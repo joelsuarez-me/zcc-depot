@@ -1,104 +1,231 @@
-import { useEffect, useState, type ChangeEvent } from "react";
-import { ArrowLeft, Check, ImagePlus, RotateCcw, Upload, X } from "lucide-react";
+import { useEffect, useRef, useState, type ChangeEvent, type FormEvent } from "react";
+import { useQueryClient } from "@tanstack/react-query";
+import { useAuth } from "@workspace/replit-auth-web";
+import {
+  getGetAgendaQueryKey,
+  getListAgendasQueryKey,
+  useAuthorizeUploadedObject,
+  useCreateAgenda,
+  useDeleteAgenda,
+  useGetAgenda,
+  useListAgendas,
+  useRequestUploadUrl,
+  useUpdateAgenda,
+  type Agenda,
+  type AgendaInput,
+} from "@workspace/api-client-react";
+import {
+  AlertCircle,
+  ArrowLeft,
+  ArrowRight,
+  Check,
+  ChevronRight,
+  FileText,
+  ImagePlus,
+  LoaderCircle,
+  LogOut,
+  Plus,
+  Presentation,
+  Save,
+  ShieldAlert,
+  Trash2,
+  Upload,
+  X,
+} from "lucide-react";
+import { motion, useReducedMotion } from "framer-motion";
 
-type AgendaData = {
+type AgendaFields = {
   company: string;
   description: string;
   currentState: string;
   problems: string;
   outcomes: string;
+  logoPath: string | null;
 };
 
 const TEXT_KEY = "zcc-depot:agenda:v1";
 const LOGO_KEY = "zcc-depot:agenda-logo:v1";
-const EMPTY: AgendaData = {
+const MAX_LOGO_BYTES = 8 * 1024 * 1024;
+const ALLOWED_TYPES = ["image/png", "image/jpeg", "image/webp"];
+const EMPTY: AgendaFields = {
   company: "",
   description: "",
   currentState: "",
   problems: "",
   outcomes: "",
+  logoPath: null,
 };
-const MAX_LOGO_BYTES = 8 * 1024 * 1024;
-const ALLOWED_TYPES = ["image/png", "image/jpeg", "image/webp"];
 
-function loadText(): AgendaData {
+const sections = [
+  {
+    key: "currentState" as const,
+    label: "Current State",
+    prompt: "Describe the operating reality today.",
+    placeholder: "How does the team work today? Capture channels, tools, workflows, and context that will help frame the conversation.",
+    noteLabel: "Current state notes",
+    tone: "sage",
+  },
+  {
+    key: "problems" as const,
+    label: "Problems",
+    prompt: "Name the friction worth solving.",
+    placeholder: "Where are customers or agents getting stuck? Capture specific pain points and their impact.",
+    noteLabel: "Problem notes",
+    tone: "sand",
+  },
+  {
+    key: "outcomes" as const,
+    label: "Outcomes",
+    prompt: "Make the desired future concrete.",
+    placeholder: "What should be different after this work? Describe the customer and business outcomes to explore.",
+    noteLabel: "Outcome notes",
+    tone: "blue",
+  },
+];
+
+function protectedLogoUrl(path: string | null) {
+  return path ? `/api/storage${path}` : "";
+}
+
+function displayDate(date?: string) {
+  if (!date) return "Not yet saved";
+  const parsed = new Date(date);
+  return Number.isNaN(parsed.getTime())
+    ? "Recently updated"
+    : new Intl.DateTimeFormat(undefined, { month: "short", day: "numeric", year: "numeric" }).format(parsed);
+}
+
+function loadLegacy() {
   try {
-    const saved = localStorage.getItem(TEXT_KEY);
-    return saved ? { ...EMPTY, ...JSON.parse(saved) } : EMPTY;
+    const text = localStorage.getItem(TEXT_KEY);
+    const logo = localStorage.getItem(LOGO_KEY);
+    const parsed = text ? JSON.parse(text) as Partial<AgendaFields> : {};
+    return {
+      available: text !== null || Boolean(logo),
+      fields: {
+        ...EMPTY,
+        company: parsed.company ?? "",
+        description: parsed.description ?? "",
+        currentState: parsed.currentState ?? "",
+        problems: parsed.problems ?? "",
+        outcomes: parsed.outcomes ?? "",
+      },
+      logo,
+    };
   } catch {
-    return EMPTY;
+    return { available: false, fields: { ...EMPTY }, logo: null };
   }
 }
 
-function loadLogo(): string {
-  try {
-    return localStorage.getItem(LOGO_KEY) || "";
-  } catch {
-    return "";
-  }
-}
-
-function resizeLogo(file: File): Promise<string> {
-  return new Promise((resolve, reject) => {
-    const image = new Image();
-    const url = URL.createObjectURL(file);
-    image.onload = () => {
-      URL.revokeObjectURL(url);
-      let scale = Math.min(1, 640 / Math.max(image.width, image.height));
-      const canvas = document.createElement("canvas");
-      const context = canvas.getContext("2d");
-      if (!context) {
-        reject(new Error("Your browser could not prepare this image."));
-        return;
-      }
-      let compressed = "";
-      for (let attempt = 0; attempt < 5; attempt += 1) {
-        canvas.width = Math.max(1, Math.round(image.width * scale));
-        canvas.height = Math.max(1, Math.round(image.height * scale));
-        context.clearRect(0, 0, canvas.width, canvas.height);
-        context.drawImage(image, 0, 0, canvas.width, canvas.height);
-        compressed = canvas.toDataURL("image/webp", Math.max(0.42, 0.72 - attempt * 0.08));
-        if (compressed.length < 180_000) break;
-        scale *= 0.72;
-      }
-      if (compressed.length >= 180_000) {
-        reject(new Error("This image is too detailed to store safely. Choose a smaller or simpler logo."));
-        return;
-      }
-      resolve(compressed);
-    };
-    image.onerror = () => {
-      URL.revokeObjectURL(url);
-      reject(new Error("This image could not be opened. Try another PNG, JPEG, or WebP file."));
-    };
-    image.src = url;
+function fileFromDataUrl(dataUrl: string): Promise<File> {
+  return fetch(dataUrl).then(async (response) => {
+    const blob = await response.blob();
+    const type = ALLOWED_TYPES.includes(blob.type) ? blob.type : "image/webp";
+    if (blob.size > MAX_LOGO_BYTES) throw new Error("The saved logo exceeds the 8 MB upload limit.");
+    return new File([blob], "customer-logo.webp", { type });
   });
 }
 
-const inputClass = "mt-2 w-full rounded-2xl border border-[#203524]/20 bg-[#FBFBF8] px-4 py-3.5 text-sm leading-relaxed text-[#11110D] placeholder:text-[#11110D]/35 focus:border-[#203524] focus:outline-none focus:ring-2 focus:ring-[#203524]/15";
+const fieldClass =
+  "mt-2 block w-full rounded-xl border border-[#d5d8cd] bg-[#fffefa] px-4 py-3.5 text-[0.94rem] leading-relaxed text-[#17251e] placeholder:text-[#69756d]/60 shadow-[inset_0_1px_2px_rgba(23,37,30,.025)] transition focus:border-[#315a47] focus:outline-none focus:ring-4 focus:ring-[#315a47]/10";
+const primaryButton =
+  "inline-flex min-h-11 items-center justify-center gap-2 rounded-full bg-[#244b39] px-5 py-2.5 text-sm font-semibold text-[#f5f5eb] transition hover:bg-[#193b2c] disabled:cursor-not-allowed disabled:opacity-55";
+const secondaryButton =
+  "inline-flex min-h-11 items-center justify-center gap-2 rounded-full border border-[#cbd1c5] bg-[#fffefa] px-5 py-2.5 text-sm font-semibold text-[#294735] transition hover:border-[#829589] hover:bg-[#f5f6ef] disabled:cursor-not-allowed disabled:opacity-55";
 
 export default function Agenda() {
-  const [data, setData] = useState<AgendaData>(loadText);
-  const [logo, setLogo] = useState(loadLogo);
-  const [mode, setMode] = useState<"edit" | "present">("edit");
-  const [storageMessage, setStorageMessage] = useState("");
+  const { user, isLoading: authLoading, isAuthenticated, login, logout } = useAuth();
+  const queryClient = useQueryClient();
+  const reducedMotion = useReducedMotion();
+  const listQuery = useListAgendas({
+    query: { enabled: isAuthenticated, queryKey: getListAgendasQueryKey() },
+  });
+  const [selectedId, setSelectedId] = useState<string | null>(null);
+  const [creating, setCreating] = useState(false);
+  const [mode, setMode] = useState<"library" | "editor" | "presentation">("library");
+  const [fields, setFields] = useState<AgendaFields>({ ...EMPTY });
+  const [loadedId, setLoadedId] = useState<string | null>(null);
+  const [busy, setBusy] = useState(false);
+  const [uploading, setUploading] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
   const [logoMessage, setLogoMessage] = useState("");
-  const [saving, setSaving] = useState(false);
+  const [confirmDelete, setConfirmDelete] = useState(false);
+  const [legacy, setLegacy] = useState(loadLegacy);
+  const [importing, setImporting] = useState(false);
+  const initGuard = useRef<string | null>(null);
+
+  const agendaQuery = useGetAgenda(selectedId ?? "", {
+    query: {
+      enabled: isAuthenticated && Boolean(selectedId),
+      queryKey: getGetAgendaQueryKey(selectedId ?? ""),
+    },
+  });
+  const createAgenda = useCreateAgenda();
+  const updateAgenda = useUpdateAgenda();
+  const deleteAgenda = useDeleteAgenda();
+  const requestUpload = useRequestUploadUrl();
+  const authorizeUpload = useAuthorizeUploadedObject();
+  const activeAgenda = agendaQuery.data;
 
   useEffect(() => {
-    setSaving(true);
-    try {
-      localStorage.setItem(TEXT_KEY, JSON.stringify(data));
-      setStorageMessage("");
-    } catch {
-      setStorageMessage("Couldn’t save your agenda in this browser. Check available storage or browser privacy settings; your current edits remain on this page.");
-    } finally {
-      setSaving(false);
-    }
-  }, [data]);
+    if (!selectedId || !activeAgenda || initGuard.current === selectedId) return;
+    initGuard.current = selectedId;
+    setLoadedId(selectedId);
+    setFields({
+      company: activeAgenda.company ?? "",
+      description: activeAgenda.description ?? "",
+      currentState: activeAgenda.currentState ?? "",
+      problems: activeAgenda.problems ?? "",
+      outcomes: activeAgenda.outcomes ?? "",
+      logoPath: activeAgenda.logoPath ?? null,
+    });
+    setErrorMessage("");
+  }, [activeAgenda, selectedId]);
 
-  function update(field: keyof AgendaData, value: string) {
-    setData((previous) => ({ ...previous, [field]: value }));
+  function openNew() {
+    setSelectedId(null);
+    setCreating(true);
+    setLoadedId(null);
+    initGuard.current = null;
+    setFields({ ...EMPTY });
+    setErrorMessage("");
+    setLogoMessage("");
+    setMode("editor");
+  }
+
+  function openAgenda(id: string) {
+    setSelectedId(id);
+    setCreating(false);
+    setLoadedId(null);
+    initGuard.current = null;
+    setErrorMessage("");
+    setMode("editor");
+  }
+
+  function updateField<K extends keyof AgendaFields>(key: K, value: AgendaFields[K]) {
+    setFields((previous) => ({ ...previous, [key]: value }));
+  }
+
+  async function uploadLogo(file: File) {
+    setUploading(true);
+    setLogoMessage("");
+    try {
+      const upload = await requestUpload.mutateAsync({
+        data: { name: file.name, size: file.size, contentType: file.type as "image/png" | "image/jpeg" | "image/webp" },
+      });
+      const response = await fetch(upload.uploadURL, {
+        method: "PUT",
+        headers: { "Content-Type": file.type },
+        body: file,
+      });
+      if (!response.ok) throw new Error("The image upload did not complete. Please try again.");
+      const authorized = await authorizeUpload.mutateAsync({ data: { objectPath: upload.objectPath } });
+      updateField("logoPath", authorized.objectPath);
+    } catch (error) {
+      setLogoMessage(error instanceof Error ? error.message : "The logo could not be uploaded.");
+    } finally {
+      setUploading(false);
+    }
   }
 
   async function handleLogo(event: ChangeEvent<HTMLInputElement>) {
@@ -113,165 +240,441 @@ export default function Agenda() {
       setLogoMessage("This image is over 8 MB. Choose a smaller image and try again.");
       return;
     }
+    await uploadLogo(file);
+  }
+
+  function buildInput(): AgendaInput {
+    return {
+      company: fields.company.trim(),
+      description: fields.description,
+      currentState: fields.currentState,
+      problems: fields.problems,
+      outcomes: fields.outcomes,
+      logoPath: fields.logoPath,
+    };
+  }
+
+  async function saveAgenda(event?: FormEvent) {
+    event?.preventDefault();
+    if (!fields.company.trim()) {
+      setErrorMessage("Add a company name before saving this brief.");
+      return;
+    }
+    setBusy(true);
+    setErrorMessage("");
     try {
-      const compressed = await resizeLogo(file);
-      setLogo(compressed);
-      setLogoMessage("");
-      try {
-        localStorage.setItem(LOGO_KEY, compressed);
-      } catch {
-        setLogoMessage("The logo is shown for this session, but browser storage is full, so it could not be saved. Your agenda text is saved separately.");
+      let saved: Agenda;
+      if (creating || !selectedId) {
+        saved = await createAgenda.mutateAsync({ data: buildInput() });
+      } else {
+        saved = await updateAgenda.mutateAsync({ id: selectedId, data: buildInput() });
       }
+      await queryClient.invalidateQueries({ queryKey: getListAgendasQueryKey() });
+      queryClient.setQueryData(getGetAgendaQueryKey(saved.id), saved);
+      setSelectedId(saved.id);
+      setCreating(false);
+      setLoadedId(saved.id);
+      initGuard.current = saved.id;
+      setFields({
+        company: saved.company,
+        description: saved.description,
+        currentState: saved.currentState,
+        problems: saved.problems,
+        outcomes: saved.outcomes,
+        logoPath: saved.logoPath,
+      });
+      setMode("editor");
     } catch (error) {
-      setLogoMessage(error instanceof Error ? error.message : "The logo could not be processed.");
+      setErrorMessage(error instanceof Error ? error.message : "Your changes could not be saved. Please try again.");
+    } finally {
+      setBusy(false);
     }
   }
 
-  function removeLogo() {
-    setLogo("");
-    setLogoMessage("");
+  async function removeAgenda() {
+    if (!selectedId) return;
+    setBusy(true);
+    setErrorMessage("");
     try {
-      localStorage.removeItem(LOGO_KEY);
-    } catch {
-      setLogoMessage("The logo was removed from this page, but browser storage could not be updated.");
+      await deleteAgenda.mutateAsync({ id: selectedId });
+      await queryClient.invalidateQueries({ queryKey: getListAgendasQueryKey() });
+      queryClient.removeQueries({ queryKey: getGetAgendaQueryKey(selectedId) });
+      setSelectedId(null);
+      setCreating(false);
+      setLoadedId(null);
+      setFields({ ...EMPTY });
+      setConfirmDelete(false);
+      setMode("library");
+    } catch (error) {
+      setErrorMessage(error instanceof Error ? error.message : "This agenda could not be deleted. Please try again.");
+      setConfirmDelete(false);
+    } finally {
+      setBusy(false);
     }
   }
 
-  function resetAgenda() {
-    if (!window.confirm("Clear all agenda text and remove the saved logo from this browser? This cannot be undone.")) return;
-    setData(EMPTY);
-    setLogo("");
-    setLogoMessage("");
+  async function importLegacy() {
+    setImporting(true);
+    setErrorMessage("");
     try {
+      let logoPath: string | null = null;
+      if (legacy.logo) {
+        const file = await fileFromDataUrl(legacy.logo);
+        const upload = await requestUpload.mutateAsync({
+          data: {
+            name: file.name,
+            size: file.size,
+            contentType: file.type as "image/png" | "image/jpeg" | "image/webp",
+          },
+        });
+        const uploaded = await fetch(upload.uploadURL, {
+          method: "PUT",
+          headers: { "Content-Type": file.type },
+          body: file,
+        });
+        if (!uploaded.ok) throw new Error("The saved logo could not be transferred. Your local draft is still available.");
+        const authorized = await authorizeUpload.mutateAsync({ data: { objectPath: upload.objectPath } });
+        logoPath = authorized.objectPath;
+      }
+      const input: AgendaInput = {
+        ...legacy.fields,
+        company: legacy.fields.company.trim(),
+        logoPath,
+      };
+      if (!input.company) throw new Error("Add a company name to the saved browser draft before importing it.");
+      const saved = await createAgenda.mutateAsync({ data: input });
+      await queryClient.invalidateQueries({ queryKey: getListAgendasQueryKey() });
+      queryClient.setQueryData(getGetAgendaQueryKey(saved.id), saved);
+      localStorage.removeItem(TEXT_KEY);
       localStorage.removeItem(LOGO_KEY);
-      localStorage.setItem(TEXT_KEY, JSON.stringify(EMPTY));
-      setStorageMessage("");
-    } catch {
-      setStorageMessage("The agenda was cleared on this page, but browser storage could not be updated.");
+      setLegacy({ available: false, fields: { ...EMPTY }, logo: null });
+      setSelectedId(saved.id);
+      setCreating(false);
+      setLoadedId(saved.id);
+      initGuard.current = saved.id;
+      setFields({
+        company: saved.company,
+        description: saved.description,
+        currentState: saved.currentState,
+        problems: saved.problems,
+        outcomes: saved.outcomes,
+        logoPath: saved.logoPath,
+      });
+      setMode("editor");
+    } catch (error) {
+      setErrorMessage(error instanceof Error ? error.message : "The saved browser draft could not be imported.");
+    } finally {
+      setImporting(false);
     }
   }
 
-  const fields: { key: keyof AgendaData; label: string; prompt: string; placeholder: string }[] = [
-    { key: "currentState", label: "Hero 1 · Current State", prompt: "Describe the operating reality today.", placeholder: "How does the team work today? Include channels, tools, workflows, or context that will help frame the conversation." },
-    { key: "problems", label: "Hero 2 · Problems", prompt: "Name the friction worth solving.", placeholder: "Where are customers or agents getting stuck? Capture the specific pain points and their impact." },
-    { key: "outcomes", label: "Hero 3 · Outcomes", prompt: "Make the desired future concrete.", placeholder: "What should be different after this work? Describe the customer and business outcomes you want to explore." },
-  ];
+  function cancelEditor() {
+    setMode("library");
+    setErrorMessage("");
+  }
+
+  const list = listQuery.data ?? [];
+  const queryBusy = Boolean(selectedId) && (agendaQuery.isLoading || loadedId !== selectedId);
+
+  if (authLoading) {
+    return (
+      <div className="min-h-[70dvh] bg-[#f1f2eb] px-5 pb-20 pt-28 md:px-8">
+        <div className="mx-auto max-w-6xl animate-pulse space-y-5">
+          <div className="h-9 w-52 rounded-lg bg-[#dfe3d8]" />
+          <div className="h-28 rounded-3xl bg-[#e7e9e0]" />
+          <div className="grid gap-4 md:grid-cols-2"><div className="h-40 rounded-2xl bg-[#e7e9e0]" /><div className="h-40 rounded-2xl bg-[#e7e9e0]" /></div>
+        </div>
+      </div>
+    );
+  }
+
+  if (!isAuthenticated) {
+    return (
+      <div className="min-h-[75dvh] bg-[#f1f2eb] px-5 pb-20 pt-28 md:px-8">
+        <div className="mx-auto max-w-6xl">
+          <section className="relative overflow-hidden rounded-[2rem] bg-[#244b39] px-6 py-12 text-[#f5f5eb] md:px-14 md:py-16">
+            <div className="grid-lines absolute inset-0 opacity-50" aria-hidden />
+            <div className="relative max-w-2xl">
+              <div className="eyebrow text-[#d4e4a6]">ZCC Depot · Workshop workspace</div>
+              <h1 className="mt-5 text-4xl font-semibold tracking-tight md:text-6xl">Today’s Agenda</h1>
+              <p className="mt-5 max-w-xl text-lg leading-relaxed text-[#f5f5eb]/75">
+                A shared, reusable conversation brief for Zendesk platform architects and the customers they work alongside.
+              </p>
+              <button type="button" onClick={login} data-testid="button-agenda-login" className="mt-8 inline-flex min-h-12 items-center gap-2 rounded-full bg-[#dce8bb] px-6 py-3 text-sm font-semibold text-[#203d2e] transition hover:bg-[#edf3dc]">
+                Sign in to continue <ArrowRight className="h-4 w-4" aria-hidden />
+              </button>
+              <p className="mt-5 max-w-xl text-xs leading-relaxed text-[#f5f5eb]/55">Sign-in uses the portal’s secure identity provider. No separate account or password form is needed here.</p>
+            </div>
+          </section>
+        </div>
+      </div>
+    );
+  }
 
   return (
-    <div className="min-h-[100dvh] bg-[#F5F5F2] pb-20">
-      <header className="bg-[#203524] px-5 pb-11 pt-28 text-[#F5F5F2] md:px-8 md:pb-14 md:pt-32">
-        <div className="mx-auto max-w-7xl">
-          <div className="eyebrow flex items-center gap-2 text-[#D1F470]"><span className="h-px w-8 bg-[#D1F470]" />Customer workshop · Conversation brief</div>
-          <div className="mt-5 flex flex-col justify-between gap-7 md:flex-row md:items-end">
+    <div className="agenda-page min-h-[75dvh] bg-[#f1f2eb] pb-20">
+      <header className="relative overflow-hidden bg-[#244b39] px-5 pb-9 pt-28 text-[#f6f5ec] md:px-8 md:pb-12 md:pt-32">
+        <div className="grid-lines absolute inset-0 opacity-50" aria-hidden />
+        <div className="relative mx-auto max-w-7xl">
+          <div className="flex flex-wrap items-center justify-between gap-4">
+            <div className="eyebrow flex items-center gap-3 text-[#d4e4a6]"><span className="h-px w-8 bg-[#d4e4a6]" />Customer workshop · Conversation brief</div>
+            <div className="flex items-center gap-3">
+              <span className="hidden text-xs text-[#f6f5ec]/65 sm:inline">{user?.email ?? "Signed in"}</span>
+              <button type="button" onClick={logout} className="inline-flex min-h-9 items-center gap-2 rounded-full border border-white/20 px-3.5 text-xs font-semibold text-white/85 transition hover:bg-white/10" data-testid="button-agenda-logout">
+                <LogOut className="h-3.5 w-3.5" aria-hidden /> Sign out
+              </button>
+            </div>
+          </div>
+          <div className="mt-6 flex flex-col justify-between gap-6 md:flex-row md:items-end">
             <div>
-              <h1 className="max-w-3xl text-4xl font-semibold tracking-tight md:text-6xl" data-testid="heading-agenda">Today’s Agenda</h1>
-              <p className="mt-4 max-w-2xl text-base leading-relaxed text-[#F5F5F2]/70 md:text-lg">Turn account notes into a clear, customer-ready conversation.</p>
+              <h1 className="text-4xl font-semibold tracking-tight md:text-6xl" data-testid="heading-agenda">Today’s Agenda</h1>
+              <p className="mt-3 max-w-2xl text-base leading-relaxed text-[#f6f5ec]/70 md:text-lg">Turn account context into a clear, customer-ready conversation.</p>
             </div>
-            <div className="flex shrink-0 rounded-full border border-[#F5F5F2]/20 bg-[#11110D]/20 p-1" role="group" aria-label="Agenda view">
-              <button type="button" onClick={() => setMode("edit")} aria-pressed={mode === "edit"} data-testid="button-agenda-edit"
-                className={`rounded-full px-5 py-2.5 text-sm font-semibold transition-colors ${mode === "edit" ? "bg-[#D1F470] text-[#11110D]" : "text-[#F5F5F2]/75 hover:text-[#F5F5F2]"}`}>Edit</button>
-              <button type="button" onClick={() => setMode("present")} aria-pressed={mode === "present"} data-testid="button-agenda-present"
-                className={`rounded-full px-5 py-2.5 text-sm font-semibold transition-colors ${mode === "present" ? "bg-[#D1F470] text-[#11110D]" : "text-[#F5F5F2]/75 hover:text-[#F5F5F2]"}`}>Presentation</button>
-            </div>
+            {mode !== "library" && (
+              <div className="flex w-fit rounded-full border border-white/20 bg-[#183629]/35 p-1" role="group" aria-label="Agenda view">
+                <button type="button" onClick={() => setMode("editor")} aria-pressed={mode === "editor"} className={`rounded-full px-4 py-2 text-sm font-semibold transition ${mode === "editor" ? "bg-[#e2ebc8] text-[#203d2e]" : "text-white/75 hover:text-white"}`} data-testid="button-agenda-edit">Edit</button>
+                <button type="button" onClick={() => setMode("presentation")} aria-pressed={mode === "presentation"} disabled={creating || !selectedId || !fields.company} className={`rounded-full px-4 py-2 text-sm font-semibold transition disabled:opacity-40 ${mode === "presentation" ? "bg-[#e2ebc8] text-[#203d2e]" : "text-white/75 hover:text-white"}`} data-testid="button-agenda-present">Presentation</button>
+              </div>
+            )}
           </div>
         </div>
       </header>
 
-      <main className="mx-auto max-w-7xl px-5 pt-8 md:px-8 md:pt-10">
-        <div className="mb-8 flex flex-col gap-3 rounded-2xl border border-[#203524]/12 bg-[#FBFBF8] px-4 py-4 text-sm md:flex-row md:items-center md:justify-between md:px-5">
-          <p className="max-w-3xl leading-relaxed text-[#11110D]/70" data-testid="notice-local-storage">
-            <strong className="font-semibold text-[#203524]">Private to this browser.</strong> Agenda text and the resized logo are stored in this browser only. They are not synced or sent to a server.
+      <main className="mx-auto max-w-7xl px-5 pt-7 md:px-8 md:pt-9">
+        <div className="mb-7 flex flex-col gap-3 rounded-2xl border border-[#d7dbd0] bg-[#fbfbf6] px-4 py-4 md:flex-row md:items-center md:justify-between md:px-5" role="note" data-testid="notice-shared-agendas">
+          <p className="flex max-w-4xl gap-3 text-sm leading-relaxed text-[#536157]">
+            <ShieldAlert className="mt-0.5 h-4 w-4 shrink-0 text-[#677b68]" aria-hidden />
+            <span><strong className="font-semibold text-[#294735]">Shared workspace.</strong> Every agenda can be viewed and edited by all signed-in portal users. This is not a private customer-data space; keep sensitive or regulated details elsewhere.</span>
           </p>
-          <div className="flex items-center gap-2 self-start whitespace-nowrap text-xs text-[#203524]/70 md:self-auto" aria-live="polite" data-testid="status-agenda-save">
-            {saving ? <span className="h-2 w-2 animate-pulse rounded-full bg-[#B78A32]" /> : <Check className="h-4 w-4 text-[#3E7548]" aria-hidden />}
-            {saving ? "Saving…" : "Saved in this browser"}
-          </div>
+          <span className="mono shrink-0 text-[10px] tracking-wider text-[#788379]">SYNCED TO PORTAL</span>
         </div>
 
-        {storageMessage && <div role="alert" className="mb-6 rounded-xl border border-[#A34B32]/30 bg-[#F9E8E1] px-4 py-3 text-sm text-[#71331F]" data-testid="error-agenda-storage">{storageMessage}</div>}
-
-        {mode === "edit" ? (
-          <div className="grid gap-6 lg:grid-cols-[minmax(0,1fr)_18rem]">
-            <div className="space-y-5">
-              <section className="rounded-[1.75rem] border border-[#203524]/10 bg-[#FBFBF8] p-5 md:p-8" aria-labelledby="edit-hero0">
-                <div className="eyebrow text-[#203524]/65">Hero 0 · Welcome</div>
-                <h2 id="edit-hero0" className="mt-2 text-2xl font-semibold tracking-tight">Set the room</h2>
-                <p className="mt-1 text-sm text-[#11110D]/55">A name, a little context, and a recognizable mark.</p>
-                <div className="mt-6 grid gap-5 md:grid-cols-[1fr_1fr]">
-                  <label className="block text-sm font-semibold text-[#203524]">Company name
-                    <input value={data.company} onChange={(e) => update("company", e.target.value)} placeholder="Add the customer’s company name" maxLength={120}
-                      className={inputClass} data-testid="input-agenda-company" />
-                  </label>
-                  <label className="block text-sm font-semibold text-[#203524]">Short description
-                    <textarea value={data.description} onChange={(e) => update("description", e.target.value)} placeholder="A concise account or workshop description" rows={3} maxLength={500}
-                      className={`${inputClass} resize-y`} data-testid="input-agenda-description" />
-                  </label>
-                </div>
-              </section>
-              {fields.map((field, index) => (
-                <section key={field.key} className="rounded-[1.75rem] border border-[#203524]/10 bg-[#FBFBF8] p-5 md:p-8" aria-labelledby={`edit-${field.key}`}>
-                  <div className="eyebrow text-[#203524]/65">{field.label}</div>
-                  <h2 id={`edit-${field.key}`} className="mt-2 text-2xl font-semibold tracking-tight">{field.prompt}</h2>
-                  <label className="mt-5 block text-sm font-semibold text-[#203524]">
-                    {index === 0 ? "Current state notes" : index === 1 ? "Problem notes" : "Outcome notes"}
-                    <textarea value={data[field.key]} onChange={(e) => update(field.key, e.target.value)} placeholder={field.placeholder} rows={5} maxLength={5000}
-                      className={`${inputClass} resize-y`} data-testid={`input-agenda-${field.key}`} />
-                  </label>
-                </section>
-              ))}
-            </div>
-            <aside className="lg:sticky lg:top-28 lg:self-start">
-              <section className="rounded-[1.75rem] border border-[#203524]/10 bg-[#E8EBDD] p-5" aria-labelledby="logo-heading">
-                <div className="eyebrow text-[#203524]/65">Brand asset</div>
-                <h2 id="logo-heading" className="mt-2 text-lg font-semibold">Customer logo</h2>
-                <div className="mt-4 grid min-h-36 place-items-center rounded-2xl border border-dashed border-[#203524]/25 bg-[#FBFBF8] p-4">
-                  {logo ? <img src={logo} alt="Uploaded customer logo preview" className="max-h-28 max-w-full object-contain" data-testid="img-agenda-logo" /> : <div className="text-center text-[#203524]/55"><ImagePlus className="mx-auto h-7 w-7" aria-hidden /><p className="mt-2 text-xs">No logo added</p></div>}
-                </div>
-                <label className="mt-4 flex cursor-pointer items-center justify-center gap-2 rounded-full bg-[#203524] px-4 py-3 text-sm font-semibold text-[#D1F470] transition-colors hover:bg-[#2b4630]">
-                  <Upload className="h-4 w-4" aria-hidden />{logo ? "Replace logo" : "Upload a logo"}
-                  <input type="file" accept="image/png,image/jpeg,image/webp" onChange={handleLogo} className="sr-only" data-testid="input-agenda-logo" aria-label="Upload customer logo (PNG, JPEG, or WebP)" />
-                </label>
-                {logo && <button type="button" onClick={removeLogo} className="mt-2 flex w-full items-center justify-center gap-2 rounded-full px-4 py-2.5 text-sm font-medium text-[#71331F] hover:bg-[#A34B32]/10" data-testid="button-agenda-remove-logo"><X className="h-4 w-4" aria-hidden />Remove logo</button>}
-                <p className="mt-3 text-xs leading-relaxed text-[#11110D]/55">PNG, JPEG, or WebP · up to 8 MB. Resized before browser storage.</p>
-                {logoMessage && <p role="alert" className="mt-3 rounded-xl bg-[#F9E8E1] p-3 text-xs leading-relaxed text-[#71331F]" data-testid="error-agenda-logo">{logoMessage}</p>}
-              </section>
-              <button type="button" onClick={resetAgenda} className="mt-4 flex w-full items-center justify-center gap-2 rounded-full border border-[#A34B32]/25 px-4 py-3 text-sm font-semibold text-[#71331F] transition-colors hover:bg-[#A34B32]/8" data-testid="button-agenda-reset">
-                <RotateCcw className="h-4 w-4" aria-hidden />Clear agenda
-              </button>
-              <p className="mt-2 text-center text-xs leading-relaxed text-[#11110D]/45">You’ll be asked to confirm before anything is cleared.</p>
-            </aside>
+        {errorMessage && (
+          <div role="alert" className="mb-6 flex items-start gap-3 rounded-xl border border-[#a95843]/25 bg-[#f8e9e3] px-4 py-3.5 text-sm text-[#723e31]" data-testid="error-agenda-save">
+            <AlertCircle className="mt-0.5 h-4 w-4 shrink-0" aria-hidden />
+            <span className="flex-1">{errorMessage}</span>
+            <button type="button" onClick={() => setErrorMessage("")} className="rounded p-1 hover:bg-[#a95843]/10" aria-label="Dismiss message" data-testid="button-dismiss-agenda-error"><X className="h-4 w-4" /></button>
           </div>
-        ) : (
+        )}
+
+        {mode === "library" && (
+          <>
+            {legacy.available && (
+              <section className="mb-6 flex flex-col gap-4 rounded-2xl border border-[#c8d2bd] bg-[#e8eddf] p-5 md:flex-row md:items-center md:justify-between" aria-labelledby="legacy-heading" data-testid="notice-legacy-draft">
+                <div className="flex gap-3">
+                  <FileText className="mt-1 h-5 w-5 shrink-0 text-[#49664f]" aria-hidden />
+                  <div>
+                    <h2 id="legacy-heading" className="font-semibold text-[#294735]">A browser draft is still here</h2>
+                    <p className="mt-1 max-w-2xl text-sm leading-relaxed text-[#536157]">Import your saved text and logo into the shared library. The local copy stays in this browser unless the import succeeds.</p>
+                  </div>
+                </div>
+                <button type="button" onClick={importLegacy} disabled={importing} className={primaryButton} data-testid="button-import-local-agenda">
+                  {importing ? <LoaderCircle className="h-4 w-4 animate-spin" /> : <Upload className="h-4 w-4" aria-hidden />}
+                  {importing ? "Importing draft…" : "Import browser draft"}
+                </button>
+              </section>
+            )}
+            <div className="mb-5 flex flex-col justify-between gap-4 sm:flex-row sm:items-end">
+              <div>
+                <div className="eyebrow text-[#68776b]">Shared library</div>
+                <h2 className="mt-2 text-2xl font-semibold tracking-tight text-[#1e3528] md:text-3xl">Workshop briefs</h2>
+                <p className="mt-1.5 text-sm text-[#69766b]">Reusable context, ready for the next customer conversation.</p>
+              </div>
+              <button type="button" onClick={openNew} className={primaryButton} data-testid="button-create-agenda"><Plus className="h-4 w-4" aria-hidden /> New agenda</button>
+            </div>
+            {listQuery.isLoading ? (
+              <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3" aria-label="Loading agendas">
+                {[0, 1, 2].map((item) => <div key={item} className="h-48 animate-pulse rounded-2xl border border-[#e0e3d9] bg-[#e8eae2]" />)}
+              </div>
+            ) : listQuery.isError ? (
+              <section className="grid min-h-64 place-items-center rounded-[1.75rem] border border-[#d9ddd2] bg-[#fbfbf6] p-8 text-center" data-testid="error-agenda-library">
+                <div className="max-w-md">
+                  <AlertCircle className="mx-auto h-8 w-8 text-[#9a5a47]" aria-hidden />
+                  <h3 className="mt-4 text-lg font-semibold text-[#294735]">The library didn’t load</h3>
+                  <p className="mt-2 text-sm leading-relaxed text-[#69766b]">Your saved agendas have not been changed. Check your connection and try again.</p>
+                  <button type="button" onClick={() => void listQuery.refetch()} className={`${secondaryButton} mt-5`} data-testid="button-retry-agenda-library">Try again</button>
+                </div>
+              </section>
+            ) : list.length === 0 ? (
+              <section className="relative overflow-hidden rounded-[1.75rem] border border-[#d9ddd2] bg-[#fbfbf6] px-6 py-12 md:px-12 md:py-16" data-testid="empty-agenda-library">
+                <div className="absolute right-8 top-8 hidden h-32 w-32 rounded-full border border-[#d8dfd1] md:block" aria-hidden />
+                <div className="relative max-w-xl">
+                  <div className="grid h-12 w-12 place-items-center rounded-2xl bg-[#e6ecdd] text-[#426148]"><FileText className="h-5 w-5" aria-hidden /></div>
+                  <div className="eyebrow mt-6 text-[#788579]">A good conversation starts with context</div>
+                  <h3 className="mt-2 text-3xl font-semibold tracking-tight text-[#203a2c]">No agendas yet.</h3>
+                  <p className="mt-3 text-base leading-relaxed text-[#68756a]">Start a shared brief with the company, current reality, and outcomes your team wants to explore.</p>
+                  <button type="button" onClick={openNew} className={`${primaryButton} mt-6`} data-testid="button-create-first-agenda"><Plus className="h-4 w-4" aria-hidden /> Create the first agenda</button>
+                </div>
+              </section>
+            ) : (
+              <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3" data-testid="list-agendas">
+                {list.map((agenda, index) => (
+                  <motion.button
+                    key={agenda.id}
+                    type="button"
+                    onClick={() => openAgenda(agenda.id)}
+                    initial={reducedMotion ? false : { opacity: 0, y: 12 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.38, delay: reducedMotion ? 0 : index * 0.045 }}
+                    className="group min-h-48 rounded-2xl border border-[#d9ddd2] bg-[#fbfbf6] p-5 text-left transition hover:-translate-y-0.5 hover:border-[#b5c4b3] hover:shadow-[0_14px_34px_-24px_rgba(30,53,40,.4)] focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-[#315a47]/15"
+                    data-testid={`card-agenda-${agenda.id}`}
+                  >
+                    <div className="flex items-start justify-between gap-4">
+                      <div className="grid h-10 w-10 place-items-center rounded-xl bg-[#e8ede2] text-[#43634a]"><FileText className="h-4 w-4" aria-hidden /></div>
+                      <ChevronRight className="mt-2 h-4 w-4 text-[#89958a] transition group-hover:translate-x-1 group-hover:text-[#315a47]" aria-hidden />
+                    </div>
+                    <h3 className="mt-5 line-clamp-1 text-lg font-semibold text-[#203a2c]" data-testid={`text-agenda-company-${agenda.id}`}>{agenda.company}</h3>
+                    <p className="mt-1.5 line-clamp-2 min-h-10 text-sm leading-relaxed text-[#68756a]">{agenda.description || "No short description yet."}</p>
+                    <div className="mono mt-4 text-[10px] tracking-wider text-[#8a948b]">UPDATED {displayDate(agenda.updatedAt).toUpperCase()}</div>
+                  </motion.button>
+                ))}
+              </div>
+            )}
+          </>
+        )}
+
+        {mode === "editor" && (
+          queryBusy ? (
+            <div className="space-y-4" aria-label="Loading agenda">
+              <div className="h-28 animate-pulse rounded-2xl bg-[#e4e8df]" />
+              <div className="h-64 animate-pulse rounded-2xl bg-[#e4e8df]" />
+              <div className="h-64 animate-pulse rounded-2xl bg-[#e4e8df]" />
+            </div>
+          ) : agendaQuery.isError ? (
+            <section className="rounded-2xl border border-[#dedfd6] bg-[#fbfbf6] p-8 text-center">
+              <h2 className="text-xl font-semibold text-[#294735]">This agenda couldn’t be opened</h2>
+              <p className="mt-2 text-sm text-[#68756a]">It may have been removed by another portal user.</p>
+              <div className="mt-5 flex justify-center gap-3">
+                <button type="button" onClick={() => void agendaQuery.refetch()} className={secondaryButton} data-testid="button-retry-open-agenda">Try again</button>
+                <button type="button" onClick={cancelEditor} className={primaryButton} data-testid="button-back-agenda-library">Back to library</button>
+              </div>
+            </section>
+          ) : (
+            <form onSubmit={saveAgenda} className="grid gap-6 lg:grid-cols-[minmax(0,1fr)_19rem]">
+              <div className="space-y-5">
+                <section className="rounded-[1.6rem] border border-[#d9ddd2] bg-[#fbfbf6] p-5 md:p-8" aria-labelledby="agenda-welcome-heading">
+                  <div className="eyebrow text-[#728075]">Welcome</div>
+                  <h2 id="agenda-welcome-heading" className="mt-2 text-2xl font-semibold tracking-tight text-[#203a2c]">Set the room.</h2>
+                  <p className="mt-1 text-sm text-[#6c786e]">A customer name and a little context make the brief easy to pick up.</p>
+                  <div className="mt-6 grid gap-5 md:grid-cols-2">
+                    <label className="block text-sm font-semibold text-[#304c38]">Company name
+                      <input value={fields.company} onChange={(event) => updateField("company", event.target.value)} placeholder="Customer company" maxLength={120} className={fieldClass} data-testid="input-agenda-company" />
+                    </label>
+                    <label className="block text-sm font-semibold text-[#304c38]">Short description
+                      <textarea value={fields.description} onChange={(event) => updateField("description", event.target.value)} placeholder="A concise account or workshop description" rows={3} maxLength={500} className={`${fieldClass} resize-y`} data-testid="input-agenda-description" />
+                    </label>
+                  </div>
+                </section>
+                {sections.map((section) => (
+                  <section key={section.key} className="rounded-[1.6rem] border border-[#d9ddd2] bg-[#fbfbf6] p-5 md:p-8" aria-labelledby={`agenda-${section.key}-heading`}>
+                    <div className="eyebrow text-[#728075]">{section.label}</div>
+                    <h2 id={`agenda-${section.key}-heading`} className="mt-2 text-2xl font-semibold tracking-tight text-[#203a2c]">{section.prompt}</h2>
+                    <label className="mt-5 block text-sm font-semibold text-[#304c38]">{section.noteLabel}
+                      <textarea value={fields[section.key]} onChange={(event) => updateField(section.key, event.target.value)} placeholder={section.placeholder} rows={5} maxLength={5000} className={`${fieldClass} resize-y`} data-testid={`input-agenda-${section.key}`} />
+                    </label>
+                  </section>
+                ))}
+              </div>
+              <aside className="space-y-4 lg:sticky lg:top-28 lg:self-start">
+                <section className="rounded-[1.6rem] border border-[#d3dacc] bg-[#e6ebdf] p-5" aria-labelledby="agenda-logo-heading">
+                  <div className="eyebrow text-[#728075]">Brand asset</div>
+                  <h2 id="agenda-logo-heading" className="mt-2 text-lg font-semibold text-[#294735]">Customer logo</h2>
+                  <div className="mt-4 grid min-h-36 place-items-center rounded-xl border border-dashed border-[#aeb9aa] bg-white p-4">
+                    {fields.logoPath
+                      ? <img src={protectedLogoUrl(fields.logoPath)} alt={`${fields.company || "Customer"} logo`} className="max-h-28 max-w-full object-contain" data-testid="img-agenda-logo" />
+                      : <div className="text-center text-[#788579]"><ImagePlus className="mx-auto h-7 w-7" aria-hidden /><p className="mt-2 text-xs">No logo added</p></div>}
+                  </div>
+                  <label className={`mt-4 flex min-h-11 cursor-pointer items-center justify-center gap-2 rounded-full bg-[#294b38] px-4 py-3 text-sm font-semibold text-[#f5f5eb] transition hover:bg-[#1d3d2d] ${uploading ? "pointer-events-none opacity-60" : ""}`}>
+                    {uploading ? <LoaderCircle className="h-4 w-4 animate-spin" aria-hidden /> : <Upload className="h-4 w-4" aria-hidden />}
+                    {uploading ? "Uploading…" : fields.logoPath ? "Replace logo" : "Upload a logo"}
+                    <input type="file" accept="image/png,image/jpeg,image/webp" onChange={handleLogo} disabled={uploading} className="sr-only" data-testid="input-agenda-logo" aria-label="Upload customer logo (PNG, JPEG, or WebP)" />
+                  </label>
+                  {fields.logoPath && <button type="button" onClick={() => updateField("logoPath", null)} className="mt-2 flex min-h-10 w-full items-center justify-center gap-2 rounded-full px-4 py-2 text-sm font-medium text-[#815346] transition hover:bg-[#a95843]/10" data-testid="button-agenda-remove-logo"><X className="h-4 w-4" aria-hidden /> Remove logo</button>}
+                  <p className="mt-3 text-xs leading-relaxed text-[#6d796e]">PNG, JPEG, or WebP · up to 8 MB. Logo uploads are stored separately from agenda text.</p>
+                  {logoMessage && <p role="alert" className="mt-3 rounded-lg bg-[#f8e9e3] p-3 text-xs leading-relaxed text-[#723e31]" data-testid="error-agenda-logo">{logoMessage}</p>}
+                </section>
+                <section className="rounded-[1.4rem] border border-[#d9ddd2] bg-[#fbfbf6] p-4">
+                  <div className="flex items-center gap-2 text-sm font-semibold text-[#38513d]"><Check className="h-4 w-4" aria-hidden /> Shared and reusable</div>
+                  <p className="mt-2 text-xs leading-relaxed text-[#718074]">Changes become visible to all signed-in portal users when saved.</p>
+                  {!creating && activeAgenda && <p className="mono mt-3 border-t border-[#e5e7df] pt-3 text-[10px] tracking-wide text-[#879187]">UPDATED {displayDate(activeAgenda.updatedAt).toUpperCase()}</p>}
+                </section>
+                <div className="grid grid-cols-2 gap-2">
+                  <button type="button" onClick={cancelEditor} className={secondaryButton} data-testid="button-agenda-cancel"><ArrowLeft className="h-4 w-4" aria-hidden /> Library</button>
+                  <button type="submit" disabled={busy || uploading || (Boolean(selectedId) && loadedId !== selectedId)} className={primaryButton} data-testid="button-agenda-save">
+                    {busy ? <LoaderCircle className="h-4 w-4 animate-spin" aria-hidden /> : <Save className="h-4 w-4" aria-hidden />}
+                    {busy ? "Saving…" : "Save brief"}
+                  </button>
+                </div>
+                {selectedId && (
+                  <button type="button" onClick={() => setConfirmDelete(true)} className="inline-flex min-h-10 w-full items-center justify-center gap-2 rounded-full px-4 py-2 text-sm font-semibold text-[#895646] transition hover:bg-[#f3e4de]" data-testid="button-agenda-delete">
+                    <Trash2 className="h-4 w-4" aria-hidden /> Delete agenda
+                  </button>
+                )}
+              </aside>
+            </form>
+          )
+        )}
+
+        {mode === "presentation" && selectedId && (
           <div className="space-y-4" data-testid="agenda-presentation">
-            <section className="relative overflow-hidden rounded-[2rem] bg-[#203524] p-7 text-[#F5F5F2] md:min-h-64 md:p-11">
-              <div className="grid-lines absolute inset-0 opacity-70" aria-hidden />
+            <motion.section
+              initial={reducedMotion ? false : { opacity: 0, y: 16 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.55, ease: [0.2, 0.7, 0.2, 1] }}
+              className="relative overflow-hidden rounded-[2rem] bg-[#244b39] p-7 text-[#f6f5ec] md:min-h-64 md:p-11"
+            >
+              <div className="grid-lines absolute inset-0 opacity-60" aria-hidden />
               <div className="relative flex flex-col-reverse justify-between gap-7 sm:flex-row sm:items-center">
                 <div>
-                  <div className="eyebrow text-[#D1F470]">Hero 0 · Welcome</div>
-                  <h2 className="mt-4 break-words text-4xl font-semibold tracking-tight md:text-6xl" data-testid="text-agenda-company">{data.company || "Company name"}</h2>
-                  <p className="mt-4 max-w-2xl whitespace-pre-wrap text-base leading-relaxed text-[#F5F5F2]/72" data-testid="text-agenda-description">{data.description || "Add a short description in Edit to set the context for today’s conversation."}</p>
+                  <div className="eyebrow text-[#d4e4a6]">Welcome</div>
+                  <h2 className="mt-4 break-words text-4xl font-semibold tracking-tight md:text-6xl" data-testid="text-agenda-company">{fields.company || "Company name"}</h2>
+                  <p className="mt-4 max-w-2xl whitespace-pre-wrap text-base leading-relaxed text-[#f6f5ec]/75" data-testid="text-agenda-description">{fields.description || "Add a short description in Edit to set the context for today’s conversation."}</p>
                 </div>
-                {logo && <div className="grid h-24 w-40 shrink-0 place-items-center rounded-2xl bg-[#FBFBF8] p-3 sm:h-32 sm:w-48"><img src={logo} alt="Customer logo" className="max-h-full max-w-full object-contain" /></div>}
+                {fields.logoPath && <div className="grid h-24 w-40 shrink-0 place-items-center rounded-2xl bg-white p-3 sm:h-32 sm:w-48"><img src={protectedLogoUrl(fields.logoPath)} alt={`${fields.company} logo`} className="max-h-full max-w-full object-contain" /></div>}
               </div>
-              <span className="mono relative mt-8 block text-xs text-[#F5F5F2]/45">CUSTOMER WORKSHOP</span>
-            </section>
-            {fields.map((field, index) => (
-              <section key={field.key} className={`grid gap-5 rounded-[2rem] p-6 md:grid-cols-[13rem_1fr] md:items-start md:p-9 ${index === 0 ? "bg-[#DDE6D7]" : index === 1 ? "bg-[#E9DFD2]" : "bg-[#D6E6E0]"}`} data-testid={`card-agenda-${field.key}`}>
+              <span className="mono relative mt-8 block text-[10px] tracking-[.18em] text-[#f6f5ec]/45">CUSTOMER WORKSHOP · {displayDate(activeAgenda?.updatedAt).toUpperCase()}</span>
+            </motion.section>
+            {sections.map((section, index) => (
+              <motion.section
+                key={section.key}
+                initial={reducedMotion ? false : { opacity: 0, y: 18 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.55, delay: reducedMotion ? 0 : 0.1 + index * 0.12, ease: [0.2, 0.7, 0.2, 1] }}
+                className={`agenda-fill-${section.tone} grid gap-5 rounded-[2rem] p-6 md:grid-cols-[13rem_1fr] md:items-start md:p-9`}
+                data-testid={`card-agenda-${section.key}`}
+              >
                 <div>
-                  <div className="eyebrow text-[#203524]/60">{field.label.split(" · ")[0]}</div>
-                  <h2 className="mt-2 text-xl font-semibold tracking-tight text-[#203524]">{field.label.split(" · ")[1]}</h2>
+                  <div className="eyebrow text-[#294735]/60">{section.label}</div>
+                  <h2 className="mt-2 text-xl font-semibold tracking-tight text-[#294735]">{section.label}</h2>
                 </div>
-                <p className="min-h-16 whitespace-pre-wrap text-base leading-relaxed text-[#11110D]/80 md:text-lg" data-testid={`text-agenda-${field.key}`}>
-                  {data[field.key] || <span className="text-[#11110D]/40">{field.prompt} Add notes in Edit to shape this section.</span>}
+                <p className="min-h-16 whitespace-pre-wrap text-base leading-relaxed text-[#24362b]/85 md:text-lg" data-testid={`text-agenda-${section.key}`}>
+                  {fields[section.key] || <span className="text-[#24362b]/45">{section.prompt} Add notes in Edit to shape this section.</span>}
                 </p>
-              </section>
+              </motion.section>
             ))}
-            <div className="flex justify-end pt-3">
-              <button type="button" onClick={() => setMode("edit")} className="inline-flex items-center gap-2 rounded-full bg-[#203524] px-5 py-3 text-sm font-semibold text-[#D1F470] transition-transform hover:-translate-y-0.5" data-testid="button-agenda-back-edit"><ArrowLeft className="h-4 w-4" aria-hidden />Back to editing</button>
+            <div className="flex flex-wrap justify-between gap-3 pt-3">
+              <button type="button" onClick={() => setMode("library")} className={secondaryButton} data-testid="button-agenda-presentation-library"><ArrowLeft className="h-4 w-4" aria-hidden /> Library</button>
+              <button type="button" onClick={() => setMode("editor")} className={primaryButton} data-testid="button-agenda-back-edit"><Presentation className="h-4 w-4" aria-hidden /> Back to editing</button>
             </div>
           </div>
         )}
       </main>
+
+      {confirmDelete && (
+        <div className="fixed inset-0 z-[100] grid place-items-center bg-[#14251c]/55 p-4 backdrop-blur-sm" role="presentation" onMouseDown={(event) => { if (event.target === event.currentTarget) setConfirmDelete(false); }}>
+          <section role="alertdialog" aria-modal="true" aria-labelledby="delete-agenda-title" aria-describedby="delete-agenda-description" className="w-full max-w-md rounded-3xl border border-[#e1ded4] bg-[#fbfbf6] p-6 shadow-[0_24px_80px_-24px_rgba(12,27,18,.45)] md:p-8" data-testid="dialog-delete-agenda">
+            <div className="grid h-11 w-11 place-items-center rounded-2xl bg-[#f4e6e0] text-[#8d5544]"><Trash2 className="h-5 w-5" aria-hidden /></div>
+            <h2 id="delete-agenda-title" className="mt-5 text-xl font-semibold text-[#243b2d]">Delete this agenda?</h2>
+            <p id="delete-agenda-description" className="mt-2 text-sm leading-relaxed text-[#68756a]">“{fields.company || "This agenda"}” will be removed for everyone in the shared library. This action cannot be undone.</p>
+            <div className="mt-7 flex justify-end gap-3">
+              <button type="button" onClick={() => setConfirmDelete(false)} className={secondaryButton} disabled={busy} data-testid="button-cancel-delete-agenda">Keep agenda</button>
+              <button type="button" onClick={() => void removeAgenda()} className="inline-flex min-h-11 items-center justify-center gap-2 rounded-full bg-[#8d4e3d] px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-[#783e30] disabled:opacity-50" disabled={busy} data-testid="button-confirm-delete-agenda">
+                {busy ? <LoaderCircle className="h-4 w-4 animate-spin" aria-hidden /> : <Trash2 className="h-4 w-4" aria-hidden />} Delete
+              </button>
+            </div>
+          </section>
+        </div>
+      )}
     </div>
   );
 }
