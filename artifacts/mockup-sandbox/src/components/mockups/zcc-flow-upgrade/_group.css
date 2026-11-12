@@ -1,0 +1,151 @@
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600;9..40,700&family=Instrument+Serif:ital@0;1&family=JetBrains+Mono:wght@400;500&display=swap');
+:root {
+  --button-outline: rgba(0, 0, 0, 0.1);
+  --badge-outline: rgba(0, 0, 0, 0.05);
+
+  /* Automatic computation of border around primary / danger buttons */
+  --opaque-button-border-intensity: -8; /* In terms of percentages */
+
+  /* Backgrounds applied on top of other backgrounds when hovered/active */
+  --elevate-1: rgba(0, 0, 0, 0.03);
+  --elevate-2: rgba(0, 0, 0, 0.08);
+
+  --background: 60 9% 95%;
+
+  --foreground: 60 13% 6%;
+
+  --border: 75 10% 84%;
+
+  --card: 60 20% 98%;
+
+  --card-foreground: 60 13% 6%;
+
+  --card-border: 75 10% 86%;
+
+  --sidebar: 131 25% 17%;
+
+  --sidebar-foreground: 60 9% 95%;
+
+  --sidebar-border: 131 18% 24%;
+
+  --sidebar-primary: 77 85% 70%;
+
+  --sidebar-primary-foreground: 60 13% 6%;
+
+  --sidebar-accent: 131 20% 22%;
+
+  --sidebar-accent-foreground: 60 9% 95%;
+
+  --sidebar-ring: 77 85% 70%;
+
+  --popover: 60 20% 98%;
+
+  --popover-foreground: 60 13% 6%;
+
+  --popover-border: 75 10% 84%;
+
+  --primary: 131 25% 17%;
+
+  --primary-foreground: 77 85% 70%;
+
+  --secondary: 77 85% 70%;
+
+  --secondary-foreground: 131 25% 17%;
+
+  --muted: 70 12% 90%;
+
+  --muted-foreground: 90 6% 34%;
+
+  --accent: 77 70% 88%;
+
+  --accent-foreground: 131 25% 17%;
+
+  --destructive: 8 70% 45%;
+
+  --destructive-foreground: 60 9% 95%;
+
+  --input: 75 10% 78%;
+  --ring: 131 25% 30%;
+  --chart-1: 131 25% 17%;
+  --chart-2: 77 85% 60%;
+  --chart-3: 160 30% 40%;
+  --chart-4: 40 60% 55%;
+  --chart-5: 90 6% 50%;
+
+  --app-font-sans: 'Vanilla Sans', 'DM Sans', Arial, sans-serif;
+  --app-font-serif: 'Instrument Serif', Georgia, serif;
+  --app-font-mono: 'JetBrains Mono', Menlo, monospace;
+  --radius: 0.875rem; /* 8px */
+  --shadow-2xs: 0px 2px 0px 0px hsl(202.8169 89.1213% 53.1373% / 0); /*replace with H S L */
+  --shadow-xs: 0px 2px 0px 0px hsl(202.8169 89.1213% 53.1373% / 0); /*replace with H S L */
+  --shadow-sm:
+    0px 2px 0px 0px hsl(202.8169 89.1213% 53.1373% / 0),
+    0px 1px 2px -1px hsl(202.8169 89.1213% 53.1373% / 0);
+  --shadow:
+    0px 2px 0px 0px hsl(202.8169 89.1213% 53.1373% / 0),
+    0px 1px 2px -1px hsl(202.8169 89.1213% 53.1373% / 0);
+  --shadow-md:
+    0px 2px 0px 0px hsl(202.8169 89.1213% 53.1373% / 0),
+    0px 2px 4px -1px hsl(202.8169 89.1213% 53.1373% / 0);
+  --shadow-lg:
+    0px 2px 0px 0px hsl(202.8169 89.1213% 53.1373% / 0),
+    0px 4px 6px -1px hsl(202.8169 89.1213% 53.1373% / 0);
+  --shadow-xl:
+    0px 2px 0px 0px hsl(202.8169 89.1213% 53.1373% / 0),
+    0px 8px 10px -1px hsl(202.8169 89.1213% 53.1373% / 0);
+  --shadow-2xl: 0px 2px 0px 0px hsl(202.8169 89.1213% 53.1373% / 0);
+  --tracking-normal: 0em;
+  --spacing: 0.25rem;
+
+  /* Automatically computed borders - intensity can be controlled by the user by the --opaque-button-border-intensity setting */
+
+  /* Fallback for older browsers */
+  --sidebar-primary-border: hsl(var(--sidebar-primary));
+  --sidebar-primary-border: hsl(
+    from hsl(var(--sidebar-primary)) h s
+      calc(l + var(--opaque-button-border-intensity)) / alpha
+  );
+
+  /* Fallback for older browsers */
+  --sidebar-accent-border: hsl(var(--sidebar-accent));
+  --sidebar-accent-border: hsl(
+    from hsl(var(--sidebar-accent)) h s
+      calc(l + var(--opaque-button-border-intensity)) / alpha
+  );
+
+  /* Fallback for older browsers */
+  --primary-border: hsl(var(--primary));
+  --primary-border: hsl(
+    from hsl(var(--primary)) h s
+      calc(l + var(--opaque-button-border-intensity)) / alpha
+  );
+
+  /* Fallback for older browsers */
+  --secondary-border: hsl(var(--secondary));
+  --secondary-border: hsl(
+    from hsl(var(--secondary)) h s
+      calc(l + var(--opaque-button-border-intensity)) / alpha
+  );
+
+  /* Fallback for older browsers */
+  --muted-border: hsl(var(--muted));
+  --muted-border: hsl(
+    from hsl(var(--muted)) h s calc(l + var(--opaque-button-border-intensity)) /
+      alpha
+  );
+
+  /* Fallback for older browsers */
+  --accent-border: hsl(var(--accent));
+  --accent-border: hsl(
+    from hsl(var(--accent)) h s
+      calc(l + var(--opaque-button-border-intensity)) / alpha
+  );
+
+  /* Fallback for older browsers */
+  --destructive-border: hsl(var(--destructive));
+  --destructive-border: hsl(
+    from hsl(var(--destructive)) h s
+      calc(l + var(--opaque-button-border-intensity)) / alpha
+  );
+}
+.sdf{font-family:"DM Sans",sans-serif}.mono,.eyebrow{font-family:"JetBrains Mono",monospace}.eyebrow{text-transform:uppercase;letter-spacing:.12em;font-size:.7rem}

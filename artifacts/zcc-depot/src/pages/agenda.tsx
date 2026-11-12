@@ -37,6 +37,8 @@ import { AGENDA_SECTIONS as sections, EMPTY_AGENDA as EMPTY, MORNINGSTAR_AGENDA,
 import { AgendaDocument } from "@/components/agenda-document";
 import { AgendaCardLogo } from "@/components/agenda-card-logo";
 import { HeroArt, SectionGlyph, StateArt } from "@/components/art";
+import { useAgendaCompanyLogo } from "@/hooks/use-agenda-company-logo";
+import { companyLogoKey } from "@/lib/agenda-company-logo";
 
 const TEXT_KEY = "zcc-depot:agenda:v1";
 const LOGO_KEY = "zcc-depot:agenda-logo:v1";
@@ -123,7 +125,7 @@ export default function Agenda() {
   const [fields, setFields] = useState<AgendaFields>({ ...(initialView.id ? EMPTY : MORNINGSTAR_AGENDA) });
   const [loadedId, setLoadedId] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
-  const [uploading, setUploading] = useState(false);
+  const [logoScope, setLogoScope] = useState(0);
   const [errorMessage, setErrorMessage] = useState("");
   const [logoMessage, setLogoMessage] = useState("");
   const [confirmDelete, setConfirmDelete] = useState(false);
@@ -143,6 +145,15 @@ export default function Agenda() {
   const requestUpload = useRequestUploadUrl();
   const authorizeUpload = useAuthorizeUploadedObject();
   const activeAgenda = agendaQuery.data;
+  const companyLogo = useAgendaCompanyLogo({
+    company: fields.company,
+    logoPath: fields.logoPath,
+    scope: String(logoScope),
+    enabled: isAuthenticated && mode !== "library" && !busy && !importing
+      && (!selectedId || loadedId === selectedId) && !agendaQuery.isError,
+    onApply: logoPath => setFields(previous => ({ ...previous, logoPath })),
+  });
+  const uploading = companyLogo.busy;
 
   useEffect(() => {
     if (!selectedId || !activeAgenda || initGuard.current === selectedId) return;
@@ -161,6 +172,8 @@ export default function Agenda() {
   }, [activeAgenda, selectedId]);
 
   function openNew(template = false) {
+    companyLogo.cancel();
+    setLogoScope(value => value + 1);
     setSelectedId(null);
     setCreating(true);
     setLoadedId(null);
@@ -173,6 +186,8 @@ export default function Agenda() {
   }
 
   function openAgenda(id: string) {
+    companyLogo.cancel();
+    setLogoScope(value => value + 1);
     updateLocation(id);
     setSelectedId(id);
     setCreating(false);
@@ -183,29 +198,14 @@ export default function Agenda() {
   }
 
   function updateField<K extends keyof AgendaFields>(key: K, value: AgendaFields[K]) {
-    setFields((previous) => ({ ...previous, [key]: value }));
-  }
-
-  async function uploadLogo(file: File) {
-    setUploading(true);
-    setLogoMessage("");
-    try {
-      const upload = await requestUpload.mutateAsync({
-        data: { name: file.name, size: file.size, contentType: file.type as "image/png" | "image/jpeg" | "image/webp" },
-      });
-      const response = await fetch(upload.uploadURL, {
-        method: "PUT",
-        headers: { "Content-Type": file.type },
-        body: file,
-      });
-      if (!response.ok) throw new Error("The image upload did not complete. Please try again.");
-      const authorized = await authorizeUpload.mutateAsync({ data: { objectPath: upload.objectPath } });
-      updateField("logoPath", authorized.objectPath);
-    } catch (error) {
-      setLogoMessage(error instanceof Error ? error.message : "The logo could not be uploaded.");
-    } finally {
-      setUploading(false);
+    if (key === "company" && companyLogoKey(fields.company) !== companyLogoKey(String(value))) {
+      companyLogo.cancel();
+      setLogoMessage("");
     }
+    setFields(previous => ({
+      ...previous, [key]: value,
+      ...(key === "company" && companyLogoKey(previous.company) !== companyLogoKey(String(value)) ? { logoPath: null } : {}),
+    }));
   }
 
   async function handleLogo(event: ChangeEvent<HTMLInputElement>) {
@@ -220,7 +220,8 @@ export default function Agenda() {
       setLogoMessage("This image is over 8 MB. Choose a smaller image and try again.");
       return;
     }
-    await uploadLogo(file);
+    setLogoMessage("");
+    await companyLogo.upload(file);
   }
 
   function buildInput(): AgendaInput {
@@ -237,6 +238,10 @@ export default function Agenda() {
 
   async function saveAgenda(event?: FormEvent) {
     event?.preventDefault();
+    if (companyLogo.busy) {
+      setErrorMessage("Wait for the company logo lookup or upload to finish, then save the agenda.");
+      return;
+    }
     if (!fields.company.trim()) {
       setErrorMessage("Add a company name before saving this brief.");
       return;
@@ -354,6 +359,8 @@ export default function Agenda() {
   }
 
   function cancelEditor() {
+    companyLogo.cancel();
+    setLogoScope(value => value + 1);
     setMode("library");
     // Clear the selection so reopening the same cached agenda triggers hydration.
     setSelectedId(null);
@@ -450,6 +457,17 @@ export default function Agenda() {
             <AlertCircle className="mt-0.5 h-4 w-4 shrink-0" aria-hidden />
             <span className="flex-1">{errorMessage}</span>
             <button type="button" onClick={() => setErrorMessage("")} className="rounded p-1 hover:bg-[#a95843]/10" aria-label="Dismiss message" data-testid="button-dismiss-agenda-error"><X className="h-4 w-4" /></button>
+          </div>
+        )}
+
+        {companyLogo.message && (
+          <div role={companyLogo.kind === "error" ? "alert" : "status"} aria-live="polite"
+            className={`mb-4 flex flex-wrap items-center gap-3 rounded-xl border px-4 py-3 text-sm ${companyLogo.kind === "error" ? "border-[#a95843]/25 bg-[#f8e9e3] text-[#723e31]" : "border-[#d7dbd0] bg-white text-[#294735]"}`}
+            data-testid="status-agenda-company-logo">
+            {companyLogo.busy && <LoaderCircle className="h-4 w-4 animate-spin" aria-hidden />}
+            <span className="flex-1">{companyLogo.message}</span>
+            {companyLogo.busy && <button type="button" onClick={companyLogo.cancel} className="font-semibold underline" data-testid="button-agenda-cancel-logo">Cancel</button>}
+            {!companyLogo.busy && !fields.logoPath && companyLogo.canRetry && <button type="button" onClick={companyLogo.retry} className="font-semibold underline" data-testid="button-agenda-retry-logo">Retry logo lookup</button>}
           </div>
         )}
 
@@ -583,13 +601,14 @@ export default function Agenda() {
                       ? <img src={protectedLogoUrl(fields.logoPath)} alt={`${fields.company || "Customer"} logo`} className="block h-full w-full min-h-0 min-w-0 object-contain" data-testid="img-agenda-logo" />
                       : <div className="text-center text-[#788579]"><ImagePlus className="mx-auto h-7 w-7" aria-hidden /><p className="mt-2 text-xs">No logo added</p></div>}
                   </div>
-                  <label className={`mt-4 flex min-h-11 cursor-pointer items-center justify-center gap-2 rounded-full bg-[#294b38] px-4 py-3 text-sm font-semibold text-[#f5f5eb] transition hover:bg-[#1d3d2d] ${uploading ? "pointer-events-none opacity-60" : ""}`}>
-                    {uploading ? <LoaderCircle className="h-4 w-4 animate-spin" aria-hidden /> : <Upload className="h-4 w-4" aria-hidden />}
-                    {uploading ? "Uploading…" : fields.logoPath ? "Replace logo" : "Upload a logo"}
-                    <input type="file" accept="image/png,image/jpeg,image/webp" onChange={handleLogo} disabled={uploading} className="sr-only" data-testid="input-agenda-logo" aria-label="Upload customer logo (PNG, JPEG, or WebP)" />
+                  <label className={`mt-4 flex min-h-11 cursor-pointer items-center justify-center gap-2 rounded-full bg-[#294b38] px-4 py-3 text-sm font-semibold text-[#f5f5eb] transition hover:bg-[#1d3d2d] ${companyLogo.manualUploading ? "pointer-events-none opacity-60" : ""}`}>
+                    {companyLogo.manualUploading ? <LoaderCircle className="h-4 w-4 animate-spin" aria-hidden /> : <Upload className="h-4 w-4" aria-hidden />}
+                    {companyLogo.manualUploading ? "Uploading…" : fields.logoPath ? "Replace logo" : "Upload a logo"}
+                    <input type="file" accept="image/png,image/jpeg,image/webp" onChange={handleLogo} disabled={companyLogo.manualUploading} className="sr-only" data-testid="input-agenda-logo" aria-label="Upload customer logo (PNG, JPEG, or WebP)" />
                   </label>
-                  {fields.logoPath && <button type="button" onClick={() => updateField("logoPath", null)} className="mt-2 flex min-h-10 w-full items-center justify-center gap-2 rounded-full px-4 py-2 text-sm font-medium text-[#815346] transition hover:bg-[#a95843]/10" data-testid="button-agenda-remove-logo"><X className="h-4 w-4" aria-hidden /> Remove logo</button>}
-                  <p className="mt-3 text-xs leading-relaxed text-[#6d796e]">PNG, JPEG, or WebP · up to 8 MB. Logo uploads are stored separately from agenda text.</p>
+                  {fields.logoPath && <button type="button" onClick={companyLogo.remove} className="mt-2 flex min-h-10 w-full items-center justify-center gap-2 rounded-full px-4 py-2 text-sm font-medium text-[#815346] transition hover:bg-[#a95843]/10" data-testid="button-agenda-remove-logo"><X className="h-4 w-4" aria-hidden /> Remove logo</button>}
+                  {!fields.logoPath && !companyLogo.busy && companyLogo.canRetry && <button type="button" onClick={companyLogo.retry} className="mt-2 min-h-10 w-full text-sm font-semibold text-[#294735] underline" data-testid="button-agenda-find-logo">Find company logo</button>}
+                  <p className="mt-3 text-xs leading-relaxed text-[#6d796e]">A company logo is added automatically after you enter the company name. You can replace it with a PNG, JPEG, or WebP up to 8 MB. Save the agenda to retain it.</p>
                   {logoMessage && <p role="alert" className="mt-3 rounded-lg bg-[#f8e9e3] p-3 text-xs leading-relaxed text-[#723e31]" data-testid="error-agenda-logo">{logoMessage}</p>}
                 </section>
                 <section className="rounded-[1.4rem] border border-[#d9ddd2] bg-[#fbfbf6] p-4">

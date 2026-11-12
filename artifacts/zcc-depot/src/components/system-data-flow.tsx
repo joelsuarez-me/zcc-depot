@@ -131,17 +131,30 @@ export function SystemDataFlow() {
             <div ref={scrollRef} className="sdf-scroll" tabIndex={0} aria-label="Architecture diagram, scrolls horizontally on small screens">
               <svg className="sdf-svg" viewBox={`0 0 ${VIEW.w} ${VIEW.h}`} role="group" aria-label="Zendesk Contact Center system and data flow diagram">
                 <defs>
+                  <linearGradient id="sdf-g-primary" x1="0" y1="0" x2="0.35" y2="1"><stop offset="0" stopColor="#2E4A33" /><stop offset="1" stopColor="#17281B" /></linearGradient>
+                  <linearGradient id="sdf-g-card" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stopColor="#FFFFFF" /><stop offset="1" stopColor="#F1F6EE" /></linearGradient>
+                  <linearGradient id="sdf-g-lit" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stopColor="#F4FBEA" /><stop offset="1" stopColor="#DDEED8" /></linearGradient>
+                  <linearGradient id="sdf-g-cz" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stopColor="#E3F0E2" /><stop offset="1" stopColor="#EDF5EB" /></linearGradient>
+                  <linearGradient id="sdf-g-cc" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stopColor="#FBFDF8" /><stop offset="1" stopColor="#F2F6EE" /></linearGradient>
+                  <linearGradient id="sdf-g-sheen" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stopColor="#FFFFFF" stopOpacity="0.22" /><stop offset="1" stopColor="#FFFFFF" stopOpacity="0" /></linearGradient>
+                  <filter id="sdf-f-lift" x="-20%" y="-20%" width="140%" height="170%"><feDropShadow dx="0" dy="10" stdDeviation="10" floodColor="#16301C" floodOpacity="0.16" /><feDropShadow dx="0" dy="2" stdDeviation="1.5" floodColor="#16301C" floodOpacity="0.14" /></filter>
+                  <filter id="sdf-f-hero" x="-20%" y="-20%" width="140%" height="180%"><feDropShadow dx="0" dy="18" stdDeviation="16" floodColor="#0E1F12" floodOpacity="0.32" /><feDropShadow dx="0" dy="3" stdDeviation="2" floodColor="#0E1F12" floodOpacity="0.25" /></filter>
+                  <filter id="sdf-f-cloud" x="-5%" y="-5%" width="110%" height="120%"><feDropShadow dx="0" dy="6" stdDeviation="8" floodColor="#203524" floodOpacity="0.08" /></filter>
+                  <radialGradient id="sdf-g-glow"><stop offset="0" stopColor="#D1F470" stopOpacity="0.9" /><stop offset="1" stopColor="#D1F470" stopOpacity="0" /></radialGradient>
+                  <pattern id="sdf-p-grid" width="24" height="24" patternUnits="userSpaceOnUse"><circle cx="1" cy="1" r="1" fill="#203524" opacity="0.09" /></pattern>
                   {(Object.keys(KH) as EdgeKind[]).map((k) => (
-                    <marker key={k} id={`sdf-arrow-${k}`} viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+                    <marker key={k} id={`sdf-arrow-${k}`} viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
                       <path d="M0 1 L9 5 L0 9 z" fill={KH[k]} />
                     </marker>
                   ))}
                 </defs>
+                <rect x="0" y="0" width={VIEW.w} height={VIEW.h} fill="url(#sdf-p-grid)" aria-hidden />
                 {CLOUDS.map((c) => (
-                  <g key={c.id} aria-hidden>
+                  <g key={c.id} aria-hidden filter="url(#sdf-f-cloud)">
                     <rect x={c.x} y={c.y} width={c.w} height={c.h} rx={26} className={c.id === "zendesk" ? "sdf-cloud-z" : "sdf-cloud-c"} />
-                    <text x={c.x + 22} y={c.y + 30} className="sdf-cloud-label">{c.t}</text>
-                    <text x={c.x + 22} y={c.y + 46} className="sdf-cloud-note">{c.note}</text>
+                    <rect x={c.x + 14} y={c.y + 14} width={4} height={36} rx={2} fill={c.id === "zendesk" ? "#203524" : "#8BAA43"} />
+                    <text x={c.x + 28} y={c.y + 30} className="sdf-cloud-label">{c.t}</text>
+                    <text x={c.x + 28} y={c.y + 46} className="sdf-cloud-note">{c.note}</text>
                   </g>
                 ))}
                 <g aria-hidden>
@@ -151,6 +164,7 @@ export function SystemDataFlow() {
                     const dim = !on && !rel && (node !== null || flow !== null);
                     return (
                       <g key={e.id}>
+                        <path d={e.d} className={`sdf-edge-case ${dim ? "dim" : ""}`} />
                         <path ref={(el) => { pathRefs.current[e.id] = el; }} d={e.d} stroke={KC[e.kind]} markerEnd={`url(#sdf-arrow-${e.kind})`}
                           className={`sdf-edge-base ${e.optional ? "opt" : ""} ${on || rel ? "lit" : ""} ${dim ? "dim" : ""}`} />
                         <path d={e.d} stroke={KC[e.kind]} className={`sdf-edge-run ${on && !reduced ? "on" : ""}`} />
@@ -168,7 +182,9 @@ export function SystemDataFlow() {
                       aria-pressed={sel} aria-label={`${n.t}, ${n.sub}. ${n.cloud === "zendesk" ? "Zendesk AWS Cloud" : "Customer AWS Cloud"}`}
                       onClick={() => pickNode(n.id)} onKeyDown={onKey(n.id)} data-testid={`button-node-${n.id}`}>
                       <rect className="ring" x={n.x - 5} y={n.y - 5} width={n.w + 10} height={n.h + 10} rx={20} />
+                      <rect className="slab" x={n.x} y={n.y + (n.tier === "primary" ? 7 : 4)} width={n.w} height={n.h} rx={n.tier === "primary" ? 18 : 12} filter={`url(#${n.tier === "primary" ? "sdf-f-hero" : "sdf-f-lift"})`} />
                       <rect className="card" x={n.x} y={n.y} width={n.w} height={n.h} rx={n.tier === "primary" ? 18 : 12} />
+                      <rect className="sheen" x={n.x + 1} y={n.y + 1} width={n.w - 2} height={n.h / 2} rx={n.tier === "primary" ? 17 : 11} fill="url(#sdf-g-sheen)" pointerEvents="none" />
                       {(() => {
                         const Icon = ICONS[n.id];
                         const prim = n.tier === "primary";
@@ -199,9 +215,9 @@ export function SystemDataFlow() {
                 <g aria-hidden style={{ pointerEvents: "none" }}>
                   {SYS_EDGES.map((e) => (
                     <g key={e.id} ref={(el) => { pktRefs.current[e.id] = el; }} style={{ opacity: 0 }}>
-                      <circle r={2.5} fill={KH[e.kind]} opacity={0.35} />
-                      <circle r={3.5} fill={KH[e.kind]} opacity={0.6} />
-                      <path d="M-6 -5 L6 0 L-6 5 z" fill={KH[e.kind]} stroke="#FFFFFF" strokeWidth={1} />
+                      <circle r={4} fill={KH[e.kind]} opacity={0.3} />
+                      <circle r={5} fill={KH[e.kind]} opacity={0.55} />
+                      <g><circle r={13} fill="url(#sdf-g-glow)" /><path d="M-7 -6 L8 0 L-7 6 L-4 0 z" fill={KH[e.kind]} stroke="#FFFFFF" strokeWidth={1.5} strokeLinejoin="round" /></g>
                     </g>
                   ))}
                 </g>

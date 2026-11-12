@@ -1,0 +1,6 @@
+export const CORE_COMPONENTS = [
+  { n: "01", t: "Amazon Connect", d: "The telephony and contact-routing foundation. Each customer supplies a Connect instance in their AWS account; one Contact Center environment links to one Connect instance.", chips: ["Voice", "Chat", "Queues", "Contact flows"] },
+  { n: "02", t: "Contact Center app", d: "A Zendesk-built web app that works with Connect. Agents use it for calls and messages, omnichannel workflows, AI-powered tools, and dashboards.", chips: ["Agent interface", "Omnichannel", "AI tools"] },
+  { n: "03", t: "Identity and sign-in", d: "Amazon Cognito holds Contact Center user accounts for agents, supervisors, and admins. Zendesk acts as a SAML 2.0 identity provider for sign-in to Connect, Cognito, and the AWS console after users authenticate through their corporate identity provider.", chips: ["Cognito user pool", "SAML 2.0 SSO", "Corporate MFA policies"] },
+  { n: "04", t: "CloudFormation", d: "Automates deployment of the AWS resources and permissions that connect the app and Connect, including Cognito, IAM roles, Lambda functions, and streaming connections.", chips: ["Automated setup", "AWS permissions", "Stack lifecycle"] },
+];

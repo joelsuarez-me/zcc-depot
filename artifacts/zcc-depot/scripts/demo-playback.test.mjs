@@ -63,8 +63,8 @@ test("negative elapsed time is clamped and invalid timelines fail explicitly", (
   }
 });
 
-test("both real nugget timelines reach each stage in order and replay cleanly", () => {
-  assert.deepEqual(DEMO_NUGGETS.map(demo => demo.id), ["voice-copilot", "voice-ai-agents"]);
+test("the library orders Copilot, QA and AI Agents and every timeline replays cleanly", () => {
+  assert.deepEqual(DEMO_NUGGETS.map(demo => demo.id), ["voice-copilot", "voice-qa", "voice-ai-agents"]);
   for (const demo of DEMO_NUGGETS) {
     assert.equal(new Set(demo.stages.map(stage => stage.id)).size, demo.stages.length);
     demo.stages.forEach((stage, index) => {

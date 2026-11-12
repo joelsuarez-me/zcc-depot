@@ -14,8 +14,8 @@ export default function Home() {
   const f = FEATURES[feat];
   return (
     <>
-      <div className="zhero-wrap">
-      <section className="zhero on-dark">
+      <div className="zhero-wrap landing-overview-wrap">
+      <section id="overview" data-section-nav aria-label="Overview" className="zhero on-dark landing-overview">
         <div className="grid-lines absolute inset-0" aria-hidden />
         <div className="relative w-full px-6 pb-3 pt-4 md:px-12">
           <motion.div className="landing-hero-grid" initial={reduce ? false : { opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8, ease: [0.2, 0.7, 0.2, 1] }}>

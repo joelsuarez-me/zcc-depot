@@ -1,0 +1,11 @@
+.vq-bars{display:flex;align-items:center;gap:2px;height:26px;overflow:hidden}
+.vq-bars i{flex:0 0 2px;height:100%;border-radius:2px;background:#11110D;transform-origin:center;transition:opacity .4s ease}
+.vq-bars.is-live i{animation:vq-bar .7s ease-in-out infinite alternate}
+@keyframes vq-bar{from{transform:scaleY(var(--lo))}to{transform:scaleY(var(--hi))}}
+.vq-sweep{position:absolute;inset:0;background:linear-gradient(90deg,transparent,rgba(209,244,112,.55),transparent);transform:translateX(-100%);animation:vq-sweep 1.6s cubic-bezier(.4,0,.2,1) infinite}
+@keyframes vq-sweep{to{transform:translateX(100%)}}
+.vq-fill{transform-origin:left;transition:transform .35s linear}
+.vq-row{transition:opacity .45s ease,transform .45s cubic-bezier(.2,.7,.2,1),background-color .45s ease,border-color .45s ease}
+.dn-paused .vq-bars i,.dn-paused .vq-sweep{animation-play-state:paused}
+.dn-idle .vq-sweep{display:none}
+@media (prefers-reduced-motion:reduce){.vq-bars i,.vq-sweep{animation:none!important}.vq-sweep{display:none}.vq-row,.vq-fill{transition:none!important}}

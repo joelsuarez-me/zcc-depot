@@ -9,6 +9,7 @@ import { Shell } from '@/components/kit';
 import Home from '@/pages/home';
 import Demos from '@/pages/demos';
 import Architecture from '@/pages/architecture';
+import ArchitectureComponents from '@/pages/architecture-components';
 import Sales from '@/pages/sales';
 import Resources from '@/pages/resources';
 import Agenda from '@/pages/agenda';
@@ -31,6 +32,7 @@ function Router() {
           <Route path="/demos/brief" component={DemoBrief} />
           <Route path="/demos/nuggets" component={DemoNuggets} />
           <Route path="/architecture" component={Architecture} />
+          <Route path="/architecture/components" component={ArchitectureComponents} />
           <Route path="/sales" component={Sales} />
           <Route path="/pricing" component={Pricing} />
           <Route path="/sell-sheet" component={SellSheet} />

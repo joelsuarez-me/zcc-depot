@@ -8,6 +8,7 @@ import { HeroArt, RouteBadge, SectionGlyph, type Motif } from "@/components/art"
 import { SearchTrigger } from "@/components/global-search";
 import { MobileNavigationLinks, PrimaryNavigation } from "@/components/header-navigation";
 import { SectionNavigation } from "@/components/section-navigation";
+import { SectionLink } from "@/components/section-link";
 
 const logo = `${import.meta.env.BASE_URL}brand/zendesk-monochrome-padded.png`;
 
@@ -51,7 +52,7 @@ export function SectionHead({ id, eyebrow, title, lede, dark = false }: { id?: s
     <Reveal className="mb-10 grid gap-6 md:grid-cols-12 md:items-end">
       <div className="md:col-span-7" id={id} data-section-nav>
         <div className={`eyebrow mb-4 flex items-center gap-3 ${dark ? "text-[#D1F470]" : "text-[#203524]"}`}>
-          {eyebrow}<SectionGlyph label={eyebrow} dark={dark} />
+          {eyebrow}<SectionGlyph label={eyebrow} dark={dark} />{id && <SectionLink id={id} label={eyebrow} dark={dark} />}
         </div>
         <h2 className={`text-[2rem] leading-[1.05] font-semibold tracking-tight md:text-5xl ${dark ? "text-[#F5F5F2]" : "text-[#11110D]"}`}>{title}</h2>
       </div>
@@ -100,13 +101,29 @@ export function Note({ children }: { children: ReactNode }) {
 function useHashScroll() {
   const [loc] = useLocation();
   useEffect(() => {
-    const hash = window.location.hash.slice(1);
-    if (hash) {
-      const t = setTimeout(() => document.getElementById(hash)?.scrollIntoView({ behavior: "instant", block: "start" }), 80);
-      return () => clearTimeout(t);
-    }
-    window.scrollTo({ top: 0 });
-    return undefined;
+    let observer: MutationObserver | undefined;
+    let timer: ReturnType<typeof setTimeout>;
+    const jump = () => {
+      observer?.disconnect();
+      clearTimeout(timer);
+      const raw = window.location.hash.slice(1);
+      if (!raw) { window.scrollTo({ top: 0 }); return; }
+      let hash = raw;
+      try { hash = decodeURIComponent(raw); } catch { /* A malformed fragment simply has no matching target. */ }
+      const scroll = () => {
+        const target = document.getElementById(hash);
+        if (!target) return;
+        target.scrollIntoView({ behavior: "instant", block: "start" });
+        observer?.disconnect();
+      };
+      observer = new MutationObserver(scroll);
+      const main = document.getElementById("main");
+      if (main) observer.observe(main, { childList: true, subtree: true, attributes: true, attributeFilter: ["id"] });
+      timer = setTimeout(scroll, 80);
+    };
+    jump();
+    window.addEventListener("hashchange", jump);
+    return () => { clearTimeout(timer); observer?.disconnect(); window.removeEventListener("hashchange", jump); };
   }, [loc]);
 }
 

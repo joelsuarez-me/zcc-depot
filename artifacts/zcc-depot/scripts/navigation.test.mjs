@@ -6,7 +6,8 @@ import { NAV, isNavItemActive } from "../src/data/navigation.ts";
 test("main menu keeps Resources as its final destination", () => {
   assert.deepEqual(NAV.map(n => n.label), ["Overview", "Architecture", "Sales", "Demos", "Resources"]);
   assert.equal(NAV.at(-1).href, "/resources");
-  assert.equal(NAV[0].children[1].href, "/#how-it-works");
+  assert.equal(NAV[0].children[0].href, "/#overview");
+  assert.equal(NAV[0].children[2].href, "/#how-it-works");
 });
 
 test("Sales and Demos contain the exact requested destinations and sequence", () => {
@@ -27,7 +28,7 @@ test("Architecture contains only the two requested submenu destinations", () => 
   assert.equal(NAV[1].href, "/architecture#data-flow");
   assert.deepEqual(NAV[1].children.map(item => [item.label, item.href]), [
     ["System + data flow", "/architecture#data-flow"],
-    ["Components", "/architecture#components"],
+    ["Components", "/architecture/components"],
   ]);
 });
 
@@ -45,6 +46,8 @@ test("Resources owns the moved sections without changing the existing library", 
     ["Agent knowledge", "/resources#ai-suggestions"],
     ["Latest news · per internal briefing", "/resources#collaboration"],
     ["Pitch Deck", "/resources#pitch-deck"],
+    ["FAQ", "/resources#faq"],
+    ["Roadmap · confidential", "/resources#roadmap"],
   ]);
   const resources = readFileSync(new URL("../src/pages/resources.tsx", import.meta.url), "utf8");
   assert.match(resources, /<AgentKnowledgeSection \/>\s*<LatestNewsSection \/>\s*<PitchDeckSection \/>/);
@@ -70,5 +73,6 @@ test("nested routes highlight their new parent without activating Overview twice
   for (const path of ["/agenda", "/demos/brief", "/demos/instance-details", "/demos/nuggets"]) assert.equal(isNavItemActive(NAV[3], path), true);
   assert.equal(isNavItemActive(NAV[0], "/architecture"), false);
   assert.equal(isNavItemActive(NAV[1], "/architecture"), true);
+  assert.equal(isNavItemActive(NAV[1], "/architecture/components"), true);
   assert.equal(isNavItemActive(NAV[2], "/salesman"), false);
 });

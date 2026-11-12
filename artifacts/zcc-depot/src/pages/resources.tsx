@@ -3,6 +3,8 @@ import { Search, Bookmark, BookmarkCheck, ArrowUpRight, X } from "lucide-react";
 import { Ext, Note, PageHero, Section, SectionHead } from "@/components/kit";
 import { PitchDeckSection } from "@/components/pitch-deck-section";
 import { AgentKnowledgeSection, LatestNewsSection } from "@/components/resource-briefings";
+import { ResourceFaq } from "@/components/resource-faq";
+import { ResourceRoadmap } from "@/components/resource-roadmap";
 import { LINKS, RESOURCES, RESOURCE_CATEGORIES } from "@/data/content";
 
 const KEY = "zcc-depot:bookmarks";
@@ -90,28 +92,6 @@ export default function Resources() {
         </div>
       </Section>
 
-      <Section tone="forest">
-        <SectionHead id="dashboards" num="02" eyebrow="Dashboards" dark title="Metrics for agents, teams, queues, and contacts" lede="The dashboards app provides real-time and historical Contact Center metrics from within Zendesk. The guide says the app is included with Contact Center and installed from the Zendesk Marketplace." />
-        <div className="grid gap-4 md:grid-cols-2">
-          <div className="rounded-3xl bg-[#D1F470] p-7 text-[#11110D]"><div className="eyebrow">Realtime snapshot</div><h3 className="mt-3 text-2xl font-semibold">See current queue and agent activity</h3><p className="mt-2 text-[#11110D]/75">Near-real-time queue metrics, agent capacity, and agent status. Filter by channel and queue, and customize the queue summary table by adding or removing metrics.</p></div>
-          <div className="rounded-3xl border border-[#F5F5F2]/15 p-7"><div className="eyebrow text-[#D1F470]">Recent performance</div><h3 className="mt-3 text-2xl font-semibold">Review the previous 24 hours</h3><p className="mt-2 text-[#F5F5F2]/70">Filter by time range, channel, or queue. Metrics include queued and handled contacts, average handle time, occupancy, abandonment, transfers, callbacks, and service level.</p></div>
-        </div>
-        <div className="mt-6 flex flex-wrap gap-2">
-          <span className="eyebrow mr-2 self-center text-[#F5F5F2]/50">Four dashboard tabs</span>
-          {["Realtime snapshot", "Recent performance", "Resolution codes", "Contact performance"].map((t) => <span key={t} className="rounded-full border border-[#F5F5F2]/20 px-4 py-1.5 text-sm">{t}</span>)}
-        </div>
-        <ol className="mt-10 grid gap-4 md:grid-cols-3">
-          {[["Install", "Install from the Marketplace", "Select your Zendesk subdomain and install the app."], ["Configure", "Set workspace and region", "Use the same Contact Center workspace name and region. Optionally restrict access by role or group."], ["Access", "Open a dashboard", "In Contact Center, select the dashboards icon, sign in if prompted, and choose a dashboard tab."]].map(([e, t, d], k) => (
-            <li key={e} className="rounded-3xl border border-[#F5F5F2]/12 p-6"><div className="mono text-xs text-[#D1F470]">0{k + 1} · {e}</div><div className="mt-3 font-semibold">{t}</div><p className="mt-1 text-sm text-[#F5F5F2]/65">{d}</p></li>
-          ))}
-        </ol>
-        <div className="mt-8 flex flex-wrap gap-3 text-sm font-semibold">
-          <Ext href={LINKS.marketplace} className="rounded-full bg-[#D1F470] px-5 py-3 text-[#11110D]" testId="link-marketplace">View the Marketplace app</Ext>
-          <Ext href={LINKS.install} className="rounded-full border border-[#F5F5F2]/25 px-5 py-3 hover:border-[#D1F470]" testId="link-install-guide">Open installation guide</Ext>
-          <Ext href={LINKS.dashboardsGuide} className="rounded-full border border-[#F5F5F2]/25 px-5 py-3 hover:border-[#D1F470]" testId="link-dashboard-guide">Open dashboard guide</Ext>
-        </div>
-      </Section>
-
       <Section tone="white">
         <div className="grid gap-4 md:grid-cols-2">
           <a href={LINKS.gettingStarted} target="_blank" rel="noopener noreferrer" className="group rounded-[2rem] bg-[#203524] p-8 text-[#F5F5F2] transition hover:-translate-y-1" data-testid="card-getting-started">
@@ -129,6 +109,8 @@ export default function Resources() {
       <AgentKnowledgeSection />
       <LatestNewsSection />
       <PitchDeckSection />
+      <ResourceFaq />
+      <ResourceRoadmap />
     </>
   );
 }

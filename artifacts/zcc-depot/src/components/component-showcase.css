@@ -1,0 +1,107 @@
+.cs-grid{display:grid;gap:1.25rem}
+@media(min-width:768px){.cs-grid{grid-template-columns:1fr 1fr}}
+.cs-card{--lime:#D1F470;--forest:#203524;--ink:#11110D;--paper:#F5F5F2;scroll-margin-top:6rem;border-radius:1.75rem;overflow:hidden;background:#FBFBF8;border:1px solid rgba(32,53,36,.14);box-shadow:0 1px 0 rgba(255,255,255,.9) inset,0 24px 48px -28px rgba(16,32,20,.45),0 6px 14px -8px rgba(16,32,20,.2);transition:transform .4s cubic-bezier(.2,.8,.2,1),box-shadow .4s;display:flex;flex-direction:column;color:var(--ink)}
+.cs-card:hover{transform:translateY(-4px);box-shadow:0 1px 0 rgba(255,255,255,.9) inset,0 34px 60px -28px rgba(16,32,20,.55),0 8px 18px -8px rgba(16,32,20,.25)}
+.cs-card:target{outline:3px solid var(--lime);outline-offset:3px}
+.cs-stage{position:relative;padding:1rem 1.1rem 1rem;color:var(--paper);background:radial-gradient(120% 90% at 85% 0%,#2F5135 0%,#1B2E1F 55%,#13221A 100%)}
+.cs-stage::after{content:"";position:absolute;inset:0;pointer-events:none;background-image:radial-gradient(rgba(209,244,112,.09) 1px,transparent 1px);background-size:18px 18px;mask-image:linear-gradient(180deg,#000,transparent)}
+.cs-identity .cs-stage{background:radial-gradient(120% 90% at 15% 0%,#2C4A3E 0%,#18291F 60%,#12201A 100%)}
+.cs-cfn .cs-stage{background:radial-gradient(120% 90% at 50% 100%,#2B4A31 0%,#192C1E 60%,#11201A 100%)}
+.cs-stage>*{position:relative;z-index:1}
+.cs-stage-head{display:flex;justify-content:space-between;align-items:center}
+.cs-tag{font:500 10px "JetBrains Mono",monospace;letter-spacing:.16em;text-transform:uppercase;color:rgba(245,245,242,.72)}
+.cs-pp{display:inline-flex;align-items:center;gap:.35rem;height:1.9rem;padding:0 .7rem;border-radius:999px;border:1px solid rgba(245,245,242,.25);font-size:.75rem;color:var(--paper);background:rgba(245,245,242,.06)}
+.cs-pp:hover:not(:disabled){border-color:var(--lime);color:var(--lime)}
+.cs-pp:disabled{opacity:.7;cursor:default}
+.cs-svg{display:block;width:100%;height:auto;margin:.5rem 0 .25rem;font-family:"DM Sans",sans-serif}
+.cs-svg text{fill:#F5F5F2;font-size:11px;font-weight:600}
+.cs-wire{fill:none;stroke:rgba(245,245,242,.28);stroke-width:2;stroke-dasharray:4 5;transition:stroke .4s}
+.cs-wire.hot{stroke:var(--lime);stroke-dasharray:none}
+.run .cs-wire.hot{stroke-dasharray:6 6;animation:cs-dash .9s linear infinite}
+@keyframes cs-dash{to{stroke-dashoffset:-24}}
+.cs-glyph{fill:none;stroke:var(--lime);stroke-width:2;stroke-linejoin:round}
+.cs-glyph-fill{fill:var(--forest)}
+/* Connect */
+.cs-c-src rect,.cs-c-q rect{fill:rgba(245,245,242,.08);stroke:rgba(245,245,242,.3);transition:fill .4s,stroke .4s}
+.cs-c-src.on rect,.cs-c-q.on rect{fill:rgba(209,244,112,.16);stroke:var(--lime)}
+.cs-c-flow path{fill:#2B4A31;stroke:rgba(245,245,242,.4);transition:fill .4s}
+.cs-c-flow.on path{fill:var(--lime);stroke:var(--lime)}
+.cs-c-flow.on text{fill:var(--ink)}
+.cs-c-q circle{fill:rgba(245,245,242,.5)}
+.cs-c-q.on circle{fill:var(--lime)}
+.cs-c-agent circle:first-child{fill:rgba(245,245,242,.15);transition:fill .4s}
+.cs-c-agent.on circle:first-child{fill:var(--lime)}
+.cs-pulse{fill:var(--lime);offset-distance:0%;animation:cs-move 5.6s cubic-bezier(.5,0,.5,1) infinite}
+@keyframes cs-move{to{offset-distance:100%}}
+/* App */
+.cs-app{margin:.6rem 0 .3rem;border-radius:14px;background:#F5F5F2;color:var(--ink);overflow:hidden;box-shadow:0 18px 30px -16px rgba(0,0,0,.6);transform:perspective(900px) rotateX(6deg);transform-origin:bottom}
+.cs-app-bar{display:flex;align-items:center;gap:5px;padding:7px 10px;background:#E4EBE1;font:500 10px "JetBrains Mono",monospace;color:#3F5446}
+.cs-app-bar i{width:7px;height:7px;border-radius:9px;background:#B7C6B6}
+.cs-app-bar span{margin-left:6px}
+.cs-app-body{display:flex;height:128px}
+.cs-app-side{width:30px;background:var(--forest);display:flex;flex-direction:column;gap:8px;padding:10px 8px}
+.cs-app-side span{height:14px;border-radius:4px;background:rgba(245,245,242,.2)}
+.cs-app-side span.on{background:var(--lime)}
+.cs-app-main{flex:1;padding:12px;animation:cs-in .45s ease both}
+.cs-app-main>div{animation:cs-in .45s ease both}
+@keyframes cs-in{from{opacity:0;transform:translateY(6px)}}
+.cs-wave{display:flex;align-items:center;gap:3px;height:40px}
+.cs-wave span{flex:1;height:30%;border-radius:2px;background:#2D683C}
+.run .cs-wave span{animation:cs-wave 1s ease-in-out infinite alternate}
+@keyframes cs-wave{to{transform:scaleY(2.6)}}
+.cs-app-row{display:flex;gap:6px;margin-top:10px;font-size:11px}
+.cs-app-row b{background:var(--forest);color:var(--paper);border-radius:99px;padding:2px 9px;font-weight:600}
+.cs-app-row em{font-style:normal;border:1px solid rgba(32,53,36,.25);border-radius:99px;padding:2px 9px}
+.cs-app-ai{margin-top:10px;font:500 10px "JetBrains Mono",monospace;background:var(--lime);display:inline-block;padding:3px 8px;border-radius:6px}
+.cs-app-msg{display:flex;flex-direction:column;gap:7px;font-size:11px}
+.cs-app-msg span{max-width:70%;padding:5px 10px;border-radius:12px}
+.cs-app-msg .in{background:#E1EADF;align-self:flex-start}
+.cs-app-msg .out{background:var(--forest);color:var(--paper);align-self:flex-end}
+.cs-app-dash{display:flex;align-items:flex-end;gap:8px;height:100%}
+.cs-app-dash span{flex:1;border-radius:6px 6px 2px 2px;background:linear-gradient(180deg,#D1F470,#2D683C);transform-origin:bottom;animation:cs-grow .6s cubic-bezier(.2,.8,.2,1) both}
+@keyframes cs-grow{from{transform:scaleY(0)}}
+/* Identity */
+.cs-i-node rect{fill:rgba(245,245,242,.08);stroke:rgba(245,245,242,.3);transition:fill .4s,stroke .4s}
+.cs-i-node.on rect{fill:rgba(209,244,112,.14);stroke:var(--lime)}
+.cs-i-node.t text{opacity:.6;transition:opacity .4s}
+.cs-i-node.t.on text{opacity:1}
+.cs-i-shield path:first-child{fill:#2B4A31;stroke:rgba(245,245,242,.4);stroke-width:1.5;transition:fill .4s}
+.cs-i-shield.on path:first-child{fill:#36573D;stroke:var(--lime)}
+.cs-check{fill:none;stroke:var(--lime);stroke-width:3.5;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:40;stroke-dashoffset:40;transition:stroke-dashoffset .6s}
+.cs-i-shield.on .cs-check{stroke-dashoffset:0}
+.cs-i-shield text{fill:var(--lime)!important;font:500 10px "JetBrains Mono",monospace!important;letter-spacing:.1em}
+.cs-i-ring{fill:none;stroke:var(--lime);stroke-width:1.5;opacity:0;transform-origin:175px 86px;transform:scale(.7);transition:opacity .5s,transform .8s}
+.cs-i-ring.on{opacity:.5;transform:scale(1)}
+/* CloudFormation */
+.cs-f-doc>rect{fill:#F5F5F2}
+.cs-f-doc text{fill:var(--forest)!important;font:500 10px "JetBrains Mono",monospace!important}
+.cs-f-doc rect rect,.cs-f-doc rect+rect{fill:#C7D3C5;transition:fill .4s}
+.cs-f-doc rect.on{fill:#2D683C}
+.cs-f-layer{opacity:.18;transform:translateY(-14px);transition:opacity .5s var(--d),transform .6s cubic-bezier(.2,.8,.2,1) var(--d)}
+.cs-f-layer.on{opacity:1;transform:none}
+.cs-f-layer .top{fill:#3A6342;stroke:var(--lime);stroke-width:1}
+.cs-f-layer:last-of-type .top{fill:#4C7A3C}
+.cs-f-layer .l{fill:#1E3424}.cs-f-layer .r{fill:#284530}
+.cs-f-layer text{font-size:10px!important}
+/* tools */
+.cs-tools{display:flex;flex-wrap:wrap;gap:.5rem;align-items:center;justify-content:space-between}
+.cs-seg{display:inline-flex;padding:3px;border-radius:999px;background:rgba(245,245,242,.08);border:1px solid rgba(245,245,242,.16)}
+.cs-seg button{padding:.3rem .8rem;border-radius:999px;font-size:.78rem;color:rgba(245,245,242,.85)}
+.cs-seg button[aria-pressed=true],.cs-seg button[aria-selected=true]{background:var(--lime);color:var(--ink)}
+.cs-btn{padding:.35rem .85rem;border-radius:999px;border:1px solid rgba(245,245,242,.25);font-size:.78rem;color:var(--paper)}
+.cs-btn:hover{border-color:var(--lime);color:var(--lime)}
+.cs-dots{display:flex;gap:6px}
+.cs-dots button{width:26px;height:8px;border-radius:9px;background:rgba(245,245,242,.25);transition:background .3s}
+.cs-dots button[aria-pressed=true]{background:var(--lime)}
+.cs-range{display:flex;align-items:center;gap:.6rem;font:500 10px "JetBrains Mono",monospace;letter-spacing:.1em;text-transform:uppercase;color:rgba(245,245,242,.75);width:100%}
+.cs-range input{flex:1;accent-color:#D1F470}
+.cs-caption{margin-top:.55rem;min-height:1.2em;font:500 11px "JetBrains Mono",monospace;color:var(--lime)}
+.cs-body{padding:1.4rem 1.6rem 1.6rem;display:flex;flex-direction:column;flex:1}
+.cs-title{font-size:1.35rem;font-weight:600;letter-spacing:-.015em;color:var(--forest)}
+.cs-desc{margin-top:.5rem;line-height:1.6;color:rgba(17,17,13,.74);flex:1}
+.cs-chips{margin-top:1rem;display:flex;flex-wrap:wrap;gap:.45rem}
+.cs-chip{display:inline-flex;align-items:center;gap:.3rem;border-radius:999px;padding:.3rem .75rem;font-size:.75rem;font-weight:500;background:rgba(32,53,36,.08);color:var(--forest);border:1px solid transparent;transition:background .2s,border-color .2s}
+.cs-chip:hover{background:var(--lime);border-color:var(--forest)}
+.cs-card :focus-visible{outline:2px solid #8BAA43;outline-offset:2px}
+.still .cs-wave span,.still .cs-wire.hot{animation:none}
+@media(prefers-reduced-motion:reduce){.cs-card,.cs-card *{animation:none!important;transition:none!important}.cs-card:hover{transform:none}.cs-app{transform:none}}

@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
-import { useLocation } from "wouter";
-import { RefreshCw } from "lucide-react";
+import { Link, useLocation } from "wouter";
+import { ArrowRight, RefreshCw } from "lucide-react";
 import { Ext, Note, PageHero, Reveal, Section, SectionHead } from "@/components/kit";
 import { CORE_COMPONENTS, LAMBDAS, LINKS } from "@/data/content";
 import { SystemDataFlow } from "@/components/system-data-flow";
@@ -58,9 +58,8 @@ export default function Architecture() {
     <>
       <PageHero eyebrow="Architecture · Interactive explanations" title={<>Two clouds. <span className="serif italic text-[#D1F470]">Connected service paths.</span></>}
         lede="Amazon Connect handles the call and routing. Zendesk Contact Center brings call controls and customer context into the agent workspace. Here is how to explain everything in between.">
-        {[["#data-flow", "System + data flow"], ["#components", "Components"]].map(([h, l]) => (
-          <a key={h} href={h} className="rounded-full border border-[#F5F5F2]/20 px-4 py-2 text-sm hover:border-[#D1F470] hover:text-[#D1F470]" data-testid={`link-jump-${h.slice(1)}`}>{l}</a>
-        ))}
+        <a href="#data-flow" className="rounded-full border border-[#F5F5F2]/20 px-4 py-2 text-sm hover:border-[#D1F470] hover:text-[#D1F470]" data-testid="link-jump-data-flow">System + data flow</a>
+        <Link href="/architecture/components" className="rounded-full border border-[#F5F5F2]/20 px-4 py-2 text-sm hover:border-[#D1F470] hover:text-[#D1F470]" data-testid="link-jump-components">Components</Link>
       </PageHero>
 
       <Section tone="forest">
@@ -71,6 +70,9 @@ export default function Architecture() {
 
       <Section>
         <SectionHead id="components" eyebrow="Components" title="How the pieces fit together" lede="Each Contact Center environment connects to one Amazon Connect instance and uses supporting services deployed in the customer's AWS account." />
+        <Link href="/architecture/components" className="mb-8 inline-flex items-center gap-2 rounded-full bg-[#203524] px-5 py-3 text-sm font-semibold text-[#D1F470] transition hover:bg-[#304c34]" data-testid="link-components-guide">
+          Explore the interactive components guide <ArrowRight className="h-4 w-4" aria-hidden />
+        </Link>
         <div className="mb-8 grid items-stretch gap-3 md:grid-cols-[1fr_auto_1fr_auto_1fr]">
           {[["Agent experience", "Zendesk Contact Center app", "Omnichannel inbox, AI tools, dashboards, and agent workflows"], ["Voice + routing", "Amazon Connect", "Calls, chats, queues, contact flows, and routing"], ["Integration layer", "AWS services", "CloudFormation, Lambda, Cognito, and event or streaming connections"]].map(([e, t, d], k) => (
             <div key={t} className="contents">

@@ -4,6 +4,7 @@ export type NavItem = { href: string; label: string; children?: SubNavItem[] };
 export const NAV: NavItem[] = [
   {
     href: "/", label: "Overview", children: [
+      { label: "Overview", href: "/#overview" },
       { label: "One solution", href: "/#platform" },
       { label: "How it works", href: "/#how-it-works" },
       { label: "Features", href: "/#features" },
@@ -12,7 +13,7 @@ export const NAV: NavItem[] = [
   {
     href: "/architecture#data-flow", label: "Architecture", children: [
       { label: "System + data flow", href: "/architecture#data-flow" },
-      { label: "Components", href: "/architecture#components" },
+      { label: "Components", href: "/architecture/components" },
     ],
   },
   {
@@ -36,6 +37,8 @@ export const NAV: NavItem[] = [
     { label: "Agent knowledge", href: "/resources#ai-suggestions" },
     { label: "Latest news · per internal briefing", href: "/resources#collaboration" },
     { label: "Pitch Deck", href: "/resources#pitch-deck" },
+    { label: "FAQ", href: "/resources#faq" },
+    { label: "Roadmap · confidential", href: "/resources#roadmap" },
   ] },
 ];
 

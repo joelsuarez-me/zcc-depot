@@ -1,5 +1,6 @@
 import { motion, useReducedMotion } from "framer-motion";
 import type { AgendaFields } from "@/data/agenda-template";
+import { SectionLink } from "@/components/section-link";
 
 const MARKER = /^\s*(?:\d+[.)]|[-*•–])\s+/;
 
@@ -31,10 +32,12 @@ function Paragraphs({ text, testId }: { text: string; testId: string }) {
   );
 }
 
-function Section({ index, title, children, delay }: { index: number; title: string; children: React.ReactNode; delay: number }) {
+function Section({ title, children, delay }: { index: number; title: string; children: React.ReactNode; delay: number }) {
   const reduced = useReducedMotion();
+  const id = `agenda-${title.toLowerCase().replace(/['’]/g, "").replace(/[^a-z0-9]+/g, "-")}`;
   return (
     <motion.section
+      id={id}
       data-section-nav
       initial={reduced ? false : { opacity: 0, y: 14 }}
       animate={{ opacity: 1, y: 0 }}
@@ -42,8 +45,7 @@ function Section({ index, title, children, delay }: { index: number; title: stri
       className="grid gap-3 border-t border-[#dfe2d8] py-7 md:grid-cols-[12rem_minmax(0,1fr)] md:gap-10 md:py-9"
     >
       <h3 className="flex items-baseline gap-3 text-[#244b39]">
-        <span className="mono text-xs text-[#7d8a7f]">{String(index).padStart(2, "0")}</span>
-        <span className="text-lg font-semibold tracking-tight">{title}</span>
+        <span className="text-lg font-semibold tracking-tight">{title}</span><SectionLink id={id} label={title} />
       </h3>
       <div className="min-w-0">{children}</div>
     </motion.section>
