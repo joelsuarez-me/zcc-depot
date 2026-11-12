@@ -1,4 +1,4 @@
-# Zendesk Demo Brief Generator
+# Demo Researcher
 
 This feature builds a company-specific research **prompt**, locally in the
 website. It does not automatically browse the web, call an AI provider, or
@@ -6,7 +6,7 @@ produce researched company facts.
 
 ## Use it
 
-1. Open **Demos → Demo Brief Generator** (or search for “brief”).
+1. Open **Demos → 04 Demo Researcher** (or search for “researcher”).
 2. Enter the company name, public website, region/market, and demo audience.
 3. Choose **Build prompt**, then copy the entire generated prompt.
 4. Paste the prompt into Replit Agent and request the public web research.
@@ -16,7 +16,9 @@ produce researched company facts.
 
 The prompt asks for all eight requested sections, current research dates,
 numbered clickable references, official Zendesk capability sources, and explicit
-separation of verified facts, uncertain clues, and recommendations.
+separation of verified facts, uncertain clues, and recommendations. The company
+context section requests an official company logo with a cited source and
+direct asset link, or an explicit unavailable notice if no logo can be verified.
 
 ## Setup and privacy
 

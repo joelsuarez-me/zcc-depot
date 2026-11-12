@@ -10,7 +10,7 @@ import {
 } from "@/data/demo-brief-prompt";
 
 const TITLE = "Demo Researcher | ZCC Depot";
-const DESC = "Build a research prompt for a company-specific Zendesk Contact Center demo brief, then run it in Replit Agent with current public web research and cited sources.";
+const DESC = "Build a company-specific Zendesk Contact Center research prompt with eight brief sections, an official company logo, and cited sources, then run it in Replit Agent.";
 
 function useMeta() {
   useEffect(() => {
@@ -43,7 +43,7 @@ const STEPS = [
   { t: "Copy it", d: "Use Copy prompt, or select the full text in the output box manually." },
   { t: "Paste into Replit Agent", d: "Open a Replit Agent chat and paste the entire prompt as one message." },
   { t: "Run current research", d: "Ask Agent to browse public sources now. If it cannot browse, treat output as unverified." },
-  { t: "Review citations", d: "Open each numbered source. Confirm company facts and Zendesk claims before the demo." },
+  { t: "Review citations", d: "Open each numbered source. Verify the company logo, company facts, and Zendesk claims before the demo." },
 ];
 
 export default function DemoBriefPage() {
@@ -130,7 +130,7 @@ export default function DemoBriefPage() {
               <h2 id="brief-form-title" className="text-xl font-semibold tracking-tight text-[#11110D]">Account context</h2>
               <span className="mono text-xs text-[#11110D]/50" data-testid="text-fields-complete">{filled}/4 complete</span>
             </div>
-            <p className="mt-1 text-sm text-[#11110D]/60">All fields are required.</p>
+            <p className="mt-1 text-sm text-[#11110D]/60">All fields are required. The prompt requests eight brief sections, a company logo, and numbered sources.</p>
             <div className="mt-5 space-y-4">
               {BRIEF_FIELDS.map((f) => {
                 const err = errors[f.key];
