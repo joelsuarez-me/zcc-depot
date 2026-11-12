@@ -12,6 +12,7 @@ import Architecture from '@/pages/architecture';
 import Sales from '@/pages/sales';
 import Resources from '@/pages/resources';
 import Agenda from '@/pages/agenda';
+import DemoInstanceDetails from '@/pages/demo-instance-details';
 
 const queryClient = new QueryClient();
 
@@ -22,6 +23,7 @@ function Router() {
         <Switch>
           <Route path="/" component={Home} />
           <Route path="/demos" component={Demos} />
+          <Route path="/demos/instance-details" component={DemoInstanceDetails} />
           <Route path="/architecture" component={Architecture} />
           <Route path="/sales" component={Sales} />
           <Route path="/resources" component={Resources} />
