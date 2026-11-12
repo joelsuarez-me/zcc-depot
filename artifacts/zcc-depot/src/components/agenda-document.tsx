@@ -35,6 +35,7 @@ function Section({ index, title, children, delay }: { index: number; title: stri
   const reduced = useReducedMotion();
   return (
     <motion.section
+      data-section-nav
       initial={reduced ? false : { opacity: 0, y: 14 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5, delay: reduced ? 0 : delay, ease: [0.2, 0.7, 0.2, 1] }}

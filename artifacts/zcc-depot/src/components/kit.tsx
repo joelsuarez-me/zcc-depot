@@ -7,6 +7,7 @@ import { NAV } from "@/data/navigation";
 import { HeroArt, RouteBadge, SectionGlyph, type Motif } from "@/components/art";
 import { SearchTrigger } from "@/components/global-search";
 import { MobileNavigationLinks, PrimaryNavigation } from "@/components/header-navigation";
+import { SectionNavigation } from "@/components/section-navigation";
 
 const logo = `${import.meta.env.BASE_URL}brand/zendesk-monochrome.png`;
 
@@ -47,7 +48,7 @@ export function Reveal({ children, delay = 0, className = "" }: { children: Reac
 export function SectionHead({ id, num, eyebrow, title, lede, dark = false }: { id?: string; num: string; eyebrow: string; title: ReactNode; lede?: ReactNode; dark?: boolean }) {
   return (
     <Reveal className="mb-10 grid gap-6 md:grid-cols-12 md:items-end">
-      <div className="md:col-span-7" id={id}>
+      <div className="md:col-span-7" id={id} data-section-nav>
         <div className={`eyebrow mb-4 flex items-center gap-3 ${dark ? "text-[#D1F470]" : "text-[#203524]"}`}>
           <span className={`rounded-full px-2 py-0.5 shadow-[0_0_0_4px_rgba(209,244,112,.25)] ${dark ? "bg-[#D1F470] text-[#11110D]" : "bg-[#203524] text-[#D1F470]"}`}>{num}</span>{eyebrow}<SectionGlyph label={eyebrow} dark={dark} />
         </div>
@@ -157,6 +158,7 @@ export function Shell({ children }: { children: ReactNode }) {
       </header>
       <main id="main" tabIndex={-1} className="outline-none">{children}</main>
       <Footer />
+      <SectionNavigation />
     </div>
   );
 }
