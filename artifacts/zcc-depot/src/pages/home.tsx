@@ -12,34 +12,6 @@ const DESTS = [
   { href: "/resources", n: "04", t: "Find the source", d: "Searchable, categorized official documentation with local bookmarks." },
 ];
 
-function HeroVisual() {
-  const reduce = useReducedMotion();
-  const nodes = [
-    { x: 40, y: 200, l: "Caller" },
-    { x: 190, y: 90, l: "Amazon Connect" },
-    { x: 340, y: 200, l: "Call context" },
-    { x: 490, y: 90, l: "Agent Workspace" },
-  ];
-  return (
-    <svg viewBox="0 0 540 290" className="h-auto w-full" role="img" aria-label="Illustration: a call moves from the caller to Amazon Connect, gathers context, and reaches Zendesk Agent Workspace">
-      <path d="M40 200 C 110 200, 120 90, 190 90 S 270 200, 340 200 S 420 90, 490 90" fill="none" stroke="#D1F470" strokeOpacity=".25" strokeWidth="2" />
-      <path d="M40 200 C 110 200, 120 90, 190 90 S 270 200, 340 200 S 420 90, 490 90" fill="none" stroke="#D1F470" strokeWidth="2" className="dash-flow" />
-      {!reduce && (
-        <circle r="6" fill="#D1F470">
-          <animateMotion dur="4.5s" repeatCount="indefinite" path="M40 200 C 110 200, 120 90, 190 90 S 270 200, 340 200 S 420 90, 490 90" />
-        </circle>
-      )}
-      {nodes.map((n, i) => (
-        <g key={n.l}>
-          <circle cx={n.x} cy={n.y} r="16" fill="#D1F470" opacity=".3" className="pulse-ring" style={{ animationDelay: `${i * 0.5}s`, transformBox: "fill-box" }} />
-          <circle cx={n.x} cy={n.y} r="9" fill="#203524" stroke="#D1F470" strokeWidth="2.5" />
-          <text x={n.x} y={n.y + (n.y > 150 ? 36 : -24)} textAnchor="middle" fill="#F5F5F2" fontSize="13" fontFamily="JetBrains Mono, monospace">{n.l}</text>
-        </g>
-      ))}
-    </svg>
-  );
-}
-
 export default function Home() {
   const reduce = useReducedMotion();
   const [feat, setFeat] = useState(0);
@@ -48,20 +20,14 @@ export default function Home() {
     <>
       <section className="on-dark relative overflow-hidden bg-[#203524] text-[#F5F5F2]">
         <div className="grid-lines absolute inset-0" aria-hidden />
-        <div className="relative mx-auto grid max-w-7xl gap-12 px-5 pb-20 pt-32 md:px-8 md:pt-40 lg:grid-cols-12 lg:items-center">
-          <motion.div className="lg:col-span-7" initial={reduce ? false : { opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8, ease: [0.2, 0.7, 0.2, 1] }}>
+        <div className="relative mx-auto max-w-7xl px-5 pb-20 pt-32 md:px-8 md:pt-40">
+          <motion.div className="max-w-4xl" initial={reduce ? false : { opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8, ease: [0.2, 0.7, 0.2, 1] }}>
             <h1 className="max-w-3xl font-sans text-3xl font-semibold leading-tight tracking-[-0.035em] text-[#F5F5F2] sm:text-4xl lg:text-[3.25rem]">
               ZENDESK CONTACT CENTER · platform ARCHITECT Depot
             </h1>
             <p className="mt-7 max-w-xl text-lg leading-relaxed text-[#F5F5F2]/75">
               Everything you need to prepare the customer conversation: the story, the architecture behind it, the outcomes it supports, and the official sources to back every claim.
             </p>
-          </motion.div>
-          <motion.div className="lg:col-span-5" initial={reduce ? false : { opacity: 0, scale: 0.96 }} animate={{ opacity: 1, scale: 1 }} transition={{ duration: 1, delay: 0.2 }}>
-            <div className="rounded-[2rem] border border-[#D1F470]/20 bg-[#11110D]/30 p-6 backdrop-blur-sm">
-              <div className="eyebrow mb-2 flex justify-between text-[#F5F5F2]/50"><span>Illustrative call path</span><span>04 stages</span></div>
-              <HeroVisual />
-            </div>
           </motion.div>
         </div>
         <div className="relative overflow-hidden border-t border-[#D1F470]/15 py-4" aria-hidden>
