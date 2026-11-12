@@ -1,0 +1,16 @@
+uploads = []
+generated = []
+
+[[outputs]]
+id = "BJHBT_z3kHqUHti9pKL7h"
+uri = "file://artifacts/zcc-depot/public/brand/zcc-depot-transparent.png"
+type = "image"
+title = "Transparent Zendesk Contact Center icon"
+description = "Your uploaded icon with the outer black background removed, preserving the green rounded tile and artwork."
+logical_id = "41eef60b-f1d2-4081-87ad-016e7b1d2e6d"
+content_hash = "sha256:70b28823e2d6264e0de0cd024ea8f41dacca9bc989540c09fa72d25322388c61"
+size = 701953
+mtime_ms = 1794491796091
+storage_uri = "gcs://replit-rams-assets-spock/rams/assets/repl:a5317541-3b36-4634-98e4-c41c651ba0cc/41eef60b-f1d2-4081-87ad-016e7b1d2e6d/53c86b99-89e3-412b-97ea-5c998c3bdb4b"
+storage_version_token = "1794491884269996"
+content_type = "image/png"
