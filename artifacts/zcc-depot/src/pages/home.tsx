@@ -19,9 +19,9 @@ export default function Home() {
         <div className="grid-lines absolute inset-0" aria-hidden />
         <div className="relative w-full px-6 pb-3 pt-4 md:px-12">
           <motion.div className="landing-hero-grid" initial={reduce ? false : { opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8, ease: [0.2, 0.7, 0.2, 1] }}>
-            <h1 className="landing-hero-title max-w-3xl font-sans text-[clamp(1rem,5.5vw,2rem)] font-semibold leading-tight tracking-[-0.035em] text-[#F5F5F2]">
-              <span className="block whitespace-nowrap">ZENDESK CONTACT CENTER ·</span>{" "}
-              <span className="block whitespace-nowrap"><span className="text-[#D1F470]">platform</span>{" "}ARCHITECT Depot</span>
+            <h1 className="landing-hero-title max-w-3xl font-sans font-semibold leading-tight tracking-[-0.035em] text-[#F5F5F2]">
+              <span className="block md:whitespace-nowrap">ZENDESK CONTACT CENTER ·</span>{" "}
+              <span className="block md:whitespace-nowrap"><span className="text-[#D1F470]">platform</span>{" "}ARCHITECT Depot</span>
             </h1>
             <p className="landing-hero-description max-w-2xl text-sm leading-snug text-[#F5F5F2]/75">
               Everything you need to prepare the customer conversation: the story, the architecture behind it, the outcomes it supports, and the official sources to back every claim.
