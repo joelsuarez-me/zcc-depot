@@ -33,55 +33,29 @@ import {
   X,
 } from "lucide-react";
 import { motion, useReducedMotion } from "framer-motion";
-
-type AgendaFields = {
-  company: string;
-  description: string;
-  currentState: string;
-  problems: string;
-  outcomes: string;
-  logoPath: string | null;
-};
+import { AGENDA_SECTIONS as sections, EMPTY_AGENDA as EMPTY, MORNINGSTAR_AGENDA, type AgendaFields } from "@/data/agenda-template";
+import { AgendaDocument } from "@/components/agenda-document";
+import { AgendaCardLogo } from "@/components/agenda-card-logo";
 
 const TEXT_KEY = "zcc-depot:agenda:v1";
 const LOGO_KEY = "zcc-depot:agenda-logo:v1";
 const MAX_LOGO_BYTES = 8 * 1024 * 1024;
 const ALLOWED_TYPES = ["image/png", "image/jpeg", "image/webp"];
-const EMPTY: AgendaFields = {
-  company: "",
-  description: "",
-  currentState: "",
-  problems: "",
-  outcomes: "",
-  logoPath: null,
-};
+function readInitialView() {
+  const params = new URLSearchParams(window.location.search);
+  const requestedId = params.get("agenda");
+  const id = requestedId && /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(requestedId) ? requestedId : null;
+  return { id, library: params.get("view") === "library" };
+}
 
-const sections = [
-  {
-    key: "currentState" as const,
-    label: "Current State",
-    prompt: "Describe the operating reality today.",
-    placeholder: "How does the team work today? Capture channels, tools, workflows, and context that will help frame the conversation.",
-    noteLabel: "Current state notes",
-    tone: "sage",
-  },
-  {
-    key: "problems" as const,
-    label: "Problems",
-    prompt: "Name the friction worth solving.",
-    placeholder: "Where are customers or agents getting stuck? Capture specific pain points and their impact.",
-    noteLabel: "Problem notes",
-    tone: "sand",
-  },
-  {
-    key: "outcomes" as const,
-    label: "Outcomes",
-    prompt: "Make the desired future concrete.",
-    placeholder: "What should be different after this work? Describe the customer and business outcomes to explore.",
-    noteLabel: "Outcome notes",
-    tone: "blue",
-  },
-];
+function updateLocation(id: string | null, library = false) {
+  const url = new URL(window.location.href);
+  if (id) url.searchParams.set("agenda", id);
+  else url.searchParams.delete("agenda");
+  if (library) url.searchParams.set("view", "library");
+  else url.searchParams.delete("view");
+  window.history.replaceState(window.history.state, "", url);
+}
 
 function protectedLogoUrl(path: string | null) {
   return path ? `/api/storage${path}` : "";
@@ -107,6 +81,7 @@ function loadLegacy() {
         company: parsed.company ?? "",
         description: parsed.description ?? "",
         currentState: parsed.currentState ?? "",
+        conversation: parsed.conversation ?? "",
         problems: parsed.problems ?? "",
         outcomes: parsed.outcomes ?? "",
       },
@@ -140,10 +115,11 @@ export default function Agenda() {
   const listQuery = useListAgendas({
     query: { enabled: isAuthenticated, queryKey: getListAgendasQueryKey() },
   });
-  const [selectedId, setSelectedId] = useState<string | null>(null);
-  const [creating, setCreating] = useState(false);
-  const [mode, setMode] = useState<"library" | "editor" | "presentation">("library");
-  const [fields, setFields] = useState<AgendaFields>({ ...EMPTY });
+  const [initialView] = useState(readInitialView);
+  const [selectedId, setSelectedId] = useState<string | null>(initialView.id);
+  const [creating, setCreating] = useState(!initialView.id);
+  const [mode, setMode] = useState<"library" | "editor" | "presentation">(initialView.library ? "library" : "presentation");
+  const [fields, setFields] = useState<AgendaFields>({ ...(initialView.id ? EMPTY : MORNINGSTAR_AGENDA) });
   const [loadedId, setLoadedId] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
   const [uploading, setUploading] = useState(false);
@@ -175,6 +151,7 @@ export default function Agenda() {
       company: activeAgenda.company ?? "",
       description: activeAgenda.description ?? "",
       currentState: activeAgenda.currentState ?? "",
+      conversation: activeAgenda.conversation ?? "",
       problems: activeAgenda.problems ?? "",
       outcomes: activeAgenda.outcomes ?? "",
       logoPath: activeAgenda.logoPath ?? null,
@@ -182,18 +159,20 @@ export default function Agenda() {
     setErrorMessage("");
   }, [activeAgenda, selectedId]);
 
-  function openNew() {
+  function openNew(template = false) {
     setSelectedId(null);
     setCreating(true);
     setLoadedId(null);
     initGuard.current = null;
-    setFields({ ...EMPTY });
+    setFields({ ...(template ? MORNINGSTAR_AGENDA : EMPTY) });
+    updateLocation(null);
     setErrorMessage("");
     setLogoMessage("");
-    setMode("editor");
+    setMode(template ? "presentation" : "editor");
   }
 
   function openAgenda(id: string) {
+    updateLocation(id);
     setSelectedId(id);
     setCreating(false);
     setLoadedId(null);
@@ -248,6 +227,7 @@ export default function Agenda() {
       company: fields.company.trim(),
       description: fields.description,
       currentState: fields.currentState,
+      conversation: fields.conversation,
       problems: fields.problems,
       outcomes: fields.outcomes,
       logoPath: fields.logoPath,
@@ -272,6 +252,7 @@ export default function Agenda() {
       await queryClient.invalidateQueries({ queryKey: getListAgendasQueryKey() });
       queryClient.setQueryData(getGetAgendaQueryKey(saved.id), saved);
       setSelectedId(saved.id);
+      updateLocation(saved.id);
       setCreating(false);
       setLoadedId(saved.id);
       initGuard.current = saved.id;
@@ -279,11 +260,11 @@ export default function Agenda() {
         company: saved.company,
         description: saved.description,
         currentState: saved.currentState,
+        conversation: saved.conversation,
         problems: saved.problems,
         outcomes: saved.outcomes,
         logoPath: saved.logoPath,
       });
-      setMode("editor");
     } catch (error) {
       setErrorMessage(error instanceof Error ? error.message : "Your changes could not be saved. Please try again.");
     } finally {
@@ -305,6 +286,7 @@ export default function Agenda() {
       setFields({ ...EMPTY });
       setConfirmDelete(false);
       setMode("library");
+      updateLocation(null, true);
     } catch (error) {
       setErrorMessage(error instanceof Error ? error.message : "This agenda could not be deleted. Please try again.");
       setConfirmDelete(false);
@@ -349,6 +331,7 @@ export default function Agenda() {
       localStorage.removeItem(LOGO_KEY);
       setLegacy({ available: false, fields: { ...EMPTY }, logo: null });
       setSelectedId(saved.id);
+      updateLocation(saved.id);
       setCreating(false);
       setLoadedId(saved.id);
       initGuard.current = saved.id;
@@ -356,6 +339,7 @@ export default function Agenda() {
         company: saved.company,
         description: saved.description,
         currentState: saved.currentState,
+        conversation: saved.conversation,
         problems: saved.problems,
         outcomes: saved.outcomes,
         logoPath: saved.logoPath,
@@ -370,11 +354,17 @@ export default function Agenda() {
 
   function cancelEditor() {
     setMode("library");
+    // Clear the selection so reopening the same cached agenda triggers hydration.
+    setSelectedId(null);
+    setLoadedId(null);
+    initGuard.current = null;
+    setCreating(false);
+    updateLocation(null, true);
     setErrorMessage("");
   }
 
   const list = listQuery.data ?? [];
-  const queryBusy = Boolean(selectedId) && (agendaQuery.isLoading || loadedId !== selectedId);
+  const queryBusy = Boolean(selectedId) && !agendaQuery.isError && (agendaQuery.isLoading || loadedId !== selectedId);
 
   if (authLoading) {
     return (
@@ -428,12 +418,13 @@ export default function Agenda() {
           <div className="mt-6 flex flex-col justify-between gap-6 md:flex-row md:items-end">
             <div>
               <h1 className="text-4xl font-semibold tracking-tight md:text-6xl" data-testid="heading-agenda">Today’s Agenda</h1>
-              <p className="mt-3 max-w-2xl text-base leading-relaxed text-[#f6f5ec]/70 md:text-lg">Turn account context into a clear, customer-ready conversation.</p>
+              <p className="mt-3 max-w-2xl text-base leading-relaxed text-[#f6f5ec]/70 md:text-lg">Objectives, platforms, conversation, validation, and outcomes — ready for the customer demo.</p>
             </div>
             {mode !== "library" && (
               <div className="flex w-fit rounded-full border border-white/20 bg-[#183629]/35 p-1" role="group" aria-label="Agenda view">
+                <button type="button" onClick={cancelEditor} className="rounded-full px-4 py-2 text-sm font-semibold text-white/75 hover:text-white" data-testid="button-agenda-library">Library</button>
                 <button type="button" onClick={() => setMode("editor")} aria-pressed={mode === "editor"} className={`rounded-full px-4 py-2 text-sm font-semibold transition ${mode === "editor" ? "bg-[#e2ebc8] text-[#203d2e]" : "text-white/75 hover:text-white"}`} data-testid="button-agenda-edit">Edit</button>
-                <button type="button" onClick={() => setMode("presentation")} aria-pressed={mode === "presentation"} disabled={creating || !selectedId || !fields.company} className={`rounded-full px-4 py-2 text-sm font-semibold transition disabled:opacity-40 ${mode === "presentation" ? "bg-[#e2ebc8] text-[#203d2e]" : "text-white/75 hover:text-white"}`} data-testid="button-agenda-present">Presentation</button>
+                <button type="button" onClick={() => setMode("presentation")} aria-pressed={mode === "presentation"} disabled={!fields.company || busy || uploading || queryBusy} className={`rounded-full px-4 py-2 text-sm font-semibold transition disabled:opacity-40 ${mode === "presentation" ? "bg-[#e2ebc8] text-[#203d2e]" : "text-white/75 hover:text-white"}`} data-testid="button-agenda-present">Presentation</button>
               </div>
             )}
           </div>
@@ -446,7 +437,7 @@ export default function Agenda() {
             <ShieldAlert className="mt-0.5 h-4 w-4 shrink-0 text-[#677b68]" aria-hidden />
             <span><strong className="font-semibold text-[#294735]">Shared workspace.</strong> Every agenda can be viewed and edited by all signed-in portal users. This is not a private customer-data space; keep sensitive or regulated details elsewhere.</span>
           </p>
-          <span className="mono shrink-0 text-[10px] tracking-wider text-[#788379]">SYNCED TO PORTAL</span>
+          <span className="mono shrink-0 text-[10px] tracking-wider text-[#788379]">{mode !== "library" && creating ? "UNSAVED DRAFT" : "SHARED LIBRARY"}</span>
         </div>
 
         {errorMessage && (
@@ -480,7 +471,10 @@ export default function Agenda() {
                 <h2 className="mt-2 text-2xl font-semibold tracking-tight text-[#1e3528] md:text-3xl">Workshop briefs</h2>
                 <p className="mt-1.5 text-sm text-[#69766b]">Reusable context, ready for the next customer conversation.</p>
               </div>
-              <button type="button" onClick={openNew} className={primaryButton} data-testid="button-create-agenda"><Plus className="h-4 w-4" aria-hidden /> New agenda</button>
+              <div className="flex flex-wrap gap-2">
+                <button type="button" onClick={() => openNew(true)} className={secondaryButton} data-testid="button-morningstar-template">Morningstar template</button>
+                <button type="button" onClick={() => openNew()} className={primaryButton} data-testid="button-create-agenda"><Plus className="h-4 w-4" aria-hidden /> New agenda</button>
+              </div>
             </div>
             {listQuery.isLoading ? (
               <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3" aria-label="Loading agendas">
@@ -502,8 +496,8 @@ export default function Agenda() {
                   <div className="grid h-12 w-12 place-items-center rounded-2xl bg-[#e6ecdd] text-[#426148]"><FileText className="h-5 w-5" aria-hidden /></div>
                   <div className="eyebrow mt-6 text-[#788579]">A good conversation starts with context</div>
                   <h3 className="mt-2 text-3xl font-semibold tracking-tight text-[#203a2c]">No agendas yet.</h3>
-                  <p className="mt-3 text-base leading-relaxed text-[#68756a]">Start a shared brief with the company, current reality, and outcomes your team wants to explore.</p>
-                  <button type="button" onClick={openNew} className={`${primaryButton} mt-6`} data-testid="button-create-first-agenda"><Plus className="h-4 w-4" aria-hidden /> Create the first agenda</button>
+                  <p className="mt-3 text-base leading-relaxed text-[#68756a]">Start a shared brief with the objective, current platforms, conversation, questions, and desired outcomes.</p>
+                  <button type="button" onClick={() => openNew()} className={`${primaryButton} mt-6`} data-testid="button-create-first-agenda"><Plus className="h-4 w-4" aria-hidden /> Create the first agenda</button>
                 </div>
               </section>
             ) : (
@@ -520,11 +514,11 @@ export default function Agenda() {
                     data-testid={`card-agenda-${agenda.id}`}
                   >
                     <div className="flex items-start justify-between gap-4">
-                      <div className="grid h-10 w-10 place-items-center rounded-xl bg-[#e8ede2] text-[#43634a]"><FileText className="h-4 w-4" aria-hidden /></div>
+                      <AgendaCardLogo src={protectedLogoUrl(agenda.logoPath)} company={agenda.company} />
                       <ChevronRight className="mt-2 h-4 w-4 text-[#89958a] transition group-hover:translate-x-1 group-hover:text-[#315a47]" aria-hidden />
                     </div>
                     <h3 className="mt-5 line-clamp-1 text-lg font-semibold text-[#203a2c]" data-testid={`text-agenda-company-${agenda.id}`}>{agenda.company}</h3>
-                    <p className="mt-1.5 line-clamp-2 min-h-10 text-sm leading-relaxed text-[#68756a]">{agenda.description || "No short description yet."}</p>
+                    <p className="mt-1.5 line-clamp-2 min-h-10 text-sm leading-relaxed text-[#68756a]">{agenda.description || "No objective added yet."}</p>
                     <div className="mono mt-4 text-[10px] tracking-wider text-[#8a948b]">UPDATED {displayDate(agenda.updatedAt).toUpperCase()}</div>
                   </motion.button>
                 ))}
@@ -553,24 +547,24 @@ export default function Agenda() {
             <form onSubmit={saveAgenda} className="grid gap-6 lg:grid-cols-[minmax(0,1fr)_19rem]">
               <div className="space-y-5">
                 <section className="rounded-[1.6rem] border border-[#d9ddd2] bg-[#fbfbf6] p-5 md:p-8" aria-labelledby="agenda-welcome-heading">
-                  <div className="eyebrow text-[#728075]">Welcome</div>
-                  <h2 id="agenda-welcome-heading" className="mt-2 text-2xl font-semibold tracking-tight text-[#203a2c]">Set the room.</h2>
-                  <p className="mt-1 text-sm text-[#6c786e]">A customer name and a little context make the brief easy to pick up.</p>
+                  <div className="eyebrow text-[#728075]">Demo brief</div>
+                  <h2 id="agenda-welcome-heading" className="mt-2 text-2xl font-semibold tracking-tight text-[#203a2c]">Company and objective</h2>
+                  <p className="mt-1 text-sm text-[#6c786e]">Set the customer name and the purpose of the demo.</p>
                   <div className="mt-6 grid gap-5 md:grid-cols-2">
                     <label className="block text-sm font-semibold text-[#304c38]">Company name
                       <input value={fields.company} onChange={(event) => updateField("company", event.target.value)} placeholder="Customer company" maxLength={120} className={fieldClass} data-testid="input-agenda-company" />
                     </label>
-                    <label className="block text-sm font-semibold text-[#304c38]">Short description
-                      <textarea value={fields.description} onChange={(event) => updateField("description", event.target.value)} placeholder="A concise account or workshop description" rows={3} maxLength={500} className={`${fieldClass} resize-y`} data-testid="input-agenda-description" />
+                    <label className="block text-sm font-semibold text-[#304c38]">Objective
+                      <textarea value={fields.description} onChange={(event) => updateField("description", event.target.value)} placeholder="What should this customer demo explore or validate?" rows={4} maxLength={500} className={`${fieldClass} resize-y`} data-testid="input-agenda-description" />
                     </label>
                   </div>
                 </section>
                 {sections.map((section) => (
                   <section key={section.key} className="rounded-[1.6rem] border border-[#d9ddd2] bg-[#fbfbf6] p-5 md:p-8" aria-labelledby={`agenda-${section.key}-heading`}>
-                    <div className="eyebrow text-[#728075]">{section.label}</div>
-                    <h2 id={`agenda-${section.key}-heading`} className="mt-2 text-2xl font-semibold tracking-tight text-[#203a2c]">{section.prompt}</h2>
+                    <h2 id={`agenda-${section.key}-heading`} className="text-2xl font-semibold tracking-tight text-[#203a2c]">{section.label}</h2>
+                    <p className="mt-2 text-sm text-[#6c786e]">{section.prompt}</p>
                     <label className="mt-5 block text-sm font-semibold text-[#304c38]">{section.noteLabel}
-                      <textarea value={fields[section.key]} onChange={(event) => updateField(section.key, event.target.value)} placeholder={section.placeholder} rows={5} maxLength={5000} className={`${fieldClass} resize-y`} data-testid={`input-agenda-${section.key}`} />
+                      <textarea value={fields[section.key]} onChange={(event) => updateField(section.key, event.target.value)} placeholder={section.placeholder} rows={section.rows} maxLength={5000} className={`${fieldClass} resize-y`} data-testid={`input-agenda-${section.key}`} />
                     </label>
                   </section>
                 ))}
@@ -579,9 +573,9 @@ export default function Agenda() {
                 <section className="rounded-[1.6rem] border border-[#d3dacc] bg-[#e6ebdf] p-5" aria-labelledby="agenda-logo-heading">
                   <div className="eyebrow text-[#728075]">Brand asset</div>
                   <h2 id="agenda-logo-heading" className="mt-2 text-lg font-semibold text-[#294735]">Customer logo</h2>
-                  <div className="mt-4 grid min-h-36 place-items-center rounded-xl border border-dashed border-[#aeb9aa] bg-white p-4">
+                  <div className="mt-4 flex h-36 w-full items-center justify-center overflow-hidden rounded-xl border border-dashed border-[#aeb9aa] bg-white p-4">
                     {fields.logoPath
-                      ? <img src={protectedLogoUrl(fields.logoPath)} alt={`${fields.company || "Customer"} logo`} className="max-h-28 max-w-full object-contain" data-testid="img-agenda-logo" />
+                      ? <img src={protectedLogoUrl(fields.logoPath)} alt={`${fields.company || "Customer"} logo`} className="block h-full w-full min-h-0 min-w-0 object-contain" data-testid="img-agenda-logo" />
                       : <div className="text-center text-[#788579]"><ImagePlus className="mx-auto h-7 w-7" aria-hidden /><p className="mt-2 text-xs">No logo added</p></div>}
                   </div>
                   <label className={`mt-4 flex min-h-11 cursor-pointer items-center justify-center gap-2 rounded-full bg-[#294b38] px-4 py-3 text-sm font-semibold text-[#f5f5eb] transition hover:bg-[#1d3d2d] ${uploading ? "pointer-events-none opacity-60" : ""}`}>
@@ -615,46 +609,36 @@ export default function Agenda() {
           )
         )}
 
-        {mode === "presentation" && selectedId && (
+        {mode === "presentation" && (selectedId || creating) && (
           <div className="space-y-4" data-testid="agenda-presentation">
-            <motion.section
-              initial={reducedMotion ? false : { opacity: 0, y: 16 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.55, ease: [0.2, 0.7, 0.2, 1] }}
-              className="relative overflow-hidden rounded-[2rem] bg-[#244b39] p-7 text-[#f6f5ec] md:min-h-64 md:p-11"
-            >
-              <div className="grid-lines absolute inset-0 opacity-60" aria-hidden />
-              <div className="relative flex flex-col-reverse justify-between gap-7 sm:flex-row sm:items-center">
-                <div>
-                  <div className="eyebrow text-[#d4e4a6]">Welcome</div>
-                  <h2 className="mt-4 break-words text-4xl font-semibold tracking-tight md:text-6xl" data-testid="text-agenda-company">{fields.company || "Company name"}</h2>
-                  <p className="mt-4 max-w-2xl whitespace-pre-wrap text-base leading-relaxed text-[#f6f5ec]/75" data-testid="text-agenda-description">{fields.description || "Add a short description in Edit to set the context for today’s conversation."}</p>
-                </div>
-                {fields.logoPath && <div className="grid h-24 w-40 shrink-0 place-items-center rounded-2xl bg-white p-3 sm:h-32 sm:w-48"><img src={protectedLogoUrl(fields.logoPath)} alt={`${fields.company} logo`} className="max-h-full max-w-full object-contain" /></div>}
+            {queryBusy ? (
+              <div className="space-y-4" aria-label="Loading agenda">
+                <div className="h-48 animate-pulse rounded-3xl bg-[#e4e8df]" />
+                <div className="h-96 animate-pulse rounded-3xl bg-[#e4e8df]" />
               </div>
-              <span className="mono relative mt-8 block text-[10px] tracking-[.18em] text-[#f6f5ec]/45">CUSTOMER WORKSHOP · {displayDate(activeAgenda?.updatedAt).toUpperCase()}</span>
-            </motion.section>
-            {sections.map((section, index) => (
-              <motion.section
-                key={section.key}
-                initial={reducedMotion ? false : { opacity: 0, y: 18 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.55, delay: reducedMotion ? 0 : 0.1 + index * 0.12, ease: [0.2, 0.7, 0.2, 1] }}
-                className={`agenda-fill-${section.tone} grid gap-5 rounded-[2rem] p-6 md:grid-cols-[13rem_1fr] md:items-start md:p-9`}
-                data-testid={`card-agenda-${section.key}`}
-              >
-                <div>
-                  <div className="eyebrow text-[#294735]/60">{section.label}</div>
-                  <h2 className="mt-2 text-xl font-semibold tracking-tight text-[#294735]">{section.label}</h2>
+            ) : agendaQuery.isError && selectedId ? (
+              <section className="rounded-2xl border border-[#dedfd6] bg-[#fbfbf6] p-8 text-center" role="alert">
+                <h2 className="text-xl font-semibold text-[#294735]">This agenda couldn’t be opened</h2>
+                <p className="mt-2 text-sm text-[#68756a]">It may have been removed by another portal user.</p>
+                <button type="button" onClick={() => void agendaQuery.refetch()} className={`${secondaryButton} mt-5`}>Try again</button>
+              </section>
+            ) : (
+              <>
+                <div className="flex flex-wrap items-center justify-between gap-3 rounded-2xl border border-[#d7dbd0] bg-[#fbfbf6] p-4">
+                  <p className="text-sm text-[#536157]">
+                    {creating ? "Unsaved draft. Edit this agenda, then save it to the shared library." : `Saved agenda · updated ${displayDate(activeAgenda?.updatedAt)}. Save after making changes.`}
+                  </p>
+                  <button type="button" onClick={() => void saveAgenda()} disabled={busy || uploading} className={primaryButton} data-testid="button-agenda-save-presentation">
+                    {busy ? <LoaderCircle className="h-4 w-4 animate-spin" aria-hidden /> : <Save className="h-4 w-4" aria-hidden />}
+                    {busy ? "Saving…" : "Save agenda"}
+                  </button>
                 </div>
-                <p className="min-h-16 whitespace-pre-wrap text-base leading-relaxed text-[#24362b]/85 md:text-lg" data-testid={`text-agenda-${section.key}`}>
-                  {fields[section.key] || <span className="text-[#24362b]/45">{section.prompt} Add notes in Edit to shape this section.</span>}
-                </p>
-              </motion.section>
-            ))}
+                <AgendaDocument fields={fields} logoUrl={protectedLogoUrl(fields.logoPath)} />
+              </>
+            )}
             <div className="flex flex-wrap justify-between gap-3 pt-3">
-              <button type="button" onClick={() => setMode("library")} className={secondaryButton} data-testid="button-agenda-presentation-library"><ArrowLeft className="h-4 w-4" aria-hidden /> Library</button>
-              <button type="button" onClick={() => setMode("editor")} className={primaryButton} data-testid="button-agenda-back-edit"><Presentation className="h-4 w-4" aria-hidden /> Back to editing</button>
+              <button type="button" onClick={cancelEditor} className={secondaryButton} data-testid="button-agenda-presentation-library"><ArrowLeft className="h-4 w-4" aria-hidden /> Library</button>
+              <button type="button" onClick={() => setMode("editor")} disabled={queryBusy || agendaQuery.isError} className={primaryButton} data-testid="button-agenda-back-edit"><Presentation className="h-4 w-4" aria-hidden /> Edit agenda</button>
             </div>
           </div>
         )}

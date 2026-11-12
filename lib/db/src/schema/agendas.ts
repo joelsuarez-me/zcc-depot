@@ -7,6 +7,7 @@ export const agendasTable = pgTable("customer_agendas", {
   company: text("company").notNull(),
   description: text("description").notNull().default(""),
   currentState: text("current_state").notNull().default(""),
+  conversation: text("conversation").notNull().default(""),
   problems: text("problems").notNull().default(""),
   outcomes: text("outcomes").notNull().default(""),
   logoPath: text("logo_path"),

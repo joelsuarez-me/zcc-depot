@@ -17,6 +17,8 @@ export interface AgendaInput {
   /** @maxLength 5000 */
   currentState?: string;
   /** @maxLength 5000 */
+  conversation?: string;
+  /** @maxLength 5000 */
   problems?: string;
   /** @maxLength 5000 */
   outcomes?: string;

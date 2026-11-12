@@ -411,7 +411,7 @@ components:
             - type: "null"
     AgendaListItem:
       type: object
-      required: [id, company, description, updatedAt]
+      required: [id, company, description, logoPath, updatedAt]
       properties:
         id:
           type: string
@@ -420,6 +420,8 @@ components:
           type: string
         description:
           type: string
+        logoPath:
+          type: [string, "null"]
         updatedAt:
           type: string
           format: date-time
@@ -427,16 +429,16 @@ components:
       allOf:
         - $ref: "#/components/schemas/AgendaListItem"
         - type: object
-          required: [currentState, problems, outcomes, logoPath, createdAt]
+          required: [currentState, conversation, problems, outcomes, createdAt]
           properties:
             currentState:
+              type: string
+            conversation:
               type: string
             problems:
               type: string
             outcomes:
               type: string
-            logoPath:
-              type: [string, "null"]
             createdAt:
               type: string
               format: date-time
@@ -452,6 +454,9 @@ components:
           type: string
           maxLength: 500
         currentState:
+          type: string
+          maxLength: 5000
+        conversation:
           type: string
           maxLength: 5000
         problems:
@@ -474,6 +479,9 @@ components:
           type: string
           maxLength: 500
         currentState:
+          type: string
+          maxLength: 5000
+        conversation:
           type: string
           maxLength: 5000
         problems:

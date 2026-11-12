@@ -43,6 +43,7 @@ router.get("/agendas", async (req, res): Promise<void> => {
       id: agendasTable.id,
       company: agendasTable.company,
       description: agendasTable.description,
+      logoPath: agendasTable.logoPath,
       updatedAt: agendasTable.updatedAt,
     })
     .from(agendasTable)
@@ -75,6 +76,7 @@ router.post("/agendas", async (req, res): Promise<void> => {
       company: input.company,
       description: input.description ?? "",
       currentState: input.currentState ?? "",
+      conversation: input.conversation ?? "",
       problems: input.problems ?? "",
       outcomes: input.outcomes ?? "",
       logoPath: input.logoPath ?? null,

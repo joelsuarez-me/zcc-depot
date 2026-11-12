@@ -7,11 +7,10 @@
  */
 import type { AgendaListItem } from './agendaListItem';
 
-export type Agenda = AgendaListItem & ({
+export type Agenda = AgendaListItem & {
   currentState: string;
+  conversation: string;
   problems: string;
   outcomes: string;
-  /** @nullable */
-  logoPath: string | null;
   createdAt: Date;
-});
+};

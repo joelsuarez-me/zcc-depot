@@ -72,6 +72,7 @@ export const ListAgendasResponseItem = zod.object({
   "id": zod.string().uuid(),
   "company": zod.string(),
   "description": zod.string(),
+  "logoPath": zod.string().nullable(),
   "updatedAt": zod.coerce.date()
 })
 export const ListAgendasResponse = zod.array(ListAgendasResponseItem)
@@ -86,6 +87,8 @@ export const createAgendaBodyDescriptionMax = 500;
 
 export const createAgendaBodyCurrentStateMax = 5000;
 
+export const createAgendaBodyConversationMax = 5000;
+
 export const createAgendaBodyProblemsMax = 5000;
 
 export const createAgendaBodyOutcomesMax = 5000;
@@ -96,6 +99,7 @@ export const CreateAgendaBody = zod.object({
   "company": zod.string().min(1).max(createAgendaBodyCompanyMax),
   "description": zod.string().max(createAgendaBodyDescriptionMax).optional(),
   "currentState": zod.string().max(createAgendaBodyCurrentStateMax).optional(),
+  "conversation": zod.string().max(createAgendaBodyConversationMax).optional(),
   "problems": zod.string().max(createAgendaBodyProblemsMax).optional(),
   "outcomes": zod.string().max(createAgendaBodyOutcomesMax).optional(),
   "logoPath": zod.string().nullish()
@@ -105,12 +109,13 @@ export const CreateAgendaResponse = zod.object({
   "id": zod.string().uuid(),
   "company": zod.string(),
   "description": zod.string(),
+  "logoPath": zod.string().nullable(),
   "updatedAt": zod.coerce.date()
 }).and(zod.object({
   "currentState": zod.string(),
+  "conversation": zod.string(),
   "problems": zod.string(),
   "outcomes": zod.string(),
-  "logoPath": zod.string().nullable(),
   "createdAt": zod.coerce.date()
 }))
 
@@ -126,12 +131,13 @@ export const GetAgendaResponse = zod.object({
   "id": zod.string().uuid(),
   "company": zod.string(),
   "description": zod.string(),
+  "logoPath": zod.string().nullable(),
   "updatedAt": zod.coerce.date()
 }).and(zod.object({
   "currentState": zod.string(),
+  "conversation": zod.string(),
   "problems": zod.string(),
   "outcomes": zod.string(),
-  "logoPath": zod.string().nullable(),
   "createdAt": zod.coerce.date()
 }))
 
@@ -149,6 +155,8 @@ export const updateAgendaBodyDescriptionMax = 500;
 
 export const updateAgendaBodyCurrentStateMax = 5000;
 
+export const updateAgendaBodyConversationMax = 5000;
+
 export const updateAgendaBodyProblemsMax = 5000;
 
 export const updateAgendaBodyOutcomesMax = 5000;
@@ -159,6 +167,7 @@ export const UpdateAgendaBody = zod.object({
   "company": zod.string().min(1).max(updateAgendaBodyCompanyMax).optional(),
   "description": zod.string().max(updateAgendaBodyDescriptionMax).optional(),
   "currentState": zod.string().max(updateAgendaBodyCurrentStateMax).optional(),
+  "conversation": zod.string().max(updateAgendaBodyConversationMax).optional(),
   "problems": zod.string().max(updateAgendaBodyProblemsMax).optional(),
   "outcomes": zod.string().max(updateAgendaBodyOutcomesMax).optional(),
   "logoPath": zod.string().nullish()
@@ -168,12 +177,13 @@ export const UpdateAgendaResponse = zod.object({
   "id": zod.string().uuid(),
   "company": zod.string(),
   "description": zod.string(),
+  "logoPath": zod.string().nullable(),
   "updatedAt": zod.coerce.date()
 }).and(zod.object({
   "currentState": zod.string(),
+  "conversation": zod.string(),
   "problems": zod.string(),
   "outcomes": zod.string(),
-  "logoPath": zod.string().nullable(),
   "createdAt": zod.coerce.date()
 }))
 

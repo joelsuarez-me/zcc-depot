@@ -10,5 +10,7 @@ export interface AgendaListItem {
   id: string;
   company: string;
   description: string;
+  /** @nullable */
+  logoPath: string | null;
   updatedAt: Date;
 }

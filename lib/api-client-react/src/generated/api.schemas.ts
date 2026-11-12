@@ -29,17 +29,18 @@ export interface AgendaListItem {
   id: string;
   company: string;
   description: string;
+  /** @nullable */
+  logoPath: string | null;
   updatedAt: string;
 }
 
-export type Agenda = AgendaListItem & ({
+export type Agenda = AgendaListItem & {
   currentState: string;
+  conversation: string;
   problems: string;
   outcomes: string;
-  /** @nullable */
-  logoPath: string | null;
   createdAt: string;
-});
+};
 
 export interface AgendaInput {
   /**
@@ -51,6 +52,8 @@ export interface AgendaInput {
   description?: string;
   /** @maxLength 5000 */
   currentState?: string;
+  /** @maxLength 5000 */
+  conversation?: string;
   /** @maxLength 5000 */
   problems?: string;
   /** @maxLength 5000 */
@@ -69,6 +72,8 @@ export interface AgendaUpdate {
   description?: string;
   /** @maxLength 5000 */
   currentState?: string;
+  /** @maxLength 5000 */
+  conversation?: string;
   /** @maxLength 5000 */
   problems?: string;
   /** @maxLength 5000 */
