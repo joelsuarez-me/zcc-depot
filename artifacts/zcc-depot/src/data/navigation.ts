@@ -16,6 +16,7 @@ export const NAV: NavItem[] = [
       { label: "Demo Approach", href: "/demos#agenda" },
       { label: "Launch Guided Demo", href: DEMO_URL, external: true },
       { label: "Demo Instance Details", href: "/demos/instance-details" },
+      { label: "Demo Brief Generator", href: "/demos/brief" },
     ],
   },
   { href: "/architecture", label: "Architecture" },

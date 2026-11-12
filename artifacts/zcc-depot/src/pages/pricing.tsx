@@ -102,34 +102,33 @@ export default function Pricing() {
         </nav>
       </PageHero>
 
+      <div className="mx-auto grid max-w-7xl gap-5 px-5 py-8 md:px-8 lg:grid-cols-3 lg:items-stretch" aria-label="Compare the three pricing paths">
       {methods.map((m) => {
         const t = tones[m.tone];
         const Icon = m.icon;
         return (
-          <section key={m.id} id={m.id} aria-labelledby={`${m.id}-title`} className={`relative overflow-hidden border-t border-[#11110D]/10 ${t.bg}`} data-testid={`section-pricing-${m.id}`}>
+          <section key={m.id} id={m.id} aria-labelledby={`${m.id}-title`} className={`relative scroll-mt-24 overflow-hidden rounded-3xl border border-[#11110D]/10 ${t.bg}`} data-testid={`section-pricing-${m.id}`}>
             {m.tone === "forest" && <div className="grid-lines absolute inset-0" aria-hidden />}
-            <span aria-hidden className={`pointer-events-none absolute -right-4 -top-6 select-none text-[9rem] font-semibold leading-none tracking-tighter md:text-[13rem] ${t.num}`}>{m.num}</span>
-            <div className="relative mx-auto max-w-7xl px-5 py-12 md:px-8 md:py-16">
-              <Reveal className="grid gap-6 md:grid-cols-12 md:items-start">
-                <div className="md:col-span-5">
+            <span aria-hidden className={`pointer-events-none absolute -right-2 -top-4 select-none text-[7rem] font-semibold leading-none tracking-tighter ${t.num}`}>{m.num}</span>
+              <Reveal className="relative flex h-full flex-col p-6 xl:p-7">
+                <div>
                   <div className="eyebrow flex items-center gap-3">
                     <span className={`rounded-full px-2 py-0.5 ${t.badge}`}>{m.num}</span>{m.tag}
                   </div>
-                  <h2 id={`${m.id}-title`} className="mt-4 text-3xl font-semibold leading-[1.08] tracking-tight md:text-4xl" data-testid={`text-pricing-name-${m.id}`}>{m.name}</h2>
-                  <p className="serif mt-2 text-2xl italic">{m.tag}</p>
+                  <h2 id={`${m.id}-title`} className="mt-5 text-[1.75rem] font-semibold leading-[1.1] tracking-tight lg:min-h-[2.2em]" data-testid={`text-pricing-name-${m.id}`}>{m.name}</h2>
                 </div>
-                <div className="md:col-span-7">
-                  <div className="flex items-center gap-3">
+                <div className="mt-5">
+                  <div className="flex min-h-10 flex-wrap items-center gap-2.5">
                     <span className={`grid h-10 w-10 place-items-center rounded-full ${t.icon}`}><Icon className="h-4 w-4" aria-hidden /></span>
-                    <span className={`mono rounded-full border px-3 py-1 text-xs uppercase tracking-wider ${t.chip}`}>{m.fit}</span>
+                     <span className={`mono rounded-full border px-2.5 py-1 text-[0.65rem] uppercase tracking-wider ${t.chip}`}>{m.fit}</span>
                   </div>
-                  <p className={`mt-5 max-w-2xl text-lg leading-relaxed ${t.sub}`} data-testid={`text-pricing-body-${m.id}`}>{m.body}</p>
+                   <p className={`mt-5 text-base leading-relaxed ${t.sub}`} data-testid={`text-pricing-body-${m.id}`}>{m.body}</p>
                 </div>
               </Reveal>
-            </div>
           </section>
         );
       })}
+      </div>
 
       <div className="bg-[#F5F5F2]">
         <p className="mx-auto max-w-7xl px-5 py-8 text-xs leading-relaxed text-[#11110D]/55 md:px-8">

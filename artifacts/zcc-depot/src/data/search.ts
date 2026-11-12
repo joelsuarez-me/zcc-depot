@@ -11,6 +11,7 @@ const PAGES: SearchEntry[] = [
   page("home", "Overview", "/", "Zendesk Contact Center platform story, how it works, and features.", "home start platform"),
   page("demos", "Demos", "/demos", "Demo approach, guided demo, video highlights, and pre-demo spotlight.", "demo storyline rooms"),
   page("instance", "Demo Instance Details", "/demos/instance-details", "Details for the shared demo instance.", "environment sandbox login setup"),
+  page("demo-brief", "Zendesk Demo Brief Generator", "/demos/brief", "Build a tailored research prompt and instructions to use in Replit Agent. No API key needed.", "company research preparation prompt builder region audience"),
   page("architecture", "Architecture", "/architecture", "Amazon Connect, Lambda, data flow, components, and regional footprint.", "aws technical"),
   page("sales", "Sales", "/sales", "Use cases, outcomes, FAQ, roadmap, and go-to-market guidance.", "gtm business value"),
   page("sell-sheet", "Sell Sheet", "/sell-sheet", "Signed-in access to the internal Zendesk Contact Center sales guide.", "sales guide enablement internal"),
