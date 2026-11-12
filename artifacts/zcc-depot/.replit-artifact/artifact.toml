@@ -1,0 +1,28 @@
+kind = "web"
+previewPath = "/"
+title = "ZCC Depot"
+description = "A Zendesk-branded portal for platform architects to access demos, sales enablement, technical guidance, and architecture resources."
+version = "1.0.0"
+id = "artifacts/zcc-depot"
+router = "path"
+
+[[services]]
+name = "web"
+paths = [ "/" ]
+localPort = 25058
+
+[services.development]
+run = "pnpm --filter @workspace/zcc-depot run dev"
+
+[services.production]
+build = [ "pnpm", "--filter", "@workspace/zcc-depot", "run", "build" ]
+serve = "static"
+publicDir = "artifacts/zcc-depot/dist/public"
+
+[[services.production.rewrites]]
+from = "/*"
+to = "/index.html"
+
+[services.env]
+PORT = "25058"
+BASE_PATH = "/"
