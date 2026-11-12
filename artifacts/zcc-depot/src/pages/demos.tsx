@@ -33,7 +33,7 @@ export default function Demos() {
       <VideoHighlights />
 
       <Section>
-        <SectionHead id="agenda" num="02" eyebrow="Demo agenda" title="A presenter-ready journey" lede="Customer → Agent → Platform → Outcomes. Step through the rooms; each one links to the depot page that supports it." />
+        <SectionHead id="agenda" num="02" eyebrow="Demo Approach" title="A presenter-ready journey" lede="Customer → Agent → Platform → Outcomes. Step through the rooms; each one links to the depot page that supports it." />
         <div className="grid gap-6 lg:grid-cols-12">
           <ol className="relative space-y-1 lg:col-span-5" aria-label="Demo rooms">
             {DEMO_ROOMS.map((x, i) => (

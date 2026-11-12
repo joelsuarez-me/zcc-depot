@@ -13,7 +13,7 @@ export const NAV: NavItem[] = [
   },
   {
     href: "/demos", label: "Demos", children: [
-      { label: "Demo Agenda", href: "/demos#agenda" },
+      { label: "Demo Approach", href: "/demos#agenda" },
       { label: "Launch Guided Demo", href: DEMO_URL, external: true },
       { label: "Demo Instance Details", href: "/demos/instance-details" },
     ],
