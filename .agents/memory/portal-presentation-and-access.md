@@ -9,8 +9,8 @@ Keep main heroes compact on every page. The user repeatedly requested less verti
 
 **How to apply:** Preserve compact headers when adding pages; do not introduce full-screen or generously padded main heroes.
 
-The Sell Sheet and its source PDF require sign-in.
+The Sell Sheet, its source PDF, and the full Pricing guide require sign-in.
 
-**Why:** The PDF is marked Internal Only, and the user explicitly selected signed-in access.
+**Why:** The PDF is marked Internal Only. The Pricing guide combines public prices with internal packaging guidance and an internal source link. The user explicitly selected signed-in access for both guides.
 
 **How to apply:** Protect content and document bytes on the server, not merely by hiding the page. Public search may link to the sign-in gate but must not include the confidential guide text.

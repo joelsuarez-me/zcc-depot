@@ -31,6 +31,7 @@ import type {
   LogoutBrowserSessionParams,
   ObjectAuthorizationInput,
   ObjectAuthorizationResult,
+  PricingGuide,
   SellSheet,
   UploadUrlRequest,
   UploadUrlResponse
@@ -62,6 +63,83 @@ const withQueryKey = <T extends object, K>(query: T, queryKey: K): T & { queryKe
   }
   return result;
 };
+
+export const getGetPricingGuideUrl = () => {
+
+
+
+
+  return `/api/pricing-guide`
+}
+
+/**
+ * @summary Read signed-in pricing and internal packaging guidance
+ */
+export const getPricingGuide = async ( options?: Parameters<typeof customFetch>[1]): Promise<PricingGuide> => {
+
+  return customFetch<PricingGuide>(getGetPricingGuideUrl(),
+  {
+    ...options,
+    method: 'GET'
+
+
+  }
+);}
+
+
+
+
+
+export const getGetPricingGuideQueryKey = () => {
+    return [
+    `/api/pricing-guide`
+    ] as const;
+    }
+
+
+export const getGetPricingGuideQueryOptions = <TData = Awaited<ReturnType<typeof getPricingGuide>>, TError = ErrorType<void>>( options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getPricingGuide>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getGetPricingGuideQueryKey();
+
+
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof getPricingGuide>>> = ({ signal }) => getPricingGuide({ signal, ...requestOptions });
+
+
+
+
+
+   return  { queryKey, queryFn, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof getPricingGuide>>, TError, TData> & { queryKey: QueryKey }
+}
+
+export type GetPricingGuideQueryResult = NonNullable<Awaited<ReturnType<typeof getPricingGuide>>>
+export type GetPricingGuideQueryError = ErrorType<void>
+
+
+/**
+ * @summary Read signed-in pricing and internal packaging guidance
+ */
+
+export function useGetPricingGuide<TData = Awaited<ReturnType<typeof getPricingGuide>>, TError = ErrorType<void>>(
+  options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getPricingGuide>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+
+ ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+
+  const queryOptions = getGetPricingGuideQueryOptions(options)
+
+  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
+
+  return withQueryKey(query, queryOptions.queryKey);
+}
+
+
+
+
+
+
 
 export const getGetSellSheetUrl = () => {
 

@@ -9,6 +9,40 @@ import * as zod from 'zod';
 
 
 /**
+ * @summary Read signed-in pricing and internal packaging guidance
+ */
+export const GetPricingGuideResponse = zod.object({
+  "intro": zod.string(),
+  "billing": zod.string(),
+  "methods": zod.array(zod.object({
+  "id": zod.enum(['bundle', 'byoa', 'team']),
+  "name": zod.string(),
+  "tag": zod.string(),
+  "fit": zod.string(),
+  "price": zod.string(),
+  "unit": zod.string(),
+  "summary": zod.string(),
+  "details": zod.array(zod.string())
+})),
+  "costs": zod.array(zod.object({
+  "item": zod.string(),
+  "price": zod.string(),
+  "covers": zod.string()
+})),
+  "notes": zod.array(zod.object({
+  "title": zod.string(),
+  "body": zod.string()
+})),
+  "sources": zod.array(zod.object({
+  "title": zod.string(),
+  "url": zod.string(),
+  "note": zod.string(),
+  "internal": zod.boolean()
+}))
+})
+
+
+/**
  * @summary Read the internal sales guide
  */
 export const GetSellSheetResponse = zod.object({

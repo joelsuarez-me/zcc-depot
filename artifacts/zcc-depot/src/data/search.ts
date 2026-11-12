@@ -15,7 +15,7 @@ const PAGES: SearchEntry[] = [
   page("architecture", "Architecture", "/architecture", "Amazon Connect, Lambda, data flow, components, and regional footprint.", "aws technical"),
   page("sales", "Sales", "/sales", "Use cases, outcomes, FAQ, roadmap, and go-to-market guidance.", "gtm business value"),
   page("sell-sheet", "Sell Sheet", "/sell-sheet", "Signed-in access to the internal Zendesk Contact Center sales guide.", "sales guide enablement internal"),
-  page("pricing", "Pricing", "/pricing", "Three buying paths: Zendesk Contact Center bundle, Contact Center License BYOA, and Contact Center Team.", "commercial contract Amazon AWS"),
+  page("pricing", "Pricing", "/pricing", "Signed-in pricing and packaging guidance for the three Contact Center buying paths.", "commercial contract Amazon AWS sign in"),
   page("resources", "Resources", "/resources", "Curated Help Center articles and dashboards guidance.", "docs documentation help center"),
   page("agenda", "Today’s Agenda", "/agenda", "Signed-in area for preparing and presenting customer agendas.", "sign in presentation meeting"),
 ];

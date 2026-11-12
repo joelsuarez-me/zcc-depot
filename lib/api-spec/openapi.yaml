@@ -17,6 +17,19 @@ tags:
   - name: Storage
     description: Object storage upload and serving endpoints.
 paths:
+  /pricing-guide:
+    get:
+      operationId: getPricingGuide
+      summary: Read signed-in pricing and internal packaging guidance
+      responses:
+        "200":
+          description: Pricing guide for signed-in users.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PricingGuide"
+        "401":
+          description: Sign-in required.
   /sell-sheet:
     get:
       operationId: getSellSheet
@@ -408,6 +421,83 @@ components:
       schema:
         type: string
   schemas:
+    PricingGuide:
+      type: object
+      required: [intro, billing, methods, costs, notes, sources]
+      properties:
+        intro:
+          type: string
+        billing:
+          type: string
+        methods:
+          type: array
+          items:
+            $ref: "#/components/schemas/PricingMethod"
+        costs:
+          type: array
+          items:
+            $ref: "#/components/schemas/PricingCost"
+        notes:
+          type: array
+          items:
+            $ref: "#/components/schemas/PricingNote"
+        sources:
+          type: array
+          items:
+            $ref: "#/components/schemas/PricingSource"
+    PricingMethod:
+      type: object
+      required: [id, name, tag, fit, price, unit, summary, details]
+      properties:
+        id:
+          type: string
+          enum: [bundle, byoa, team]
+        name:
+          type: string
+        tag:
+          type: string
+        fit:
+          type: string
+        price:
+          type: string
+        unit:
+          type: string
+        summary:
+          type: string
+        details:
+          type: array
+          items:
+            type: string
+    PricingCost:
+      type: object
+      required: [item, price, covers]
+      properties:
+        item:
+          type: string
+        price:
+          type: string
+        covers:
+          type: string
+    PricingNote:
+      type: object
+      required: [title, body]
+      properties:
+        title:
+          type: string
+        body:
+          type: string
+    PricingSource:
+      type: object
+      required: [title, url, note, internal]
+      properties:
+        title:
+          type: string
+        url:
+          type: string
+        note:
+          type: string
+        internal:
+          type: boolean
     SellSheet:
       type: object
       required: [title, businessChallenge, pains, pitch, plays, preparation, pdfUrl]

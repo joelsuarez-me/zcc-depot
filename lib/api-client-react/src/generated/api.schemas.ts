@@ -5,6 +5,53 @@
  * API specification
  * OpenAPI spec version: 0.1.0
  */
+export type PricingMethodId = typeof PricingMethodId[keyof typeof PricingMethodId];
+
+
+export const PricingMethodId = {
+  bundle: 'bundle',
+  byoa: 'byoa',
+  team: 'team',
+} as const;
+
+export interface PricingMethod {
+  id: PricingMethodId;
+  name: string;
+  tag: string;
+  fit: string;
+  price: string;
+  unit: string;
+  summary: string;
+  details: string[];
+}
+
+export interface PricingCost {
+  item: string;
+  price: string;
+  covers: string;
+}
+
+export interface PricingNote {
+  title: string;
+  body: string;
+}
+
+export interface PricingSource {
+  title: string;
+  url: string;
+  note: string;
+  internal: boolean;
+}
+
+export interface PricingGuide {
+  intro: string;
+  billing: string;
+  methods: PricingMethod[];
+  costs: PricingCost[];
+  notes: PricingNote[];
+  sources: PricingSource[];
+}
+
 export interface SellSheetPlay {
   title: string;
   help: string;

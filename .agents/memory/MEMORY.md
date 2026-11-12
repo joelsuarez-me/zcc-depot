@@ -1,3 +1,3 @@
 - [YouTube transcript access](youtube-transcript-access.md) — empty caption responses can be retrieval failures even when an English caption track exists.
-- [Portal presentation and access](portal-presentation-and-access.md) — compact main heroes on all pages; Sell Sheet content and PDF require sign-in.
+- [Portal presentation and access](portal-presentation-and-access.md) — compact main heroes on all pages; Sell Sheet, its PDF, and Pricing require sign-in.
 - [Demo research prompts](demo-research-prompts.md) — the user removed OpenAI; keep demo preparation a local prompt-and-instructions builder.

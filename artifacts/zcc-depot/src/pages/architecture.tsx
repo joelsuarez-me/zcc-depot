@@ -196,7 +196,7 @@ export default function Architecture() {
     <>
       <PageHero eyebrow="Architecture · Interactive explanations" title={<>Two clouds. <span className="serif italic text-[#D1F470]">Connected service paths.</span></>}
         lede="Amazon Connect handles the call and routing. Zendesk Contact Center brings call controls and customer context into the agent workspace. Here is how to explain everything in between.">
-        {[["#journey", "Call journey"], ["#ai-suggestions", "AI suggestions"], ["#data-flow", "Data flow"], ["#components", "Components"], ["#footprint", "Global footprint"], ["#collaboration", "A2A collaboration"]].map(([h, l]) => (
+        {[["#ai-suggestions", "AI suggestions"], ["#data-flow", "Data flow"], ["#components", "Components"], ["#footprint", "Global footprint"], ["#collaboration", "A2A collaboration"]].map(([h, l]) => (
           <a key={h} href={h} className="rounded-full border border-[#F5F5F2]/20 px-4 py-2 text-sm hover:border-[#D1F470] hover:text-[#D1F470]" data-testid={`link-jump-${h.slice(1)}`}>{l}</a>
         ))}
       </PageHero>
