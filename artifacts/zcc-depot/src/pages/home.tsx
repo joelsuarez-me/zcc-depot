@@ -1,10 +1,11 @@
 import { useState } from "react";
-import { Link } from "wouter";
 import { motion, useReducedMotion, AnimatePresence } from "framer-motion";
 import { Ext, Note, Reveal, Section, SectionHead } from "@/components/kit";
 import { Pause, Play } from "lucide-react";
-import { HeroArt, PillarArt, RouteBadge } from "@/components/art";
-import { FEATURES, JOURNEY, LINKS, PILLARS } from "@/data/content";
+import { PillarArt } from "@/components/art";
+import { LandingHeroArt } from "@/components/landing-hero-art";
+import { CallJourney } from "@/components/call-journey";
+import { FEATURES, LINKS, PILLARS } from "@/data/content";
 
 export default function Home() {
   const reduce = useReducedMotion();
@@ -16,16 +17,16 @@ export default function Home() {
       <div className="zhero-wrap">
       <section className="zhero on-dark">
         <div className="grid-lines absolute inset-0" aria-hidden />
-        <div className="relative w-full px-6 pb-4 pt-6 md:px-12">
-          <motion.div className="grid gap-3 md:grid-cols-12 md:items-center md:gap-8" initial={reduce ? false : { opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8, ease: [0.2, 0.7, 0.2, 1] }}>
-            <h1 className="max-w-3xl font-sans text-[clamp(1rem,5.5vw,2rem)] font-semibold leading-tight tracking-[-0.035em] text-[#F5F5F2] md:col-span-7 lg:col-span-6">
+        <div className="relative w-full px-6 pb-3 pt-4 md:px-12">
+          <motion.div className="landing-hero-grid" initial={reduce ? false : { opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8, ease: [0.2, 0.7, 0.2, 1] }}>
+            <h1 className="landing-hero-title max-w-3xl font-sans text-[clamp(1rem,5.5vw,2rem)] font-semibold leading-tight tracking-[-0.035em] text-[#F5F5F2]">
               <span className="block whitespace-nowrap">ZENDESK CONTACT CENTER ·</span>{" "}
               <span className="block whitespace-nowrap"><span className="text-[#D1F470]">platform</span>{" "}ARCHITECT Depot</span>
             </h1>
-            <p className="max-w-2xl text-sm leading-snug text-[#F5F5F2]/75 md:col-span-5 lg:col-span-4"><span className="mr-1.5 align-middle lg:hidden"><RouteBadge motif="flow" /></span>
+            <p className="landing-hero-description max-w-2xl text-sm leading-snug text-[#F5F5F2]/75">
               Everything you need to prepare the customer conversation: the story, the architecture behind it, the outcomes it supports, and the official sources to back every claim.
             </p>
-            <div className="zart-slot pointer-events-none hidden lg:col-span-2 lg:block" aria-hidden><HeroArt motif="flow" className="is-sm" /></div>
+            <LandingHeroArt />
           </motion.div>
         </div>
         <div className={`relative flex items-center border-t border-[#D1F470]/15 ${paused || reduce ? "marquee-paused" : ""}`}>
@@ -62,21 +63,10 @@ export default function Home() {
         </div>
       </Section>
 
-      <Section tone="forest">
-        <SectionHead id="how-it-works" num="02" eyebrow="How it works" dark title="From caller to Zendesk agent"
-          lede="Follow the configured call journey: voice entry, routing, customer context, and the agent workspace." />
-        <ol className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4" aria-label="How Zendesk Contact Center works">
-          {JOURNEY.map(stage => (
-            <li key={stage.k} className="rounded-3xl border border-[#D1F470]/20 bg-[#11110D]/20 p-6 transition-all duration-300 hover:-translate-y-1 hover:border-[#D1F470]/60">
-              <div className="mono text-sm text-[#D1F470]">{stage.k} · {stage.label}</div>
-              <h3 className="mt-6 text-xl font-semibold">{stage.t}</h3>
-              <p className="mt-3 text-sm leading-relaxed text-[#F5F5F2]/70">{stage.d}</p>
-            </li>
-          ))}
-        </ol>
-        <Link href="/architecture#journey" className="mt-8 inline-flex rounded-full border border-[#D1F470]/40 px-5 py-3 text-sm font-semibold text-[#D1F470] transition-colors hover:bg-[#D1F470] hover:text-[#203524]">
-          Explore the call journey
-        </Link>
+      <Section>
+        <SectionHead id="how-it-works" num="02" eyebrow="How it works" title="From caller to Zendesk agent"
+          lede="Select a stage to see what it does. Illustrative architecture." />
+        <CallJourney />
       </Section>
 
       <Section tone="white">

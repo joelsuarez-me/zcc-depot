@@ -67,7 +67,7 @@ function SignIn({ login, expired }: { login: () => void; expired?: boolean }) {
 
 function Skeleton() {
   return (
-    <div className="mx-auto max-w-7xl animate-pulse space-y-5 px-5 py-12 md:px-8 motion-reduce:animate-none" aria-busy="true" aria-label="Loading pricing guide" data-testid="status-pricing-loading">
+    <div className="hero-content mx-auto max-w-7xl animate-pulse space-y-5 px-5 py-12 md:px-8 motion-reduce:animate-none" aria-busy="true" aria-label="Loading pricing guide" data-testid="status-pricing-loading">
       <div className="h-6 w-72 rounded-lg bg-[#e3e5dc]" />
       <div className="grid gap-4 lg:grid-cols-3"><div className="h-80 rounded-3xl bg-[#ebece5]" /><div className="h-80 rounded-3xl bg-[#ebece5]" /><div className="h-80 rounded-3xl bg-[#ebece5]" /></div>
     </div>
@@ -112,7 +112,7 @@ export default function Pricing() {
       </PageHero>
 
       {q.isLoading || (q.isFetching && !data && !q.isError) ? <Skeleton /> : q.isError || !data ? (
-        <div className="mx-auto max-w-3xl px-5 py-16 md:px-8" role="alert">
+        <div className="hero-content mx-auto max-w-3xl px-5 py-16 md:px-8" role="alert">
           <div className="rounded-3xl border border-[#11110D]/10 bg-[#FBFBF8] p-8">
             <div className="flex items-center gap-3"><AlertTriangle className="h-6 w-6 text-[#9a4b2a]" aria-hidden /><StateArt kind="error" /></div>
             <h2 className="mt-3 text-xl font-semibold text-[#11110D]">The pricing guide could not be loaded.</h2>
@@ -124,7 +124,7 @@ export default function Pricing() {
           </div>
         </div>
       ) : (
-        <div className="mx-auto max-w-7xl space-y-12 px-5 py-10 md:px-8 md:py-14" data-testid="content-pricing">
+        <div className="hero-content mx-auto max-w-7xl space-y-12 px-5 py-10 md:px-8 md:py-14" data-testid="content-pricing">
           <div className="grid gap-4 md:grid-cols-12">
             <p className="text-base leading-relaxed text-[#11110D]/80 md:col-span-7" data-testid="text-pricing-intro">{data.intro}</p>
             <p className="rounded-2xl bg-[#e9f1cf] p-4 text-sm leading-relaxed text-[#203524] md:col-span-5" data-testid="text-pricing-billing">

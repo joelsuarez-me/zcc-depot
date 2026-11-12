@@ -39,6 +39,8 @@
 /* Inset compact hero banner (reference: white page, rounded forest panel) */
 .zhero-wrap{background:#FDFDFB;padding:5.25rem .75rem .75rem}
 @media(min-width:768px){.zhero-wrap{padding:5.5rem 1.5rem 1rem}}
+.zhero-wrap + section > .section-body,.zhero-wrap + .hero-content{padding-top:1.5rem}
+@media(min-width:768px){.zhero-wrap + section > .section-body,.zhero-wrap + .hero-content{padding-top:2rem}}
 .zhero{position:relative;isolation:isolate;overflow:hidden;max-width:80rem;margin:0 auto;border-radius:1.5rem;background:#1B2E1F;color:#F5F5F2;min-height:150px;display:flex;flex-direction:column;justify-content:center}
 .zhero>*{position:relative;z-index:1}
 .zhero::before{content:"";position:absolute;inset:-20%;z-index:0;pointer-events:none;background:radial-gradient(40% 70% at 20% 30%,rgba(209,244,112,.16),transparent 70%),radial-gradient(35% 80% at 85% 80%,rgba(80,140,95,.35),transparent 70%);animation:zhero-wash 4.6s cubic-bezier(.4,0,.2,1) both}

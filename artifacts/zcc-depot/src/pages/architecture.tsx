@@ -1,123 +1,9 @@
 import { useState } from "react";
-import { motion, AnimatePresence, useReducedMotion } from "framer-motion";
-import { Phone, Workflow, FileText, Headset, RefreshCw, ThumbsUp, BookOpen } from "lucide-react";
+import { RefreshCw, ThumbsUp, BookOpen } from "lucide-react";
 import { Ext, Note, PageHero, Reveal, Section, SectionHead } from "@/components/kit";
-import { CORE_COMPONENTS, FLOWS, FLOW_NODES, JOURNEY, LAMBDAS, LINKS } from "@/data/content";
-
-const JICONS = [Phone, Workflow, FileText, Headset];
-
-function Journey() {
-  const [i, setI] = useState(0);
-  const reduce = useReducedMotion();
-  const s = JOURNEY[i];
-  return (
-    <div>
-      <div role="tablist" aria-label="Call journey stages" className="relative grid grid-cols-2 gap-3 md:grid-cols-4">
-        <div className="absolute left-[12%] right-[12%] top-9 hidden h-0.5 bg-[#203524]/15 md:block" aria-hidden>
-          <div className="h-full bg-[#203524] transition-all duration-500" style={{ width: `${(i / 3) * 100}%` }} />
-        </div>
-        {JOURNEY.map((j, k) => {
-          const I = JICONS[k];
-          return (
-            <button key={j.k} role="tab" aria-selected={i === k} onClick={() => setI(k)} data-testid={`tab-journey-${j.k}`} className="group relative flex flex-col items-center gap-3 rounded-2xl p-3 text-center">
-              <span className={`relative z-10 grid h-14 w-14 place-items-center rounded-full transition-all ${k <= i ? "bg-[#203524] text-[#D1F470]" : "border border-[#11110D]/15 bg-[#F5F5F2] text-[#11110D]/50 group-hover:border-[#203524]"} ${k === i ? "scale-110 ring-4 ring-[#D1F470]" : ""}`}><I className="h-5 w-5" /></span>
-              <span className="eyebrow text-[#11110D]/50">{j.k} · {j.label}</span>
-              <span className="font-semibold">{j.t}</span>
-            </button>
-          );
-        })}
-      </div>
-      <AnimatePresence mode="wait">
-        <motion.div key={i} role="tabpanel" initial={reduce ? false : { opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} exit={reduce ? undefined : { opacity: 0 }} transition={{ duration: 0.3 }}
-          className="mt-8 grid gap-6 rounded-[2rem] bg-[#203524] p-8 text-[#F5F5F2] md:grid-cols-2 md:p-10">
-          <div>
-            <h3 className="text-2xl font-semibold">{s.d}</h3>
-            <p className="mt-3 text-[#F5F5F2]/70">{s.detail}</p>
-            <div className="mt-5 flex flex-wrap gap-2">{s.chips.map((c) => <span key={c} className="mono rounded-full border border-[#D1F470]/40 px-3 py-1 text-xs text-[#D1F470]">{c}</span>)}</div>
-          </div>
-          <div className="rounded-2xl bg-[#F5F5F2] p-5 text-[#11110D]" aria-label="Illustrative Agent Workspace mock">
-            <div className="flex items-center justify-between text-xs"><span className="font-semibold">Zendesk Agent Workspace</span><span className="flex items-center gap-1.5"><span className="h-2 w-2 rounded-full bg-[#5a9b3c]" />Available</span></div>
-            <div className="mt-4 rounded-xl border border-[#11110D]/10 bg-white/60 p-4">
-              <div className="text-sm font-semibold">#4821 · Order status</div><div className="text-xs text-[#11110D]/55">Open · Priority normal</div>
-              <div className={`mt-4 rounded-lg p-3 transition-colors ${i >= 3 ? "bg-[#D1F470]" : "bg-[#11110D]/5"}`}>
-                <div className="mono text-[11px]">Zendesk Contact Center · 00:04</div>
-                <div className="mt-1 text-sm font-medium">Jordan Rivera</div>
-                <div className="text-sm italic text-[#11110D]/70">"I'm calling about my order..."</div>
-                <div className="mt-3 flex gap-2 text-xs"><span className="rounded-full bg-[#11110D] px-3 py-1 text-[#F5F5F2]">Mute</span><span className="rounded-full border border-[#11110D]/20 px-3 py-1">Transfer</span></div>
-              </div>
-            </div>
-            <p className="mono mt-3 text-[10px] text-[#11110D]/45">Illustrative mock. Not a product screenshot.</p>
-          </div>
-        </motion.div>
-      </AnimatePresence>
-      <Note>Amazon Connect + contact flow → Contact Center integration → Agent Workspace. Call attributes, recording writeback, and transcripts require configuration.</Note>
-    </div>
-  );
-}
-
-function DataFlow() {
-  const [node, setNode] = useState("zcc");
-  const [flow, setFlow] = useState<string | null>(null);
-  const activeFlow = FLOWS.find((f) => f.id === flow);
-  const n = FLOW_NODES.find((x) => x.id === node)!;
-  const lit = (id: string) => (activeFlow ? activeFlow.path.includes(id) : id === node);
-  const NodeBtn = ({ id }: { id: string }) => {
-    const x = FLOW_NODES.find((y) => y.id === id)!;
-    const step = activeFlow ? activeFlow.path.indexOf(id) : -1;
-    return (
-      <button onClick={() => { setNode(id); setFlow(null); }} aria-pressed={node === id && !flow} data-testid={`button-node-${id}`}
-        className={`relative w-full rounded-2xl border p-4 text-left transition-all ${lit(id) ? "border-[#D1F470] bg-[#D1F470] text-[#11110D]" : "border-[#F5F5F2]/15 hover:border-[#D1F470]/60"}`}>
-        {step >= 0 && <span className="mono absolute -right-2 -top-2 grid h-6 w-6 place-items-center rounded-full bg-[#11110D] text-[10px] text-[#D1F470]">{step + 1}</span>}
-        <div className="font-semibold">{x.t}</div><div className={`text-xs ${lit(id) ? "text-[#11110D]/65" : "text-[#F5F5F2]/50"}`}>{x.sub}</div>
-      </button>
-    );
-  };
-  return (
-    <div className="grid gap-6 lg:grid-cols-12">
-      <div className="lg:col-span-8">
-        <div className="grid gap-4 md:grid-cols-[1fr_auto_2fr]">
-          <div className="rounded-3xl border border-[#F5F5F2]/15 p-4">
-            <div className="eyebrow mb-3 text-[#D1F470]">Zendesk AWS Cloud</div>
-            <NodeBtn id="zcc" />
-          </div>
-          <div className="hidden items-center md:flex" aria-hidden>
-            <svg width="60" height="40"><line x1="0" y1="20" x2="60" y2="20" stroke="#D1F470" strokeWidth="2" className="dash-flow" /></svg>
-          </div>
-          <div className="rounded-3xl border border-dashed border-[#F5F5F2]/25 p-4">
-            <div className="eyebrow mb-3 text-[#D1F470]">Customer AWS Cloud</div>
-            <div className="grid gap-3 sm:grid-cols-2">{["connect", "lambda", "cognito", "internal", "records"].map((id) => <NodeBtn key={id} id={id} />)}</div>
-          </div>
-        </div>
-        <div className="mt-5 flex flex-wrap items-center gap-2">
-          <span className="eyebrow mr-2 text-[#F5F5F2]/50">Trace a flow</span>
-          {FLOWS.map((f) => (
-            <button key={f.id} onClick={() => setFlow(flow === f.id ? null : f.id)} aria-pressed={flow === f.id} data-testid={`button-flow-${f.id}`}
-              className={`rounded-full px-4 py-2 text-sm font-medium transition ${flow === f.id ? "bg-[#D1F470] text-[#11110D]" : "border border-[#F5F5F2]/20 hover:border-[#D1F470]"}`}>{f.t}</button>
-          ))}
-        </div>
-      </div>
-      <div className="lg:col-span-4" aria-live="polite">
-        <div className="h-full rounded-3xl bg-[#F5F5F2] p-7 text-[#11110D]">
-          {activeFlow ? (
-            <>
-              <div className="eyebrow text-[#203524]">Flow</div>
-              <h3 className="mt-3 text-2xl font-semibold">{activeFlow.t}</h3>
-              <p className="mt-3 text-[#11110D]/70">{activeFlow.d}</p>
-              <ol className="mt-5 space-y-2">{activeFlow.path.map((p, k) => <li key={p + k} className="flex gap-3 text-sm"><span className="mono text-[#203524]/50">{k + 1}</span>{FLOW_NODES.find((x) => x.id === p)!.t}</li>)}</ol>
-            </>
-          ) : (
-            <>
-              <div className="eyebrow text-[#203524]">{n.side}</div>
-              <h3 className="mt-3 text-2xl font-semibold">{n.t}</h3>
-              <p className="mt-3 text-[#11110D]/70">{n.d}</p>
-              <div className="mt-5 flex flex-wrap gap-2">{n.chips.map((c) => <span key={c} className="rounded-full bg-[#203524]/8 px-3 py-1 text-xs">{c}</span>)}</div>
-            </>
-          )}
-        </div>
-      </div>
-    </div>
-  );
-}
+import { CORE_COMPONENTS, LAMBDAS, LINKS } from "@/data/content";
+import { SystemDataFlow } from "@/components/system-data-flow";
+import { CallJourney } from "@/components/call-journey";
 
 function Lambdas() {
   const [tab, setTab] = useState<"deployment" | "runtime">("runtime");
@@ -162,7 +48,7 @@ export default function Architecture() {
 
       <Section>
         <SectionHead id="journey" num="01" eyebrow="How it works" title="From caller to Zendesk agent" lede="Select a stage to see what it does. Illustrative architecture." />
-        <Journey />
+        <CallJourney />
       </Section>
 
       <Section tone="white">
@@ -199,8 +85,8 @@ export default function Architecture() {
       </Section>
 
       <Section tone="forest">
-        <SectionHead id="data-flow" num="03" eyebrow="System + data flow" dark title="Detailed system overview" lede="Explore the service boundary between Zendesk and the customer-managed AWS environment. Select a component, or trace a flow end to end." />
-        <DataFlow />
+        <SectionHead id="data-flow" num="03" eyebrow="System + data flow" dark title="One connected service architecture" lede="Follow the signals across Zendesk and your AWS environment. Explore the complete architecture, trace a flow, or inspect any component." />
+        <SystemDataFlow />
         <p className="mt-8 text-xs text-[#F5F5F2]/50">Conceptual architecture. Confirm deployment-specific services, regions, and integration behavior with current product guidance.</p>
       </Section>
 

@@ -58,7 +58,7 @@ function SignInPrompt({ login, expired }: { login: () => void; expired?: boolean
 
 function Skeleton() {
   return (
-    <div className="mx-auto max-w-5xl animate-pulse space-y-5 px-5 py-12 md:px-8 motion-reduce:animate-none" aria-busy="true" aria-label="Loading sell sheet">
+    <div className="hero-content mx-auto max-w-5xl animate-pulse space-y-5 px-5 py-12 md:px-8 motion-reduce:animate-none" aria-busy="true" aria-label="Loading sell sheet">
       <div className="h-8 w-64 rounded-lg bg-[#e3e5dc]" />
       <div className="h-32 rounded-3xl bg-[#ebece5]" />
       <div className="grid gap-4 md:grid-cols-2"><div className="h-48 rounded-2xl bg-[#ebece5]" /><div className="h-48 rounded-2xl bg-[#ebece5]" /></div>
@@ -130,7 +130,7 @@ export default function SellSheetPage() {
       </PageHero>
 
       {q.isLoading || (q.isFetching && !data && !q.isError) ? <Skeleton /> : q.isError || !data ? (
-        <div className="mx-auto max-w-3xl px-5 py-16 md:px-8" role="alert">
+        <div className="hero-content mx-auto max-w-3xl px-5 py-16 md:px-8" role="alert">
           <div className="rounded-3xl border border-[#11110D]/10 bg-[#FBFBF8] p-8">
             <AlertTriangle className="h-6 w-6 text-[#9a4b2a]" aria-hidden />
             <h2 className="mt-3 text-xl font-semibold text-[#11110D]">The sell sheet could not be loaded.</h2>
@@ -142,7 +142,7 @@ export default function SellSheetPage() {
           </div>
         </div>
       ) : (
-        <article className="mx-auto max-w-5xl space-y-16 px-5 py-12 md:px-8 md:py-16" data-testid="content-sellsheet">
+        <article className="hero-content mx-auto max-w-5xl space-y-16 px-5 py-12 md:px-8 md:py-16" data-testid="content-sellsheet">
           <p className="mono text-xs uppercase tracking-wider text-[#11110D]/50" data-testid="text-sellsheet-title">{data.title}</p>
 
           <section aria-labelledby="sec-pitch">

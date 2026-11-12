@@ -5,7 +5,9 @@ description: User requirements for hero density and internal sales-guide access.
 
 Keep main heroes compact on every page. The user repeatedly requested less vertical space for titles, subtitles, and shaded headers, aiming to see useful content in one browser viewport at 90% zoom.
 
-**Why:** The user found the large headers excessive and specifically requested another roughly 50% reduction after the first compacting pass.
+Keep the gap between each main hero and its first content section compact too; do not recreate a large blank area through first-section padding.
+
+**Why:** The user found the large headers excessive, requested another roughly 50% reduction after the first compacting pass, and identified the blank gap below the landing-page hero as wasted space.
 
 **How to apply:** Preserve compact headers when adding pages; do not introduce full-screen or generously padded main heroes.
 

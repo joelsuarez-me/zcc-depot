@@ -245,7 +245,7 @@ export default function DemoBriefPage() {
       <PageHero eyebrow="Demos · Live research" title="Demo Researcher"
         lede="Research a company from current public sources and get a cited, eight-section prep report for your Zendesk Contact Center demo." />
 
-      <div className="mx-auto grid max-w-7xl gap-6 px-5 py-10 md:px-8 lg:grid-cols-12">
+      <div className="mx-auto grid max-w-7xl gap-6 px-5 pb-10 pt-6 md:px-8 md:pt-8 lg:grid-cols-12">
         <aside className="space-y-5 lg:col-span-4 lg:self-start lg:sticky lg:top-24">
           {authLoading ? (
             <div className="space-y-3 rounded-3xl border border-[#11110D]/10 bg-[#FBFBF8] p-6" aria-busy="true" data-testid="skeleton-auth">

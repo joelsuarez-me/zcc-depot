@@ -9,7 +9,7 @@ import { SearchTrigger } from "@/components/global-search";
 import { MobileNavigationLinks, PrimaryNavigation } from "@/components/header-navigation";
 import { SectionNavigation } from "@/components/section-navigation";
 
-const logo = `${import.meta.env.BASE_URL}brand/zendesk-monochrome.png`;
+const logo = `${import.meta.env.BASE_URL}brand/zendesk-monochrome-padded.png`;
 
 export { NAV } from "@/data/navigation";
 
@@ -89,7 +89,7 @@ export function PageHero({ eyebrow, title, lede, children, motif }: { eyebrow: s
 
 export function Section({ children, className = "", tone = "paper" }: { children: ReactNode; className?: string; tone?: "paper" | "white" | "forest" | "ink" }) {
   const bg = { paper: "bg-[#F5F5F2]", white: "bg-[#FBFBF8]", forest: "on-dark bg-[#203524] text-[#F5F5F2]", ink: "on-dark bg-[#11110D] text-[#F5F5F2]" }[tone];
-  return <section className={`${bg} ${className}`}><div className="mx-auto max-w-7xl px-5 py-20 md:px-8 md:py-28">{children}</div></section>;
+  return <section className={`${bg} ${className}`}><div className="section-body mx-auto max-w-7xl px-5 py-20 md:px-8 md:py-28">{children}</div></section>;
 }
 
 export function Note({ children }: { children: ReactNode }) {
@@ -134,7 +134,7 @@ export function Shell({ children }: { children: ReactNode }) {
         <div className="pointer-events-none absolute inset-x-0 top-0 h-[4.75rem] bg-[#FDFDFB]" aria-hidden style={{ opacity: scrolled ? 0 : 1 }} />
         <div className={`relative z-10 mx-auto flex max-w-7xl items-center justify-between rounded-full border px-3 py-2 transition-all duration-300 md:px-4 ${scrolled || open ? "border-[#11110D]/10 bg-[#F5F5F2]/90 shadow-[0_10px_30px_-12px_rgba(32,53,36,.35)] backdrop-blur-md" : "border-transparent bg-[#FDFDFB]"}`}>
           <Link href="/" className="flex items-center gap-3 rounded-full pl-2 pr-3" data-testid="link-home-logo">
-            <img src={logo} alt="Zendesk" className="h-10 w-auto rounded-md" />
+            <img src={logo} alt="Zendesk" className="h-10 w-14 rounded-lg bg-[#11110D] object-contain" />
           </Link>
           <PrimaryNavigation />
           <div className="flex items-center gap-2">
