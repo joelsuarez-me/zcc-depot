@@ -10,7 +10,10 @@ export const NAV: NavItem[] = [
     ],
   },
   {
-    href: "/architecture", label: "Architecture",
+    href: "/architecture", label: "Architecture", children: [
+      { label: "System + data flow", href: "/architecture#data-flow" },
+      { label: "Components", href: "/architecture#components" },
+    ],
   },
   {
     href: "/sales", label: "Sales", children: [
@@ -25,6 +28,7 @@ export const NAV: NavItem[] = [
       { label: "03 Demo Instance Details", href: "/demos/instance-details" },
       { label: "04 Demo Researcher", href: "/demos/brief" },
       { label: "05 Demo Agenda", href: "/agenda" },
+      { label: "06 Demo Nuggets", href: "/demos/nuggets" },
     ],
   },
   { href: "/resources", label: "Resources", children: [

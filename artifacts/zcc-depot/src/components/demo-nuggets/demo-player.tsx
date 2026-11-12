@@ -1,0 +1,76 @@
+import type { ReactNode } from "react";
+import { Pause, Play, RotateCcw } from "lucide-react";
+import { useDemoPlayback, type DemoPlayback } from "@/hooks/use-demo-playback";
+import type { DemoNugget, NuggetId } from "@/data/demo-nuggets";
+import "./demo-nuggets.css";
+
+type Props = { nugget: DemoNugget; activeId: NuggetId | null; onActiveChange: (id: NuggetId | null) => void; children: (pb: DemoPlayback) => ReactNode; dark?: boolean };
+
+export function DemoPlayer({ nugget, activeId, onActiveChange, children, dark = false }: Props) {
+  const pb = useDemoPlayback({ id: nugget.id, stages: nugget.stages, activeId, onActiveChange });
+  const id = nugget.id;
+  const label = pb.playing ? "Pause" : pb.status === "paused" ? "Resume" : pb.complete ? "Play again" : "Play";
+  const toggle = () => (pb.playing ? pb.pause() : pb.play());
+  const statusText = { idle: "Ready to play", playing: "Playing", paused: "Paused", complete: "Complete" }[pb.status];
+  const ink = dark ? "text-[#F5F5F2]" : "text-[#11110D]";
+
+  return (
+    <div className={`grid gap-6 lg:grid-cols-12 ${pb.playing ? "" : "dn-paused"} ${pb.status === "idle" ? "dn-idle" : ""}`} data-testid={`demo-${id}`}>
+      <div className="relative min-w-0 lg:col-span-8">
+        <div className={`dn-stage ${dark ? "is-dark" : ""}`} data-testid={`stage-${id}`} data-step={pb.stage.id}>
+          <div className="pointer-events-none absolute left-4 top-4 z-20 rounded-full bg-[#11110D]/80 px-3 py-1 text-[0.62rem] uppercase tracking-[.14em] text-[#D1F470] mono">Simulation · sample data</div>
+          {children(pb)}
+          {pb.status === "idle" && (
+            <button type="button" onClick={pb.play} data-testid={`button-overlay-play-${id}`} aria-label={`Play ${nugget.title} demo`}
+              className="group absolute inset-0 z-30 grid place-items-center bg-[#11110D]/25 backdrop-blur-[1px] transition-colors hover:bg-[#11110D]/15">
+              <span className="flex items-center gap-3 rounded-full bg-[#D1F470] py-3 pl-3 pr-6 text-base font-semibold text-[#11110D] shadow-[0_20px_40px_-15px_rgba(17,17,13,.6)] transition-transform group-hover:scale-105">
+                <span className="grid h-10 w-10 place-items-center rounded-full bg-[#203524] text-[#D1F470]"><Play className="h-5 w-5 translate-x-px" fill="currentColor" aria-hidden /></span>
+                Play demo
+              </span>
+            </button>
+          )}
+        </div>
+      </div>
+
+      <div className={`flex min-w-0 flex-col gap-4 lg:col-span-4 ${ink}`}>
+        <div className="flex items-center gap-2">
+          <button type="button" onClick={toggle} aria-pressed={pb.playing} aria-label={`${label} ${nugget.title} demo`} data-testid={`button-play-${id}`}
+            className="inline-flex items-center gap-2 rounded-full bg-[#D1F470] px-5 py-2.5 text-sm font-semibold text-[#11110D] transition-transform hover:-translate-y-0.5">
+            {pb.playing ? <Pause className="h-4 w-4" aria-hidden /> : <Play className="h-4 w-4" aria-hidden />}{label}
+          </button>
+          <button type="button" onClick={pb.replay} aria-label={`Restart ${nugget.title} demo from the beginning`} data-testid={`button-replay-${id}`}
+            className={`inline-flex items-center gap-2 rounded-full border px-4 py-2.5 text-sm font-semibold transition-colors ${dark ? "border-[#F5F5F2]/20 hover:bg-[#F5F5F2]/10" : "border-[#11110D]/15 hover:bg-[#11110D]/5"}`}>
+            <RotateCcw className="h-4 w-4" aria-hidden />Restart
+          </button>
+        </div>
+        <div>
+          <div className="mono mb-1.5 flex justify-between text-[0.68rem] uppercase tracking-[.14em] opacity-60">
+            <span data-testid={`status-${id}`} role="status">{statusText}</span>
+            <span>Step {pb.stepIndex + 1} / {nugget.stages.length}</span>
+          </div>
+          <div className={`h-1.5 overflow-hidden rounded-full ${dark ? "bg-[#F5F5F2]/10" : "bg-[#11110D]/10"}`} aria-hidden>
+            <div className="h-full w-full origin-left rounded-full bg-[#7DA33A]" style={{ transform: `scaleX(${pb.progress})` }} />
+          </div>
+        </div>
+        <ol className="space-y-1.5" aria-label={`${nugget.title} steps`}>
+          {nugget.stages.map((s, i) => {
+            const cur = i === pb.stepIndex && pb.status !== "idle";
+            const done = i < pb.stepIndex || pb.complete;
+            return (
+              <li key={s.id}>
+                <button type="button" onClick={() => pb.seekStep(i)} aria-current={cur ? "step" : undefined} data-testid={`button-step-${id}-${s.id}`}
+                  className={`w-full rounded-2xl border p-3 text-left transition-colors ${cur ? "border-[#7DA33A] bg-[#D1F470]/25" : dark ? "border-[#F5F5F2]/10 hover:bg-[#F5F5F2]/5" : "border-[#11110D]/10 hover:bg-[#11110D]/[.04]"}`}>
+                  <div className="flex items-center gap-2.5 text-sm font-semibold">
+                    <span className={`mono grid h-6 w-6 shrink-0 place-items-center rounded-full text-[0.65rem] ${done || cur ? "bg-[#203524] text-[#D1F470]" : dark ? "bg-[#F5F5F2]/10" : "bg-[#11110D]/10"}`}>{String(i + 1).padStart(2, "0")}</span>
+                    {s.label}
+                  </div>
+                  {cur && <p className="mt-1.5 pl-[2.1rem] text-xs leading-relaxed opacity-70">{s.description}</p>}
+                </button>
+              </li>
+            );
+          })}
+        </ol>
+      </div>
+    </div>
+  );
+}

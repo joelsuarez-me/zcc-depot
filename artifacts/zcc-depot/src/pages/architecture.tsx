@@ -2,7 +2,7 @@ import { useState } from "react";
 import { motion, AnimatePresence, useReducedMotion } from "framer-motion";
 import { Phone, Workflow, FileText, Headset, RefreshCw, ThumbsUp, BookOpen } from "lucide-react";
 import { Ext, Note, PageHero, Reveal, Section, SectionHead } from "@/components/kit";
-import { CORE_COMPONENTS, FLOWS, FLOW_NODES, JOURNEY, LAMBDAS, LINKS, REGIONS } from "@/data/content";
+import { CORE_COMPONENTS, FLOWS, FLOW_NODES, JOURNEY, LAMBDAS, LINKS } from "@/data/content";
 
 const JICONS = [Phone, Workflow, FileText, Headset];
 
@@ -150,53 +150,12 @@ function Lambdas() {
   );
 }
 
-function Footprint() {
-  const [sel, setSel] = useState<string | null>(null);
-  const region = REGIONS.find((r) => r.pts.some((p) => p.n === sel));
-  return (
-    <div className="grid gap-8 lg:grid-cols-12">
-      <div className="lg:col-span-8">
-        <div className="relative aspect-[2/1] overflow-hidden rounded-[2rem] bg-[#203524]">
-          <div className="grid-lines absolute inset-0" aria-hidden />
-          {REGIONS.flatMap((r) => r.pts.map((p) => (
-            <button key={p.n} onClick={() => setSel(p.n)} aria-pressed={sel === p.n} aria-label={`${p.n}, ${r.r}`} data-testid={`button-pod-${p.n.replace(/\W/g, "").toLowerCase()}`}
-              className="group absolute -translate-x-1/2 -translate-y-1/2" style={{ left: `${p.x}%`, top: `${p.y}%` }}>
-              <span className="pulse-ring absolute inset-0 rounded-full bg-[#D1F470]/40" aria-hidden />
-              <span className={`relative block h-3.5 w-3.5 rounded-full border-2 border-[#D1F470] transition ${sel === p.n ? "scale-150 bg-[#D1F470]" : "bg-[#203524] group-hover:bg-[#D1F470]"}`} />
-              <span className="mono absolute left-1/2 top-5 -translate-x-1/2 whitespace-nowrap text-[10px] text-[#F5F5F2]/70">{p.n}</span>
-            </button>
-          )))}
-          {["Americas", "Europe", "Asia Pacific"].map((t, k) => <span key={t} className="eyebrow absolute bottom-4 text-[#D1F470]/60" style={{ left: `${[8, 42, 74][k]}%` }}>{t}</span>)}
-        </div>
-      </div>
-      <div className="space-y-4 lg:col-span-4">
-        <div className="rounded-3xl bg-[#D1F470] p-6" aria-live="polite">
-          <div className="eyebrow">Global delivery network</div>
-          <p className="mt-3 text-2xl font-semibold">{sel ? `${sel}` : "Select a delivery point."}</p>
-          <p className="mt-1 text-[#11110D]/70">{region ? `${region.r} · ${region.pts.map((p) => p.n).join(", ")}` : "Pins mark the regions shown in the supplied overview."}</p>
-        </div>
-        <div className="grid grid-cols-3 gap-2 text-center">
-          {[["15", "Global pods"], ["9", "Regions"], ["3", "AZs / pod"]].map(([v, l]) => <div key={l} className="rounded-2xl border border-[#11110D]/10 p-3"><div className="text-2xl font-semibold">{v}</div><div className="text-xs text-[#11110D]/55">{l}</div></div>)}
-        </div>
-        <div className="grid grid-cols-3 gap-2 text-center">
-          {[["3.3B", "Users"], ["2.8T", "Requests"], ["100,000+", "Customers"]].map(([v, l]) => <div key={l} className="rounded-2xl bg-[#203524] p-3 text-[#F5F5F2]"><div className="text-lg font-semibold text-[#D1F470]">{v}</div><div className="text-xs text-[#F5F5F2]/60">{l}</div></div>)}
-        </div>
-      </div>
-      <div className="grid gap-3 sm:grid-cols-2 lg:col-span-12 lg:grid-cols-4">
-        {[["AWS-powered foundation", "Infrastructure designed to scale across service tiers."], ["Regional Points of Delivery", "Services delivered from geographically distributed locations."], ["Isolated service pods", "Designed to contain incidents and support resilience."], ["Data-location choice", "Customers can request a nearby or local data center."]].map(([t, d], k) => (
-          <div key={t} className="rounded-2xl border border-[#11110D]/10 p-5"><div className="mono text-xs text-[#203524]/50">0{k + 1}</div><div className="mt-2 font-semibold">{t}</div><p className="mt-1 text-sm text-[#11110D]/60">{d}</p></div>
-        ))}
-      </div>
-    </div>
-  );
-}
-
 export default function Architecture() {
   return (
     <>
       <PageHero eyebrow="Architecture · Interactive explanations" title={<>Two clouds. <span className="serif italic text-[#D1F470]">Connected service paths.</span></>}
         lede="Amazon Connect handles the call and routing. Zendesk Contact Center brings call controls and customer context into the agent workspace. Here is how to explain everything in between.">
-        {[["#ai-suggestions", "AI suggestions"], ["#data-flow", "Data flow"], ["#components", "Components"], ["#footprint", "Global footprint"], ["#collaboration", "A2A collaboration"]].map(([h, l]) => (
+        {[["#data-flow", "System + data flow"], ["#components", "Components"]].map(([h, l]) => (
           <a key={h} href={h} className="rounded-full border border-[#F5F5F2]/20 px-4 py-2 text-sm hover:border-[#D1F470] hover:text-[#D1F470]" data-testid={`link-jump-${h.slice(1)}`}>{l}</a>
         ))}
       </PageHero>
@@ -277,14 +236,8 @@ export default function Architecture() {
         <Note>Source: <Ext href={LINKS.components} className="underline">Understanding Contact Center components</Ext>. Exact resources and behavior depend on the deployed version and configuration.</Note>
       </Section>
 
-      <Section tone="white">
-        <SectionHead id="footprint" num="05" eyebrow="Global platform" title="One global platform, resilient regional infrastructure" lede="Select a delivery point to explore Zendesk's global footprint." />
-        <Footprint />
-        <Note>Scale figures and locations reproduced from the supplied Zendesk architecture overview image. Map positions are approximate.</Note>
-      </Section>
-
       <Section tone="ink">
-        <SectionHead id="collaboration" num="06" eyebrow="Latest news · per internal briefing" dark title={<>Agent-to-Agent collaboration <span className="serif italic text-[#D1F470]">in Amazon Connect</span></>}
+        <SectionHead id="collaboration" num="05" eyebrow="Latest news · per internal briefing" dark title={<>Agent-to-Agent collaboration <span className="serif italic text-[#D1F470]">in Amazon Connect</span></>}
           lede="Per the source briefing, AWS launched A2A collaboration (GA, Customer tier), bringing specialist AI agents into live customer contacts under a Connect orchestrator." />
         <p className="mb-8 rounded-2xl border border-[#D1F470]/30 p-4 text-sm text-[#F5F5F2]/75"><strong className="text-[#D1F470]">Terminology:</strong> A2A here means AI-agent collaboration, not a human agent-to-agent transfer. Connect adds voice streaming, session continuity, and built-in observability to the open A2A protocol.</p>
         <div className="grid gap-3 md:grid-cols-4">
