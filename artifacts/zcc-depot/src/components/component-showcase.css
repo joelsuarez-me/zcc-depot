@@ -13,7 +13,7 @@
 .cs-pp{display:inline-flex;align-items:center;gap:.35rem;height:1.9rem;padding:0 .7rem;border-radius:999px;border:1px solid rgba(245,245,242,.25);font-size:.75rem;color:var(--paper);background:rgba(245,245,242,.06)}
 .cs-pp:hover:not(:disabled){border-color:var(--lime);color:var(--lime)}
 .cs-pp:disabled{opacity:.7;cursor:default}
-.cs-svg{display:block;width:100%;height:auto;margin:.5rem 0 .25rem;font-family:"DM Sans",sans-serif}
+.cs-svg{display:block;width:100%;height:auto;margin:.5rem 0 .25rem;font-family:var(--app-font-sans)}
 .cs-svg text{fill:#F5F5F2;font-size:11px;font-weight:600}
 .cs-wire{fill:none;stroke:rgba(245,245,242,.28);stroke-width:2;stroke-dasharray:4 5;transition:stroke .4s}
 .cs-wire.hot{stroke:var(--lime);stroke-dasharray:none}

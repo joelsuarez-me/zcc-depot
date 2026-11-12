@@ -26,7 +26,7 @@
 .sdf-node{transition:opacity .35s}
 .sdf-node:focus-visible rect.ring{stroke:var(--forest);stroke-width:2;opacity:1}
 .sdf-node rect.ring{fill:none;opacity:0}
-.sdf-t{fill:var(--forest);font:600 13px "DM Sans",sans-serif}
+.sdf-t{fill:var(--forest);font:600 13px var(--app-font-sans)}
 .sdf-node.primary .sdf-t{fill:#FFFFFF}
 .sdf-node.primary .sdf-t{font-size:17px}
 .sdf-s{fill:#52675C;font:400 10.5px "JetBrains Mono",monospace;letter-spacing:.04em}
@@ -75,7 +75,7 @@
 .sdf-node.sel rect.slab{fill:#203524}
 .sdf-node.dim{opacity:.62}
 .sdf-node.sel rect.sheen{opacity:.5}
-.sdf-t{font:600 14px "DM Sans",sans-serif;letter-spacing:-.01em}
+.sdf-t{font:600 14px var(--app-font-sans);letter-spacing:-.01em}
 .sdf-node.primary .sdf-t{font-size:18px;letter-spacing:-.02em}
 .sdf-s{font-size:10.5px}
 .sdf-node.primary rect.icon-bg{fill:#2B4A31;stroke:#8BAA43}
