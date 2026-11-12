@@ -202,12 +202,12 @@ export default function Architecture() {
       </PageHero>
 
       <Section>
-        <SectionHead id="journey" num="03" eyebrow="How it works" title="From caller to Zendesk agent" lede="Select a stage to see what it does. Illustrative architecture." />
+        <SectionHead id="journey" num="01" eyebrow="How it works" title="From caller to Zendesk agent" lede="Select a stage to see what it does. Illustrative architecture." />
         <Journey />
       </Section>
 
       <Section tone="white">
-        <SectionHead id="ai-suggestions" num="04" eyebrow="Agent knowledge" title={<>Live transcript in. <span className="hl">Relevant knowledge out.</span></>}
+        <SectionHead id="ai-suggestions" num="02" eyebrow="Agent knowledge" title={<>Live transcript in. <span className="hl">Relevant knowledge out.</span></>}
           lede="Give agents call-specific guidance from your Zendesk help center while a customer conversation is still in progress." />
         <div className="grid gap-6 lg:grid-cols-12">
           <Reveal className="rounded-[2rem] bg-[#203524] p-8 text-[#F5F5F2] lg:col-span-5">
@@ -240,13 +240,13 @@ export default function Architecture() {
       </Section>
 
       <Section tone="forest">
-        <SectionHead id="data-flow" num="05" eyebrow="System + data flow" dark title="Detailed system overview" lede="Explore the service boundary between Zendesk and the customer-managed AWS environment. Select a component, or trace a flow end to end." />
+        <SectionHead id="data-flow" num="03" eyebrow="System + data flow" dark title="Detailed system overview" lede="Explore the service boundary between Zendesk and the customer-managed AWS environment. Select a component, or trace a flow end to end." />
         <DataFlow />
         <p className="mt-8 text-xs text-[#F5F5F2]/50">Conceptual architecture. Confirm deployment-specific services, regions, and integration behavior with current product guidance.</p>
       </Section>
 
       <Section>
-        <SectionHead id="components" num="06" eyebrow="Components" title="How the pieces fit together" lede="Each Contact Center environment connects to one Amazon Connect instance and uses supporting services deployed in the customer's AWS account." />
+        <SectionHead id="components" num="04" eyebrow="Components" title="How the pieces fit together" lede="Each Contact Center environment connects to one Amazon Connect instance and uses supporting services deployed in the customer's AWS account." />
         <div className="mb-8 grid items-stretch gap-3 md:grid-cols-[1fr_auto_1fr_auto_1fr]">
           {[["Agent experience", "Zendesk Contact Center app", "Omnichannel inbox, AI tools, dashboards, and agent workflows"], ["Voice + routing", "Amazon Connect", "Calls, chats, queues, contact flows, and routing"], ["Integration layer", "AWS services", "CloudFormation, Lambda, Cognito, and event or streaming connections"]].map(([e, t, d], k) => (
             <div key={t} className="contents">
@@ -278,13 +278,13 @@ export default function Architecture() {
       </Section>
 
       <Section tone="white">
-        <SectionHead id="footprint" num="07" eyebrow="Global platform" title="One global platform, resilient regional infrastructure" lede="Select a delivery point to explore Zendesk's global footprint." />
+        <SectionHead id="footprint" num="05" eyebrow="Global platform" title="One global platform, resilient regional infrastructure" lede="Select a delivery point to explore Zendesk's global footprint." />
         <Footprint />
         <Note>Scale figures and locations reproduced from the supplied Zendesk architecture overview image. Map positions are approximate.</Note>
       </Section>
 
       <Section tone="ink">
-        <SectionHead id="collaboration" num="20" eyebrow="Latest news · per internal briefing" dark title={<>Agent-to-Agent collaboration <span className="serif italic text-[#D1F470]">in Amazon Connect</span></>}
+        <SectionHead id="collaboration" num="06" eyebrow="Latest news · per internal briefing" dark title={<>Agent-to-Agent collaboration <span className="serif italic text-[#D1F470]">in Amazon Connect</span></>}
           lede="Per the source briefing, AWS launched A2A collaboration (GA, Customer tier), bringing specialist AI agents into live customer contacts under a Connect orchestrator." />
         <p className="mb-8 rounded-2xl border border-[#D1F470]/30 p-4 text-sm text-[#F5F5F2]/75"><strong className="text-[#D1F470]">Terminology:</strong> A2A here means AI-agent collaboration, not a human agent-to-agent transfer. Connect adds voice streaming, session continuity, and built-in observability to the open A2A protocol.</p>
         <div className="grid gap-3 md:grid-cols-4">

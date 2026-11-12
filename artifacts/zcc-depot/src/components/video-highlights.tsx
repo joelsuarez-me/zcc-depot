@@ -6,7 +6,7 @@ export function VideoHighlights() {
   return (
     <Section tone="white">
       <div id="video-highlights" className="scroll-mt-28">
-        <SectionHead num="13" eyebrow="Recorded walkthrough" title="Watch the journey. Find the moment."
+        <SectionHead num="01" eyebrow="Recorded walkthrough" title="Watch the journey. Find the moment."
           lede="Eight timestamped highlights from Call Center Power’s Zendesk Contact Center walkthrough, with matching paraphrased transcript passages." />
       </div>
       <div className="mb-8 flex flex-wrap items-center justify-between gap-5 rounded-3xl bg-[#203524] p-6 text-[#F5F5F2] md:p-8">

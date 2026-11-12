@@ -4,6 +4,7 @@ import { motion, useReducedMotion } from "framer-motion";
 import { ArrowUpRight, Menu, X, PlayCircle } from "lucide-react";
 import { DEMO_URL, LINKS } from "@/data/content";
 import { NAV } from "@/data/navigation";
+import { SearchTrigger } from "@/components/global-search";
 import { MobileNavigationLinks, PrimaryNavigation } from "@/components/header-navigation";
 
 const logo = `${import.meta.env.BASE_URL}brand/zendesk-logo.svg`;
@@ -123,6 +124,7 @@ export function Shell({ children }: { children: ReactNode }) {
           </Link>
           <PrimaryNavigation />
           <div className="flex items-center gap-2">
+            <SearchTrigger />
             <a href={DEMO_URL} target="_blank" rel="noopener noreferrer" data-testid="button-header-demo"
               className="hidden items-center gap-1.5 rounded-full bg-[#D1F470] px-4 py-2 text-sm font-semibold text-[#11110D] transition-transform hover:-translate-y-0.5 sm:inline-flex">
               Guided demo <ArrowUpRight className="h-3.5 w-3.5" aria-hidden /><span className="sr-only">(opens in a new tab)</span>

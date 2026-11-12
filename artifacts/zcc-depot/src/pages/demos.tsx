@@ -33,7 +33,7 @@ export default function Demos() {
       <VideoHighlights />
 
       <Section>
-        <SectionHead id="agenda" num="10" eyebrow="Demo agenda" title="A presenter-ready journey" lede="Customer → Agent → Platform → Outcomes. Step through the rooms; each one links to the depot page that supports it." />
+        <SectionHead id="agenda" num="02" eyebrow="Demo agenda" title="A presenter-ready journey" lede="Customer → Agent → Platform → Outcomes. Step through the rooms; each one links to the depot page that supports it." />
         <div className="grid gap-6 lg:grid-cols-12">
           <ol className="relative space-y-1 lg:col-span-5" aria-label="Demo rooms">
             {DEMO_ROOMS.map((x, i) => (
@@ -79,7 +79,7 @@ export default function Demos() {
       <Section tone="forest">
         <div className="grid gap-10 lg:grid-cols-2 lg:items-center">
           <Reveal>
-            <div className="eyebrow mb-4 text-[#D1F470]">12 · Click-through demo</div>
+            <div className="eyebrow mb-4 text-[#D1F470]">03 · Click-through demo</div>
             <h2 className="text-4xl font-semibold leading-tight tracking-tight md:text-6xl">Step inside the <span className="serif italic text-[#D1F470]">contact center experience.</span></h2>
             <p className="mt-6 max-w-lg text-lg text-[#F5F5F2]/70">A guided Storylane walkthrough of Zendesk Contact Center. It opens in a new tab so you can return here to continue the architecture story.</p>
             <div className="mt-8"><DemoButton label="Launch click-through demo" testId="button-launch-demo-2" /></div>
@@ -100,7 +100,7 @@ export default function Demos() {
       </Section>
 
       <Section>
-        <SectionHead id="spotlight" num="11" eyebrow="Pre-demo spotlight" title={<>Elevating experiences. <span className="serif italic">Making every interaction transformative.</span></>}
+        <SectionHead id="spotlight" num="04" eyebrow="Pre-demo spotlight" title={<>Elevating experiences. <span className="serif italic">Making every interaction transformative.</span></>}
           lede="Open with the journey: AI captures intent and context, routes the call, and prepares the agent for a more informed conversation." />
         <div className="grid gap-4 md:grid-cols-3">
           {[["Capture intent", "AI listens for why the customer is calling and gathers context before a human picks up."], ["Route with context", "The call reaches the right queue or expert with what has been learned so far."], ["Prepare the agent", "The agent opens a ticket and customer context together, ready for a more informed conversation."]].map(([t, d], i) => (
@@ -113,7 +113,7 @@ export default function Demos() {
       </Section>
 
       <Section tone="white">
-        <SectionHead id="video" num="09" eyebrow="Visual channels" title="Video calling & screen sharing" lede="Bring visual context into complex support conversations with agent-initiated video and screen sharing in the Zendesk agent workspace." />
+        <SectionHead id="video" num="05" eyebrow="Visual channels" title="Video calling & screen sharing" lede="Bring visual context into complex support conversations with agent-initiated video and screen sharing in the Zendesk agent workspace." />
         <div className="grid gap-4 md:grid-cols-3">
           {[[Video, "Escalate with one click", "Start a browser-based video call from the customer's ticket for complex diagnostics, device setup, or difficult digital navigation."], [Layers, "Keep the conversation together", "The customer receives an invitation and chooses whether to join. The agent and customer can switch channels while keeping the service context in one conversation."], [MonitorUp, "Share the customer's view", "Use basic screen sharing to guide a customer through a workflow. The video call remains visible while a shared screen is selected."]].map(([Icon, t, d], i) => {
             const I = Icon as typeof Video;

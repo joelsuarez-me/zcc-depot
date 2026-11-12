@@ -120,12 +120,12 @@ export default function Sales() {
       </PageHero>
 
       <Section>
-        <SectionHead id="use-cases" num="08" eyebrow="Customer use cases" title="Top 5 use cases" lede="Five customer pains, five conversation starters, and the outcomes Zendesk Contact Center can support." />
+        <SectionHead id="use-cases" num="01" eyebrow="Customer use cases" title="Top 5 use cases" lede="Five customer pains, five conversation starters, and the outcomes Zendesk Contact Center can support." />
         <UseCases />
       </Section>
 
       <Section tone="white">
-        <SectionHead id="outcomes" num="15" eyebrow="Customer outcomes" title="Proof, in their numbers" lede="Examples from the Contact Center pitch deck show how teams use voice, digital channels, and AI to improve service operations." />
+        <SectionHead id="outcomes" num="02" eyebrow="Customer outcomes" title="Proof, in their numbers" lede="Examples from the Contact Center pitch deck show how teams use voice, digital channels, and AI to improve service operations." />
         <div className="grid gap-4 lg:grid-cols-4">
           {OUTCOMES.map((o, k) => (
             <Reveal key={o.co} delay={k * 0.06} className="rounded-3xl border border-[#11110D]/10 p-7">
@@ -143,13 +143,13 @@ export default function Sales() {
       </Section>
 
       <Section tone="forest">
-        <SectionHead id="operating-model" num="16" eyebrow="Human + AI operating model" dark title="How contact center roles evolve" lede="As AI handles more routine work, people can focus on complex cases, knowledge, and service quality." />
+        <SectionHead id="operating-model" num="03" eyebrow="Human + AI operating model" dark title="How contact center roles evolve" lede="As AI handles more routine work, people can focus on complex cases, knowledge, and service quality." />
         <OperatingModel />
       </Section>
 
       <Section>
         <div className="grid gap-10 lg:grid-cols-12">
-          <div className="lg:col-span-4"><SectionHead id="faq" num="17" eyebrow="FAQ" title="Short answers, carefully qualified" /></div>
+          <div className="lg:col-span-4"><SectionHead id="faq" num="04" eyebrow="FAQ" title="Short answers, carefully qualified" /></div>
           <div className="lg:col-span-8">
             {FAQ.map(([q, a], k) => <Details key={q} q={q} testId={`faq-${k}`}>{a}</Details>)}
             <Note>Answers summarize <Ext href={LINKS.product} className="underline">Zendesk's Contact Center page</Ext>. Product, compliance, and performance claims should be checked against the current plan and agreement.</Note>
@@ -158,12 +158,12 @@ export default function Sales() {
       </Section>
 
       <Section tone="white">
-        <SectionHead id="roadmap" num="18" eyebrow="Roadmap · confidential" title="Executive, technical, and internal horizons" lede="A phased view of the Contact Center experience. Not for unqualified customer distribution." />
+        <SectionHead id="roadmap" num="05" eyebrow="Roadmap · confidential" title="Executive, technical, and internal horizons" lede="A phased view of the Contact Center experience. Not for unqualified customer distribution." />
         <Roadmap />
       </Section>
 
       <Section>
-        <SectionHead id="guidance" num="GTM" eyebrow="Presentation guidance · internal" title="Level 1 Foundation seller reference" lede="Recognize customer pain, tell the platform story, qualify early fit, and bring in the right specialists." />
+        <SectionHead id="guidance" num="06" eyebrow="Presentation guidance · internal" title="Level 1 Foundation seller reference" lede="Recognize customer pain, tell the platform story, qualify early fit, and bring in the right specialists." />
         <div className="rounded-[2rem] border border-[#11110D]/10 bg-[#FBFBF8] px-6 md:px-10">
           {GTM.map((g, k) => (
             <Details key={g.t} q={g.t} testId={`gtm-${k}`}>

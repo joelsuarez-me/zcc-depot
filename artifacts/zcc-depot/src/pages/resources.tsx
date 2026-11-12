@@ -34,6 +34,7 @@ export default function Resources() {
       </PageHero>
 
       <Section>
+        <SectionHead id="library" num="01" eyebrow="Resource library" title="Find the guidance you need" />
         <div className="grid gap-8 lg:grid-cols-12">
           <aside className="lg:col-span-3">
             <div className="lg:sticky lg:top-28">
@@ -88,7 +89,7 @@ export default function Resources() {
       </Section>
 
       <Section tone="forest">
-        <SectionHead id="dashboards" num="19" eyebrow="Dashboards" dark title="Metrics for agents, teams, queues, and contacts" lede="The dashboards app provides real-time and historical Contact Center metrics from within Zendesk. The guide says the app is included with Contact Center and installed from the Zendesk Marketplace." />
+        <SectionHead id="dashboards" num="02" eyebrow="Dashboards" dark title="Metrics for agents, teams, queues, and contacts" lede="The dashboards app provides real-time and historical Contact Center metrics from within Zendesk. The guide says the app is included with Contact Center and installed from the Zendesk Marketplace." />
         <div className="grid gap-4 md:grid-cols-2">
           <div className="rounded-3xl bg-[#D1F470] p-7 text-[#11110D]"><div className="eyebrow">Realtime snapshot</div><h3 className="mt-3 text-2xl font-semibold">See current queue and agent activity</h3><p className="mt-2 text-[#11110D]/75">Near-real-time queue metrics, agent capacity, and agent status. Filter by channel and queue, and customize the queue summary table by adding or removing metrics.</p></div>
           <div className="rounded-3xl border border-[#F5F5F2]/15 p-7"><div className="eyebrow text-[#D1F470]">Recent performance</div><h3 className="mt-3 text-2xl font-semibold">Review the previous 24 hours</h3><p className="mt-2 text-[#F5F5F2]/70">Filter by time range, channel, or queue. Metrics include queued and handled contacts, average handle time, occupancy, abandonment, transfers, callbacks, and service level.</p></div>
@@ -112,11 +113,11 @@ export default function Resources() {
       <Section tone="white">
         <div className="grid gap-4 md:grid-cols-2">
           <a href={LINKS.gettingStarted} target="_blank" rel="noopener noreferrer" className="group rounded-[2rem] bg-[#203524] p-8 text-[#F5F5F2] transition hover:-translate-y-1" data-testid="card-getting-started">
-            <div className="eyebrow text-[#D1F470]">13 · Getting started</div><h3 className="mt-6 text-3xl font-semibold">Zendesk Contact Center setup guide</h3><p className="mt-2 text-[#F5F5F2]/65">Prerequisites, configuration, and first steps.</p>
+            <div className="eyebrow text-[#D1F470]">03 · Getting started</div><h3 className="mt-6 text-3xl font-semibold">Zendesk Contact Center setup guide</h3><p className="mt-2 text-[#F5F5F2]/65">Prerequisites, configuration, and first steps.</p>
             <ArrowUpRight className="mt-8 h-6 w-6 text-[#D1F470] transition group-hover:rotate-45" aria-hidden /><span className="sr-only">(opens in a new tab)</span>
           </a>
           <a href={LINKS.usingSection} target="_blank" rel="noopener noreferrer" className="group rounded-[2rem] bg-[#D1F470] p-8 transition hover:-translate-y-1" data-testid="card-using-zcc">
-            <div className="eyebrow text-[#203524]">14 · Product guides</div><h3 className="mt-6 text-3xl font-semibold">Using Zendesk Contact Center</h3><p className="mt-2 text-[#11110D]/65">Product guides and how-to articles.</p>
+            <div className="eyebrow text-[#203524]">04 · Product guides</div><h3 className="mt-6 text-3xl font-semibold">Using Zendesk Contact Center</h3><p className="mt-2 text-[#11110D]/65">Product guides and how-to articles.</p>
             <ArrowUpRight className="mt-8 h-6 w-6 transition group-hover:rotate-45" aria-hidden /><span className="sr-only">(opens in a new tab)</span>
           </a>
         </div>
