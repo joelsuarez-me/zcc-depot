@@ -9,7 +9,7 @@ const sec = (id: string, title: string, href: string, description: string, keywo
 
 const PAGES: SearchEntry[] = [
   page("home", "Overview", "/", "Zendesk Contact Center platform story, how it works, and features.", "home start platform"),
-  page("demos", "Demos", "/demos", "Demo methodology, click-through, video highlights, and pre-demo spotlight.", "demo approach storyline rooms"),
+  page("demos", "Demos", "/demos", "Demo Blueprint, click-through, video highlights, and pre-demo spotlight.", "demo approach storyline rooms"),
   page("demo-nuggets", "Demo Nuggets", "/demos/nuggets", "Browse the Library and play Voice Copilot, Voice QA and Voice AI Agent simulations with sample data.", "animated capabilities play pause replay nuggets voice copilot quality assurance agents"),
   page("instance", "Demo Instance Details", "/demos/instance-details", "Details for the shared demo instance.", "environment sandbox login setup"),
   page("demo-brief", "Demo Researcher", "/demos/brief", "Research a company using current public sources and download a cited demo-preparation report as a PDF. Sign-in required.", "company research logo website region audience role demo brief PDF report"),
@@ -30,7 +30,7 @@ const SECTIONS: SearchEntry[] = [
   sec("platform", "One solution", "/#platform", "Pillars of the unified contact center platform.", "pillars overview"),
   sec("how-it-works", "How it works", "/#how-it-works", "Call journey from customer to Agent Workspace.", "journey voice"),
   sec("features", "Features", "/#features", "Voice AI agents, copilots, translation, WEM, compliance.", "capabilities"),
-  sec("demo-agenda", "Demo Methodology", "/demos#agenda", "Seven-room story map for a customer demo.", "demo approach rooms storyline"),
+  sec("demo-agenda", "Demo Blueprint", "/demos#agenda", "Explore the building blocks of a compelling Zendesk Contact Center demonstration—from customer scenarios and AI capabilities to platform architecture and business outcomes.", "demo approach rooms storyline methodology blueprint"),
   sec("demo-click-through", "Demo Click-Through", "/demos#guided-demo", "Play the embedded Zendesk Contact Center walkthrough.", "storylane interactive guided demo"),
   sec("nugget-copilot", "Voice Copilot simulation", "/demos/nuggets#voice-copilot", "Simulate a returns call, recognized intent and in-call knowledge guidance.", "demo nuggets refund transcript returns neutral sentiment quick answer"),
   sec("nugget-library", "Demo Nuggets library", "/demos/nuggets#library", "Browse the individual Voice Copilot, Voice QA and Voice AI Agents demos.", "feature simulations library"),

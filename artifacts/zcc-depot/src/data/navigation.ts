@@ -24,7 +24,7 @@ export const NAV: NavItem[] = [
   },
   {
     href: "/demos", label: "Demos", children: [
-      { label: "Demo Methodology", href: "/demos#agenda" },
+      { label: "Demo Blueprint", href: "/demos#agenda" },
       { label: "Demo Click-Through", href: "/demos#guided-demo" },
       { label: "Demo Instance Details", href: "/demos/instance-details" },
       { label: "Demo Researcher", href: "/demos/brief" },

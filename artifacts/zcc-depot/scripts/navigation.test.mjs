@@ -15,7 +15,7 @@ test("Sales and Demos contain the exact requested destinations and sequence", ()
     ["Sell Sheet", "/sell-sheet"], ["Pricing", "/pricing"],
   ]);
   assert.deepEqual(NAV[3].children.map(n => [n.label, n.href]), [
-    ["Demo Methodology", "/demos#agenda"],
+    ["Demo Blueprint", "/demos#agenda"],
     ["Demo Click-Through", "/demos#guided-demo"],
     ["Demo Instance Details", "/demos/instance-details"],
     ["Demo Researcher", "/demos/brief"],

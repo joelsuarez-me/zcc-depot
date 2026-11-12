@@ -26,14 +26,14 @@ export default function Demos() {
       <PageHero eyebrow="Demos · Guided access" title={<>One story. <span className="serif italic text-[#D1F470]">Seven connected rooms.</span></>}
         lede="Guide your audience from the customer's first interaction through the agent experience, the architecture behind it, and the business impact. Then hand them the walkthrough.">
         <DemoButton />
-        <a href="#agenda" className="inline-flex items-center gap-2 rounded-full border border-[#F5F5F2]/25 px-5 py-3 text-sm font-semibold hover:border-[#D1F470] hover:text-[#D1F470]" data-testid="link-agenda">Demo methodology</a>
+        <a href="#agenda" className="inline-flex items-center gap-2 rounded-full border border-[#F5F5F2]/25 px-5 py-3 text-sm font-semibold hover:border-[#D1F470] hover:text-[#D1F470]" data-testid="link-agenda">Demo Blueprint</a>
         <a href="#video-highlights" className="inline-flex items-center gap-2 rounded-full border border-[#F5F5F2]/25 px-5 py-3 text-sm font-semibold hover:border-[#D1F470] hover:text-[#D1F470]" data-testid="link-video-highlights">Video highlights</a>
       </PageHero>
 
       <Section>
-        <SectionHead id="agenda" num="01" eyebrow="Demo Methodology" title="A presenter-ready journey" lede="Customer → Agent → Platform → Outcomes. Step through the rooms; each one links to the depot page that supports it." />
+        <SectionHead id="agenda" num="01" eyebrow="Demo Blueprint" title="A presenter-ready journey" lede="Explore the building blocks of a compelling Zendesk Contact Center demonstration—from customer scenarios and AI capabilities to platform architecture and business outcomes." />
         <div className="space-y-6">
-          <div className="overflow-x-auto rounded-2xl pb-2 focus-visible:outline focus-visible:outline-2 focus-visible:outline-[#203524]" tabIndex={0} role="region" aria-label="Demo methodology steps; scroll horizontally on small screens">
+          <div className="overflow-x-auto rounded-2xl pb-2 focus-visible:outline focus-visible:outline-2 focus-visible:outline-[#203524]" tabIndex={0} role="region" aria-label="Demo Blueprint steps; scroll horizontally on small screens">
           <ol className="grid min-w-[56rem] grid-cols-7 gap-2" aria-label="Demo rooms">
             {DEMO_ROOMS.map((x, i) => (
               <li key={x.n} className="flex">
