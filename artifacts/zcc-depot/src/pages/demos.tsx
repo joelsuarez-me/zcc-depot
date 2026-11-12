@@ -4,6 +4,7 @@ import { motion, AnimatePresence, useReducedMotion } from "framer-motion";
 import { ArrowLeft, ArrowRight, ArrowUpRight, Video, MonitorUp, Layers } from "lucide-react";
 import { DemoButton, Ext, Note, PageHero, Reveal, Section, SectionHead } from "@/components/kit";
 import { DEMO_ROOMS, DEMO_URL, LINKS } from "@/data/content";
+import { VideoHighlights } from "@/components/video-highlights";
 
 const VIDEO_GA = [
   ["Native video calls", "Launch from Agent Workspace."],
@@ -26,7 +27,10 @@ export default function Demos() {
         lede="Guide your audience from the customer's first interaction through the agent experience, the architecture behind it, and the business impact. Then hand them the walkthrough.">
         <DemoButton />
         <a href="#agenda" className="inline-flex items-center gap-2 rounded-full border border-[#F5F5F2]/25 px-5 py-3 text-sm font-semibold hover:border-[#D1F470] hover:text-[#D1F470]" data-testid="link-agenda">View the agenda</a>
+        <a href="#video-highlights" className="inline-flex items-center gap-2 rounded-full border border-[#F5F5F2]/25 px-5 py-3 text-sm font-semibold hover:border-[#D1F470] hover:text-[#D1F470]" data-testid="link-video-highlights">Video highlights</a>
       </PageHero>
+
+      <VideoHighlights />
 
       <Section>
         <SectionHead id="agenda" num="10" eyebrow="Demo agenda" title="A presenter-ready journey" lede="Customer → Agent → Platform → Outcomes. Step through the rooms; each one links to the depot page that supports it." />
