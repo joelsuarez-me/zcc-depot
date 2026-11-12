@@ -1,6 +1,6 @@
-# [Project name]
+# ZCC Depot
 
-_Replace the heading above with the project's name, and this line with one sentence describing what this app does for users._
+A Zendesk-branded portal for platform architects to find demo, sales, technical, and architecture resources.
 
 ## Run & Operate
 
@@ -30,11 +30,12 @@ _Populate as you build — non-obvious choices a reader couldn't infer from the 
 
 ## Product
 
-_Describe the high-level user-facing capabilities of this app once they exist._
+The portal is based on the user's supplied Zendesk Architecture Hub HTML. It organizes Contact Center architecture, demo preparation, customer use cases, and official documentation. The supplied Storylane walkthrough is a guided click-through demo, not an authenticated live Zendesk tenant.
 
 ## User preferences
 
-_Populate as you build — explicit user instructions worth remembering across sessions._
+- The website is named `zcc-depot` and is dedicated to Zendesk platform architects.
+- Use Zendesk.com branding and preserve the supplied HTML's useful technical and resource content.
 
 ## Gotchas
 
