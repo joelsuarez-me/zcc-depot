@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Link } from "wouter";
 import { motion, AnimatePresence, useReducedMotion } from "framer-motion";
-import { ArrowLeft, ArrowRight, ArrowUpRight, Video, MonitorUp, Layers } from "lucide-react";
+import { ArrowLeft, ArrowRight, Video, MonitorUp, Layers } from "lucide-react";
 import { DemoButton, Ext, Note, PageHero, Reveal, Section, SectionHead } from "@/components/kit";
 import { DEMO_ROOMS, DEMO_URL, LINKS } from "@/data/content";
 import { VideoHighlights } from "@/components/video-highlights";
@@ -77,24 +77,22 @@ export default function Demos() {
       </Section>
 
       <Section tone="forest">
-        <div className="grid gap-10 lg:grid-cols-2 lg:items-center">
+        <div id="guided-demo" className="scroll-mt-28 grid gap-7">
           <Reveal>
             <div className="eyebrow mb-4 text-[#D1F470]">03 · Click-through demo</div>
-            <h2 className="text-4xl font-semibold leading-tight tracking-tight md:text-6xl">Step inside the <span className="serif italic text-[#D1F470]">contact center experience.</span></h2>
-            <p className="mt-6 max-w-lg text-lg text-[#F5F5F2]/70">A guided Storylane walkthrough of Zendesk Contact Center. It opens in a new tab so you can return here to continue the architecture story.</p>
-            <div className="mt-8"><DemoButton label="Launch click-through demo" testId="button-launch-demo-2" /></div>
-            <p className="mono mt-4 text-xs text-[#F5F5F2]/45">Guided click-through demo. It is not connected to a live Zendesk account.</p>
+            <h2 className="text-3xl font-semibold leading-tight tracking-tight md:text-4xl">Step inside the <span className="serif italic text-[#D1F470]">contact center experience.</span></h2>
+            <p className="mt-3 max-w-3xl text-base text-[#F5F5F2]/70">Explore the guided Storylane walkthrough below, or open it directly in this tab.</p>
+            <div className="mt-5">
+              <a href={DEMO_URL} data-testid="button-launch-demo-2" className="inline-flex items-center gap-2 rounded-full bg-[#D1F470] px-5 py-3 text-sm font-semibold text-[#11110D] transition hover:bg-[#c3ea55]">
+                Open interactive walkthrough <ArrowRight className="h-4 w-4" aria-hidden />
+              </a>
+            </div>
+            <p className="mono mt-3 text-xs text-[#F5F5F2]/60">Guided click-through demo. It is not connected to a live Zendesk account.</p>
           </Reveal>
           <Reveal delay={0.1}>
-            <a href={DEMO_URL} target="_blank" rel="noopener noreferrer" data-testid="card-demo-preview" className="group block rounded-[2rem] border border-[#D1F470]/25 bg-[#11110D]/40 p-6 transition hover:border-[#D1F470]">
-              <div className="mb-5 flex items-center gap-2"><span className="h-2.5 w-2.5 rounded-full bg-[#D1F470]" /><span className="h-2.5 w-2.5 rounded-full bg-[#F5F5F2]/20" /><span className="h-2.5 w-2.5 rounded-full bg-[#F5F5F2]/20" /><span className="mono ml-3 truncate text-xs text-[#F5F5F2]/40">zendesk.storylane.io</span></div>
-              {["Customer call enters the contact center", "Agent works with customer and ticket context", "Call outcome is captured for service follow-through"].map((s, i) => (
-                <div key={s} className="flex items-center gap-4 border-t border-[#F5F5F2]/10 py-5">
-                  <span className="mono text-[#D1F470]">0{i + 1}</span><span className="text-lg">{s}</span>
-                </div>
-              ))}
-              <div className="mt-2 flex items-center gap-2 text-sm font-semibold text-[#D1F470]">Interactive walkthrough <ArrowUpRight className="h-4 w-4 transition group-hover:translate-x-1 group-hover:-translate-y-1" /><span className="sr-only">(opens in a new tab)</span></div>
-            </a>
+            <div data-testid="card-demo-preview" className="overflow-hidden rounded-2xl border border-[#D1F470]/25 bg-white">
+              <iframe src="https://zendesk.storylane.io/demo/contactcenter-feb2026-en-us?embed=inline" title="Zendesk Contact Center interactive Storylane demo" loading="lazy" allowFullScreen className="block aspect-[4/3] w-full border-0 md:aspect-video" data-testid="iframe-guided-demo" />
+            </div>
           </Reveal>
         </div>
       </Section>
