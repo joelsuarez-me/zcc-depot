@@ -33,6 +33,8 @@ export const NAV: NavItem[] = [
   },
   { href: "/resources", label: "Resources", children: [
     { label: "Resource library", href: "/resources#library" },
+    { label: "Agent knowledge", href: "/resources#ai-suggestions" },
+    { label: "Latest news · per internal briefing", href: "/resources#collaboration" },
     { label: "Pitch Deck", href: "/resources#pitch-deck" },
   ] },
 ];

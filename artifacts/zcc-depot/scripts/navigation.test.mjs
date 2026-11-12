@@ -3,7 +3,7 @@ import { readFileSync } from "node:fs";
 import { test } from "node:test";
 import { NAV, isNavItemActive } from "../src/data/navigation.ts";
 
-test("main menu keeps Resources unchanged as its final destination", () => {
+test("main menu keeps Resources as its final destination", () => {
   assert.deepEqual(NAV.map(n => n.label), ["Overview", "Architecture", "Sales", "Demos", "Resources"]);
   assert.equal(NAV.at(-1).href, "/resources");
   assert.equal(NAV[0].children[1].href, "/architecture#journey");
@@ -33,7 +33,27 @@ test("Architecture contains only the two requested submenu destinations", () => 
 test("Architecture removes Global platform and keeps section numbering continuous", () => {
   const source = readFileSync(new URL("../src/pages/architecture.tsx", import.meta.url), "utf8");
   assert.doesNotMatch(source, /Global platform|#footprint|id="footprint"|<Footprint/);
-  assert.deepEqual([...source.matchAll(/<SectionHead[^>]*num="(\d+)"/g)].map(match => match[1]), ["01", "02", "03", "04", "05"]);
+  assert.deepEqual([...source.matchAll(/<SectionHead[^>]*num="(\d+)"/g)].map(match => match[1]), ["01", "02", "03"]);
+  assert.doesNotMatch(source, /id="ai-suggestions"|id="collaboration"/);
+});
+
+test("Resources owns the moved sections and all resource section numbers remain continuous", () => {
+  assert.deepEqual(NAV[4].children.map(item => [item.label, item.href]), [
+    ["Resource library", "/resources#library"],
+    ["Agent knowledge", "/resources#ai-suggestions"],
+    ["Latest news · per internal briefing", "/resources#collaboration"],
+    ["Pitch Deck", "/resources#pitch-deck"],
+  ]);
+  const resources = readFileSync(new URL("../src/pages/resources.tsx", import.meta.url), "utf8");
+  const briefings = readFileSync(new URL("../src/components/resource-briefings.tsx", import.meta.url), "utf8");
+  const pitchDeck = readFileSync(new URL("../src/components/pitch-deck-section.tsx", import.meta.url), "utf8");
+  assert.match(resources, /<AgentKnowledgeSection \/>\s*<LatestNewsSection \/>\s*<PitchDeckSection \/>/);
+  assert.deepEqual([
+    ...[...resources.matchAll(/<SectionHead[^>]*num="(\d+)"/g)].map(match => match[1]),
+    ...[...resources.matchAll(/eyebrow[^>]*>(\d+) ·/g)].map(match => match[1]),
+    ...[...briefings.matchAll(/<SectionHead[^>]*num="(\d+)"/g)].map(match => match[1]),
+    ...[...pitchDeck.matchAll(/<SectionHead[^>]*num="(\d+)"/g)].map(match => match[1]),
+  ], ["01", "02", "03", "04", "05", "06", "07"]);
 });
 
 test("nested routes highlight their new parent without activating Overview twice", () => {

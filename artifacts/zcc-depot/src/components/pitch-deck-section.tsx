@@ -210,7 +210,7 @@ export function PitchDeckSection() {
   return (
     <Section>
       <div id="pitch-deck" className="scroll-mt-28" />
-      <SectionHead num="05" eyebrow="Pitch deck" title="Pitch Deck" lede="Original product deep-dive slides for customer conversations. Sign-in required." />
+      <SectionHead num="07" eyebrow="Pitch deck" title="Pitch Deck" lede="Original product deep-dive slides for customer conversations. Sign-in required." />
       {body}
     </Section>
   );

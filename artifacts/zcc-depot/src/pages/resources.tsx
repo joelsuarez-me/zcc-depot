@@ -2,6 +2,7 @@ import { useEffect, useMemo, useState } from "react";
 import { Search, Bookmark, BookmarkCheck, ArrowUpRight, X } from "lucide-react";
 import { Ext, Note, PageHero, Section, SectionHead } from "@/components/kit";
 import { PitchDeckSection } from "@/components/pitch-deck-section";
+import { AgentKnowledgeSection, LatestNewsSection } from "@/components/resource-briefings";
 import { LINKS, RESOURCES, RESOURCE_CATEGORIES } from "@/data/content";
 
 const KEY = "zcc-depot:bookmarks";
@@ -125,6 +126,8 @@ export default function Resources() {
         <Note>Bookmarks are stored in this browser's localStorage only and are not synced.</Note>
       </Section>
 
+      <AgentKnowledgeSection />
+      <LatestNewsSection />
       <PitchDeckSection />
     </>
   );
