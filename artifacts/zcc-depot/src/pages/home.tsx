@@ -1,16 +1,8 @@
 import { useState } from "react";
 import { Link } from "wouter";
 import { motion, useReducedMotion, AnimatePresence } from "framer-motion";
-import { ArrowUpRight } from "lucide-react";
 import { Ext, Note, Reveal, Section, SectionHead } from "@/components/kit";
-import { FEATURES, LINKS, PILLARS } from "@/data/content";
-
-const DESTS = [
-  { href: "/demos", n: "01", t: "Run the demo", d: "Seven-room agenda, presenter cues, and the guided click-through walkthrough." },
-  { href: "/architecture", n: "02", t: "Explain the architecture", d: "Call journey, two-cloud data flow, Lambda roles, and the global footprint." },
-  { href: "/sales", n: "03", t: "Frame the value", d: "Top five use cases, customer outcomes, FAQ, and a labeled roadmap snapshot." },
-  { href: "/resources", n: "04", t: "Find the source", d: "Searchable, categorized official documentation with local bookmarks." },
-];
+import { FEATURES, JOURNEY, LINKS, PILLARS } from "@/data/content";
 
 export default function Home() {
   const reduce = useReducedMotion();
@@ -58,8 +50,25 @@ export default function Home() {
         </div>
       </Section>
 
+      <Section tone="forest">
+        <SectionHead id="how-it-works" num="02" eyebrow="How it works" dark title="From caller to Zendesk agent"
+          lede="Follow the configured call journey: voice entry, routing, customer context, and the agent workspace." />
+        <ol className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4" aria-label="How Zendesk Contact Center works">
+          {JOURNEY.map(stage => (
+            <li key={stage.k} className="rounded-3xl border border-[#D1F470]/20 bg-[#11110D]/20 p-6">
+              <div className="mono text-sm text-[#D1F470]">{stage.k} · {stage.label}</div>
+              <h3 className="mt-6 text-xl font-semibold">{stage.t}</h3>
+              <p className="mt-3 text-sm leading-relaxed text-[#F5F5F2]/70">{stage.d}</p>
+            </li>
+          ))}
+        </ol>
+        <Link href="/architecture#journey" className="mt-8 inline-flex rounded-full border border-[#D1F470]/40 px-5 py-3 text-sm font-semibold text-[#D1F470] transition-colors hover:bg-[#D1F470] hover:text-[#203524]">
+          Explore the call journey
+        </Link>
+      </Section>
+
       <Section tone="white">
-        <SectionHead id="features" num="02" eyebrow="Features" title="Features for connected customer service" lede="Select a capability to brief it. Each description is qualified the way the source documentation qualifies it." />
+        <SectionHead id="features" num="03" eyebrow="Features" title="Features for connected customer service" lede="Select a capability to brief it. Each description is qualified the way the source documentation qualifies it." />
         <div className="grid gap-6 lg:grid-cols-12">
           <div role="tablist" aria-label="Features" aria-orientation="vertical" className="flex flex-col gap-1 lg:col-span-5">
             {FEATURES.map((x, i) => (
@@ -84,25 +93,6 @@ export default function Home() {
         <Note>Feature descriptions are based on <Ext href={LINKS.product} className="underline">Zendesk Contact Center</Ext> and linked Zendesk documentation.</Note>
       </Section>
 
-      <Section tone="ink">
-        <SectionHead num="03" eyebrow="Depot map" dark title={<>Four rooms. <span className="serif italic text-[#D1F470]">One conversation.</span></>} lede="Pick the room that matches where your customer conversation is today." />
-        <div className="grid gap-4 md:grid-cols-2">
-          {DESTS.map((d, i) => (
-            <Reveal key={d.href} delay={i * 0.06}>
-              <Link href={d.href} data-testid={`link-dest-${d.n}`} className="group flex h-full flex-col justify-between rounded-[1.75rem] border border-[#F5F5F2]/12 p-8 transition-all hover:-translate-y-1 hover:border-[#D1F470] hover:bg-[#203524]">
-                <div className="flex items-start justify-between">
-                  <span className="mono text-sm text-[#D1F470]">{d.n}</span>
-                  <ArrowUpRight className="h-6 w-6 text-[#F5F5F2]/40 transition-all group-hover:rotate-45 group-hover:text-[#D1F470]" />
-                </div>
-                <div className="mt-14">
-                  <h3 className="text-2xl font-semibold tracking-tight md:text-3xl">{d.t}</h3>
-                  <p className="mt-2 text-[#F5F5F2]/60">{d.d}</p>
-                </div>
-              </Link>
-            </Reveal>
-          ))}
-        </div>
-      </Section>
     </>
   );
 }

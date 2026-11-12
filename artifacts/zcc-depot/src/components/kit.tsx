@@ -3,17 +3,12 @@ import { Link, useLocation } from "wouter";
 import { motion, useReducedMotion } from "framer-motion";
 import { ArrowUpRight, Menu, X, PlayCircle } from "lucide-react";
 import { DEMO_URL, LINKS } from "@/data/content";
+import { NAV } from "@/data/navigation";
+import { MobileNavigationLinks, PrimaryNavigation } from "@/components/header-navigation";
 
 const logo = `${import.meta.env.BASE_URL}brand/zendesk-logo.svg`;
 
-export const NAV = [
-  { href: "/", label: "Overview" },
-  { href: "/demos", label: "Demos" },
-  { href: "/architecture", label: "Architecture" },
-  { href: "/sales", label: "Sales" },
-  { href: "/resources", label: "Resources" },
-  { href: "/agenda", label: "Today’s Agenda" },
-];
+export { NAV } from "@/data/navigation";
 
 export function Ext({ href, children, className = "", testId }: { href: string; children: ReactNode; className?: string; testId?: string }) {
   return (
@@ -126,17 +121,7 @@ export function Shell({ children }: { children: ReactNode }) {
           <Link href="/" className="flex items-center gap-3 rounded-full pl-2 pr-3" data-testid="link-home-logo">
             <img src={logo} alt="Zendesk" className="h-6 w-auto" />
           </Link>
-          <nav aria-label="Primary" className="hidden items-center gap-1 lg:flex">
-            {NAV.map((n) => {
-              const active = n.href === "/" ? loc === "/" : loc.startsWith(n.href);
-              return (
-                <Link key={n.href} href={n.href} data-testid={`link-nav-${n.label.toLowerCase()}`} aria-current={active ? "page" : undefined}
-                  className={`relative rounded-full px-4 py-2 text-sm font-medium transition-colors ${active ? "bg-[#203524] text-[#D1F470]" : "text-[#11110D]/75 hover:bg-[#203524]/8 hover:text-[#11110D]"}`}>
-                  {n.label}
-                </Link>
-              );
-            })}
-          </nav>
+          <PrimaryNavigation />
           <div className="flex items-center gap-2">
             <a href={DEMO_URL} target="_blank" rel="noopener noreferrer" data-testid="button-header-demo"
               className="hidden items-center gap-1.5 rounded-full bg-[#D1F470] px-4 py-2 text-sm font-semibold text-[#11110D] transition-transform hover:-translate-y-0.5 sm:inline-flex">
@@ -149,13 +134,8 @@ export function Shell({ children }: { children: ReactNode }) {
           </div>
         </div>
         {open && (
-          <nav id="mobile-nav" aria-label="Mobile" className="mx-auto mt-2 max-w-7xl rounded-3xl border border-[#11110D]/10 bg-[#F5F5F2] p-3 shadow-xl lg:hidden">
-            {NAV.map((n, i) => (
-              <Link key={n.href} href={n.href} data-testid={`link-mobile-${n.label.toLowerCase()}`}
-                className="flex items-center justify-between rounded-2xl px-4 py-3.5 text-lg font-medium hover:bg-[#203524]/8">
-                {n.label}<span className="mono text-xs text-[#11110D]/40">0{i + 1}</span>
-              </Link>
-            ))}
+          <nav id="mobile-nav" aria-label="Mobile" className="mx-auto mt-2 max-h-[calc(100dvh-100px)] max-w-7xl overflow-y-auto rounded-3xl border border-[#11110D]/10 bg-[#F5F5F2] p-3 shadow-xl lg:hidden">
+            <MobileNavigationLinks onNavigate={() => setOpen(false)} />
             <div className="p-2 pt-3"><DemoButton testId="button-mobile-demo" /></div>
           </nav>
         )}
