@@ -1,1 +1,2 @@
 - [YouTube transcript access](youtube-transcript-access.md) — empty caption responses can be retrieval failures even when an English caption track exists.
+- [Portal presentation and access](portal-presentation-and-access.md) — compact main heroes on all pages; Sell Sheet content and PDF require sign-in.

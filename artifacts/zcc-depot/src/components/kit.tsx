@@ -62,12 +62,16 @@ export function PageHero({ eyebrow, title, lede, children }: { eyebrow: string; 
   return (
     <section className="on-dark relative overflow-hidden bg-[#203524] text-[#F5F5F2]">
       <div className="grid-lines absolute inset-0" aria-hidden />
-      <div className="relative mx-auto max-w-7xl px-5 pb-8 pt-24 md:px-8 md:pb-10 md:pt-28">
+      <div className="relative mx-auto max-w-7xl px-5 pb-4 pt-20 md:px-8">
         <motion.div initial={reduce ? false : { opacity: 0, y: 24 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.7, ease: [0.2, 0.7, 0.2, 1] }}>
-          <div className="eyebrow mb-3 text-[#D1F470]">{eyebrow}</div>
-          <h1 className="max-w-4xl text-3xl font-semibold leading-[1.08] tracking-tight md:text-5xl">{title}</h1>
-          <p className="mt-3 max-w-3xl text-base leading-relaxed text-[#F5F5F2]/75">{lede}</p>
-          {children && <div className="mt-5 flex flex-wrap gap-3">{children}</div>}
+          <div className="grid gap-2 md:grid-cols-12 md:items-end md:gap-6">
+            <div className="md:col-span-7">
+              <div className="eyebrow mb-1.5 text-[0.625rem] text-[#D1F470]">{eyebrow}</div>
+              <h1 className="max-w-4xl text-2xl font-semibold leading-[1.08] tracking-tight md:text-[2rem]">{title}</h1>
+            </div>
+            <p className="max-w-3xl text-sm leading-snug text-[#F5F5F2]/75 md:col-span-5">{lede}</p>
+          </div>
+          {children && <div className="mt-3 flex flex-wrap items-center gap-2 [&_a]:py-1.5 [&_button]:py-1.5">{children}</div>}
         </motion.div>
       </div>
     </section>

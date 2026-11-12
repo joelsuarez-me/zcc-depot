@@ -12,18 +12,18 @@ export default function Home() {
     <>
       <section className="on-dark relative overflow-hidden bg-[#203524] text-[#F5F5F2]">
         <div className="grid-lines absolute inset-0" aria-hidden />
-        <div className="relative mx-auto max-w-7xl px-5 pb-8 pt-24 md:px-8 md:pb-10 md:pt-28">
-          <motion.div className="max-w-4xl" initial={reduce ? false : { opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8, ease: [0.2, 0.7, 0.2, 1] }}>
-            <h1 className="max-w-3xl font-sans text-[clamp(1rem,6vw,2.75rem)] font-semibold leading-tight tracking-[-0.035em] text-[#F5F5F2]">
+        <div className="relative mx-auto max-w-7xl px-5 pb-3 pt-20 md:px-8">
+          <motion.div className="grid gap-3 md:grid-cols-12 md:items-center md:gap-8" initial={reduce ? false : { opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8, ease: [0.2, 0.7, 0.2, 1] }}>
+            <h1 className="max-w-3xl font-sans text-[clamp(1rem,5.5vw,2rem)] font-semibold leading-tight tracking-[-0.035em] text-[#F5F5F2] md:col-span-7">
               <span className="block whitespace-nowrap">ZENDESK CONTACT CENTER ·</span>{" "}
               <span className="block whitespace-nowrap"><span className="text-[#D1F470]">platform</span>{" "}ARCHITECT Depot</span>
             </h1>
-            <p className="mt-4 max-w-2xl text-base leading-relaxed text-[#F5F5F2]/75">
+            <p className="max-w-2xl text-sm leading-snug text-[#F5F5F2]/75 md:col-span-5">
               Everything you need to prepare the customer conversation: the story, the architecture behind it, the outcomes it supports, and the official sources to back every claim.
             </p>
           </motion.div>
         </div>
-        <div className="relative overflow-hidden border-t border-[#D1F470]/15 py-4" aria-hidden>
+        <div className="relative overflow-hidden border-t border-[#D1F470]/15 py-1.5" aria-hidden>
           <div className="marquee flex w-max gap-10 whitespace-nowrap text-sm text-[#F5F5F2]/50">
             {[0, 1].map((k) => (
               <div key={k} className="flex gap-10">

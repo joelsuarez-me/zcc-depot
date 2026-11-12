@@ -20,6 +20,7 @@ export const NAV: NavItem[] = [
   },
   { href: "/architecture", label: "Architecture" },
   { href: "/sales", label: "Sales" },
+  { href: "/sell-sheet", label: "Sell Sheet" },
   { href: "/pricing", label: "Pricing" },
   { href: "/resources", label: "Resources" },
   { href: "/agenda", label: "Today’s Agenda" },

@@ -9,6 +9,36 @@ import * as zod from 'zod';
 
 
 /**
+ * @summary Read the internal sales guide
+ */
+export const GetSellSheetResponse = zod.object({
+  "title": zod.string(),
+  "businessChallenge": zod.string(),
+  "pains": zod.array(zod.string()),
+  "pitch": zod.array(zod.string()),
+  "plays": zod.array(zod.object({
+  "title": zod.string(),
+  "help": zod.string(),
+  "capabilities": zod.array(zod.string()),
+  "metrics": zod.array(zod.string()),
+  "stories": zod.array(zod.string())
+})),
+  "preparation": zod.array(zod.object({
+  "title": zod.string(),
+  "steps": zod.array(zod.string()),
+  "questions": zod.array(zod.string())
+})),
+  "pdfUrl": zod.string()
+})
+
+
+/**
+ * @summary Download the internal source PDF
+ */
+export const DownloadSellSheetPdfResponse = zod.unknown()
+
+
+/**
  * Returns server health status
  * @summary Health check
  */

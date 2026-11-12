@@ -17,6 +17,35 @@ tags:
   - name: Storage
     description: Object storage upload and serving endpoints.
 paths:
+  /sell-sheet:
+    get:
+      operationId: getSellSheet
+      summary: Read the internal sales guide
+      responses:
+        "200":
+          description: Internal guide for signed-in users only.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SellSheet"
+        "401":
+          description: Sign-in required.
+  /sell-sheet/pdf:
+    get:
+      operationId: downloadSellSheetPdf
+      summary: Download the internal source PDF
+      responses:
+        "200":
+          description: Protected internal PDF.
+          content:
+            application/pdf:
+              schema:
+                type: string
+                format: binary
+        "401":
+          description: Sign-in required.
+        "503":
+          description: Source document temporarily unavailable.
   /healthz:
     get:
       operationId: healthCheck
@@ -379,6 +408,66 @@ components:
       schema:
         type: string
   schemas:
+    SellSheet:
+      type: object
+      required: [title, businessChallenge, pains, pitch, plays, preparation, pdfUrl]
+      properties:
+        title:
+          type: string
+        businessChallenge:
+          type: string
+        pains:
+          type: array
+          items:
+            type: string
+        pitch:
+          type: array
+          items:
+            type: string
+        plays:
+          type: array
+          items:
+            $ref: "#/components/schemas/SellSheetPlay"
+        preparation:
+          type: array
+          items:
+            $ref: "#/components/schemas/SellSheetPreparation"
+        pdfUrl:
+          type: string
+    SellSheetPlay:
+      type: object
+      required: [title, help, capabilities, metrics, stories]
+      properties:
+        title:
+          type: string
+        help:
+          type: string
+        capabilities:
+          type: array
+          items:
+            type: string
+        metrics:
+          type: array
+          items:
+            type: string
+        stories:
+          type: array
+          items:
+            type: string
+    SellSheetPreparation:
+      type: object
+      required: [title, steps, questions]
+      properties:
+        title:
+          type: string
+        steps:
+          type: array
+          items:
+            type: string
+        questions:
+          type: array
+          items:
+            type: string
     HealthStatus:
       type: object
       properties:

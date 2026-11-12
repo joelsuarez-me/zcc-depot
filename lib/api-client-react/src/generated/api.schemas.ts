@@ -5,6 +5,30 @@
  * API specification
  * OpenAPI spec version: 0.1.0
  */
+export interface SellSheetPlay {
+  title: string;
+  help: string;
+  capabilities: string[];
+  metrics: string[];
+  stories: string[];
+}
+
+export interface SellSheetPreparation {
+  title: string;
+  steps: string[];
+  questions: string[];
+}
+
+export interface SellSheet {
+  title: string;
+  businessChallenge: string;
+  pains: string[];
+  pitch: string[];
+  plays: SellSheetPlay[];
+  preparation: SellSheetPreparation[];
+  pdfUrl: string;
+}
+
 export interface HealthStatus {
   status: string;
 }

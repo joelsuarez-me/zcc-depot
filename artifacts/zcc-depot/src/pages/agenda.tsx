@@ -380,20 +380,20 @@ export default function Agenda() {
 
   if (!isAuthenticated) {
     return (
-      <div className="min-h-[75dvh] bg-[#f1f2eb] px-5 pb-20 pt-28 md:px-8">
+      <div className="bg-[#f1f2eb] px-5 pb-4 pt-20 md:px-8">
         <div className="mx-auto max-w-6xl">
-          <section className="relative overflow-hidden rounded-[2rem] bg-[#244b39] px-6 py-7 text-[#f5f5eb] md:px-10 md:py-8">
+          <section className="relative overflow-hidden rounded-[2rem] bg-[#244b39] px-6 py-4 text-[#f5f5eb] md:px-8">
             <div className="grid-lines absolute inset-0 opacity-50" aria-hidden />
             <div className="relative max-w-2xl">
               <div className="eyebrow text-[#d4e4a6]">ZCC Depot · Workshop workspace</div>
-              <h1 className="mt-3 text-3xl font-semibold tracking-tight md:text-4xl">Today’s Agenda</h1>
-              <p className="mt-5 max-w-xl text-lg leading-relaxed text-[#f5f5eb]/75">
+              <h1 className="mt-2 text-2xl font-semibold tracking-tight md:text-3xl">Today’s Agenda</h1>
+              <p className="mt-2 max-w-xl text-sm leading-snug text-[#f5f5eb]/75">
                 A shared, reusable conversation brief for Zendesk platform architects and the customers they work alongside.
               </p>
-              <button type="button" onClick={login} data-testid="button-agenda-login" className="mt-8 inline-flex min-h-12 items-center gap-2 rounded-full bg-[#dce8bb] px-6 py-3 text-sm font-semibold text-[#203d2e] transition hover:bg-[#edf3dc]">
+              <button type="button" onClick={login} data-testid="button-agenda-login" className="mt-3 inline-flex min-h-10 items-center gap-2 rounded-full bg-[#dce8bb] px-5 py-2 text-sm font-semibold text-[#203d2e] transition hover:bg-[#edf3dc]">
                 Sign in to continue <ArrowRight className="h-4 w-4" aria-hidden />
               </button>
-              <p className="mt-5 max-w-xl text-xs leading-relaxed text-[#f5f5eb]/55">Sign-in uses the portal’s secure identity provider. No separate account or password form is needed here.</p>
+              <p className="mt-2 max-w-xl text-xs leading-relaxed text-[#f5f5eb]/55">Sign-in uses the portal’s secure identity provider. No separate account or password form is needed here.</p>
             </div>
           </section>
         </div>
@@ -403,11 +403,11 @@ export default function Agenda() {
 
   return (
     <div className="agenda-page min-h-[75dvh] bg-[#f1f2eb] pb-20">
-      <header className="relative overflow-hidden bg-[#244b39] px-5 pb-5 pt-24 text-[#f6f5ec] md:px-8 md:pb-6 md:pt-24">
+      <header className="relative overflow-hidden bg-[#244b39] px-5 pb-3 pt-20 text-[#f6f5ec] md:px-8">
         <div className="grid-lines absolute inset-0 opacity-50" aria-hidden />
         <div className="relative mx-auto max-w-7xl">
-          <div className="flex flex-wrap items-center justify-between gap-4">
-            <div className="eyebrow flex items-center gap-3 text-[#d4e4a6]"><span className="h-px w-8 bg-[#d4e4a6]" />Customer workshop · Conversation brief</div>
+          <div className="flex flex-wrap items-center justify-between gap-2">
+            <div className="eyebrow flex items-center gap-2 text-[0.625rem] text-[#d4e4a6]"><span className="h-px w-5 bg-[#d4e4a6]" />Customer workshop · Conversation brief</div>
             <div className="flex items-center gap-3">
               <span className="hidden text-xs text-[#f6f5ec]/65 sm:inline">{user?.email ?? "Signed in"}</span>
               <button type="button" onClick={logout} className="inline-flex min-h-9 items-center gap-2 rounded-full border border-white/20 px-3.5 text-xs font-semibold text-white/85 transition hover:bg-white/10" data-testid="button-agenda-logout">
@@ -415,10 +415,10 @@ export default function Agenda() {
               </button>
             </div>
           </div>
-          <div className="mt-3 flex flex-col justify-between gap-3 md:flex-row md:items-end">
+          <div className="mt-1.5 flex flex-col justify-between gap-2 md:flex-row md:items-end">
             <div>
-              <h1 className="text-3xl font-semibold tracking-tight md:text-4xl" data-testid="heading-agenda">Today’s Agenda</h1>
-              <p className="mt-2 max-w-2xl text-sm leading-relaxed text-[#f6f5ec]/70 md:text-base">Objectives, platforms, conversation, validation, and outcomes — ready for the customer demo.</p>
+              <h1 className="text-2xl font-semibold tracking-tight md:text-3xl" data-testid="heading-agenda">Today’s Agenda</h1>
+              <p className="mt-1 max-w-2xl text-sm leading-snug text-[#f6f5ec]/70">Objectives, platforms, conversation, validation, and outcomes — ready for the customer demo.</p>
             </div>
             {mode !== "library" && (
               <div className="flex w-fit rounded-full border border-white/20 bg-[#183629]/35 p-1" role="group" aria-label="Agenda view">

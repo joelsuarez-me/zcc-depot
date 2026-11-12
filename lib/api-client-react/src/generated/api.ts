@@ -31,6 +31,7 @@ import type {
   LogoutBrowserSessionParams,
   ObjectAuthorizationInput,
   ObjectAuthorizationResult,
+  SellSheet,
   UploadUrlRequest,
   UploadUrlResponse
 } from './api.schemas';
@@ -61,6 +62,160 @@ const withQueryKey = <T extends object, K>(query: T, queryKey: K): T & { queryKe
   }
   return result;
 };
+
+export const getGetSellSheetUrl = () => {
+
+
+
+
+  return `/api/sell-sheet`
+}
+
+/**
+ * @summary Read the internal sales guide
+ */
+export const getSellSheet = async ( options?: Parameters<typeof customFetch>[1]): Promise<SellSheet> => {
+
+  return customFetch<SellSheet>(getGetSellSheetUrl(),
+  {
+    ...options,
+    method: 'GET'
+
+
+  }
+);}
+
+
+
+
+
+export const getGetSellSheetQueryKey = () => {
+    return [
+    `/api/sell-sheet`
+    ] as const;
+    }
+
+
+export const getGetSellSheetQueryOptions = <TData = Awaited<ReturnType<typeof getSellSheet>>, TError = ErrorType<void>>( options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getSellSheet>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getGetSellSheetQueryKey();
+
+
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof getSellSheet>>> = ({ signal }) => getSellSheet({ signal, ...requestOptions });
+
+
+
+
+
+   return  { queryKey, queryFn, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof getSellSheet>>, TError, TData> & { queryKey: QueryKey }
+}
+
+export type GetSellSheetQueryResult = NonNullable<Awaited<ReturnType<typeof getSellSheet>>>
+export type GetSellSheetQueryError = ErrorType<void>
+
+
+/**
+ * @summary Read the internal sales guide
+ */
+
+export function useGetSellSheet<TData = Awaited<ReturnType<typeof getSellSheet>>, TError = ErrorType<void>>(
+  options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getSellSheet>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+
+ ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+
+  const queryOptions = getGetSellSheetQueryOptions(options)
+
+  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
+
+  return withQueryKey(query, queryOptions.queryKey);
+}
+
+
+
+
+
+
+
+export const getDownloadSellSheetPdfUrl = () => {
+
+
+
+
+  return `/api/sell-sheet/pdf`
+}
+
+/**
+ * @summary Download the internal source PDF
+ */
+export const downloadSellSheetPdf = async ( options?: Parameters<typeof customFetch>[1]): Promise<Blob> => {
+
+  return customFetch<Blob>(getDownloadSellSheetPdfUrl(),
+  {
+    ...options,
+    method: 'GET'
+
+
+  }
+);}
+
+
+
+
+
+export const getDownloadSellSheetPdfQueryKey = () => {
+    return [
+    `/api/sell-sheet/pdf`
+    ] as const;
+    }
+
+
+export const getDownloadSellSheetPdfQueryOptions = <TData = Awaited<ReturnType<typeof downloadSellSheetPdf>>, TError = ErrorType<void>>( options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof downloadSellSheetPdf>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getDownloadSellSheetPdfQueryKey();
+
+
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof downloadSellSheetPdf>>> = ({ signal }) => downloadSellSheetPdf({ signal, ...requestOptions });
+
+
+
+
+
+   return  { queryKey, queryFn, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof downloadSellSheetPdf>>, TError, TData> & { queryKey: QueryKey }
+}
+
+export type DownloadSellSheetPdfQueryResult = NonNullable<Awaited<ReturnType<typeof downloadSellSheetPdf>>>
+export type DownloadSellSheetPdfQueryError = ErrorType<void>
+
+
+/**
+ * @summary Download the internal source PDF
+ */
+
+export function useDownloadSellSheetPdf<TData = Awaited<ReturnType<typeof downloadSellSheetPdf>>, TError = ErrorType<void>>(
+  options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof downloadSellSheetPdf>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+
+ ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+
+  const queryOptions = getDownloadSellSheetPdfQueryOptions(options)
+
+  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
+
+  return withQueryKey(query, queryOptions.queryKey);
+}
+
+
+
+
+
+
 
 export const getHealthCheckUrl = () => {
 

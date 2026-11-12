@@ -2,10 +2,10 @@ import { Link } from "wouter";
 
 export default function NotFound() {
   return (
-    <section className="on-dark grid place-items-center bg-[#203524] px-6 pb-10 pt-28 text-center text-[#F5F5F2]">
+    <section className="on-dark grid place-items-center bg-[#203524] px-6 pb-4 pt-20 text-center text-[#F5F5F2]">
       <div>
         <div className="eyebrow text-[#D1F470]">404 · Off the call path</div>
-        <h1 className="mt-3 text-3xl font-semibold tracking-tight md:text-5xl">This room <span className="serif italic text-[#D1F470]">doesn't exist.</span></h1>
+        <h1 className="mt-2 text-2xl font-semibold tracking-tight md:text-[2rem]">This room <span className="serif italic text-[#D1F470]">doesn't exist.</span></h1>
         <Link href="/" className="mt-5 inline-flex rounded-full bg-[#D1F470] px-6 py-3 text-sm font-semibold text-[#11110D]" data-testid="link-404-home">Back to the depot</Link>
       </div>
     </section>

@@ -14,6 +14,7 @@ import Resources from '@/pages/resources';
 import Agenda from '@/pages/agenda';
 import DemoInstanceDetails from '@/pages/demo-instance-details';
 import Pricing from '@/pages/pricing';
+import SellSheet from '@/pages/sell-sheet';
 
 const queryClient = new QueryClient();
 
@@ -28,6 +29,7 @@ function Router() {
           <Route path="/architecture" component={Architecture} />
           <Route path="/sales" component={Sales} />
           <Route path="/pricing" component={Pricing} />
+          <Route path="/sell-sheet" component={SellSheet} />
           <Route path="/resources" component={Resources} />
           <Route path="/agenda" component={Agenda} />
           <Route component={NotFound} />
