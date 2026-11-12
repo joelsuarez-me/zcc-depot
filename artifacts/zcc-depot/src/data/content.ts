@@ -81,16 +81,6 @@ export const FEATURES = [
   { tag: "Connected channels", t: "Connected digital, voice, and visual channels", d: "Switch seamlessly between digital, voice, and visual channels." },
 ];
 
-export const DEMO_ROOMS = [
-  { n: "01", stage: "Set the stage", t: "One unified contact center", d: "Introduce the customer challenge, platform vision, and the promise of connected service.", take: "The audience understands the end-to-end story.", href: "/#platform" },
-  { n: "02", stage: "Customer entry", t: "Voice, digital & AI", d: "Follow an incoming interaction and show how AI and routing help connect customers to the right resolution path.", take: "A consistent experience begins at first contact.", href: "/#how-it-works" },
-  { n: "03", stage: "Live service", t: "Agent workspace & call context", d: "Show the journey from Amazon Connect to the Zendesk agent experience, including available interaction context.", take: "Agents can work with the context they need.", href: "/#how-it-works" },
-  { n: "04", stage: "Agent intelligence", t: "Real-time AI suggestions", d: "Explore transcription, relevant knowledge suggestions, and how agents stay in control of the conversation.", take: "AI supports faster, more informed responses.", href: "/resources#ai-suggestions" },
-  { n: "05", stage: "Connected operations", t: "Architecture & data flow", d: "Reveal how the platform components, AWS services, integrations, and call information fit together.", take: "A credible technical foundation behind the experience.", href: "/architecture#data-flow" },
-  { n: "06", stage: "Business impact", t: "Use cases & customer outcomes", d: "Connect the demonstration to practical customer scenarios and the outcomes they are designed to support.", take: "Turn features into business value.", href: "/sales#use-cases" },
-  { n: "07", stage: "Experience the product", t: "Guided click-through demo", d: "Move from the story map into the existing interactive Zendesk Contact Center walkthrough.", take: "See the product experience in action.", href: DEMO_URL },
-];
-
 export const JOURNEY = [
   { k: "01", label: "Customer", t: "Voice", d: "Customer calls the service line.", detail: "Voice entry: Amazon Connect receives the customer call and begins the configured contact flow.", chips: [] as string[] },
   { k: "02", label: "Voice + routing", t: "Amazon Connect", d: "Contact flows handle IVR, routing, and configured AWS integrations.", detail: "Contact flows orchestrate IVR (Amazon Lex), Lambda integrations, and Contact Lens analytics before routing to the right queue.", chips: ["Lex · IVR", "Lambda", "Contact Lens"] },

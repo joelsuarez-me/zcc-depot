@@ -2,3 +2,5 @@
 - [Portal presentation and access](portal-presentation-and-access.md) — compact main heroes on all pages; Sell Sheet, its PDF, and Pricing require sign-in.
 - [Demo research provider](demo-research-prompts.md) — live company research with Gemini was approved; keep OpenAI out and require current sources.
 - [Seismic PDF rendering](pdf-rendering.md) — use MuPDF when Poppler drops gradient backgrounds and white text from uploaded slides.
+- [Demo product accuracy](demo-product-accuracy.md) — public demonstrations must distinguish Contact Lens from optional Zendesk QA and describe only configured capabilities.
+- [Keyboard test limitations](keyboard-test-limitations.md) — inspect Space keydown events before treating automated native-checkbox failures as application defects.

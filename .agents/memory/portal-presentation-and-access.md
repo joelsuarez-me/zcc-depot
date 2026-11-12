@@ -9,7 +9,7 @@ The landing-page Overview is an explicit exception: its enlarged hero occupies t
 
 **Why:** The user subsequently requested a full-view landing hero while leaving the other pages compact.
 
-**How to apply:** Do not shrink the Overview hero when adjusting shared interior-page headers. Keep the always-visible section arrows on the left by default, including before the first content section. The Components guide has a phone-width exception: its controls must not obscure map headings or text.
+**How to apply:** Do not shrink the Overview hero when adjusting shared interior-page headers. Keep the always-visible section arrows on the left by default, including before the first content section. Use header placement on phones for the Components guide, and while the main menu is collapsed for Demos, so controls do not obscure map content or blueprint stages.
 
 Keep the gap between each main hero and its first content section compact too; do not recreate a large blank area through first-section padding.
 

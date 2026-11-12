@@ -80,7 +80,7 @@ export function useAgendaCompanyLogo({ company, logoPath, scope, enabled, onAppl
       const path = await storeLogo(file, request.signal);
       if (!isCurrent(key, request.signal)) return;
       current.current.onApply(path);
-      setState({ key, kind: "added", message: "Customer logo uploaded. Save the agenda to keep it." });
+      setState({ key, kind: "added", message: "" });
     } catch (error) {
       if (!isCurrent(key, request.signal)) return;
       setState({ key, kind: "error", message: error instanceof Error ? error.message : "The logo could not be uploaded." });

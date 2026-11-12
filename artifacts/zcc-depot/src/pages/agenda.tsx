@@ -27,7 +27,6 @@ import {
   Plus,
   Presentation,
   Save,
-  ShieldAlert,
   Trash2,
   Upload,
   X,
@@ -444,14 +443,6 @@ export default function Agenda() {
       </div>
 
       <main className="mx-auto max-w-7xl px-5 pt-4 md:px-8 md:pt-4">
-        <div className="mb-4 flex flex-col gap-2 rounded-2xl border border-[#d7dbd0] bg-[#fbfbf6] px-4 py-3 md:flex-row md:items-center md:justify-between md:px-5" role="note" data-testid="notice-shared-agendas">
-          <p className="flex max-w-4xl gap-3 text-sm leading-relaxed text-[#536157]">
-            <ShieldAlert className="mt-0.5 h-4 w-4 shrink-0 text-[#677b68]" aria-hidden />
-            <span><strong className="font-semibold text-[#294735]">Shared workspace.</strong> Every agenda can be viewed and edited by all signed-in portal users. This is not a private customer-data space; keep sensitive or regulated details elsewhere.</span>
-          </p>
-          <span className="mono shrink-0 text-[10px] tracking-wider text-[#788379]">{mode !== "library" && creating ? "UNSAVED DRAFT" : "SHARED LIBRARY"}</span>
-        </div>
-
         {errorMessage && (
           <div role="alert" className="mb-6 flex items-start gap-3 rounded-xl border border-[#a95843]/25 bg-[#f8e9e3] px-4 py-3.5 text-sm text-[#723e31]" data-testid="error-agenda-save">
             <AlertCircle className="mt-0.5 h-4 w-4 shrink-0" aria-hidden />
@@ -490,8 +481,7 @@ export default function Agenda() {
             )}
             <div className="mb-5 flex flex-col justify-between gap-4 sm:flex-row sm:items-end">
               <div>
-                <div className="eyebrow text-[#68776b]">Shared library</div>
-                <h2 className="mt-2 text-2xl font-semibold tracking-tight text-[#1e3528] md:text-3xl">Workshop briefs</h2>
+                <h2 className="text-2xl font-semibold tracking-tight text-[#1e3528] md:text-3xl">Workshop briefs</h2>
                 <p className="mt-1.5 text-sm text-[#69766b]">Reusable context, ready for the next customer conversation.</p>
               </div>
               <div className="flex flex-wrap gap-2">

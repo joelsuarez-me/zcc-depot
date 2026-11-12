@@ -1,10 +1,8 @@
-import { useState } from "react";
-import { Link } from "wouter";
-import { motion, AnimatePresence, useReducedMotion } from "framer-motion";
-import { ArrowLeft, ArrowRight, Video, MonitorUp, Layers } from "lucide-react";
+import { Video, MonitorUp, Layers } from "lucide-react";
 import { DemoButton, Ext, Note, PageHero, Reveal, Section, SectionHead } from "@/components/kit";
-import { DEMO_ROOMS, LINKS } from "@/data/content";
+import { LINKS } from "@/data/content";
 import { VideoHighlights } from "@/components/video-highlights";
+import { DemoBlueprint } from "@/components/demo-blueprint";
 
 const VIDEO_GA = [
   ["Native video calls", "Launch from Agent Workspace."],
@@ -17,64 +15,16 @@ const VIDEO_GA = [
 const VIDEO_LATER = ["Call recordings and video transcripts/playback", "Customer-initiated calls or screen sharing", "Voice-to-video handoff using invite codes", "Availability for non-PODS customers", "Advanced UI and brand customization"];
 
 export default function Demos() {
-  const reduce = useReducedMotion();
-  const [room, setRoom] = useState(0);
-  const r = DEMO_ROOMS[room];
-  const external = r.href.startsWith("http");
   return (
     <>
-      <PageHero eyebrow="Demos · Guided access" title={<>One story. <span className="serif italic text-[#D1F470]">Seven connected rooms.</span></>}
+      <PageHero eyebrow="Demos · Guided access" title={<>One journey. <span className="serif italic text-[#D1F470]">Seven connected stages.</span></>}
         lede="Guide your audience from the customer's first interaction through the agent experience, the architecture behind it, and the business impact. Then hand them the walkthrough.">
         <DemoButton />
         <a href="#agenda" className="inline-flex items-center gap-2 rounded-full border border-[#F5F5F2]/25 px-5 py-3 text-sm font-semibold hover:border-[#D1F470] hover:text-[#D1F470]" data-testid="link-agenda">Demo Blueprint</a>
         <a href="#video-highlights" className="inline-flex items-center gap-2 rounded-full border border-[#F5F5F2]/25 px-5 py-3 text-sm font-semibold hover:border-[#D1F470] hover:text-[#D1F470]" data-testid="link-video-highlights">Video highlights</a>
       </PageHero>
 
-      <Section>
-        <SectionHead id="agenda" num="01" eyebrow="Demo Blueprint" title="A presenter-ready journey" lede="Explore the building blocks of a compelling Zendesk Contact Center demonstration—from customer scenarios and AI capabilities to platform architecture and business outcomes." />
-        <div className="space-y-6">
-          <div className="overflow-x-auto rounded-2xl pb-2 focus-visible:outline focus-visible:outline-2 focus-visible:outline-[#203524]" tabIndex={0} role="region" aria-label="Demo Blueprint steps; scroll horizontally on small screens">
-          <ol className="grid min-w-[56rem] grid-cols-7 gap-2" aria-label="Demo rooms">
-            {DEMO_ROOMS.map((x, i) => (
-              <li key={x.n} className="flex">
-                <button onClick={() => setRoom(i)} aria-current={i === room ? "step" : undefined} data-testid={`button-room-${x.n}`}
-                  className={`flex w-full flex-col items-start gap-3 rounded-2xl border px-3 py-4 text-left transition-colors ${i === room ? "border-[#203524] bg-[#203524] text-[#F5F5F2]" : "border-[#11110D]/10 bg-[#FBFBF8] hover:bg-[#203524]/6"}`}>
-                  <span className={`grid h-9 w-9 shrink-0 place-items-center rounded-full mono text-xs ${i === room ? "bg-[#D1F470] text-[#11110D]" : i < room ? "bg-[#203524]/15 text-[#203524]" : "border border-[#11110D]/15"}`}>{x.n}</span>
-                  <span><span className={`mono mb-2 block min-h-[2.6em] text-[0.6rem] uppercase leading-snug tracking-wider ${i === room ? "text-[#D1F470]" : "text-[#11110D]/45"}`}>{x.stage}</span><span className="text-sm font-medium leading-snug">{x.t}</span></span>
-                </button>
-              </li>
-            ))}
-          </ol>
-          </div>
-          <div>
-            <div className="overflow-hidden rounded-[2rem] border border-[#11110D]/10 bg-[#FBFBF8]">
-              <div className="h-1.5 bg-[#11110D]/8"><div className="h-full bg-[#203524] transition-all duration-500" style={{ width: `${((room + 1) / DEMO_ROOMS.length) * 100}%` }} /></div>
-              <AnimatePresence mode="wait">
-                <motion.div key={room} className="p-8 md:p-10" initial={reduce ? false : { opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} exit={reduce ? undefined : { opacity: 0, x: -20 }} transition={{ duration: 0.3 }} aria-live="polite">
-                  <div className="eyebrow text-[#203524]">{r.stage}</div>
-                  <h3 className="mt-4 text-3xl font-semibold tracking-tight md:text-4xl">{r.t}</h3>
-                  <p className="mt-4 text-lg leading-relaxed text-[#11110D]/70">{r.d}</p>
-                  <div className="mt-8 rounded-2xl bg-[#D1F470] p-5">
-                    <div className="eyebrow text-[#203524]">Takeaway</div>
-                    <p className="mt-1 text-lg font-medium">{r.take}</p>
-                  </div>
-                  <div className="mt-8 flex flex-wrap items-center justify-between gap-3">
-                    {external ? <DemoButton variant="forest" label="Open guided walkthrough" testId="button-room-demo" /> : (
-                      <Link href={r.href} className="group inline-flex items-center gap-2 rounded-full bg-[#203524] px-5 py-3 text-sm font-semibold text-[#D1F470]" data-testid="link-room-section">
-                        Open supporting section <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
-                      </Link>
-                    )}
-                    <div className="flex gap-2">
-                      <button onClick={() => setRoom((v) => Math.max(0, v - 1))} disabled={room === 0} aria-label="Previous room" data-testid="button-room-prev" className="grid h-11 w-11 place-items-center rounded-full border border-[#11110D]/15 transition hover:bg-[#203524]/8 disabled:opacity-30"><ArrowLeft className="h-4 w-4" /></button>
-                      <button onClick={() => setRoom((v) => Math.min(DEMO_ROOMS.length - 1, v + 1))} disabled={room === DEMO_ROOMS.length - 1} aria-label="Next room" data-testid="button-room-next" className="grid h-11 w-11 place-items-center rounded-full border border-[#11110D]/15 transition hover:bg-[#203524]/8 disabled:opacity-30"><ArrowRight className="h-4 w-4" /></button>
-                    </div>
-                  </div>
-                </motion.div>
-              </AnimatePresence>
-            </div>
-          </div>
-        </div>
-      </Section>
+      <DemoBlueprint />
 
       <Section tone="forest">
         <div id="guided-demo" className="scroll-mt-28 grid gap-7">

@@ -1,0 +1,26 @@
+.bp-bar{display:flex;height:.5rem;overflow:hidden;border-radius:999px;background:rgba(17,17,13,.08);gap:2px}
+.bp-bar-seg{background:rgba(32,53,36,.28);transition:background-color .2s ease}
+.bp-bar-seg.is-on{background:var(--forest)}
+.bp-stage{transition:background-color .2s ease,border-color .2s ease}
+.bp-stage[aria-pressed="true"]{border-color:var(--forest);box-shadow:inset 3px 0 0 var(--forest)}
+.bp-detail-enter{animation:bp-in .3s cubic-bezier(.2,.7,.2,1) both}
+@keyframes bp-in{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+@media (prefers-reduced-motion:reduce){.bp-detail-enter{animation:none}.bp-stage,.bp-bar-seg{transition:none}}
+/* Use the available header space while the Demos navigation is collapsed. */
+@media (max-width:1279px){
+  .section-nav-blueprint{
+    --section-nav-bottom:auto;
+    top:15px;
+    left:calc(50% - .75rem);
+    transform:translateX(-50%);
+    flex-direction:row;
+    z-index:60;
+  }
+  .section-nav-blueprint [data-testid="link-current-section"]{display:none}
+}
+/* Reserve the left arrow rail's space on small desktop windows. */
+@media (min-width:1280px) and (max-width:1407px){
+  .demo-blueprint-section > .section-body{
+    padding-left:max(2rem,calc(6rem - (100vw - 1280px) / 2));
+  }
+}
