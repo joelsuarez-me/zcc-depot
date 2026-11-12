@@ -1,5 +1,3 @@
-import { DEMO_URL } from "@/data/content";
-
 export type SubNavItem = { label: string; href: string; external?: boolean };
 export type NavItem = { href: string; label: string; children?: SubNavItem[] };
 
@@ -12,20 +10,33 @@ export const NAV: NavItem[] = [
     ],
   },
   {
-    href: "/demos", label: "Demos", children: [
-      { label: "Demo Approach", href: "/demos#agenda" },
-      { label: "Launch Guided Demo", href: DEMO_URL, external: true },
-      { label: "Demo Instance Details", href: "/demos/instance-details" },
-      { label: "Demo Brief Generator", href: "/demos/brief" },
+    href: "/architecture", label: "Architecture",
+  },
+  {
+    href: "/sales", label: "Sales", children: [
+      { label: "Sell Sheet", href: "/sell-sheet" },
+      { label: "Pricing", href: "/pricing" },
     ],
   },
-  { href: "/architecture", label: "Architecture" },
-  { href: "/sales", label: "Sales" },
-  { href: "/sell-sheet", label: "Sell Sheet" },
-  { href: "/pricing", label: "Pricing" },
+  {
+    href: "/demos", label: "Demos", children: [
+      { label: "01 Demo Methodology", href: "/demos#agenda" },
+      { label: "02 Demo Click-Through", href: "/demos#guided-demo" },
+      { label: "03 Demo Instance Details", href: "/demos/instance-details" },
+      { label: "04 Demo Researcher", href: "/demos/brief" },
+      { label: "05 Demo Agenda", href: "/agenda" },
+    ],
+  },
   { href: "/resources", label: "Resources" },
-  { href: "/agenda", label: "Today’s Agenda" },
 ];
+
+export function isNavItemActive(item: NavItem, location: string) {
+  const matches = (href: string) => href === "/"
+    ? location === "/"
+    : location === href || location.startsWith(`${href}/`);
+  return matches(item.href) || !!item.children?.some(child =>
+    !child.external && !child.href.includes("#") && matches(child.href));
+}
 
 // Native section links support both same-page hashes and cross-page entry.
 export function sectionHref(item: SubNavItem) {

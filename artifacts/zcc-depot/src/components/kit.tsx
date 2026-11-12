@@ -163,7 +163,9 @@ function Footer() {
           </div>
           <div className="md:col-span-3">
             <div className="eyebrow mb-4 text-[#F5F5F2]/40">Depot</div>
-            <ul className="space-y-2.5">{NAV.map((n) => <li key={n.href}><Link href={n.href} className="text-sm hover:text-[#D1F470]" data-testid={`link-footer-${n.label.toLowerCase()}`}>{n.label}</Link></li>)}</ul>
+            <ul className="space-y-2.5">
+              {NAV.map((n) => <li key={n.href}><Link href={n.href} className="text-sm hover:text-[#D1F470]" data-testid={`link-footer-${n.label.toLowerCase()}`}>{n.label}</Link></li>)}
+            </ul>
           </div>
           <div className="md:col-span-4">
             <div className="eyebrow mb-4 text-[#F5F5F2]/40">Official sources</div>

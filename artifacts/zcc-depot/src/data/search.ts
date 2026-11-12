@@ -9,15 +9,15 @@ const sec = (id: string, title: string, href: string, description: string, keywo
 
 const PAGES: SearchEntry[] = [
   page("home", "Overview", "/", "Zendesk Contact Center platform story, how it works, and features.", "home start platform"),
-  page("demos", "Demos", "/demos", "Demo approach, guided demo, video highlights, and pre-demo spotlight.", "demo storyline rooms"),
+  page("demos", "Demos", "/demos", "Demo methodology, click-through, video highlights, and pre-demo spotlight.", "demo approach storyline rooms"),
   page("instance", "Demo Instance Details", "/demos/instance-details", "Details for the shared demo instance.", "environment sandbox login setup"),
-  page("demo-brief", "Zendesk Demo Brief Generator", "/demos/brief", "Build a tailored research prompt and instructions to use in Replit Agent. No API key needed.", "company research preparation prompt builder region audience"),
+  page("demo-brief", "Demo Researcher", "/demos/brief", "Build a tailored research prompt and instructions to use in Replit Agent. No API key needed.", "Zendesk Demo Brief Generator company research preparation prompt builder region audience"),
   page("architecture", "Architecture", "/architecture", "Amazon Connect, Lambda, data flow, components, and regional footprint.", "aws technical"),
   page("sales", "Sales", "/sales", "Use cases, outcomes, FAQ, roadmap, and go-to-market guidance.", "gtm business value"),
   page("sell-sheet", "Sell Sheet", "/sell-sheet", "Signed-in access to the internal Zendesk Contact Center sales guide.", "sales guide enablement internal"),
   page("pricing", "Pricing", "/pricing", "Signed-in pricing and packaging guidance for the three Contact Center buying paths.", "commercial contract Amazon AWS sign in"),
   page("resources", "Resources", "/resources", "Curated Help Center articles and dashboards guidance.", "docs documentation help center"),
-  page("agenda", "Today’s Agenda", "/agenda", "Signed-in area for preparing and presenting customer agendas.", "sign in presentation meeting"),
+  page("agenda", "Demo Agenda", "/agenda", "Signed-in area for preparing and presenting customer agendas.", "today’s agenda sign in presentation meeting"),
 ];
 
 const SECTIONS: SearchEntry[] = [
@@ -27,7 +27,8 @@ const SECTIONS: SearchEntry[] = [
   sec("platform", "One solution", "/#platform", "Pillars of the unified contact center platform.", "pillars overview"),
   sec("how-it-works", "How it works", "/#how-it-works", "Call journey from customer to Agent Workspace.", "journey voice"),
   sec("features", "Features", "/#features", "Voice AI agents, copilots, translation, WEM, compliance.", "capabilities"),
-  sec("demo-agenda", "Demo Approach", "/demos#agenda", "Seven-room story map for a customer demo.", "rooms storyline"),
+  sec("demo-agenda", "Demo Methodology", "/demos#agenda", "Seven-room story map for a customer demo.", "demo approach rooms storyline"),
+  sec("demo-click-through", "Demo Click-Through", "/demos#guided-demo", "Play the embedded Zendesk Contact Center walkthrough.", "storylane interactive guided demo"),
   sec("video-highlights", "Video highlights", "/demos#video-highlights", "Timestamped walkthrough chapters.", "youtube walkthrough"),
   sec("video", "Video calling & screen sharing", "/demos#video", "Visual channels for complex support conversations.", "video call screen sharing"),
   sec("spotlight", "Pre-demo spotlight", "/demos#spotlight", "What to prepare before the demo.", "prep"),

@@ -9,7 +9,7 @@ import {
   type DemoBriefFields,
 } from "@/data/demo-brief-prompt";
 
-const TITLE = "Demo Brief Prompt Builder | ZCC Depot";
+const TITLE = "Demo Researcher | ZCC Depot";
 const DESC = "Build a research prompt for a company-specific Zendesk Contact Center demo brief, then run it in Replit Agent with current public web research and cited sources.";
 
 function useMeta() {
@@ -113,7 +113,7 @@ export default function DemoBriefPage() {
 
   return (
     <div className="bg-[#F5F5F2]">
-      <PageHero eyebrow="Demos · Prompt builder" title="Demo Brief Prompt"
+      <PageHero eyebrow="Demos · Prompt builder" title="Demo Researcher"
         lede="Builds a research prompt locally. It does not browse, generate facts, save, or send your inputs anywhere.">
         <span className="inline-flex items-center gap-1.5 rounded-full border border-[#F5F5F2]/30 px-3 py-1 text-xs font-semibold uppercase tracking-wider text-[#F5F5F2]">
           <ShieldCheck className="h-3.5 w-3.5" aria-hidden /> Local only

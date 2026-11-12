@@ -26,28 +26,28 @@ export default function Demos() {
       <PageHero eyebrow="Demos · Guided access" title={<>One story. <span className="serif italic text-[#D1F470]">Seven connected rooms.</span></>}
         lede="Guide your audience from the customer's first interaction through the agent experience, the architecture behind it, and the business impact. Then hand them the walkthrough.">
         <DemoButton />
-        <a href="#agenda" className="inline-flex items-center gap-2 rounded-full border border-[#F5F5F2]/25 px-5 py-3 text-sm font-semibold hover:border-[#D1F470] hover:text-[#D1F470]" data-testid="link-agenda">View the agenda</a>
+        <a href="#agenda" className="inline-flex items-center gap-2 rounded-full border border-[#F5F5F2]/25 px-5 py-3 text-sm font-semibold hover:border-[#D1F470] hover:text-[#D1F470]" data-testid="link-agenda">Demo methodology</a>
         <a href="#video-highlights" className="inline-flex items-center gap-2 rounded-full border border-[#F5F5F2]/25 px-5 py-3 text-sm font-semibold hover:border-[#D1F470] hover:text-[#D1F470]" data-testid="link-video-highlights">Video highlights</a>
       </PageHero>
 
-      <VideoHighlights />
-
       <Section>
-        <SectionHead id="agenda" num="02" eyebrow="Demo Approach" title="A presenter-ready journey" lede="Customer → Agent → Platform → Outcomes. Step through the rooms; each one links to the depot page that supports it." />
-        <div className="grid gap-6 lg:grid-cols-12">
-          <ol className="relative space-y-1 lg:col-span-5" aria-label="Demo rooms">
+        <SectionHead id="agenda" num="01" eyebrow="Demo Methodology" title="A presenter-ready journey" lede="Customer → Agent → Platform → Outcomes. Step through the rooms; each one links to the depot page that supports it." />
+        <div className="space-y-6">
+          <div className="overflow-x-auto rounded-2xl pb-2 focus-visible:outline focus-visible:outline-2 focus-visible:outline-[#203524]" tabIndex={0} role="region" aria-label="Demo methodology steps; scroll horizontally on small screens">
+          <ol className="grid min-w-[56rem] grid-cols-7 gap-2" aria-label="Demo rooms">
             {DEMO_ROOMS.map((x, i) => (
-              <li key={x.n}>
+              <li key={x.n} className="flex">
                 <button onClick={() => setRoom(i)} aria-current={i === room ? "step" : undefined} data-testid={`button-room-${x.n}`}
-                  className={`flex w-full items-center gap-4 rounded-2xl px-4 py-3.5 text-left transition-all ${i === room ? "bg-[#203524] text-[#F5F5F2]" : "hover:bg-[#203524]/6"}`}>
+                  className={`flex w-full flex-col items-start gap-3 rounded-2xl border px-3 py-4 text-left transition-colors ${i === room ? "border-[#203524] bg-[#203524] text-[#F5F5F2]" : "border-[#11110D]/10 bg-[#FBFBF8] hover:bg-[#203524]/6"}`}>
                   <span className={`grid h-9 w-9 shrink-0 place-items-center rounded-full mono text-xs ${i === room ? "bg-[#D1F470] text-[#11110D]" : i < room ? "bg-[#203524]/15 text-[#203524]" : "border border-[#11110D]/15"}`}>{x.n}</span>
-                  <span><span className={`eyebrow block ${i === room ? "text-[#D1F470]" : "text-[#11110D]/45"}`}>{x.stage}</span><span className="font-medium">{x.t}</span></span>
+                  <span><span className={`mono mb-2 block min-h-[2.6em] text-[0.6rem] uppercase leading-snug tracking-wider ${i === room ? "text-[#D1F470]" : "text-[#11110D]/45"}`}>{x.stage}</span><span className="text-sm font-medium leading-snug">{x.t}</span></span>
                 </button>
               </li>
             ))}
           </ol>
-          <div className="lg:col-span-7">
-            <div className="sticky top-28 overflow-hidden rounded-[2rem] border border-[#11110D]/10 bg-[#FBFBF8]">
+          </div>
+          <div>
+            <div className="overflow-hidden rounded-[2rem] border border-[#11110D]/10 bg-[#FBFBF8]">
               <div className="h-1.5 bg-[#11110D]/8"><div className="h-full bg-[#203524] transition-all duration-500" style={{ width: `${((room + 1) / DEMO_ROOMS.length) * 100}%` }} /></div>
               <AnimatePresence mode="wait">
                 <motion.div key={room} className="p-8 md:p-10" initial={reduce ? false : { opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} exit={reduce ? undefined : { opacity: 0, x: -20 }} transition={{ duration: 0.3 }} aria-live="polite">
@@ -79,7 +79,7 @@ export default function Demos() {
       <Section tone="forest">
         <div id="guided-demo" className="scroll-mt-28 grid gap-7">
           <Reveal>
-            <div className="eyebrow mb-4 text-[#D1F470]">03 · Click-through demo</div>
+            <div className="eyebrow mb-4 text-[#D1F470]">02 · Demo Click-Through</div>
             <h2 className="text-3xl font-semibold leading-tight tracking-tight md:text-4xl">Step inside the <span className="serif italic text-[#D1F470]">contact center experience.</span></h2>
             <p className="mt-3 max-w-3xl text-base text-[#F5F5F2]/70">Explore the guided Storylane walkthrough below, or open it directly in this tab.</p>
             <div className="mt-5">
@@ -96,6 +96,8 @@ export default function Demos() {
           </Reveal>
         </div>
       </Section>
+
+      <VideoHighlights />
 
       <Section>
         <SectionHead id="spotlight" num="04" eyebrow="Pre-demo spotlight" title={<>Elevating experiences. <span className="serif italic">Making every interaction transformative.</span></>}
