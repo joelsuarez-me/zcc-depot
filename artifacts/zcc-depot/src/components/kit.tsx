@@ -4,6 +4,7 @@ import { motion, useReducedMotion } from "framer-motion";
 import { ArrowUpRight, Menu, X, PlayCircle } from "lucide-react";
 import { DEMO_URL, LINKS } from "@/data/content";
 import { NAV } from "@/data/navigation";
+import { HeroArt, RouteBadge, SectionGlyph, type Motif } from "@/components/art";
 import { SearchTrigger } from "@/components/global-search";
 import { MobileNavigationLinks, PrimaryNavigation } from "@/components/header-navigation";
 
@@ -48,7 +49,7 @@ export function SectionHead({ id, num, eyebrow, title, lede, dark = false }: { i
     <Reveal className="mb-10 grid gap-6 md:grid-cols-12 md:items-end">
       <div className="md:col-span-7" id={id}>
         <div className={`eyebrow mb-4 flex items-center gap-3 ${dark ? "text-[#D1F470]" : "text-[#203524]"}`}>
-          <span className={`rounded-full px-2 py-0.5 ${dark ? "bg-[#D1F470] text-[#11110D]" : "bg-[#203524] text-[#D1F470]"}`}>{num}</span>{eyebrow}
+          <span className={`rounded-full px-2 py-0.5 shadow-[0_0_0_4px_rgba(209,244,112,.25)] ${dark ? "bg-[#D1F470] text-[#11110D]" : "bg-[#203524] text-[#D1F470]"}`}>{num}</span>{eyebrow}<SectionGlyph label={eyebrow} dark={dark} />
         </div>
         <h2 className={`text-[2rem] leading-[1.05] font-semibold tracking-tight md:text-5xl ${dark ? "text-[#F5F5F2]" : "text-[#11110D]"}`}>{title}</h2>
       </div>
@@ -57,19 +58,24 @@ export function SectionHead({ id, num, eyebrow, title, lede, dark = false }: { i
   );
 }
 
-export function PageHero({ eyebrow, title, lede, children }: { eyebrow: string; title: ReactNode; lede: ReactNode; children?: ReactNode }) {
+const MOTIFS: Record<string, Motif> = { "/architecture": "map", "/sales": "brief", "/pricing": "gate", "/sell-sheet": "doc", "/demos": "rooms", "/demos/instance-details": "flow", "/demos/brief": "brief", "/resources": "search" };
+
+export function PageHero({ eyebrow, title, lede, children, motif }: { eyebrow: string; title: ReactNode; lede: ReactNode; children?: ReactNode; motif?: Motif }) {
   const reduce = useReducedMotion();
+  const [loc] = useLocation();
+  const m = motif ?? MOTIFS[loc] ?? "flow";
   return (
     <section className="on-dark relative overflow-hidden bg-[#203524] text-[#F5F5F2]">
       <div className="grid-lines absolute inset-0" aria-hidden />
       <div className="relative mx-auto max-w-7xl px-5 pb-4 pt-20 md:px-8">
         <motion.div initial={reduce ? false : { opacity: 0, y: 24 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.7, ease: [0.2, 0.7, 0.2, 1] }}>
           <div className="grid gap-2 md:grid-cols-12 md:items-end md:gap-6">
-            <div className="md:col-span-7">
-              <div className="eyebrow mb-1.5 text-[0.625rem] text-[#D1F470]">{eyebrow}</div>
+            <div className="md:col-span-7 lg:col-span-6">
+              <div className="eyebrow mb-1.5 flex items-center gap-2 text-[0.625rem] text-[#D1F470]"><span className="lg:hidden"><RouteBadge motif={m} /></span><span className="hidden h-1.5 w-1.5 rounded-full bg-[#D1F470] lg:inline-block" aria-hidden />{eyebrow}</div>
               <h1 className="max-w-4xl text-2xl font-semibold leading-[1.08] tracking-tight md:text-[2rem]">{title}</h1>
             </div>
-            <p className="max-w-3xl text-sm leading-snug text-[#F5F5F2]/75 md:col-span-5">{lede}</p>
+            <p className="max-w-3xl text-sm leading-snug text-[#F5F5F2]/75 md:col-span-5 lg:col-span-4">{lede}</p>
+            <div className="zart-slot pointer-events-none hidden lg:col-span-2 lg:block" aria-hidden><HeroArt motif={m} className="is-sm" /></div>
           </div>
           {children && <div className="mt-3 flex flex-wrap items-center gap-2 [&_a]:py-1.5 [&_button]:py-1.5">{children}</div>}
         </motion.div>

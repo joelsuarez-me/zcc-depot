@@ -3,6 +3,7 @@ import { useAuth } from "@workspace/replit-auth-web";
 import { useGetPricingGuide, getGetPricingGuideQueryKey } from "@workspace/api-client-react";
 import { AlertTriangle, ArrowRight, ArrowUpRight, Cloud, Layers, Lock, RotateCw, ShieldCheck, Sprout } from "lucide-react";
 import { PageHero, Reveal } from "@/components/kit";
+import { LaneArt, StateArt } from "@/components/art";
 
 const title = "Pricing | ZCC Depot";
 const description = "Signed-in internal pricing guide for Zendesk Contact Center conversations. Internal use only.";
@@ -113,7 +114,7 @@ export default function Pricing() {
       {q.isLoading || (q.isFetching && !data && !q.isError) ? <Skeleton /> : q.isError || !data ? (
         <div className="mx-auto max-w-3xl px-5 py-16 md:px-8" role="alert">
           <div className="rounded-3xl border border-[#11110D]/10 bg-[#FBFBF8] p-8">
-            <AlertTriangle className="h-6 w-6 text-[#9a4b2a]" aria-hidden />
+            <div className="flex items-center gap-3"><AlertTriangle className="h-6 w-6 text-[#9a4b2a]" aria-hidden /><StateArt kind="error" /></div>
             <h2 className="mt-3 text-xl font-semibold text-[#11110D]">The pricing guide could not be loaded.</h2>
             <p className="mt-2 text-sm text-[#11110D]/65">Check your connection and try again.</p>
             <button type="button" onClick={() => q.refetch()} data-testid="button-pricing-retry"
@@ -139,10 +140,11 @@ export default function Pricing() {
               return (
                 <Reveal key={m.id} delay={i * 0.06} className="h-full">
                   <section id={m.id} aria-labelledby={`${m.id}-title`} data-testid={`section-pricing-${m.id}`}
-                    className={`relative flex h-full scroll-mt-24 flex-col overflow-hidden rounded-3xl border border-[#11110D]/10 p-6 ${t.bg}`}>
+                    className={`zart-host relative flex h-full scroll-mt-24 flex-col overflow-hidden rounded-3xl border border-[#11110D]/10 p-6 transition-shadow duration-300 hover:shadow-[0_24px_50px_-28px_rgba(32,53,36,.55)] ${t.bg}`}>
                     {v.tone === "forest" && <div className="grid-lines absolute inset-0" aria-hidden />}
-                    <span aria-hidden className={`pointer-events-none absolute -right-2 -top-4 select-none text-[7rem] font-semibold leading-none tracking-tighter ${t.num}`}>{v.num}</span>
+                                        <span aria-hidden className={`pointer-events-none absolute -right-2 -top-4 select-none text-[7rem] font-semibold leading-none tracking-tighter ${t.num}`}>{v.num}</span>
                     <div className="relative flex h-full flex-col">
+                      <div className="pointer-events-none -mt-1 mb-2" aria-hidden><LaneArt id={m.id} dark={v.tone === "forest"} /></div>
                       <div className="eyebrow flex items-center gap-3"><span className={`rounded-full px-2 py-0.5 ${t.badge}`}>{v.num}</span>{m.tag}</div>
                       <h2 id={`${m.id}-title`} className="mt-4 min-h-[2.5em] text-2xl font-semibold leading-[1.1] tracking-tight" data-testid={`text-pricing-name-${m.id}`}>{m.name}</h2>
                       <div className="mt-3 flex flex-wrap items-center gap-2">

@@ -36,6 +36,7 @@ import { motion, useReducedMotion } from "framer-motion";
 import { AGENDA_SECTIONS as sections, EMPTY_AGENDA as EMPTY, MORNINGSTAR_AGENDA, type AgendaFields } from "@/data/agenda-template";
 import { AgendaDocument } from "@/components/agenda-document";
 import { AgendaCardLogo } from "@/components/agenda-card-logo";
+import { HeroArt, SectionGlyph, StateArt } from "@/components/art";
 
 const TEXT_KEY = "zcc-depot:agenda:v1";
 const LOGO_KEY = "zcc-depot:agenda-logo:v1";
@@ -384,6 +385,7 @@ export default function Agenda() {
         <div className="mx-auto max-w-6xl">
           <section className="relative overflow-hidden rounded-[2rem] bg-[#244b39] px-6 py-4 text-[#f5f5eb] md:px-8">
             <div className="grid-lines absolute inset-0 opacity-50" aria-hidden />
+            <div className="pointer-events-none absolute right-8 top-1/2 hidden -translate-y-1/2 lg:block" aria-hidden><HeroArt motif="agenda" className="is-sm" /></div>
             <div className="relative max-w-2xl">
               <div className="eyebrow text-[#d4e4a6]">ZCC Depot · Workshop workspace</div>
               <h1 className="mt-2 text-2xl font-semibold tracking-tight md:text-3xl">Today’s Agenda</h1>
@@ -407,7 +409,7 @@ export default function Agenda() {
         <div className="grid-lines absolute inset-0 opacity-50" aria-hidden />
         <div className="relative mx-auto max-w-7xl">
           <div className="flex flex-wrap items-center justify-between gap-2">
-            <div className="eyebrow flex items-center gap-2 text-[0.625rem] text-[#d4e4a6]"><span className="h-px w-5 bg-[#d4e4a6]" />Customer workshop · Conversation brief</div>
+            <div className="eyebrow flex items-center gap-2 text-[0.625rem] text-[#d4e4a6]"><span className="h-px w-5 bg-[#d4e4a6]" />Customer workshop · Conversation brief{mode !== "library" && <SectionGlyph label={mode === "presentation" ? "presentation" : "outcome"} dark />}</div>
             <div className="flex items-center gap-3">
               <span className="hidden text-xs text-[#f6f5ec]/65 sm:inline">{user?.email ?? "Signed in"}</span>
               <button type="button" onClick={logout} className="inline-flex min-h-9 items-center gap-2 rounded-full border border-white/20 px-3.5 text-xs font-semibold text-white/85 transition hover:bg-white/10" data-testid="button-agenda-logout">
@@ -420,6 +422,7 @@ export default function Agenda() {
               <h1 className="text-2xl font-semibold tracking-tight md:text-3xl" data-testid="heading-agenda">Today’s Agenda</h1>
               <p className="mt-1 max-w-2xl text-sm leading-snug text-[#f6f5ec]/70">Objectives, platforms, conversation, validation, and outcomes — ready for the customer demo.</p>
             </div>
+            {mode === "library" && <div className="pointer-events-none hidden lg:block" aria-hidden><HeroArt motif="agenda" className="is-sm" /></div>}
             {mode !== "library" && (
               <div className="flex w-fit rounded-full border border-white/20 bg-[#183629]/35 p-1" role="group" aria-label="Agenda view">
                 <button type="button" onClick={cancelEditor} className="rounded-full px-4 py-2 text-sm font-semibold text-white/75 hover:text-white" data-testid="button-agenda-library">Library</button>
@@ -483,7 +486,7 @@ export default function Agenda() {
             ) : listQuery.isError ? (
               <section className="grid min-h-64 place-items-center rounded-[1.75rem] border border-[#d9ddd2] bg-[#fbfbf6] p-8 text-center" data-testid="error-agenda-library">
                 <div className="max-w-md">
-                  <AlertCircle className="mx-auto h-8 w-8 text-[#9a5a47]" aria-hidden />
+                  <div className="flex justify-center"><StateArt kind="error" /></div>
                   <h3 className="mt-4 text-lg font-semibold text-[#294735]">The library didn’t load</h3>
                   <p className="mt-2 text-sm leading-relaxed text-[#69766b]">Your saved agendas have not been changed. Check your connection and try again.</p>
                   <button type="button" onClick={() => void listQuery.refetch()} className={`${secondaryButton} mt-5`} data-testid="button-retry-agenda-library">Try again</button>
@@ -491,7 +494,7 @@ export default function Agenda() {
               </section>
             ) : list.length === 0 ? (
               <section className="relative overflow-hidden rounded-[1.75rem] border border-[#d9ddd2] bg-[#fbfbf6] px-6 py-12 md:px-12 md:py-16" data-testid="empty-agenda-library">
-                <div className="absolute right-8 top-8 hidden h-32 w-32 rounded-full border border-[#d8dfd1] md:block" aria-hidden />
+                <div className="pointer-events-none absolute right-10 top-10 hidden md:block" aria-hidden><StateArt kind="empty" /></div>
                 <div className="relative max-w-xl">
                   <div className="grid h-12 w-12 place-items-center rounded-2xl bg-[#e6ecdd] text-[#426148]"><FileText className="h-5 w-5" aria-hidden /></div>
                   <div className="eyebrow mt-6 text-[#788579]">A good conversation starts with context</div>
@@ -547,7 +550,7 @@ export default function Agenda() {
             <form onSubmit={saveAgenda} className="grid gap-6 lg:grid-cols-[minmax(0,1fr)_19rem]">
               <div className="space-y-5">
                 <section className="rounded-[1.6rem] border border-[#d9ddd2] bg-[#fbfbf6] p-5 md:p-8" aria-labelledby="agenda-welcome-heading">
-                  <div className="eyebrow text-[#728075]">Demo brief</div>
+                  <div className="eyebrow flex items-center text-[#728075]">Demo brief<SectionGlyph label="outcome" /></div>
                   <h2 id="agenda-welcome-heading" className="mt-2 text-2xl font-semibold tracking-tight text-[#203a2c]">Company and objective</h2>
                   <p className="mt-1 text-sm text-[#6c786e]">Set the customer name and the purpose of the demo.</p>
                   <div className="mt-6 grid gap-5 md:grid-cols-2">
@@ -561,7 +564,7 @@ export default function Agenda() {
                 </section>
                 {sections.map((section) => (
                   <section key={section.key} className="rounded-[1.6rem] border border-[#d9ddd2] bg-[#fbfbf6] p-5 md:p-8" aria-labelledby={`agenda-${section.key}-heading`}>
-                    <h2 id={`agenda-${section.key}-heading`} className="text-2xl font-semibold tracking-tight text-[#203a2c]">{section.label}</h2>
+                    <h2 id={`agenda-${section.key}-heading`} className="flex items-center gap-2 text-2xl font-semibold tracking-tight text-[#203a2c]">{section.label}<SectionGlyph label={{ currentState: "system", conversation: "channel", problems: "faq", outcomes: "outcome" }[section.key] ?? section.label} /></h2>
                     <p className="mt-2 text-sm text-[#6c786e]">{section.prompt}</p>
                     <label className="mt-5 block text-sm font-semibold text-[#304c38]">{section.noteLabel}
                       <textarea value={fields[section.key]} onChange={(event) => updateField(section.key, event.target.value)} placeholder={section.placeholder} rows={section.rows} maxLength={5000} className={`${fieldClass} resize-y`} data-testid={`input-agenda-${section.key}`} />

@@ -3,7 +3,7 @@ import { Link } from "wouter";
 import { motion, AnimatePresence, useReducedMotion } from "framer-motion";
 import { ArrowLeft, ArrowRight, Video, MonitorUp, Layers } from "lucide-react";
 import { DemoButton, Ext, Note, PageHero, Reveal, Section, SectionHead } from "@/components/kit";
-import { DEMO_ROOMS, DEMO_URL, LINKS } from "@/data/content";
+import { DEMO_ROOMS, LINKS } from "@/data/content";
 import { VideoHighlights } from "@/components/video-highlights";
 
 const VIDEO_GA = [
@@ -81,13 +81,7 @@ export default function Demos() {
           <Reveal>
             <div className="eyebrow mb-4 text-[#D1F470]">02 · Demo Click-Through</div>
             <h2 className="text-3xl font-semibold leading-tight tracking-tight md:text-4xl">Step inside the <span className="serif italic text-[#D1F470]">contact center experience.</span></h2>
-            <p className="mt-3 max-w-3xl text-base text-[#F5F5F2]/70">Explore the guided Storylane walkthrough below, or open it directly in this tab.</p>
-            <div className="mt-5">
-              <a href={DEMO_URL} data-testid="button-launch-demo-2" className="inline-flex items-center gap-2 rounded-full bg-[#D1F470] px-5 py-3 text-sm font-semibold text-[#11110D] transition hover:bg-[#c3ea55]">
-                Open interactive walkthrough <ArrowRight className="h-4 w-4" aria-hidden />
-              </a>
-            </div>
-            <p className="mono mt-3 text-xs text-[#F5F5F2]/60">Guided click-through demo. It is not connected to a live Zendesk account.</p>
+            <p className="mt-3 max-w-3xl text-base text-[#F5F5F2]/70">Explore the guided Storylane walkthrough below.</p>
           </Reveal>
           <Reveal delay={0.1}>
             <div data-testid="card-demo-preview" className="overflow-hidden rounded-2xl border border-[#D1F470]/25 bg-white">

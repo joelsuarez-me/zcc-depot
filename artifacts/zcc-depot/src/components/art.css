@@ -1,0 +1,37 @@
+/* Scoped illustration motion. All auto motion is finite (< 5s). */
+.zart{pointer-events:none;user-select:none}
+.zart .draw{stroke-dasharray:5 6;stroke-dashoffset:60;animation:zart-draw 1.8s .3s cubic-bezier(.2,.7,.2,1) forwards}
+.zart .pop{transform-box:fill-box;transform-origin:center;opacity:0;animation:zart-pop .55s cubic-bezier(.2,1.4,.4,1) forwards}
+.zart .rise{transform-box:fill-box;opacity:0;animation:zart-rise .6s cubic-bezier(.2,.7,.2,1) forwards}
+.zart .halo{transform-box:fill-box;transform-origin:center;animation:zart-halo 1.6s ease-out 2 both}
+.zart .d1{animation-delay:.15s}.zart .d2{animation-delay:.45s}.zart .d3{animation-delay:.8s}.zart .d4{animation-delay:1.15s}.zart .d5{animation-delay:1.5s}
+@keyframes zart-draw{to{stroke-dashoffset:0}}
+@keyframes zart-pop{from{opacity:0;transform:scale(.4)}to{opacity:1;transform:scale(1)}}
+@keyframes zart-rise{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+@keyframes zart-halo{0%{opacity:.9;transform:scale(.85)}100%{opacity:.35;transform:scale(1.15)}}
+/* Hover feedback on host cards */
+.zart-host .zart-hover{transition:transform .45s cubic-bezier(.2,.7,.2,1)}
+.zart-host:hover .zart-hover{transform:translateY(-4px) rotate(-1.5deg)}
+.zart-host:hover .zart-hover .hl-node{fill:#D1F470}
+.marquee-paused .marquee{animation-play-state:paused}
+@media (prefers-reduced-motion:reduce){
+  .zart .draw{stroke-dashoffset:0;animation:none}
+  .zart .pop,.zart .rise{opacity:1;animation:none}
+  .zart .halo{animation:none}
+  .zart-host:hover .zart-hover{transform:none}
+}
+
+/* Sizing classes (single source, no competing h- utilities) */
+.zart-hero{display:block;height:84px;width:auto}
+.zart-hero.is-sm{height:60px}
+.zart-badge{display:inline-grid;place-items:center;width:1rem;height:1rem;margin-block:-.2rem;border-radius:999px;background:#D1F470;color:#203524;flex:none}
+.zart-badge svg{width:.6rem;height:.6rem;stroke-width:2.4}
+.zart-glyph{display:inline-flex;align-items:center;gap:.35rem;margin-left:.25rem;color:#203524}
+.zart-glyph.is-dark{color:#D1F470}
+.zart-glyph-line{width:1.75rem;height:.5rem;opacity:.55}
+.zart-glyph-icon{display:grid;place-items:center;width:1.6rem;height:1.6rem;margin-block:-.45rem;border-radius:999px;background:#ECF7C8;box-shadow:0 0 0 4px rgba(209,244,112,.35);color:#203524}
+.zart-glyph.is-dark .zart-glyph-icon{background:#D1F470;box-shadow:0 0 0 4px rgba(209,244,112,.18)}
+.zart-glyph-icon svg{width:.85rem;height:.85rem}
+/* Hero art slot: reserves width, art anchors to row bottom and never sets row height */
+.zart-slot{position:relative;align-self:stretch;min-height:1px}
+.zart-slot>.zart{position:absolute;right:0;bottom:0}
