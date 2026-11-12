@@ -142,10 +142,9 @@ export default function Pricing() {
                   <section id={m.id} aria-labelledby={`${m.id}-title`} data-testid={`section-pricing-${m.id}`}
                     className={`zart-host relative flex h-full scroll-mt-24 flex-col overflow-hidden rounded-3xl border border-[#11110D]/10 p-6 transition-shadow duration-300 hover:shadow-[0_24px_50px_-28px_rgba(32,53,36,.55)] ${t.bg}`}>
                     {v.tone === "forest" && <div className="grid-lines absolute inset-0" aria-hidden />}
-                                        <span aria-hidden className={`pointer-events-none absolute -right-2 -top-4 select-none text-[7rem] font-semibold leading-none tracking-tighter ${t.num}`}>{v.num}</span>
                     <div className="relative flex h-full flex-col">
                       <div className="pointer-events-none -mt-1 mb-2" aria-hidden><LaneArt id={m.id} dark={v.tone === "forest"} /></div>
-                      <div className="eyebrow flex items-center gap-3"><span className={`rounded-full px-2 py-0.5 ${t.badge}`}>{v.num}</span>{m.tag}</div>
+                      <div className="eyebrow">{m.tag}</div>
                       <h2 id={`${m.id}-title`} className="mt-4 min-h-[2.5em] text-2xl font-semibold leading-[1.1] tracking-tight" data-testid={`text-pricing-name-${m.id}`}>{m.name}</h2>
                       <div className="mt-3 flex flex-wrap items-center gap-2">
                         <span className={`grid h-8 w-8 place-items-center rounded-full ${t.icon}`}><Icon className="h-4 w-4" aria-hidden /></span>

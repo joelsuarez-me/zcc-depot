@@ -4,7 +4,6 @@ import { RefreshCw } from "lucide-react";
 import { Ext, Note, PageHero, Reveal, Section, SectionHead } from "@/components/kit";
 import { CORE_COMPONENTS, LAMBDAS, LINKS } from "@/data/content";
 import { SystemDataFlow } from "@/components/system-data-flow";
-import { CallJourney } from "@/components/call-journey";
 
 function Lambdas() {
   const [tab, setTab] = useState<"deployment" | "runtime">("runtime");
@@ -42,6 +41,10 @@ export default function Architecture() {
   useEffect(() => {
     const redirectMovedSection = () => {
       const hash = window.location.hash;
+      if (hash === "#journey") {
+        navigate("/#how-it-works", { replace: true });
+        return;
+      }
       if (hash === "#ai-suggestions" || hash === "#collaboration") {
         navigate(`/resources${hash}`, { replace: true });
       }
@@ -60,19 +63,14 @@ export default function Architecture() {
         ))}
       </PageHero>
 
-      <Section>
-        <SectionHead id="journey" num="01" eyebrow="How it works" title="From caller to Zendesk agent" lede="Select a stage to see what it does. Illustrative architecture." />
-        <CallJourney />
-      </Section>
-
       <Section tone="forest">
-        <SectionHead id="data-flow" num="02" eyebrow="System + data flow" dark title="One connected service architecture" lede="Follow the signals across Zendesk and your AWS environment. Explore the complete architecture, trace a flow, or inspect any component." />
+        <SectionHead id="data-flow" eyebrow="System + data flow" dark title="One connected service architecture" lede="Follow the signals across Zendesk and your AWS environment. Explore the complete architecture, trace a flow, or inspect any component." />
         <SystemDataFlow />
         <p className="mt-8 text-xs text-[#F5F5F2]/50">Conceptual architecture. Confirm deployment-specific services, regions, and integration behavior with current product guidance.</p>
       </Section>
 
       <Section>
-        <SectionHead id="components" num="03" eyebrow="Components" title="How the pieces fit together" lede="Each Contact Center environment connects to one Amazon Connect instance and uses supporting services deployed in the customer's AWS account." />
+        <SectionHead id="components" eyebrow="Components" title="How the pieces fit together" lede="Each Contact Center environment connects to one Amazon Connect instance and uses supporting services deployed in the customer's AWS account." />
         <div className="mb-8 grid items-stretch gap-3 md:grid-cols-[1fr_auto_1fr_auto_1fr]">
           {[["Agent experience", "Zendesk Contact Center app", "Omnichannel inbox, AI tools, dashboards, and agent workflows"], ["Voice + routing", "Amazon Connect", "Calls, chats, queues, contact flows, and routing"], ["Integration layer", "AWS services", "CloudFormation, Lambda, Cognito, and event or streaming connections"]].map(([e, t, d], k) => (
             <div key={t} className="contents">

@@ -1,7 +1,14 @@
-import { useRef, useState } from "react";
+import { useRef, useState, type AnchorHTMLAttributes } from "react";
 import { Link, useLocation } from "wouter";
 import { ArrowUpRight, ChevronDown } from "lucide-react";
 import { NAV, isNavItemActive, sectionHref, type NavItem, type SubNavItem } from "@/data/navigation";
+
+function MainNavLink({ item, ...props }: { item: NavItem } & AnchorHTMLAttributes<HTMLAnchorElement>) {
+  // Native anchors also scroll correctly when the pathname has not changed.
+  return item.href.includes("#")
+    ? <a {...props} href={sectionHref(item)} />
+    : <Link {...props} href={item.href} />;
+}
 
 function SubNavLink({ item, onNavigate }: { item: SubNavItem; onNavigate: () => void }) {
   return (
@@ -22,8 +29,8 @@ function DesktopNavItem({ item, active }: { item: NavItem; active: boolean }) {
   const tone = active ? "bg-[#203524] text-[#D1F470]" : "text-[#11110D]/75 hover:bg-[#203524]/8 hover:text-[#11110D]";
 
   if (!item.children) {
-    return <Link href={item.href} aria-current={active ? "page" : undefined} data-testid={`link-nav-${item.label.toLowerCase()}`}
-      className={`rounded-full px-3 py-2 text-sm font-medium transition-colors ${tone}`}>{item.label}</Link>;
+    return <MainNavLink item={item} aria-current={active ? "page" : undefined} data-testid={`link-nav-${item.label.toLowerCase()}`}
+      className={`rounded-full px-3 py-2 text-sm font-medium transition-colors ${tone}`}>{item.label}</MainNavLink>;
   }
 
   return (
@@ -43,9 +50,9 @@ function DesktopNavItem({ item, active }: { item: NavItem; active: boolean }) {
         }
       }}>
       <div className={`flex items-center rounded-full transition-colors ${tone}`}>
-        <Link href={item.href} onFocus={() => setOpen(true)} onClick={() => setOpen(false)}
+        <MainNavLink item={item} onFocus={() => setOpen(true)} onClick={() => setOpen(false)}
           aria-current={active ? "page" : undefined} data-testid={`link-nav-${item.label.toLowerCase()}`}
-          className="rounded-full py-2 pl-3 pr-1 text-sm font-medium">{item.label}</Link>
+          className="rounded-full py-2 pl-3 pr-1 text-sm font-medium">{item.label}</MainNavLink>
         <button ref={toggle} type="button" aria-label={`${item.label} sections`} aria-expanded={open} aria-controls={id}
           onClick={() => setOpen(value => !value)} data-testid={`button-submenu-${item.label.toLowerCase()}`}
           className="grid h-8 w-8 place-items-center rounded-full">
@@ -73,12 +80,12 @@ export function PrimaryNavigation() {
 export function MobileNavigationLinks({ onNavigate }: { onNavigate: () => void }) {
   return (
     <ul>
-      {NAV.map((item, index) => (
+      {NAV.map((item) => (
         <li key={item.href}>
-          <Link href={item.href} onClick={onNavigate} data-testid={`link-mobile-${item.label.toLowerCase()}`}
+          <MainNavLink item={item} onClick={onNavigate} data-testid={`link-mobile-${item.label.toLowerCase()}`}
             className="flex items-center justify-between rounded-2xl px-4 py-3.5 text-lg font-medium hover:bg-[#203524]/8">
-            {item.label}<span className="mono text-xs text-[#11110D]/40">0{index + 1}</span>
-          </Link>
+            {item.label}
+          </MainNavLink>
           {item.children && (
             <ul className="mb-2 ml-5 border-l border-[#203524]/15 pl-2" aria-label={`${item.label} sections`}>
               {item.children.map(child => <li key={child.href}><SubNavLink item={child} onNavigate={onNavigate} /></li>)}

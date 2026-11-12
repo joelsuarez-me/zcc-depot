@@ -36,7 +36,7 @@ const SECTIONS: SearchEntry[] = [
   sec("video-highlights", "Video highlights", "/demos#video-highlights", "Timestamped walkthrough chapters.", "youtube walkthrough"),
   sec("video", "Video calling & screen sharing", "/demos#video", "Visual channels for complex support conversations.", "video call screen sharing"),
   sec("spotlight", "Pre-demo spotlight", "/demos#spotlight", "What to prepare before the demo.", "prep"),
-  sec("journey", "Call journey", "/architecture#journey", "From Amazon Connect to the Zendesk agent experience.", "flow"),
+  sec("journey", "Call journey", "/#how-it-works", "From Amazon Connect to the Zendesk agent experience.", "flow"),
   sec("ai-suggestions", "Agent knowledge · Real-time AI suggestions", "/resources#ai-suggestions", "Transcription and knowledge suggestions during calls.", "copilot"),
   sec("data-flow", "Architecture & data flow", "/architecture#data-flow", "Agent controls, customer context, and call records flows.", "lambda api gateway cognito ctr"),
   sec("components", "Core components", "/architecture#components", "Amazon Connect, app, identity, CloudFormation.", "cognito saml lambdas"),

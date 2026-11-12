@@ -33,7 +33,7 @@ export function CallJourney() {
               }}
               data-testid={`tab-journey-${j.k}`} className="group relative flex flex-col items-center gap-3 rounded-2xl p-3 text-center">
               <span className={`relative z-10 grid h-14 w-14 place-items-center rounded-full transition-all ${k <= i ? "bg-[#203524] text-[#D1F470]" : "border border-[#11110D]/15 bg-[#F5F5F2] text-[#11110D]/50 group-hover:border-[#203524]"} ${k === i ? "scale-110 ring-4 ring-[#D1F470]" : ""}`}><I className="h-5 w-5" aria-hidden /></span>
-              <span className="eyebrow text-[#11110D]/50">{j.k} · {j.label}</span>
+              <span className="eyebrow text-[#11110D]/50">{j.label}</span>
               <span className="font-semibold">{j.t}</span>
             </button>
           );

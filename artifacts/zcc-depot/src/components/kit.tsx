@@ -45,12 +45,13 @@ export function Reveal({ children, delay = 0, className = "" }: { children: Reac
   );
 }
 
-export function SectionHead({ id, num, eyebrow, title, lede, dark = false }: { id?: string; num: string; eyebrow: string; title: ReactNode; lede?: ReactNode; dark?: boolean }) {
+// Legacy num props are accepted but never rendered; section names are unnumbered.
+export function SectionHead({ id, eyebrow, title, lede, dark = false }: { id?: string; num?: string; eyebrow: string; title: ReactNode; lede?: ReactNode; dark?: boolean }) {
   return (
     <Reveal className="mb-10 grid gap-6 md:grid-cols-12 md:items-end">
       <div className="md:col-span-7" id={id} data-section-nav>
         <div className={`eyebrow mb-4 flex items-center gap-3 ${dark ? "text-[#D1F470]" : "text-[#203524]"}`}>
-          <span className={`rounded-full px-2 py-0.5 shadow-[0_0_0_4px_rgba(209,244,112,.25)] ${dark ? "bg-[#D1F470] text-[#11110D]" : "bg-[#203524] text-[#D1F470]"}`}>{num}</span>{eyebrow}<SectionGlyph label={eyebrow} dark={dark} />
+          {eyebrow}<SectionGlyph label={eyebrow} dark={dark} />
         </div>
         <h2 className={`text-[2rem] leading-[1.05] font-semibold tracking-tight md:text-5xl ${dark ? "text-[#F5F5F2]" : "text-[#11110D]"}`}>{title}</h2>
       </div>

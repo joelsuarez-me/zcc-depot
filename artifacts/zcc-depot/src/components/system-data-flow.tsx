@@ -8,7 +8,7 @@ import {
 import "./system-data-flow.css";
 
 const KC: Record<EdgeKind, string> = { auth: "var(--k-auth)", controls: "var(--k-controls)", context: "var(--k-context)", records: "var(--k-records)" };
-const KH: Record<EdgeKind, string> = { auth: "#E9E4D4", controls: "#D1F470", context: "#8FD6B4", records: "#F2B86B" };
+const KH: Record<EdgeKind, string> = { auth: "#52665D", controls: "#2D683C", context: "#167567", records: "#986321" };
 const TRAIL = [0, 0.05, 0.1];
 const PAUSE_AT = 0.62;
 const ICONS: Record<string, LucideIcon> = { zcc: Headset, ticket: Search, status: UserCheck, analysis: AudioWaveform, reporting: BarChart3, lambda: Webhook, cognito: KeyRound, connect: PhoneCall, profiles: IdCard, internal: Database, events: Cpu, direct: Boxes, logs: ScrollText, transcripts: FileText, ctr: ListChecks };
@@ -201,7 +201,7 @@ export function SystemDataFlow() {
                     <g key={e.id} ref={(el) => { pktRefs.current[e.id] = el; }} style={{ opacity: 0 }}>
                       <circle r={2.5} fill={KH[e.kind]} opacity={0.35} />
                       <circle r={3.5} fill={KH[e.kind]} opacity={0.6} />
-                      <path d="M-6 -5 L6 0 L-6 5 z" fill={KH[e.kind]} stroke="#11110D" strokeWidth={1} />
+                      <path d="M-6 -5 L6 0 L-6 5 z" fill={KH[e.kind]} stroke="#FFFFFF" strokeWidth={1} />
                     </g>
                   ))}
                 </g>
@@ -222,11 +222,11 @@ export function SystemDataFlow() {
               Step {s.index + 1}/{s.count} · {curFlow.t} · ~{total}s loop{reduced ? " · motion reduced" : ""}
             </div>
           </div>
-          <div className="mt-4 flex flex-wrap gap-x-5 gap-y-2 text-xs text-[#F5F5F2]/70">
+          <div className="sdf-legend mt-4 flex flex-wrap gap-x-5 gap-y-2 rounded-2xl p-4 text-xs">
             {(Object.keys(KIND_META) as EdgeKind[]).map((k) => (
-              <span key={k} className="inline-flex items-center gap-2"><span className="h-0.5 w-6" style={{ background: KH[k] }} aria-hidden /><strong className="font-medium text-[#F5F5F2]">{KIND_META[k].t}</strong>{KIND_META[k].d}</span>
+              <span key={k} className="inline-flex items-center gap-2"><span className="h-0.5 w-6" style={{ background: KH[k] }} aria-hidden /><strong className="font-medium text-[#203524]">{KIND_META[k].t}</strong>{KIND_META[k].d}</span>
             ))}
-            <span className="inline-flex items-center gap-2"><svg width="24" height="4" aria-hidden><line x1="0" y1="2" x2="24" y2="2" stroke="#F5F5F2" strokeDasharray="3 4" /></svg>Optional or configuration-dependent</span>
+            <span className="inline-flex items-center gap-2"><svg width="24" height="4" aria-hidden><line x1="0" y1="2" x2="24" y2="2" stroke="#52665D" strokeDasharray="3 4" /></svg>Optional or configuration-dependent</span>
           </div>
         </div>
 

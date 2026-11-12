@@ -11,6 +11,12 @@ Keep the gap between each main hero and its first content section compact too; d
 
 **How to apply:** Preserve compact headers when adding pages; do not introduce full-screen or generously padded main heroes.
 
+Do not display numerical prefixes before section names, including navigation labels.
+
+**Why:** The user explicitly requested unnumbered section names after earlier numbering passes.
+
+**How to apply:** Keep new section headings and menu names unnumbered. This does not mean removing meaningful prices, statistics, or playback step counts.
+
 The user supplied a Zendesk reference with an inset, rounded dark-green banner
 on a white surround, approximately 150px tall on desktop, and requested this
 treatment across all pages with animation in the background fill.

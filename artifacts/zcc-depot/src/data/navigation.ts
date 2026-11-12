@@ -4,13 +4,13 @@ export type NavItem = { href: string; label: string; children?: SubNavItem[] };
 export const NAV: NavItem[] = [
   {
     href: "/", label: "Overview", children: [
-      { label: "01: One solution", href: "/#platform" },
-      { label: "02: How it works", href: "/architecture#journey" },
-      { label: "03: Features", href: "/#features" },
+      { label: "One solution", href: "/#platform" },
+      { label: "How it works", href: "/#how-it-works" },
+      { label: "Features", href: "/#features" },
     ],
   },
   {
-    href: "/architecture", label: "Architecture", children: [
+    href: "/architecture#data-flow", label: "Architecture", children: [
       { label: "System + data flow", href: "/architecture#data-flow" },
       { label: "Components", href: "/architecture#components" },
     ],
@@ -23,12 +23,12 @@ export const NAV: NavItem[] = [
   },
   {
     href: "/demos", label: "Demos", children: [
-      { label: "01 Demo Methodology", href: "/demos#agenda" },
-      { label: "02 Demo Click-Through", href: "/demos#guided-demo" },
-      { label: "03 Demo Instance Details", href: "/demos/instance-details" },
-      { label: "04 Demo Researcher", href: "/demos/brief" },
-      { label: "05 Demo Agenda", href: "/agenda" },
-      { label: "06 Demo Nuggets", href: "/demos/nuggets" },
+      { label: "Demo Methodology", href: "/demos#agenda" },
+      { label: "Demo Click-Through", href: "/demos#guided-demo" },
+      { label: "Demo Instance Details", href: "/demos/instance-details" },
+      { label: "Demo Researcher", href: "/demos/brief" },
+      { label: "Demo Agenda", href: "/agenda" },
+      { label: "Demo Nuggets", href: "/demos/nuggets" },
     ],
   },
   { href: "/resources", label: "Resources", children: [
@@ -40,9 +40,10 @@ export const NAV: NavItem[] = [
 ];
 
 export function isNavItemActive(item: NavItem, location: string) {
-  const matches = (href: string) => href === "/"
-    ? location === "/"
-    : location === href || location.startsWith(`${href}/`);
+  const matches = (href: string) => {
+    const path = href.split("#")[0];
+    return path === "/" ? location === "/" : location === path || location.startsWith(`${path}/`);
+  };
   return matches(item.href) || !!item.children?.some(child =>
     !child.external && !child.href.includes("#") && matches(child.href));
 }

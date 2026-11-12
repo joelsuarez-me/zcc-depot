@@ -6,7 +6,7 @@ import { NAV, isNavItemActive } from "../src/data/navigation.ts";
 test("main menu keeps Resources as its final destination", () => {
   assert.deepEqual(NAV.map(n => n.label), ["Overview", "Architecture", "Sales", "Demos", "Resources"]);
   assert.equal(NAV.at(-1).href, "/resources");
-  assert.equal(NAV[0].children[1].href, "/architecture#journey");
+  assert.equal(NAV[0].children[1].href, "/#how-it-works");
 });
 
 test("Sales and Demos contain the exact requested destinations and sequence", () => {
@@ -14,30 +14,32 @@ test("Sales and Demos contain the exact requested destinations and sequence", ()
     ["Sell Sheet", "/sell-sheet"], ["Pricing", "/pricing"],
   ]);
   assert.deepEqual(NAV[3].children.map(n => [n.label, n.href]), [
-    ["01 Demo Methodology", "/demos#agenda"],
-    ["02 Demo Click-Through", "/demos#guided-demo"],
-    ["03 Demo Instance Details", "/demos/instance-details"],
-    ["04 Demo Researcher", "/demos/brief"],
-    ["05 Demo Agenda", "/agenda"],
-    ["06 Demo Nuggets", "/demos/nuggets"],
+    ["Demo Methodology", "/demos#agenda"],
+    ["Demo Click-Through", "/demos#guided-demo"],
+    ["Demo Instance Details", "/demos/instance-details"],
+    ["Demo Researcher", "/demos/brief"],
+    ["Demo Agenda", "/agenda"],
+    ["Demo Nuggets", "/demos/nuggets"],
   ]);
 });
 
 test("Architecture contains only the two requested submenu destinations", () => {
+  assert.equal(NAV[1].href, "/architecture#data-flow");
   assert.deepEqual(NAV[1].children.map(item => [item.label, item.href]), [
     ["System + data flow", "/architecture#data-flow"],
     ["Components", "/architecture#components"],
   ]);
 });
 
-test("Architecture removes Global platform and keeps section numbering continuous", () => {
+test("Architecture starts with data flow and no longer contains How it works", () => {
   const source = readFileSync(new URL("../src/pages/architecture.tsx", import.meta.url), "utf8");
   assert.doesNotMatch(source, /Global platform|#footprint|id="footprint"|<Footprint/);
-  assert.deepEqual([...source.matchAll(/<SectionHead[^>]*num="(\d+)"/g)].map(match => match[1]), ["01", "02", "03"]);
-  assert.doesNotMatch(source, /id="ai-suggestions"|id="collaboration"/);
+  assert.deepEqual([...source.matchAll(/<SectionHead[^>]*id="([^"]+)"/g)].map(match => match[1]), ["data-flow", "components"]);
+  assert.doesNotMatch(source, /id="ai-suggestions"|id="collaboration"|<CallJourney|eyebrow="How it works"/);
+  assert.match(source, /hash === "#journey"[\s\S]*?navigate\("\/#how-it-works", \{ replace: true \}\)/);
 });
 
-test("Resources owns the moved sections and all resource section numbers remain continuous", () => {
+test("Resources owns the moved sections without changing the existing library", () => {
   assert.deepEqual(NAV[4].children.map(item => [item.label, item.href]), [
     ["Resource library", "/resources#library"],
     ["Agent knowledge", "/resources#ai-suggestions"],
@@ -45,15 +47,22 @@ test("Resources owns the moved sections and all resource section numbers remain 
     ["Pitch Deck", "/resources#pitch-deck"],
   ]);
   const resources = readFileSync(new URL("../src/pages/resources.tsx", import.meta.url), "utf8");
-  const briefings = readFileSync(new URL("../src/components/resource-briefings.tsx", import.meta.url), "utf8");
-  const pitchDeck = readFileSync(new URL("../src/components/pitch-deck-section.tsx", import.meta.url), "utf8");
   assert.match(resources, /<AgentKnowledgeSection \/>\s*<LatestNewsSection \/>\s*<PitchDeckSection \/>/);
-  assert.deepEqual([
-    ...[...resources.matchAll(/<SectionHead[^>]*num="(\d+)"/g)].map(match => match[1]),
-    ...[...resources.matchAll(/eyebrow[^>]*>(\d+) ·/g)].map(match => match[1]),
-    ...[...briefings.matchAll(/<SectionHead[^>]*num="(\d+)"/g)].map(match => match[1]),
-    ...[...pitchDeck.matchAll(/<SectionHead[^>]*num="(\d+)"/g)].map(match => match[1]),
-  ], ["01", "02", "03", "04", "05", "06", "07"]);
+  assert.doesNotMatch(resources, />0[34] ·/);
+});
+
+test("Section headings and navigation names have no numerical prefixes", () => {
+  for (const item of NAV) {
+    for (const label of [item.label, ...(item.children ?? []).map(child => child.label)]) {
+      assert.doesNotMatch(label, /^\d/);
+    }
+  }
+  const kit = readFileSync(new URL("../src/components/kit.tsx", import.meta.url), "utf8");
+  const sectionHead = kit.slice(kit.indexOf("export function SectionHead"), kit.indexOf("const MOTIFS"));
+  assert.doesNotMatch(sectionHead, /\{num\}/);
+  const header = readFileSync(new URL("../src/components/header-navigation.tsx", import.meta.url), "utf8");
+  assert.doesNotMatch(header, /0\{index \+ 1\}/);
+  assert.match(header, /<a \{\.\.\.props\} href=\{sectionHref\(item\)\}/);
 });
 
 test("nested routes highlight their new parent without activating Overview twice", () => {

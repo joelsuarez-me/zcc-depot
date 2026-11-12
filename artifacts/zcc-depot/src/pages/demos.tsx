@@ -51,7 +51,7 @@ export default function Demos() {
               <div className="h-1.5 bg-[#11110D]/8"><div className="h-full bg-[#203524] transition-all duration-500" style={{ width: `${((room + 1) / DEMO_ROOMS.length) * 100}%` }} /></div>
               <AnimatePresence mode="wait">
                 <motion.div key={room} className="p-8 md:p-10" initial={reduce ? false : { opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} exit={reduce ? undefined : { opacity: 0, x: -20 }} transition={{ duration: 0.3 }} aria-live="polite">
-                  <div className="eyebrow text-[#203524]">Room {r.n} · {r.stage}</div>
+                  <div className="eyebrow text-[#203524]">{r.stage}</div>
                   <h3 className="mt-4 text-3xl font-semibold tracking-tight md:text-4xl">{r.t}</h3>
                   <p className="mt-4 text-lg leading-relaxed text-[#11110D]/70">{r.d}</p>
                   <div className="mt-8 rounded-2xl bg-[#D1F470] p-5">
@@ -79,7 +79,7 @@ export default function Demos() {
       <Section tone="forest">
         <div id="guided-demo" className="scroll-mt-28 grid gap-7">
           <Reveal>
-            <div className="eyebrow mb-4 text-[#D1F470]">02 · Demo Click-Through</div>
+            <div className="eyebrow mb-4 text-[#D1F470]">Demo Click-Through</div>
             <h2 className="text-3xl font-semibold leading-tight tracking-tight md:text-4xl">Step inside the <span className="serif italic text-[#D1F470]">contact center experience.</span></h2>
             <p className="mt-3 max-w-3xl text-base text-[#F5F5F2]/70">Explore the guided Storylane walkthrough below.</p>
           </Reveal>
