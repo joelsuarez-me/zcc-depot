@@ -12,6 +12,7 @@ export const NAV = [
   { href: "/architecture", label: "Architecture" },
   { href: "/sales", label: "Sales" },
   { href: "/resources", label: "Resources" },
+  { href: "/agenda", label: "Today’s Agenda" },
 ];
 
 export function Ext({ href, children, className = "", testId }: { href: string; children: ReactNode; className?: string; testId?: string }) {

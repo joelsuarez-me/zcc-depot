@@ -11,6 +11,7 @@ import Demos from '@/pages/demos';
 import Architecture from '@/pages/architecture';
 import Sales from '@/pages/sales';
 import Resources from '@/pages/resources';
+import Agenda from '@/pages/agenda';
 
 const queryClient = new QueryClient();
 
@@ -24,6 +25,7 @@ function Router() {
           <Route path="/architecture" component={Architecture} />
           <Route path="/sales" component={Sales} />
           <Route path="/resources" component={Resources} />
+          <Route path="/agenda" component={Agenda} />
           <Route component={NotFound} />
         </Switch>
       </RoutedErrorBoundary>
