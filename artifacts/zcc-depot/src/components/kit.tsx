@@ -62,12 +62,12 @@ export function PageHero({ eyebrow, title, lede, children }: { eyebrow: string; 
   return (
     <section className="on-dark relative overflow-hidden bg-[#203524] text-[#F5F5F2]">
       <div className="grid-lines absolute inset-0" aria-hidden />
-      <div className="relative mx-auto max-w-7xl px-5 pb-16 pt-32 md:px-8 md:pb-24 md:pt-40">
+      <div className="relative mx-auto max-w-7xl px-5 pb-8 pt-24 md:px-8 md:pb-10 md:pt-28">
         <motion.div initial={reduce ? false : { opacity: 0, y: 24 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.7, ease: [0.2, 0.7, 0.2, 1] }}>
-          <div className="eyebrow mb-5 text-[#D1F470]">{eyebrow}</div>
-          <h1 className="max-w-4xl text-[2.6rem] font-semibold leading-[1] tracking-tight md:text-7xl">{title}</h1>
-          <p className="mt-6 max-w-2xl text-lg leading-relaxed text-[#F5F5F2]/75">{lede}</p>
-          {children && <div className="mt-9 flex flex-wrap gap-3">{children}</div>}
+          <div className="eyebrow mb-3 text-[#D1F470]">{eyebrow}</div>
+          <h1 className="max-w-4xl text-3xl font-semibold leading-[1.08] tracking-tight md:text-5xl">{title}</h1>
+          <p className="mt-3 max-w-3xl text-base leading-relaxed text-[#F5F5F2]/75">{lede}</p>
+          {children && <div className="mt-5 flex flex-wrap gap-3">{children}</div>}
         </motion.div>
       </div>
     </section>

@@ -382,11 +382,11 @@ export default function Agenda() {
     return (
       <div className="min-h-[75dvh] bg-[#f1f2eb] px-5 pb-20 pt-28 md:px-8">
         <div className="mx-auto max-w-6xl">
-          <section className="relative overflow-hidden rounded-[2rem] bg-[#244b39] px-6 py-12 text-[#f5f5eb] md:px-14 md:py-16">
+          <section className="relative overflow-hidden rounded-[2rem] bg-[#244b39] px-6 py-7 text-[#f5f5eb] md:px-10 md:py-8">
             <div className="grid-lines absolute inset-0 opacity-50" aria-hidden />
             <div className="relative max-w-2xl">
               <div className="eyebrow text-[#d4e4a6]">ZCC Depot · Workshop workspace</div>
-              <h1 className="mt-5 text-4xl font-semibold tracking-tight md:text-6xl">Today’s Agenda</h1>
+              <h1 className="mt-3 text-3xl font-semibold tracking-tight md:text-4xl">Today’s Agenda</h1>
               <p className="mt-5 max-w-xl text-lg leading-relaxed text-[#f5f5eb]/75">
                 A shared, reusable conversation brief for Zendesk platform architects and the customers they work alongside.
               </p>
@@ -403,7 +403,7 @@ export default function Agenda() {
 
   return (
     <div className="agenda-page min-h-[75dvh] bg-[#f1f2eb] pb-20">
-      <header className="relative overflow-hidden bg-[#244b39] px-5 pb-9 pt-28 text-[#f6f5ec] md:px-8 md:pb-12 md:pt-32">
+      <header className="relative overflow-hidden bg-[#244b39] px-5 pb-5 pt-24 text-[#f6f5ec] md:px-8 md:pb-6 md:pt-24">
         <div className="grid-lines absolute inset-0 opacity-50" aria-hidden />
         <div className="relative mx-auto max-w-7xl">
           <div className="flex flex-wrap items-center justify-between gap-4">
@@ -415,10 +415,10 @@ export default function Agenda() {
               </button>
             </div>
           </div>
-          <div className="mt-6 flex flex-col justify-between gap-6 md:flex-row md:items-end">
+          <div className="mt-3 flex flex-col justify-between gap-3 md:flex-row md:items-end">
             <div>
-              <h1 className="text-4xl font-semibold tracking-tight md:text-6xl" data-testid="heading-agenda">Today’s Agenda</h1>
-              <p className="mt-3 max-w-2xl text-base leading-relaxed text-[#f6f5ec]/70 md:text-lg">Objectives, platforms, conversation, validation, and outcomes — ready for the customer demo.</p>
+              <h1 className="text-3xl font-semibold tracking-tight md:text-4xl" data-testid="heading-agenda">Today’s Agenda</h1>
+              <p className="mt-2 max-w-2xl text-sm leading-relaxed text-[#f6f5ec]/70 md:text-base">Objectives, platforms, conversation, validation, and outcomes — ready for the customer demo.</p>
             </div>
             {mode !== "library" && (
               <div className="flex w-fit rounded-full border border-white/20 bg-[#183629]/35 p-1" role="group" aria-label="Agenda view">
@@ -431,8 +431,8 @@ export default function Agenda() {
         </div>
       </header>
 
-      <main className="mx-auto max-w-7xl px-5 pt-7 md:px-8 md:pt-9">
-        <div className="mb-7 flex flex-col gap-3 rounded-2xl border border-[#d7dbd0] bg-[#fbfbf6] px-4 py-4 md:flex-row md:items-center md:justify-between md:px-5" role="note" data-testid="notice-shared-agendas">
+      <main className="mx-auto max-w-7xl px-5 pt-4 md:px-8 md:pt-4">
+        <div className="mb-4 flex flex-col gap-2 rounded-2xl border border-[#d7dbd0] bg-[#fbfbf6] px-4 py-3 md:flex-row md:items-center md:justify-between md:px-5" role="note" data-testid="notice-shared-agendas">
           <p className="flex max-w-4xl gap-3 text-sm leading-relaxed text-[#536157]">
             <ShieldAlert className="mt-0.5 h-4 w-4 shrink-0 text-[#677b68]" aria-hidden />
             <span><strong className="font-semibold text-[#294735]">Shared workspace.</strong> Every agenda can be viewed and edited by all signed-in portal users. This is not a private customer-data space; keep sensitive or regulated details elsewhere.</span>
@@ -610,7 +610,7 @@ export default function Agenda() {
         )}
 
         {mode === "presentation" && (selectedId || creating) && (
-          <div className="space-y-4" data-testid="agenda-presentation">
+          <div className="space-y-3" data-testid="agenda-presentation">
             {queryBusy ? (
               <div className="space-y-4" aria-label="Loading agenda">
                 <div className="h-48 animate-pulse rounded-3xl bg-[#e4e8df]" />

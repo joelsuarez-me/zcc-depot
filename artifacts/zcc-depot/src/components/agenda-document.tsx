@@ -78,18 +78,18 @@ export function AgendaDocument({ fields, logoUrl }: { fields: AgendaFields; logo
         initial={reduced ? false : { opacity: 0, y: 12 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.55, ease: [0.2, 0.7, 0.2, 1] }}
-        className="relative bg-[#244b39] px-6 py-9 text-[#f6f5ec] md:px-12 md:py-12"
+        className="relative bg-[#244b39] px-6 py-5 text-[#f6f5ec] md:px-8 md:py-6"
       >
         <div className="grid-lines absolute inset-0 opacity-50" aria-hidden />
-        <div className="relative flex flex-col gap-6 md:flex-row md:items-center md:justify-between">
+        <div className="relative flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
           <div className="min-w-0">
             <div className="eyebrow text-[#d4e4a6]">Customer conversation agenda</div>
-            <h2 className="mt-3 break-words text-3xl font-semibold leading-tight tracking-tight md:text-5xl" data-testid="text-document-title">
+            <h2 className="mt-2 break-words text-2xl font-semibold leading-tight tracking-tight md:text-3xl" data-testid="text-document-title">
               {company || "Customer"} <span className="text-[#D1F470]">|</span> Zendesk Contact Center Demo
             </h2>
           </div>
           {logoUrl && (
-            <div className="flex h-24 w-full max-w-[14rem] shrink-0 items-center justify-center overflow-hidden rounded-2xl bg-white p-4 shadow-sm md:w-56">
+            <div className="flex h-20 w-full max-w-[12rem] shrink-0 items-center justify-center overflow-hidden rounded-2xl bg-white p-3 shadow-sm md:w-48">
               <img src={logoUrl} alt={`${company || "Customer"} logo`} className="block h-full w-full min-h-0 min-w-0 object-contain" data-testid="img-document-logo" />
             </div>
           )}
