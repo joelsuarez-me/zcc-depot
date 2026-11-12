@@ -124,8 +124,6 @@ export function Shell({ children }: { children: ReactNode }) {
         <div className={`mx-auto flex max-w-7xl items-center justify-between rounded-full border px-3 py-2 transition-all duration-300 md:px-4 ${scrolled || open ? "border-[#11110D]/10 bg-[#F5F5F2]/90 shadow-[0_10px_30px_-12px_rgba(32,53,36,.35)] backdrop-blur-md" : "border-transparent bg-[#F5F5F2]"}`}>
           <Link href="/" className="flex items-center gap-3 rounded-full pl-2 pr-3" data-testid="link-home-logo">
             <img src={logo} alt="Zendesk" className="h-6 w-auto" />
-            <span className="h-5 w-px bg-[#11110D]/20" aria-hidden />
-            <span className="text-sm font-semibold tracking-tight">ZCC Depot</span>
           </Link>
           <nav aria-label="Primary" className="hidden items-center gap-1 lg:flex">
             {NAV.map((n) => {
