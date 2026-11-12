@@ -26,6 +26,17 @@ test("section links preserve route and query by using native fragments", () => {
   assert.doesNotMatch(source, /href="\/"/);
 });
 
+test("phone arrow placement is scoped to Components and does not cover its content", () => {
+  const nav = readFileSync(new URL("../src/components/section-navigation.tsx", import.meta.url), "utf8");
+  const css = readFileSync(new URL("../src/components/contact-center-components/components-guide.css", import.meta.url), "utf8");
+  assert.match(nav, /location === "\/architecture\/components" \? "section-nav-components" : ""/);
+  assert.match(nav, /bottom: "var\(--section-nav-bottom, calc\(env\(safe-area-inset-bottom/);
+  assert.match(css, /@media \(max-width:767px\)\{\s*\.section-nav-components\{/);
+  assert.match(css, /--section-nav-bottom:auto;[\s\S]*?top:15px;[\s\S]*?flex-direction:row;/);
+  assert.match(css, /\.section-nav-components \[data-testid="link-current-section"\]\{display:none\}/);
+  assert.match(nav, /h-11 w-11/);
+});
+
 test("FAQ moved to Resources and the Human plus AI section was deleted", () => {
   const sales = readFileSync(new URL("../src/pages/sales.tsx", import.meta.url), "utf8");
   const resources = readFileSync(new URL("../src/pages/resources.tsx", import.meta.url), "utf8");

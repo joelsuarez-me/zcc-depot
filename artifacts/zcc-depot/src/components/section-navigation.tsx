@@ -73,8 +73,8 @@ export function SectionNavigation() {
 
   return (
     <nav aria-label="Section navigation" data-testid="section-navigation"
-      className="fixed left-3 z-40 flex flex-col gap-1 rounded-full border border-[#D1F470]/40 bg-[#203524] p-1 text-[#D1F470] shadow-[0_6px_24px_rgba(17,17,13,.25)] md:left-6 print:hidden"
-      style={{ bottom: "calc(env(safe-area-inset-bottom, 0px) + 1rem)" }}>
+      className={`fixed left-3 z-40 flex flex-col gap-1 rounded-full border border-[#D1F470]/40 bg-[#203524] p-1 text-[#D1F470] shadow-[0_6px_24px_rgba(17,17,13,.25)] md:left-6 print:hidden ${location === "/architecture/components" ? "section-nav-components" : ""}`}
+      style={{ bottom: "var(--section-nav-bottom, calc(env(safe-area-inset-bottom, 0px) + 1rem))" }}>
       <button type="button" onClick={() => navigate(-1)} disabled={!available.up}
         aria-label="Previous section" title="Previous section" data-testid="button-section-up"
         className="grid h-11 w-11 place-items-center rounded-full transition-colors hover:bg-[#D1F470] hover:text-[#203524] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#D1F470] disabled:cursor-default disabled:opacity-35 disabled:hover:bg-transparent disabled:hover:text-[#D1F470]">

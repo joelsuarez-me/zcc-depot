@@ -68,6 +68,21 @@
 .ccg-panel-in{animation:ccg-in .4s cubic-bezier(.2,.7,.2,1) both}
 @keyframes ccg-in{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
 
+/* On this route only, phone arrows occupy the header's unused middle space,
+   never the map or reading area. Keep both 44px touch targets; each heading
+   retains its own permalink, so the extra floating link can be omitted here. */
+@media (max-width:767px){
+  .section-nav-components{
+    --section-nav-bottom:auto;
+    top:15px;
+    left:calc(50% - .75rem);
+    transform:translateX(-50%);
+    flex-direction:row;
+    z-index:60;
+  }
+  .section-nav-components [data-testid="link-current-section"]{display:none}
+}
+
 .ccg-btn{display:inline-flex;align-items:center;gap:.4rem;border-radius:999px;padding:.45rem .9rem;font-size:.85rem;font-weight:600;border:1px solid rgba(17,17,13,.18);background:transparent;cursor:pointer;transition:background .2s,transform .2s}
 .ccg-btn:hover{transform:translateY(-1px);background:rgba(32,53,36,.07)}
 .ccg-btn:disabled{opacity:.4;cursor:not-allowed;transform:none}
