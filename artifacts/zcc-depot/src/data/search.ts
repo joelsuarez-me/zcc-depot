@@ -13,11 +13,15 @@ const PAGES: SearchEntry[] = [
   page("instance", "Demo Instance Details", "/demos/instance-details", "Details for the shared demo instance.", "environment sandbox login setup"),
   page("architecture", "Architecture", "/architecture", "Amazon Connect, Lambda, data flow, components, and regional footprint.", "aws technical"),
   page("sales", "Sales", "/sales", "Use cases, outcomes, FAQ, roadmap, and go-to-market guidance.", "gtm business value"),
+  page("pricing", "Pricing", "/pricing", "Three buying paths: Zendesk Contact Center bundle, Contact Center License BYOA, and Contact Center Team.", "commercial contract Amazon AWS"),
   page("resources", "Resources", "/resources", "Curated Help Center articles and dashboards guidance.", "docs documentation help center"),
   page("agenda", "Today’s Agenda", "/agenda", "Signed-in area for preparing and presenting customer agendas.", "sign in presentation meeting"),
 ];
 
 const SECTIONS: SearchEntry[] = [
+  sec("pricing-bundle", "Zendesk Contact Center — the bundle", "/pricing#bundle", "The primary motion: Zendesk sells Contact Center and Amazon Connect together on one contract.", "pricing bundle purchasing"),
+  sec("pricing-byoa", "Contact Center License — BYOA", "/pricing#byoa", "Bring-your-own-Amazon for customers with an AWS relationship or buying directly from Amazon.", "pricing license AWS Amazon contract"),
+  sec("pricing-team", "Contact Center Team — the lighter-weight path", "/pricing#team", "For greenfield and net-new customers who do not want the full Suite.", "pricing team new customer"),
   sec("platform", "One solution", "/#platform", "Pillars of the unified contact center platform.", "pillars overview"),
   sec("how-it-works", "How it works", "/#how-it-works", "Call journey from customer to Agent Workspace.", "journey voice"),
   sec("features", "Features", "/#features", "Voice AI agents, copilots, translation, WEM, compliance.", "capabilities"),

@@ -67,7 +67,7 @@ export function SearchTrigger() {
               </CommandPrimitive.Empty>
               {SEARCH_GROUPS.map((g) => {
                 const items = SEARCH_INDEX.filter((e) => e.group === g);
-                const shown = query ? items : items.slice(0, g === "Pages" ? 7 : g === "Sections" ? 6 : 0);
+                const shown = query || g === "Pages" ? items : items.slice(0, g === "Sections" ? 6 : 0);
                 if (!shown.length) return null;
                 return (
                   <CommandPrimitive.Group key={g} heading={query ? g : g === "Pages" ? "Jump to" : "Popular sections"}

@@ -64,7 +64,7 @@ function DesktopNavItem({ item, active }: { item: NavItem; active: boolean }) {
 export function PrimaryNavigation() {
   const [loc] = useLocation();
   return (
-    <nav aria-label="Primary" className="hidden items-center gap-1 lg:flex">
+    <nav aria-label="Primary" className="hidden items-center gap-1 xl:flex">
       {NAV.map(item => <DesktopNavItem key={`${loc}:${item.href}`} item={item} active={item.href === "/" ? loc === "/" : loc.startsWith(item.href)} />)}
     </nav>
   );

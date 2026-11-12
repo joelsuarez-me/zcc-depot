@@ -13,6 +13,7 @@ import Sales from '@/pages/sales';
 import Resources from '@/pages/resources';
 import Agenda from '@/pages/agenda';
 import DemoInstanceDetails from '@/pages/demo-instance-details';
+import Pricing from '@/pages/pricing';
 
 const queryClient = new QueryClient();
 
@@ -26,6 +27,7 @@ function Router() {
           <Route path="/demos/instance-details" component={DemoInstanceDetails} />
           <Route path="/architecture" component={Architecture} />
           <Route path="/sales" component={Sales} />
+          <Route path="/pricing" component={Pricing} />
           <Route path="/resources" component={Resources} />
           <Route path="/agenda" component={Agenda} />
           <Route component={NotFound} />

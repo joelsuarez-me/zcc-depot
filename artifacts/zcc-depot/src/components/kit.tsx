@@ -130,13 +130,13 @@ export function Shell({ children }: { children: ReactNode }) {
               Guided demo <ArrowUpRight className="h-3.5 w-3.5" aria-hidden /><span className="sr-only">(opens in a new tab)</span>
             </a>
             <button type="button" onClick={() => setOpen((o) => !o)} aria-expanded={open} aria-controls="mobile-nav" aria-label={open ? "Close menu" : "Open menu"}
-              data-testid="button-mobile-menu" className="grid h-10 w-10 place-items-center rounded-full bg-[#203524] text-[#D1F470] lg:hidden">
+              data-testid="button-mobile-menu" className="grid h-10 w-10 place-items-center rounded-full bg-[#203524] text-[#D1F470] xl:hidden">
               {open ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
             </button>
           </div>
         </div>
         {open && (
-          <nav id="mobile-nav" aria-label="Mobile" className="mx-auto mt-2 max-h-[calc(100dvh-100px)] max-w-7xl overflow-y-auto rounded-3xl border border-[#11110D]/10 bg-[#F5F5F2] p-3 shadow-xl lg:hidden">
+          <nav id="mobile-nav" aria-label="Mobile" className="mx-auto mt-2 max-h-[calc(100dvh-100px)] max-w-7xl overflow-y-auto rounded-3xl border border-[#11110D]/10 bg-[#F5F5F2] p-3 shadow-xl xl:hidden">
             <MobileNavigationLinks onNavigate={() => setOpen(false)} />
             <div className="p-2 pt-3"><DemoButton testId="button-mobile-demo" /></div>
           </nav>
