@@ -22,8 +22,9 @@ export default function Home() {
         <div className="grid-lines absolute inset-0" aria-hidden />
         <div className="relative mx-auto max-w-7xl px-5 pb-20 pt-32 md:px-8 md:pt-40">
           <motion.div className="max-w-4xl" initial={reduce ? false : { opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8, ease: [0.2, 0.7, 0.2, 1] }}>
-            <h1 className="max-w-3xl font-sans text-3xl font-semibold leading-tight tracking-[-0.035em] text-[#F5F5F2] sm:text-4xl lg:text-[3.25rem]">
-              ZENDESK CONTACT CENTER · platform ARCHITECT Depot
+            <h1 className="max-w-3xl font-sans text-[clamp(1rem,6vw,3.25rem)] font-semibold leading-tight tracking-[-0.035em] text-[#F5F5F2]">
+              <span className="block whitespace-nowrap">ZENDESK CONTACT CENTER ·</span>{" "}
+              <span className="block whitespace-nowrap"><span className="text-[#D1F470]">platform</span>{" "}ARCHITECT Depot</span>
             </h1>
             <p className="mt-7 max-w-xl text-lg leading-relaxed text-[#F5F5F2]/75">
               Everything you need to prepare the customer conversation: the story, the architecture behind it, the outcomes it supports, and the official sources to back every claim.
