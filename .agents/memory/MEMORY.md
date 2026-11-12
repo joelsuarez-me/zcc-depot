@@ -1,0 +1,1 @@
+- [YouTube transcript access](youtube-transcript-access.md) — empty caption responses can be retrieval failures even when an English caption track exists.
