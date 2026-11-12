@@ -27,7 +27,10 @@ export const NAV: NavItem[] = [
       { label: "05 Demo Agenda", href: "/agenda" },
     ],
   },
-  { href: "/resources", label: "Resources" },
+  { href: "/resources", label: "Resources", children: [
+    { label: "Resource library", href: "/resources#library" },
+    { label: "Pitch Deck", href: "/resources#pitch-deck" },
+  ] },
 ];
 
 export function isNavItemActive(item: NavItem, location: string) {

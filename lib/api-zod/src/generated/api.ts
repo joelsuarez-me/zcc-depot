@@ -9,6 +9,112 @@ import * as zod from 'zod';
 
 
 /**
+ * @summary Read the signed-in product deep-dive slide collection
+ */
+export const GetPitchDeckResponse = zod.object({
+  "title": zod.string(),
+  "description": zod.string(),
+  "totalSlides": zod.number().int(),
+  "pdfUrl": zod.string(),
+  "slides": zod.array(zod.object({
+  "number": zod.number().int(),
+  "title": zod.string(),
+  "sourcePage": zod.number().int(),
+  "imageUrl": zod.string()
+}))
+})
+
+
+export const getPitchDeckSlidePathNumberMax = 13;
+
+
+
+export const GetPitchDeckSlideParams = zod.object({
+  "number": zod.coerce.number().int().min(1).max(getPitchDeckSlidePathNumberMax)
+})
+
+export const GetPitchDeckSlideResponse = zod.unknown()
+
+
+export const DownloadPitchDeckResponse = zod.unknown()
+
+
+/**
+ * @summary Resolve an official company website and discover its logo
+ */
+export const resolveResearchCompanyBodyCompanyNameMin = 2;
+export const resolveResearchCompanyBodyCompanyNameMax = 120;
+
+export const resolveResearchCompanyBodyCompanyWebsiteMax = 300;
+
+
+
+export const ResolveResearchCompanyBody = zod.object({
+  "companyName": zod.string().min(resolveResearchCompanyBodyCompanyNameMin).max(resolveResearchCompanyBodyCompanyNameMax),
+  "companyWebsite": zod.string().max(resolveResearchCompanyBodyCompanyWebsiteMax).optional()
+})
+
+export const ResolveResearchCompanyResponse = zod.object({
+  "companyName": zod.string(),
+  "companyWebsite": zod.string(),
+  "logoUrl": zod.string().nullable(),
+  "logoSourceUrl": zod.string().nullable(),
+  "note": zod.string()
+})
+
+
+export const GetResearchCompanyLogoParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const GetResearchCompanyLogoResponse = zod.unknown()
+
+
+/**
+ * Requires sign-in. Accept text/event-stream to receive data lines containing JSON events:
+ * status {message}, delta {text}, complete {report}, or error {message}.
+ * Only a complete event is exportable. application/json returns the completed report instead.
+ * @summary Generate a current web-grounded demo report
+ */
+export const generateResearchReportBodyCompanyNameMin = 2;
+export const generateResearchReportBodyCompanyNameMax = 120;
+
+export const generateResearchReportBodyCompanyWebsiteMin = 3;
+export const generateResearchReportBodyCompanyWebsiteMax = 300;
+
+export const generateResearchReportBodyRegionMin = 2;
+export const generateResearchReportBodyRegionMax = 120;
+
+export const generateResearchReportBodyAudienceMin = 2;
+export const generateResearchReportBodyAudienceMax = 160;
+
+
+
+export const GenerateResearchReportBody = zod.object({
+  "companyName": zod.string().min(generateResearchReportBodyCompanyNameMin).max(generateResearchReportBodyCompanyNameMax),
+  "companyWebsite": zod.string().min(generateResearchReportBodyCompanyWebsiteMin).max(generateResearchReportBodyCompanyWebsiteMax),
+  "region": zod.string().min(generateResearchReportBodyRegionMin).max(generateResearchReportBodyRegionMax),
+  "audience": zod.string().min(generateResearchReportBodyAudienceMin).max(generateResearchReportBodyAudienceMax)
+})
+
+export const GenerateResearchReportResponse = zod.object({
+  "companyName": zod.string(),
+  "companyWebsite": zod.string(),
+  "region": zod.string(),
+  "audience": zod.string(),
+  "markdown": zod.string(),
+  "sources": zod.array(zod.object({
+  "id": zod.number().int(),
+  "title": zod.string(),
+  "url": zod.string(),
+  "publisher": zod.string(),
+  "accessedAt": zod.string()
+})),
+  "researchedAt": zod.string()
+})
+
+
+/**
  * @summary Read signed-in pricing and internal packaging guidance
  */
 export const GetPricingGuideResponse = zod.object({

@@ -31,7 +31,12 @@ import type {
   LogoutBrowserSessionParams,
   ObjectAuthorizationInput,
   ObjectAuthorizationResult,
+  PitchDeck,
   PricingGuide,
+  ResearchCompany,
+  ResearchCompanyInput,
+  ResearchReport,
+  ResearchReportInput,
   SellSheet,
   UploadUrlRequest,
   UploadUrlResponse
@@ -63,6 +68,475 @@ const withQueryKey = <T extends object, K>(query: T, queryKey: K): T & { queryKe
   }
   return result;
 };
+
+export const getGetPitchDeckUrl = () => {
+
+
+
+
+  return `/api/pitch-deck`
+}
+
+/**
+ * @summary Read the signed-in product deep-dive slide collection
+ */
+export const getPitchDeck = async ( options?: Parameters<typeof customFetch>[1]): Promise<PitchDeck> => {
+
+  return customFetch<PitchDeck>(getGetPitchDeckUrl(),
+  {
+    ...options,
+    method: 'GET'
+
+
+  }
+);}
+
+
+
+
+
+export const getGetPitchDeckQueryKey = () => {
+    return [
+    `/api/pitch-deck`
+    ] as const;
+    }
+
+
+export const getGetPitchDeckQueryOptions = <TData = Awaited<ReturnType<typeof getPitchDeck>>, TError = ErrorType<void>>( options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getPitchDeck>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getGetPitchDeckQueryKey();
+
+
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof getPitchDeck>>> = ({ signal }) => getPitchDeck({ signal, ...requestOptions });
+
+
+
+
+
+   return  { queryKey, queryFn, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof getPitchDeck>>, TError, TData> & { queryKey: QueryKey }
+}
+
+export type GetPitchDeckQueryResult = NonNullable<Awaited<ReturnType<typeof getPitchDeck>>>
+export type GetPitchDeckQueryError = ErrorType<void>
+
+
+/**
+ * @summary Read the signed-in product deep-dive slide collection
+ */
+
+export function useGetPitchDeck<TData = Awaited<ReturnType<typeof getPitchDeck>>, TError = ErrorType<void>>(
+  options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getPitchDeck>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+
+ ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+
+  const queryOptions = getGetPitchDeckQueryOptions(options)
+
+  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
+
+  return withQueryKey(query, queryOptions.queryKey);
+}
+
+
+
+
+
+
+
+export const getGetPitchDeckSlideUrl = (number: number,) => {
+
+
+
+
+  return `/api/pitch-deck/slides/${number}`
+}
+
+export const getPitchDeckSlide = async (number: number, options?: Parameters<typeof customFetch>[1]): Promise<Blob> => {
+
+  return customFetch<Blob>(getGetPitchDeckSlideUrl(number),
+  {
+    ...options,
+    method: 'GET'
+
+
+  }
+);}
+
+
+
+
+
+export const getGetPitchDeckSlideQueryKey = (number: number,) => {
+    return [
+    `/api/pitch-deck/slides/${number}`
+    ] as const;
+    }
+
+
+export const getGetPitchDeckSlideQueryOptions = <TData = Awaited<ReturnType<typeof getPitchDeckSlide>>, TError = ErrorType<void>>(number: number, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getPitchDeckSlide>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getGetPitchDeckSlideQueryKey(number);
+
+
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof getPitchDeckSlide>>> = ({ signal }) => getPitchDeckSlide(number, { signal, ...requestOptions });
+
+
+
+
+
+   return  { queryKey, queryFn, enabled: number !== null && number !== undefined, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof getPitchDeckSlide>>, TError, TData> & { queryKey: QueryKey }
+}
+
+export type GetPitchDeckSlideQueryResult = NonNullable<Awaited<ReturnType<typeof getPitchDeckSlide>>>
+export type GetPitchDeckSlideQueryError = ErrorType<void>
+
+
+
+export function useGetPitchDeckSlide<TData = Awaited<ReturnType<typeof getPitchDeckSlide>>, TError = ErrorType<void>>(
+ number: number, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getPitchDeckSlide>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+
+ ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+
+  const queryOptions = getGetPitchDeckSlideQueryOptions(number,options)
+
+  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
+
+  return withQueryKey(query, queryOptions.queryKey);
+}
+
+
+
+
+
+
+
+export const getDownloadPitchDeckUrl = () => {
+
+
+
+
+  return `/api/pitch-deck/pdf`
+}
+
+export const downloadPitchDeck = async ( options?: Parameters<typeof customFetch>[1]): Promise<Blob> => {
+
+  return customFetch<Blob>(getDownloadPitchDeckUrl(),
+  {
+    ...options,
+    method: 'GET'
+
+
+  }
+);}
+
+
+
+
+
+export const getDownloadPitchDeckQueryKey = () => {
+    return [
+    `/api/pitch-deck/pdf`
+    ] as const;
+    }
+
+
+export const getDownloadPitchDeckQueryOptions = <TData = Awaited<ReturnType<typeof downloadPitchDeck>>, TError = ErrorType<void>>( options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof downloadPitchDeck>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getDownloadPitchDeckQueryKey();
+
+
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof downloadPitchDeck>>> = ({ signal }) => downloadPitchDeck({ signal, ...requestOptions });
+
+
+
+
+
+   return  { queryKey, queryFn, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof downloadPitchDeck>>, TError, TData> & { queryKey: QueryKey }
+}
+
+export type DownloadPitchDeckQueryResult = NonNullable<Awaited<ReturnType<typeof downloadPitchDeck>>>
+export type DownloadPitchDeckQueryError = ErrorType<void>
+
+
+
+export function useDownloadPitchDeck<TData = Awaited<ReturnType<typeof downloadPitchDeck>>, TError = ErrorType<void>>(
+  options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof downloadPitchDeck>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+
+ ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+
+  const queryOptions = getDownloadPitchDeckQueryOptions(options)
+
+  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
+
+  return withQueryKey(query, queryOptions.queryKey);
+}
+
+
+
+
+
+
+
+export const getResolveResearchCompanyUrl = () => {
+
+
+
+
+  return `/api/demo-research/company`
+}
+
+/**
+ * @summary Resolve an official company website and discover its logo
+ */
+export const resolveResearchCompany = async (researchCompanyInput: ResearchCompanyInput, options?: Parameters<typeof customFetch>[1]): Promise<ResearchCompany> => {
+
+    const getHeaders = (h?: NonNullable<RequestInit['headers']>): Record<string, string | readonly string[]> => {
+    if (!h) return {};
+    if (h instanceof Headers) return Object.fromEntries(h.entries());
+    if (Symbol.iterator in h) {
+      return Object.fromEntries(
+        Array.from(h as Iterable<Iterable<string>>, (entry) => Array.from(entry) as [string, string]),
+      );
+    }
+    const headers: Record<string, string | readonly string[]> = {};
+    for (const [name, value] of Object.entries<string | readonly string[] | undefined>(h)) {
+      if (value !== undefined) headers[name] = value;
+    }
+    return headers;
+  };
+return customFetch<ResearchCompany>(getResolveResearchCompanyUrl(),
+  {
+    ...options,
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', ...getHeaders(options?.headers) },
+    body: JSON.stringify(researchCompanyInput)
+  }
+);}
+
+
+
+
+
+export const getResolveResearchCompanyMutationKey = () => ['resolveResearchCompany'] as const;
+
+export const getResolveResearchCompanyMutationOptions = <TError = ErrorType<void>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof resolveResearchCompany>>, TError,ResolveResearchCompanyMutationVariables, TContext>, request?: SecondParameter<typeof customFetch>}
+): UseMutationOptions<Awaited<ReturnType<typeof resolveResearchCompany>>, TError,ResolveResearchCompanyMutationVariables, TContext> => {
+
+const mutationKey = getResolveResearchCompanyMutationKey();
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof resolveResearchCompany>>, ResolveResearchCompanyMutationVariables> = (props) => {
+          const {data} = props ?? {};
+
+          return  resolveResearchCompany(data,requestOptions)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type ResolveResearchCompanyMutationResult = NonNullable<Awaited<ReturnType<typeof resolveResearchCompany>>>
+    export type ResolveResearchCompanyMutationBody = BodyType<ResearchCompanyInput>
+    export type ResolveResearchCompanyMutationError = ErrorType<void>
+    export type ResolveResearchCompanyMutationVariables = {data: BodyType<ResearchCompanyInput>}
+
+    /**
+ * @summary Resolve an official company website and discover its logo
+ */
+export const useResolveResearchCompany = <TError = ErrorType<void>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof resolveResearchCompany>>, TError,ResolveResearchCompanyMutationVariables, TContext>, request?: SecondParameter<typeof customFetch>}
+ ): UseMutationResult<
+        Awaited<ReturnType<typeof resolveResearchCompany>>,
+        TError,
+        ResolveResearchCompanyMutationVariables,
+        TContext
+      > => {
+      return useMutation(getResolveResearchCompanyMutationOptions(options));
+    }
+
+export const getGetResearchCompanyLogoUrl = (id: string,) => {
+
+
+
+
+  return `/api/demo-research/logo/${id}`
+}
+
+export const getResearchCompanyLogo = async (id: string, options?: Parameters<typeof customFetch>[1]): Promise<Blob> => {
+
+  return customFetch<Blob>(getGetResearchCompanyLogoUrl(id),
+  {
+    ...options,
+    method: 'GET'
+
+
+  }
+);}
+
+
+
+
+
+export const getGetResearchCompanyLogoQueryKey = (id: string,) => {
+    return [
+    `/api/demo-research/logo/${id}`
+    ] as const;
+    }
+
+
+export const getGetResearchCompanyLogoQueryOptions = <TData = Awaited<ReturnType<typeof getResearchCompanyLogo>>, TError = ErrorType<void>>(id: string, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getResearchCompanyLogo>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getGetResearchCompanyLogoQueryKey(id);
+
+
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof getResearchCompanyLogo>>> = ({ signal }) => getResearchCompanyLogo(id, { signal, ...requestOptions });
+
+
+
+
+
+   return  { queryKey, queryFn, enabled: id !== null && id !== undefined, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof getResearchCompanyLogo>>, TError, TData> & { queryKey: QueryKey }
+}
+
+export type GetResearchCompanyLogoQueryResult = NonNullable<Awaited<ReturnType<typeof getResearchCompanyLogo>>>
+export type GetResearchCompanyLogoQueryError = ErrorType<void>
+
+
+
+export function useGetResearchCompanyLogo<TData = Awaited<ReturnType<typeof getResearchCompanyLogo>>, TError = ErrorType<void>>(
+ id: string, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getResearchCompanyLogo>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+
+ ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+
+  const queryOptions = getGetResearchCompanyLogoQueryOptions(id,options)
+
+  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
+
+  return withQueryKey(query, queryOptions.queryKey);
+}
+
+
+
+
+
+
+
+export const getGenerateResearchReportUrl = () => {
+
+
+
+
+  return `/api/demo-research/report`
+}
+
+/**
+ * Requires sign-in. Accept text/event-stream to receive data lines containing JSON events:
+ * status {message}, delta {text}, complete {report}, or error {message}.
+ * Only a complete event is exportable. application/json returns the completed report instead.
+ * @summary Generate a current web-grounded demo report
+ */
+export const generateResearchReport = async (researchReportInput: ResearchReportInput, options?: Parameters<typeof customFetch>[1]): Promise<ResearchReport | string> => {
+
+    const getHeaders = (h?: NonNullable<RequestInit['headers']>): Record<string, string | readonly string[]> => {
+    if (!h) return {};
+    if (h instanceof Headers) return Object.fromEntries(h.entries());
+    if (Symbol.iterator in h) {
+      return Object.fromEntries(
+        Array.from(h as Iterable<Iterable<string>>, (entry) => Array.from(entry) as [string, string]),
+      );
+    }
+    const headers: Record<string, string | readonly string[]> = {};
+    for (const [name, value] of Object.entries<string | readonly string[] | undefined>(h)) {
+      if (value !== undefined) headers[name] = value;
+    }
+    return headers;
+  };
+return customFetch<ResearchReport | string>(getGenerateResearchReportUrl(),
+  {
+    ...options,
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', ...getHeaders(options?.headers) },
+    body: JSON.stringify(researchReportInput)
+  }
+);}
+
+
+
+
+
+export const getGenerateResearchReportMutationKey = () => ['generateResearchReport'] as const;
+
+export const getGenerateResearchReportMutationOptions = <TError = ErrorType<void>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof generateResearchReport>>, TError,GenerateResearchReportMutationVariables, TContext>, request?: SecondParameter<typeof customFetch>}
+): UseMutationOptions<Awaited<ReturnType<typeof generateResearchReport>>, TError,GenerateResearchReportMutationVariables, TContext> => {
+
+const mutationKey = getGenerateResearchReportMutationKey();
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof generateResearchReport>>, GenerateResearchReportMutationVariables> = (props) => {
+          const {data} = props ?? {};
+
+          return  generateResearchReport(data,requestOptions)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type GenerateResearchReportMutationResult = NonNullable<Awaited<ReturnType<typeof generateResearchReport>>>
+    export type GenerateResearchReportMutationBody = BodyType<ResearchReportInput>
+    export type GenerateResearchReportMutationError = ErrorType<void>
+    export type GenerateResearchReportMutationVariables = {data: BodyType<ResearchReportInput>}
+
+    /**
+ * @summary Generate a current web-grounded demo report
+ */
+export const useGenerateResearchReport = <TError = ErrorType<void>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof generateResearchReport>>, TError,GenerateResearchReportMutationVariables, TContext>, request?: SecondParameter<typeof customFetch>}
+ ): UseMutationResult<
+        Awaited<ReturnType<typeof generateResearchReport>>,
+        TError,
+        GenerateResearchReportMutationVariables,
+        TContext
+      > => {
+      return useMutation(getGenerateResearchReportMutationOptions(options));
+    }
 
 export const getGetPricingGuideUrl = () => {
 

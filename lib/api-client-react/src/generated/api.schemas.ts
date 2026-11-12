@@ -196,6 +196,82 @@ export interface ErrorEnvelope {
   error: string;
 }
 
+export interface ResearchCompanyInput {
+  /**
+     * @minLength 2
+     * @maxLength 120
+     */
+  companyName: string;
+  /** @maxLength 300 */
+  companyWebsite?: string;
+}
+
+export interface ResearchCompany {
+  companyName: string;
+  companyWebsite: string;
+  /** @nullable */
+  logoUrl: string | null;
+  /** @nullable */
+  logoSourceUrl: string | null;
+  note: string;
+}
+
+export interface ResearchReportInput {
+  /**
+     * @minLength 2
+     * @maxLength 120
+     */
+  companyName: string;
+  /**
+     * @minLength 3
+     * @maxLength 300
+     */
+  companyWebsite: string;
+  /**
+     * @minLength 2
+     * @maxLength 120
+     */
+  region: string;
+  /**
+     * @minLength 2
+     * @maxLength 160
+     */
+  audience: string;
+}
+
+export interface ResearchSource {
+  id: number;
+  title: string;
+  url: string;
+  publisher: string;
+  accessedAt: string;
+}
+
+export interface ResearchReport {
+  companyName: string;
+  companyWebsite: string;
+  region: string;
+  audience: string;
+  markdown: string;
+  sources: ResearchSource[];
+  researchedAt: string;
+}
+
+export interface PitchSlide {
+  number: number;
+  title: string;
+  sourcePage: number;
+  imageUrl: string;
+}
+
+export interface PitchDeck {
+  title: string;
+  description: string;
+  totalSlides: number;
+  pdfUrl: string;
+  slides: PitchSlide[];
+}
+
 export type AuthorizationSessionHeaderParameter = string;
 
 export type BeginBrowserLoginParams = {

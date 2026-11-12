@@ -1,10 +1,18 @@
 ---
 name: Demo research prompts
-description: User-directed scope change from automated AI research to a local prompt builder.
+description: Approved live company research using Gemini, without restoring OpenAI.
 ---
 
-The user requested: “please remove the dependency to open ai and create the prompt and instructions natively in replit.”
+Keep OpenAI out of Demo Researcher. The user originally requested a local prompt
+builder, then explicitly requested live on-page company research and PDF export
+and approved “Use Gemini through Replit (recommended).”
 
-**Why:** This explicitly replaced the earlier attachment's OpenAI Responses API and API-key requirement.
+**Why:** The user approved Gemini through Replit AI Integrations after being told
+that no personal API key is required and usage is billed to Replit credits.
+The later request supersedes the earlier local-only scope, not the removal of OpenAI.
 
-**How to apply:** Build company-specific research prompts locally in the portal for deliberate copying into a research conversation. Do not silently restore an AI-provider dependency or claim that assembling a prompt performs current web research. Ask before adding automated research later.
+**How to apply:** Use live search grounding for company reports. Distinguish drafts,
+verified evidence, hypotheses, and unknowns; never present model memory as current
+research. Generate only on explicit submission, not each field edit. A completed
+report can be downloaded as a PDF; no report history/database persistence was
+requested. Do not reintroduce OpenAI or a personal API-key requirement.

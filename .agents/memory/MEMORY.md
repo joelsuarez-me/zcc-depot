@@ -1,3 +1,4 @@
 - [YouTube transcript access](youtube-transcript-access.md) — empty caption responses can be retrieval failures even when an English caption track exists.
 - [Portal presentation and access](portal-presentation-and-access.md) — compact main heroes on all pages; Sell Sheet, its PDF, and Pricing require sign-in.
-- [Demo research prompts](demo-research-prompts.md) — the user removed OpenAI; keep demo preparation a local prompt-and-instructions builder.
+- [Demo research provider](demo-research-prompts.md) — live company research with Gemini was approved; keep OpenAI out and require current sources.
+- [Seismic PDF rendering](pdf-rendering.md) — use MuPDF when Poppler drops gradient backgrounds and white text from uploaded slides.

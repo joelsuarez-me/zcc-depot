@@ -17,6 +17,124 @@ tags:
   - name: Storage
     description: Object storage upload and serving endpoints.
 paths:
+  /pitch-deck:
+    get:
+      operationId: getPitchDeck
+      summary: Read the signed-in product deep-dive slide collection
+      responses:
+        "200":
+          description: Product slides cloned from source pages 35–47.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PitchDeck"
+        "401":
+          description: Sign-in required.
+  /pitch-deck/slides/{number}:
+    get:
+      operationId: getPitchDeckSlide
+      parameters:
+        - name: number
+          in: path
+          required: true
+          schema: { type: integer, minimum: 1, maximum: 13 }
+      responses:
+        "200":
+          description: Original slide rendered without cropping.
+          content:
+            image/jpeg:
+              schema: { type: string, format: binary }
+        "401":
+          description: Sign-in required.
+        "404":
+          description: Slide unavailable.
+  /pitch-deck/pdf:
+    get:
+      operationId: downloadPitchDeck
+      responses:
+        "200":
+          description: The selected 13 original product slides as a PDF.
+          content:
+            application/pdf:
+              schema: { type: string, format: binary }
+        "401":
+          description: Sign-in required.
+        "503":
+          description: PDF unavailable.
+  /demo-research/company:
+    post:
+      operationId: resolveResearchCompany
+      summary: Resolve an official company website and discover its logo
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ResearchCompanyInput"
+      responses:
+        "200":
+          description: Company profile with an optional verified website logo.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ResearchCompany"
+        "400":
+          description: Invalid company or public website.
+        "401":
+          description: Sign-in required.
+        "429":
+          description: Lookup limit reached.
+        "502":
+          description: Company lookup unavailable.
+  /demo-research/logo/{id}:
+    get:
+      operationId: getResearchCompanyLogo
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema: { type: string }
+      responses:
+        "200":
+          description: Normalized PNG logo belonging to this session user.
+          content:
+            image/png:
+              schema: { type: string, format: binary }
+        "401":
+          description: Sign-in required.
+        "404":
+          description: Logo expired or unavailable.
+  /demo-research/report:
+    post:
+      operationId: generateResearchReport
+      summary: Generate a current web-grounded demo report
+      description: |
+        Requires sign-in. Accept text/event-stream to receive data lines containing JSON events:
+        status {message}, delta {text}, complete {report}, or error {message}.
+        Only a complete event is exportable. application/json returns the completed report instead.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ResearchReportInput"
+      responses:
+        "200":
+          description: Completed report, or a stream ending in complete or error.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ResearchReport"
+            text/event-stream:
+              schema: { type: string }
+        "400":
+          description: Invalid context or public website.
+        "401":
+          description: Sign-in required.
+        "429":
+          description: Research limit reached or another report is running.
+        "502":
+          description: Live research could not be grounded.
   /pricing-guide:
     get:
       operationId: getPricingGuide
@@ -716,4 +834,70 @@ components:
       properties:
         error:
           type: string
+    ResearchCompanyInput:
+      type: object
+      required: [companyName]
+      properties:
+        companyName: { type: string, minLength: 2, maxLength: 120 }
+        companyWebsite: { type: string, maxLength: 300 }
+    ResearchCompany:
+      type: object
+      required: [companyName, companyWebsite, logoUrl, logoSourceUrl, note]
+      properties:
+        companyName: { type: string }
+        companyWebsite: { type: string }
+        logoUrl: { type: ["string", "null"] }
+        logoSourceUrl: { type: ["string", "null"] }
+        note: { type: string }
+    ResearchReportInput:
+      type: object
+      required: [companyName, companyWebsite, region, audience]
+      properties:
+        companyName: { type: string, minLength: 2, maxLength: 120 }
+        companyWebsite: { type: string, minLength: 3, maxLength: 300 }
+        region: { type: string, minLength: 2, maxLength: 120 }
+        audience: { type: string, minLength: 2, maxLength: 160 }
+    ResearchSource:
+      type: object
+      required: [id, title, url, publisher, accessedAt]
+      properties:
+        id: { type: integer }
+        title: { type: string }
+        url: { type: string }
+        publisher: { type: string }
+        accessedAt: { type: string }
+    ResearchReport:
+      type: object
+      required: [companyName, companyWebsite, region, audience, markdown, sources, researchedAt]
+      properties:
+        companyName: { type: string }
+        companyWebsite: { type: string }
+        region: { type: string }
+        audience: { type: string }
+        markdown: { type: string }
+        sources:
+          type: array
+          items:
+            $ref: "#/components/schemas/ResearchSource"
+        researchedAt: { type: string }
+    PitchSlide:
+      type: object
+      required: [number, title, sourcePage, imageUrl]
+      properties:
+        number: { type: integer }
+        title: { type: string }
+        sourcePage: { type: integer }
+        imageUrl: { type: string }
+    PitchDeck:
+      type: object
+      required: [title, description, totalSlides, pdfUrl, slides]
+      properties:
+        title: { type: string }
+        description: { type: string }
+        totalSlides: { type: integer }
+        pdfUrl: { type: string }
+        slides:
+          type: array
+          items:
+            $ref: "#/components/schemas/PitchSlide"
 

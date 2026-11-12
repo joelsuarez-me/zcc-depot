@@ -381,9 +381,9 @@ export default function Agenda() {
 
   if (!isAuthenticated) {
     return (
-      <div className="bg-[#f1f2eb] px-5 pb-4 pt-20 md:px-8">
-        <div className="mx-auto max-w-6xl">
-          <section className="relative overflow-hidden rounded-[2rem] bg-[#244b39] px-6 py-4 text-[#f5f5eb] md:px-8">
+      <div className="zhero-wrap">
+        <div>
+          <section className="zhero on-dark px-6 py-6 md:px-12">
             <div className="grid-lines absolute inset-0 opacity-50" aria-hidden />
             <div className="pointer-events-none absolute right-8 top-1/2 hidden -translate-y-1/2 lg:block" aria-hidden><HeroArt motif="agenda" className="is-sm" /></div>
             <div className="relative max-w-2xl">
@@ -405,9 +405,10 @@ export default function Agenda() {
 
   return (
     <div className="agenda-page min-h-[75dvh] bg-[#f1f2eb] pb-20">
-      <header className="relative overflow-hidden bg-[#244b39] px-5 pb-3 pt-20 text-[#f6f5ec] md:px-8">
+      <div className="zhero-wrap">
+      <header className="zhero on-dark px-6 py-5 md:px-12">
         <div className="grid-lines absolute inset-0 opacity-50" aria-hidden />
-        <div className="relative mx-auto max-w-7xl">
+        <div className="relative w-full">
           <div className="flex flex-wrap items-center justify-between gap-2">
             <div className="eyebrow flex items-center gap-2 text-[0.625rem] text-[#d4e4a6]"><span className="h-px w-5 bg-[#d4e4a6]" />Customer workshop · Conversation brief{mode !== "library" && <SectionGlyph label={mode === "presentation" ? "presentation" : "outcome"} dark />}</div>
             <div className="flex items-center gap-3">
@@ -433,6 +434,7 @@ export default function Agenda() {
           </div>
         </div>
       </header>
+      </div>
 
       <main className="mx-auto max-w-7xl px-5 pt-4 md:px-8 md:pt-4">
         <div className="mb-4 flex flex-col gap-2 rounded-2xl border border-[#d7dbd0] bg-[#fbfbf6] px-4 py-3 md:flex-row md:items-center md:justify-between md:px-5" role="note" data-testid="notice-shared-agendas">

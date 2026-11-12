@@ -13,9 +13,10 @@ export default function Home() {
   const f = FEATURES[feat];
   return (
     <>
-      <section className="on-dark relative overflow-hidden bg-[#203524] text-[#F5F5F2]">
+      <div className="zhero-wrap">
+      <section className="zhero on-dark">
         <div className="grid-lines absolute inset-0" aria-hidden />
-        <div className="relative mx-auto max-w-7xl px-5 pb-3 pt-20 md:px-8">
+        <div className="relative w-full px-6 pb-4 pt-6 md:px-12">
           <motion.div className="grid gap-3 md:grid-cols-12 md:items-center md:gap-8" initial={reduce ? false : { opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8, ease: [0.2, 0.7, 0.2, 1] }}>
             <h1 className="max-w-3xl font-sans text-[clamp(1rem,5.5vw,2rem)] font-semibold leading-tight tracking-[-0.035em] text-[#F5F5F2] md:col-span-7 lg:col-span-6">
               <span className="block whitespace-nowrap">ZENDESK CONTACT CENTER ·</span>{" "}
@@ -45,6 +46,7 @@ export default function Home() {
           </div>
         </div>
       </section>
+      </div>
 
       <Section>
         <SectionHead id="platform" num="01" eyebrow="One solution" title={<>One contact center solution. <span className="hl">Zero silos.</span></>}

@@ -9,6 +9,16 @@ Keep main heroes compact on every page. The user repeatedly requested less verti
 
 **How to apply:** Preserve compact headers when adding pages; do not introduce full-screen or generously padded main heroes.
 
+The user supplied a Zendesk reference with an inset, rounded dark-green banner
+on a white surround, approximately 150px tall on desktop, and requested this
+treatment across all pages with animation in the background fill.
+
+**Why:** This refines their repeated requirement to reduce header height.
+
+**How to apply:** Keep navigation spacing outside the banner; preserve a compact
+title/subtitle area. Use the shared rounded-banner treatment on new pages, and
+respect reduced-motion settings.
+
 The Sell Sheet, its source PDF, and the full Pricing guide require sign-in.
 
 **Why:** The PDF is marked Internal Only. The Pricing guide combines public prices with internal packaging guidance and an internal source link. The user explicitly selected signed-in access for both guides.

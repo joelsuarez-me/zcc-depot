@@ -8,7 +8,7 @@ import { HeroArt, RouteBadge, SectionGlyph, type Motif } from "@/components/art"
 import { SearchTrigger } from "@/components/global-search";
 import { MobileNavigationLinks, PrimaryNavigation } from "@/components/header-navigation";
 
-const logo = `${import.meta.env.BASE_URL}brand/zendesk-logo.svg`;
+const logo = `${import.meta.env.BASE_URL}brand/zendesk-monochrome.png`;
 
 export { NAV } from "@/data/navigation";
 
@@ -65,9 +65,10 @@ export function PageHero({ eyebrow, title, lede, children, motif }: { eyebrow: s
   const [loc] = useLocation();
   const m = motif ?? MOTIFS[loc] ?? "flow";
   return (
-    <section className="on-dark relative overflow-hidden bg-[#203524] text-[#F5F5F2]">
+    <div className="zhero-wrap">
+    <section className="zhero on-dark">
       <div className="grid-lines absolute inset-0" aria-hidden />
-      <div className="relative mx-auto max-w-7xl px-5 pb-4 pt-20 md:px-8">
+      <div className="relative w-full px-6 py-6 md:px-12">
         <motion.div initial={reduce ? false : { opacity: 0, y: 24 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.7, ease: [0.2, 0.7, 0.2, 1] }}>
           <div className="grid gap-2 md:grid-cols-12 md:items-end md:gap-6">
             <div className="md:col-span-7 lg:col-span-6">
@@ -81,6 +82,7 @@ export function PageHero({ eyebrow, title, lede, children, motif }: { eyebrow: s
         </motion.div>
       </div>
     </section>
+    </div>
   );
 }
 
@@ -98,7 +100,7 @@ function useHashScroll() {
   useEffect(() => {
     const hash = window.location.hash.slice(1);
     if (hash) {
-      const t = setTimeout(() => document.getElementById(hash)?.scrollIntoView({ behavior: "smooth", block: "start" }), 80);
+      const t = setTimeout(() => document.getElementById(hash)?.scrollIntoView({ behavior: "instant", block: "start" }), 80);
       return () => clearTimeout(t);
     }
     window.scrollTo({ top: 0 });
@@ -128,9 +130,10 @@ export function Shell({ children }: { children: ReactNode }) {
     <div className="min-h-[100dvh]">
       <a href="#main" className="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-[200] focus:rounded-full focus:bg-[#D1F470] focus:px-4 focus:py-2 focus:text-[#11110D]">Skip to content</a>
       <header className="fixed inset-x-0 top-0 z-50 px-3 pt-3 md:px-6">
-        <div className={`mx-auto flex max-w-7xl items-center justify-between rounded-full border px-3 py-2 transition-all duration-300 md:px-4 ${scrolled || open ? "border-[#11110D]/10 bg-[#F5F5F2]/90 shadow-[0_10px_30px_-12px_rgba(32,53,36,.35)] backdrop-blur-md" : "border-transparent bg-[#F5F5F2]"}`}>
+        <div className="pointer-events-none absolute inset-x-0 top-0 h-[4.75rem] bg-[#FDFDFB]" aria-hidden style={{ opacity: scrolled ? 0 : 1 }} />
+        <div className={`relative z-10 mx-auto flex max-w-7xl items-center justify-between rounded-full border px-3 py-2 transition-all duration-300 md:px-4 ${scrolled || open ? "border-[#11110D]/10 bg-[#F5F5F2]/90 shadow-[0_10px_30px_-12px_rgba(32,53,36,.35)] backdrop-blur-md" : "border-transparent bg-[#FDFDFB]"}`}>
           <Link href="/" className="flex items-center gap-3 rounded-full pl-2 pr-3" data-testid="link-home-logo">
-            <img src={logo} alt="Zendesk" className="h-6 w-auto" />
+            <img src={logo} alt="Zendesk" className="h-10 w-auto rounded-md" />
           </Link>
           <PrimaryNavigation />
           <div className="flex items-center gap-2">
