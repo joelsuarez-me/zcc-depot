@@ -1,8 +1,8 @@
 import { useState } from "react";
 import { Link } from "wouter";
 import { motion, useReducedMotion, AnimatePresence } from "framer-motion";
-import { ArrowRight, ArrowUpRight } from "lucide-react";
-import { DemoButton, Ext, Note, Reveal, Section, SectionHead } from "@/components/kit";
+import { ArrowUpRight } from "lucide-react";
+import { Ext, Note, Reveal, Section, SectionHead } from "@/components/kit";
 import { FEATURES, LINKS, PILLARS } from "@/data/content";
 
 const DESTS = [
@@ -50,20 +50,10 @@ export default function Home() {
         <div className="grid-lines absolute inset-0" aria-hidden />
         <div className="relative mx-auto grid max-w-7xl gap-12 px-5 pb-20 pt-32 md:px-8 md:pt-40 lg:grid-cols-12 lg:items-center">
           <motion.div className="lg:col-span-7" initial={reduce ? false : { opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8, ease: [0.2, 0.7, 0.2, 1] }}>
-            <div className="eyebrow mb-6 text-[#D1F470]">Zendesk Contact Center · Architect field kit</div>
-            <h1 className="text-[2.9rem] font-semibold leading-[0.95] tracking-tight md:text-[5.4rem]">
-              The direct path to an <span className="serif italic text-[#D1F470]">agentic</span> contact center.
-            </h1>
+            <div className="eyebrow mb-6 text-[#D1F470]" style={{ textTransform: "none" }}>ZENDESK CONTACT CENTER · platform ARCHITECT Depot</div>
             <p className="mt-7 max-w-xl text-lg leading-relaxed text-[#F5F5F2]/75">
               Everything you need to prepare the customer conversation: the story, the architecture behind it, the outcomes it supports, and the official sources to back every claim.
             </p>
-            <div className="mt-9 flex flex-wrap gap-3">
-              <DemoButton />
-              <Link href="/architecture" data-testid="link-hero-architecture" className="group inline-flex items-center gap-2 rounded-full border border-[#F5F5F2]/25 px-5 py-3 text-sm font-semibold transition-colors hover:border-[#D1F470] hover:text-[#D1F470]">
-                Explore the architecture <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
-              </Link>
-            </div>
-            <p className="mono mt-5 text-xs text-[#F5F5F2]/45">Guided click-through demo. Not a connected live Zendesk account.</p>
           </motion.div>
           <motion.div className="lg:col-span-5" initial={reduce ? false : { opacity: 0, scale: 0.96 }} animate={{ opacity: 1, scale: 1 }} transition={{ duration: 1, delay: 0.2 }}>
             <div className="rounded-[2rem] border border-[#D1F470]/20 bg-[#11110D]/30 p-6 backdrop-blur-sm">

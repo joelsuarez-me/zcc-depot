@@ -172,7 +172,7 @@ function Footer() {
         <div className="grid gap-12 md:grid-cols-12">
           <div className="md:col-span-5">
             <p className="serif text-4xl italic leading-tight text-[#D1F470] md:text-5xl">Every call, connected.</p>
-            <p className="mt-5 max-w-sm text-sm leading-relaxed text-[#F5F5F2]/60">ZCC Depot is an architect-curated field kit for Zendesk Contact Center conversations. It is not an official Zendesk product; always confirm availability, pricing, and compliance details with current Zendesk documentation.</p>
+            <p className="mt-5 max-w-sm text-sm leading-relaxed text-[#F5F5F2]/60">ZCC Depot is an architect-curated resource depot for Zendesk Contact Center conversations. It is not an official Zendesk product; always confirm availability, pricing, and compliance details with current Zendesk documentation.</p>
           </div>
           <div className="md:col-span-3">
             <div className="eyebrow mb-4 text-[#F5F5F2]/40">Depot</div>
@@ -190,7 +190,7 @@ function Footer() {
         </div>
         <div className="mt-14 flex flex-col justify-between gap-3 border-t border-[#F5F5F2]/10 pt-6 text-xs text-[#F5F5F2]/40 md:flex-row">
           <span>Zendesk and the Zendesk logo are trademarks of Zendesk, Inc.</span>
-          <span className="mono">ZCC DEPOT · FIELD KIT</span>
+          <span className="mono">ZCC DEPOT · PLATFORM ARCHITECTURE</span>
         </div>
       </div>
     </footer>
