@@ -85,6 +85,29 @@ paths:
           description: Sign-in required.
         "404":
           description: Report not found.
+  /demo-research/saved/{id}/agenda-draft:
+    get:
+      operationId: getResearchAgendaDraft
+      summary: Map saved research to an unsaved agenda without creating or updating records
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema: { type: string, format: uuid }
+      responses:
+        "200":
+          description: Editable agenda fields. Nothing has been saved.
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/AgendaInput" }
+        "401":
+          description: Sign-in required.
+        "403":
+          description: Presenter mode required.
+        "404":
+          description: Report not found.
+        "422":
+          description: Report cannot fit an agenda without losing content.
   /demo-research/saved/{id}/agenda:
     post:
       operationId: convertResearchReportToAgenda

@@ -395,6 +395,83 @@ export function useGetSavedResearchReport<TData = Awaited<ReturnType<typeof getS
 
 
 
+export const getGetResearchAgendaDraftUrl = (id: string,) => {
+
+
+
+
+  return `/api/demo-research/saved/${id}/agenda-draft`
+}
+
+/**
+ * @summary Map saved research to an unsaved agenda without creating or updating records
+ */
+export const getResearchAgendaDraft = async (id: string, options?: Parameters<typeof customFetch>[1]): Promise<AgendaInput> => {
+
+  return customFetch<AgendaInput>(getGetResearchAgendaDraftUrl(id),
+  {
+    ...options,
+    method: 'GET'
+
+
+  }
+);}
+
+
+
+
+
+export const getGetResearchAgendaDraftQueryKey = (id: string,) => {
+    return [
+    `/api/demo-research/saved/${id}/agenda-draft`
+    ] as const;
+    }
+
+
+export const getGetResearchAgendaDraftQueryOptions = <TData = Awaited<ReturnType<typeof getResearchAgendaDraft>>, TError = ErrorType<void>>(id: string, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getResearchAgendaDraft>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getGetResearchAgendaDraftQueryKey(id);
+
+
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof getResearchAgendaDraft>>> = ({ signal }) => getResearchAgendaDraft(id, { signal, ...requestOptions });
+
+
+
+
+
+   return  { queryKey, queryFn, enabled: id !== null && id !== undefined, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof getResearchAgendaDraft>>, TError, TData> & { queryKey: QueryKey }
+}
+
+export type GetResearchAgendaDraftQueryResult = NonNullable<Awaited<ReturnType<typeof getResearchAgendaDraft>>>
+export type GetResearchAgendaDraftQueryError = ErrorType<void>
+
+
+/**
+ * @summary Map saved research to an unsaved agenda without creating or updating records
+ */
+
+export function useGetResearchAgendaDraft<TData = Awaited<ReturnType<typeof getResearchAgendaDraft>>, TError = ErrorType<void>>(
+ id: string, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getResearchAgendaDraft>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+
+ ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+
+  const queryOptions = getGetResearchAgendaDraftQueryOptions(id,options)
+
+  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
+
+  return withQueryKey(query, queryOptions.queryKey);
+}
+
+
+
+
+
+
+
 export const getConvertResearchReportToAgendaUrl = (id: string,) => {
 
 

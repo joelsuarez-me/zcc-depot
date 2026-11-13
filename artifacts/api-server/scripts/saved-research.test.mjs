@@ -36,7 +36,7 @@ const call = (path = "", data, user = "fixture-author") => fetch(base + path, {
 
 try {
   await test("all saved-report, image and conversion routes reject anonymous users", async () => {
-    for (const [path, data] of [["", undefined], ["", {}], ["/invalid", undefined], ["/invalid/logo", undefined], ["/invalid/agenda", {}]]) {
+    for (const [path, data] of [["", undefined], ["", {}], ["/invalid", undefined], ["/invalid/logo", undefined], ["/invalid/agenda", {}], ["/invalid/agenda-draft", undefined]]) {
       const response = await call(path, data, "");
       assert.equal(response.status, 401);
       assert.match(response.headers.get("cache-control"), /private, no-store/);
@@ -57,6 +57,30 @@ try {
     assert.ok((await listing.json()).some(item => item.id === record.id && item.audience === fields.audience));
     const rows = await db.select().from(researchReportsTable).where(eq(researchReportsTable.saveKey, savedKeys[0]));
     assert.equal(rows.length, 1);
+  });
+  await test("draft conversion is read-only, repeatable and retains all five sections and citations", async () => {
+    const before = await db.select().from(agendasTable).where(eq(agendasTable.company, fields.companyName));
+    const drafts = await Promise.all([call(`/${record.id}/agenda-draft`), call(`/${record.id}/agenda-draft`, undefined, "fixture-colleague")]);
+    for (const response of drafts) {
+      assert.equal(response.status, 200);
+      assert.match(response.headers.get("cache-control"), /private, no-store/);
+      const draft = await response.json();
+      assert.equal(draft.id, undefined);
+      assert.equal(draft.company, fields.companyName);
+      for (const [key, index] of [["description", 0], ["currentState", 1], ["conversation", 2], ["problems", 3], ["outcomes", 4]]) {
+        assert.match(draft[key], new RegExp(`Section ${index}:`));
+        assert.match(draft[key], /\[1\]/);
+      }
+      assert.equal(draft.logoPath, null);
+      assert.match(draft.outcomes, /https:\/\/example\.com\//);
+    }
+    const after = await db.select().from(agendasTable).where(eq(agendasTable.company, fields.companyName));
+    assert.deepEqual(after, before, "Preparing or canceling a draft cannot create an agenda");
+    const unchanged = await (await call(`/${record.id}`)).json();
+    assert.equal(unchanged.agendaId, null);
+    assert.deepEqual(unchanged.report, report);
+    assert.equal((await call("/not-a-uuid/agenda-draft")).status, 404);
+    assert.equal((await call(`/${randomUUID()}/agenda-draft`)).status, 404);
   });
   await test("conversion maps all five sections, retains citations, and never overwrites an edited agenda", async () => {
     const conversions = await Promise.all([
@@ -80,6 +104,9 @@ try {
     const original = await (await call(`/${record.id}`)).json();
     assert.equal(original.report.markdown, markdown);
     assert.equal(original.agendaId, agenda.id);
+    const freshDraft = await (await call(`/${record.id}/agenda-draft`)).json();
+    assert.notEqual(freshDraft.outcomes, "Keep the presenter's edits.");
+    assert.equal((await db.select().from(agendasTable).where(eq(agendasTable.id, agenda.id)))[0].outcomes, "Keep the presenter's edits.");
   });
   await test("partial reports, mismatched context and arbitrary logo URLs cannot be saved", async () => {
     for (const input of [
@@ -101,6 +128,7 @@ try {
     const longReport = { ...report, markdown: markdown.replace("Section 0:", "X".repeat(6000)) };
     const saved = await (await call("", { saveKey: savedKeys[2], fields, report: longReport })).json();
     assert.equal((await call(`/${saved.id}/agenda`, {})).status, 422);
+    assert.equal((await call(`/${saved.id}/agenda-draft`)).status, 422);
     const unchanged = await (await call(`/${saved.id}`)).json();
     assert.equal(unchanged.report.markdown, longReport.markdown);
     assert.equal(unchanged.agendaId, null);

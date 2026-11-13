@@ -17,6 +17,12 @@ research. Generate only on explicit submission, not each field edit. A completed
 report can be downloaded as a PDF. The user later requested saved-report history
 and conversion to Demo Agenda. Do not reintroduce OpenAI or a personal API-key requirement.
 
+Converting research from Demo Agenda must open an unsaved draft in Edit mode, with an explicit save after review.
+
+**Why:** The user specifically required the ability to edit the converted agenda before saving.
+
+**How to apply:** Preparing or canceling the conversion must not persist a new agenda or change the saved research. Protect any current unsaved agenda before replacing it.
+
 Load the PDF exporter with the research route rather than deferring its module until the download click. Do not automatically reload a tab containing an unsaved report to recover from an asset error.
 
 **Why:** A published version replaced the hashed export asset while an older research tab was still open; clicking Download then fetched missing JavaScript and failed. Reloading can discard unsaved research.

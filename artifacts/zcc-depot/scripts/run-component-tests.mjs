@@ -12,6 +12,7 @@ const output = resolve(temporary, "showcase.test.cjs");
 const voiceOutput = resolve(temporary, "voice-controls.test.cjs");
 const researchOutput = resolve(temporary, "research-library.test.cjs");
 const playlistOutput = resolve(temporary, "playlist.test.cjs");
+const draftOutput = resolve(temporary, "research-agenda-picker.test.cjs");
 try {
   await build({
     entryPoints: [entry], outfile: output, bundle: true, platform: "node", format: "cjs",
@@ -66,8 +67,24 @@ export const convertResearchReportToAgenda=(...a)=>globalThis.__researchApi.conv
       }));
     } }], logLevel: "warning",
   });
+  await build({
+    entryPoints: [resolve(packageDir, "scripts/research-agenda-picker.test.mjs")],
+    outfile: draftOutput, bundle: true, platform: "node", format: "cjs", jsx: "automatic",
+    external: ["react", "react/*", "react-test-renderer"],
+    define: { "import.meta.env.BASE_URL": JSON.stringify("/") },
+    plugins: [{ name: "agenda-draft-context", setup(builder) {
+      builder.onResolve({ filter: /^@workspace\/api-client-react$/ }, () => ({ path: "api", namespace: "draft-fixture" }));
+      builder.onResolve({ filter: /^@\/components\/ui\/dialog$/ }, () => ({ path: "dialog", namespace: "draft-fixture" }));
+      builder.onLoad({ filter: /.*/, namespace: "draft-fixture" }, args => ({
+        contents: args.path === "api"
+          ? `export const useListResearchReports=()=>globalThis.__draftApi.library; export const getResearchAgendaDraft=(...a)=>globalThis.__draftApi.get(...a);`
+          : `import React from "react"; export const Dialog=({open,children})=>open?React.createElement("div",null,children):null; export const DialogContent=({children,...props})=>React.createElement("div",props,children); export const DialogHeader=DialogContent; export const DialogTitle=DialogContent; export const DialogDescription=DialogContent;`,
+        loader: "js",
+      }));
+    } }], logLevel: "warning",
+  });
   const result = spawnSync(process.execPath, [
-    "--test", output, voiceOutput, researchOutput, playlistOutput, resolve(packageDir, "scripts/voice-preview.test.mjs"),
+    "--test", output, voiceOutput, researchOutput, playlistOutput, draftOutput, resolve(packageDir, "scripts/voice-preview.test.mjs"),
     resolve(packageDir, "scripts/contact-center-components.test.mjs"),
   ], { cwd: packageDir, stdio: "inherit" });
   if (result.error) throw result.error;

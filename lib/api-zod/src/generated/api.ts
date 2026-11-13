@@ -235,6 +235,38 @@ export const GetSavedResearchReportResponse = zod.object({
 
 
 /**
+ * @summary Map saved research to an unsaved agenda without creating or updating records
+ */
+export const GetResearchAgendaDraftParams = zod.object({
+  "id": zod.coerce.string().uuid()
+})
+
+export const getResearchAgendaDraftResponseCompanyMax = 120;
+
+export const getResearchAgendaDraftResponseDescriptionMax = 5000;
+
+export const getResearchAgendaDraftResponseCurrentStateMax = 5000;
+
+export const getResearchAgendaDraftResponseConversationMax = 5000;
+
+export const getResearchAgendaDraftResponseProblemsMax = 5000;
+
+export const getResearchAgendaDraftResponseOutcomesMax = 5000;
+
+
+
+export const GetResearchAgendaDraftResponse = zod.object({
+  "company": zod.string().min(1).max(getResearchAgendaDraftResponseCompanyMax),
+  "description": zod.string().max(getResearchAgendaDraftResponseDescriptionMax).optional(),
+  "currentState": zod.string().max(getResearchAgendaDraftResponseCurrentStateMax).optional(),
+  "conversation": zod.string().max(getResearchAgendaDraftResponseConversationMax).optional(),
+  "problems": zod.string().max(getResearchAgendaDraftResponseProblemsMax).optional(),
+  "outcomes": zod.string().max(getResearchAgendaDraftResponseOutcomesMax).optional(),
+  "logoPath": zod.string().nullish()
+})
+
+
+/**
  * @summary Create or reopen the editable agenda linked to a saved report
  */
 export const ConvertResearchReportToAgendaParams = zod.object({

@@ -11,6 +11,7 @@ import {
   useListAgendas,
   useRequestUploadUrl,
   useUpdateAgenda,
+  type SavedResearchSummary,
   type Agenda,
   type AgendaInput,
 } from "@workspace/api-client-react";
@@ -38,6 +39,7 @@ import { AgendaCardLogo } from "@/components/agenda-card-logo";
 import { HeroArt, SectionGlyph, StateArt } from "@/components/art";
 import { useAgendaCompanyLogo } from "@/hooks/use-agenda-company-logo";
 import { companyLogoKey } from "@/lib/agenda-company-logo";
+import { ResearchAgendaPicker } from "@/components/research-agenda-picker";
 
 const TEXT_KEY = "zcc-depot:agenda:v1";
 const LOGO_KEY = "zcc-depot:agenda-logo:v1";
@@ -131,6 +133,23 @@ export default function Agenda() {
   const [legacy, setLegacy] = useState(loadLegacy);
   const [importing, setImporting] = useState(false);
   const initGuard = useRef<string | null>(null);
+  const [researchPickerOpen, setResearchPickerOpen] = useState(false);
+  const [researchDraft, setResearchDraft] = useState("");
+  const baseline = useRef<string | null>(JSON.stringify(fields));
+  const currentFields = useRef(fields);
+  currentFields.current = fields;
+  const dirty = baseline.current !== JSON.stringify(fields);
+
+  function mayDiscard() {
+    return baseline.current === JSON.stringify(currentFields.current) ||
+      window.confirm("This agenda has unsaved changes. Discard them and continue? Nothing will be saved.");
+  }
+  useEffect(() => {
+    if (!dirty) return;
+    const warn = (event: BeforeUnloadEvent) => { event.preventDefault(); event.returnValue = ""; };
+    window.addEventListener("beforeunload", warn);
+    return () => window.removeEventListener("beforeunload", warn);
+  }, [dirty]);
 
   const agendaQuery = useGetAgenda(selectedId ?? "", {
     query: {
@@ -167,10 +186,16 @@ export default function Agenda() {
       outcomes: activeAgenda.outcomes ?? "",
       logoPath: activeAgenda.logoPath ?? null,
     });
+    baseline.current = JSON.stringify({
+      company: activeAgenda.company ?? "", description: activeAgenda.description ?? "",
+      currentState: activeAgenda.currentState ?? "", conversation: activeAgenda.conversation ?? "",
+      problems: activeAgenda.problems ?? "", outcomes: activeAgenda.outcomes ?? "", logoPath: activeAgenda.logoPath ?? null,
+    });
     setErrorMessage("");
   }, [activeAgenda, selectedId]);
 
   function openNew(template = false) {
+    if (!mayDiscard()) return;
     companyLogo.cancel();
     setLogoScope(value => value + 1);
     setSelectedId(null);
@@ -178,6 +203,8 @@ export default function Agenda() {
     setLoadedId(null);
     initGuard.current = null;
     setFields({ ...(template ? MORNINGSTAR_AGENDA : EMPTY) });
+    baseline.current = JSON.stringify(template ? MORNINGSTAR_AGENDA : EMPTY);
+    setResearchDraft("");
     updateLocation(null);
     setErrorMessage("");
     setLogoMessage("");
@@ -185,6 +212,7 @@ export default function Agenda() {
   }
 
   function openAgenda(id: string) {
+    if (!mayDiscard()) return;
     companyLogo.cancel();
     setLogoScope(value => value + 1);
     updateLocation(id);
@@ -194,6 +222,21 @@ export default function Agenda() {
     initGuard.current = null;
     setErrorMessage("");
     setMode("editor");
+    setResearchDraft("");
+  }
+
+  function applyResearchDraft(input: AgendaInput, report: SavedResearchSummary) {
+    if (!isAuthenticated || busy || uploading || !mayDiscard()) return false;
+    companyLogo.cancel();
+    setLogoScope(value => value + 1);
+    setSelectedId(null); setCreating(true); setLoadedId(null); initGuard.current = null;
+    const draft: AgendaFields = { ...EMPTY, ...input };
+    setFields(draft);
+    baseline.current = null; // A converted draft stays unsaved even before the first edit.
+    setResearchDraft(report.companyName);
+    setErrorMessage(""); setLogoMessage(""); setMode("editor"); updateLocation(null);
+    window.requestAnimationFrame(() => document.querySelector<HTMLInputElement>('[data-testid="input-agenda-company"]')?.focus());
+    return true;
   }
 
   function updateField<K extends keyof AgendaFields>(key: K, value: AgendaFields[K]) {
@@ -270,6 +313,11 @@ export default function Agenda() {
         outcomes: saved.outcomes,
         logoPath: saved.logoPath,
       });
+      baseline.current = JSON.stringify({
+        company: saved.company, description: saved.description, currentState: saved.currentState,
+        conversation: saved.conversation, problems: saved.problems, outcomes: saved.outcomes, logoPath: saved.logoPath,
+      });
+      setResearchDraft("");
     } catch (error) {
       setErrorMessage(error instanceof Error ? error.message : "Your changes could not be saved. Please try again.");
     } finally {
@@ -289,6 +337,8 @@ export default function Agenda() {
       setCreating(false);
       setLoadedId(null);
       setFields({ ...EMPTY });
+      baseline.current = JSON.stringify(EMPTY);
+      setResearchDraft("");
       setConfirmDelete(false);
       setMode("library");
       updateLocation(null, true);
@@ -350,6 +400,11 @@ export default function Agenda() {
         logoPath: saved.logoPath,
       });
       setMode("editor");
+      baseline.current = JSON.stringify({
+        company: saved.company, description: saved.description, currentState: saved.currentState,
+        conversation: saved.conversation, problems: saved.problems, outcomes: saved.outcomes, logoPath: saved.logoPath,
+      });
+      setResearchDraft("");
     } catch (error) {
       setErrorMessage(error instanceof Error ? error.message : "The saved browser draft could not be imported.");
     } finally {
@@ -358,6 +413,7 @@ export default function Agenda() {
   }
 
   function cancelEditor() {
+    if (!mayDiscard()) return;
     companyLogo.cancel();
     setLogoScope(value => value + 1);
     setMode("library");
@@ -366,6 +422,9 @@ export default function Agenda() {
     setLoadedId(null);
     initGuard.current = null;
     setCreating(false);
+    setFields({ ...EMPTY });
+    baseline.current = JSON.stringify(EMPTY);
+    setResearchDraft("");
     updateLocation(null, true);
     setErrorMessage("");
   }
@@ -443,6 +502,22 @@ export default function Agenda() {
       </div>
 
       <main className="mx-auto max-w-7xl px-5 pt-4 md:px-8 md:pt-4">
+        <div className="mb-4 flex flex-col gap-3 rounded-2xl border border-[#cbd5bd] bg-[#e8eddf] p-4 sm:flex-row sm:items-center sm:justify-between">
+          <div>
+            <p className="font-semibold text-[#203a2c]">Start with your company research</p>
+            <p className="mt-1 text-sm text-[#536157]">Turn a saved report into a draft you can edit before saving.</p>
+          </div>
+          <button type="button" onClick={() => setResearchPickerOpen(true)} disabled={busy || uploading || importing || queryBusy}
+            className={`${primaryButton} shrink-0 whitespace-normal text-center`} data-testid="button-convert-demo-research">
+            <FileText className="h-4 w-4 shrink-0" aria-hidden />Convert Demo Research to Demo Agenda
+          </button>
+        </div>
+        <ResearchAgendaPicker open={researchPickerOpen} onOpenChange={setResearchPickerOpen}
+          userId={user?.id ?? null} onLogin={login} onDraft={applyResearchDraft} />
+        {researchDraft && <p role="status" className="mb-4 rounded-xl border border-[#cbd5bd] bg-white p-4 text-sm text-[#294735]" data-testid="notice-research-agenda-draft">
+          <strong>Unsaved research draft · {researchDraft}</strong><br />
+          Review and edit the agenda below, then select Save agenda. Cancel discards this draft; your saved research is unchanged.
+        </p>}
         {errorMessage && (
           <div role="alert" className="mb-6 flex items-start gap-3 rounded-xl border border-[#a95843]/25 bg-[#f8e9e3] px-4 py-3.5 text-sm text-[#723e31]" data-testid="error-agenda-save">
             <AlertCircle className="mt-0.5 h-4 w-4 shrink-0" aria-hidden />
@@ -607,10 +682,10 @@ export default function Agenda() {
                   {!creating && activeAgenda && <p className="mono mt-3 border-t border-[#e5e7df] pt-3 text-[10px] tracking-wide text-[#879187]">UPDATED {displayDate(activeAgenda.updatedAt).toUpperCase()}</p>}
                 </section>
                 <div className="grid grid-cols-2 gap-2">
-                  <button type="button" onClick={cancelEditor} className={secondaryButton} data-testid="button-agenda-cancel"><ArrowLeft className="h-4 w-4" aria-hidden /> Library</button>
+                  <button type="button" onClick={cancelEditor} disabled={busy} className={secondaryButton} data-testid="button-agenda-cancel"><ArrowLeft className="h-4 w-4" aria-hidden /> Cancel</button>
                   <button type="submit" disabled={busy || uploading || (Boolean(selectedId) && loadedId !== selectedId)} className={primaryButton} data-testid="button-agenda-save">
                     {busy ? <LoaderCircle className="h-4 w-4 animate-spin" aria-hidden /> : <Save className="h-4 w-4" aria-hidden />}
-                    {busy ? "Saving…" : "Save brief"}
+                    {busy ? "Saving…" : "Save agenda"}
                   </button>
                 </div>
                 {selectedId && (

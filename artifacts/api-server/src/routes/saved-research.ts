@@ -3,6 +3,7 @@ import { desc, eq, sql } from "drizzle-orm";
 import { db, agendasTable, researchReportsTable, type SavedResearchRow } from "@workspace/db";
 import {
   CreateAgendaBody, GetAgendaResponse, GetSavedResearchReportResponse,
+  GetResearchAgendaDraftParams, GetResearchAgendaDraftResponse,
   SaveResearchReportBody, type SavedResearchReport,
 } from "@workspace/api-zod";
 import { getCompanyLogo } from "../lib/demo-research/company";
@@ -134,6 +135,25 @@ router.get("/demo-research/saved/:id/logo", async (req, res) => {
       if (!res.headersSent) res.sendStatus(404); else res.destroy();
     }).pipe(res);
   } catch { res.sendStatus(404); }
+});
+
+router.get("/demo-research/saved/:id/agenda-draft", async (req, res): Promise<void> => {
+  const params = GetResearchAgendaDraftParams.safeParse(req.params);
+  if (!params.success) { res.status(404).json({ error: "Report not found." }); return; }
+  try {
+    const [row] = await db.select().from(researchReportsTable).where(eq(researchReportsTable.id, params.data.id));
+    if (!row) { res.status(404).json({ error: "Report not found." }); return; }
+    const mapped = CreateAgendaBody.safeParse({ ...researchToAgenda(snapshot(row).report), logoPath: row.logoPath });
+    if (!mapped.success) {
+      res.status(422).json({ error: "This report exceeds an agenda's field limits. Your complete research is unchanged; open it in Demo Researcher to review it." });
+      return;
+    }
+    // Read-only: editing and cancellation must never create a saved agenda.
+    res.json(GetResearchAgendaDraftResponse.parse(mapped.data));
+  } catch (err) {
+    req.log.error({ err }, "Could not prepare research agenda draft");
+    res.status(500).json({ error: "The agenda draft could not be prepared. Your saved research is unchanged; please retry." });
+  }
 });
 
 router.post("/demo-research/saved/:id/agenda", async (req, res) => {
