@@ -163,6 +163,7 @@ test("the playlist transport operates the existing visual players with only one 
   };
   globalThis.__playlistNarration = {
     enabled: false, volume: 1, settingsKey: "visual-only", captions: false,
+    auth: { isAuthenticated: false, login() {} }, preferencesReady: true,
     register: () => () => {}, claim() {}, stopPlayback() { activeSetter(null); },
   };
   function Presentation() {

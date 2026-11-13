@@ -5,6 +5,7 @@ import { useNarratedDemo } from "@/hooks/use-narrated-demo";
 import { useNarration, VOICE_ROLES } from "./narration-provider";
 import type { DemoNugget, NuggetId } from "@/data/demo-nuggets";
 import "./demo-nuggets.css";
+import { DemoAudioStatus } from "./demo-audio-status";
 
 export type DemoPlayerControls = Pick<DemoPlayback, "play">;
 type Props = {
@@ -40,7 +41,7 @@ export function DemoPlayer({ nugget, activeId, onActiveChange, children, dark = 
               className="group absolute inset-0 z-30 grid place-items-center bg-[#11110D]/25 backdrop-blur-[1px] transition-colors hover:bg-[#11110D]/15">
               <span className="flex items-center gap-3 rounded-full bg-[#D1F470] py-3 pl-3 pr-6 text-base font-semibold text-[#11110D] shadow-[0_20px_40px_-15px_rgba(17,17,13,.6)] transition-transform group-hover:scale-105">
                 <span className="grid h-10 w-10 place-items-center rounded-full bg-[#203524] text-[#D1F470]"><Play className="h-5 w-5 translate-x-px" fill="currentColor" aria-hidden /></span>
-                Play demo
+                {voiced && narration.volume > 0 ? "Play with audio" : "Play without audio"}
               </span>
             </button>
           )}
@@ -68,7 +69,7 @@ export function DemoPlayer({ nugget, activeId, onActiveChange, children, dark = 
             <RotateCcw className="h-4 w-4" aria-hidden />Restart
           </button>
         </div>
-        <p className="text-xs opacity-65">{voiced ? "ElevenLabs narration · audio-paced stages" : "Visual-only playback · no audio"}</p>
+        <DemoAudioStatus id={id} dark={dark} />
         {error && <div role="alert" className={`rounded-xl border p-3 text-sm ${dark ? "border-[#D1F470]/30 bg-white/10" : "border-[#9A4C2C]/25 bg-[#FFF7EF]"}`} data-testid={`error-narration-${id}`}>
           <p>{error}</p>
           <button type="button" onClick={pb.play} className="mr-4 mt-2 min-h-11 font-semibold underline">Retry narration</button>

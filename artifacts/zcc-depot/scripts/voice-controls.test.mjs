@@ -3,8 +3,45 @@ import { test } from "node:test";
 import React, { act, StrictMode } from "react";
 import { create } from "react-test-renderer";
 import { VoiceTalentControls } from "../src/components/demo-nuggets/voice-talent-controls.tsx";
+import { DemoAudioStatus } from "../src/components/demo-nuggets/demo-audio-status.tsx";
 
 globalThis.IS_REACT_ACT_ENVIRONMENT = true;
+test("player audio status offers sign-in instead of unexplained silent playback", async () => {
+  let signedIn = false;
+  globalThis.__voiceTestNarration = { auth: { isAuthenticated: false, login() { signedIn = true; } }, enabled: false, volume: .9 };
+  let ui;
+  await act(async () => { ui = create(React.createElement(DemoAudioStatus, { id: "voice-copilot" })); });
+  assert.match(JSON.stringify(ui.toJSON()), /Sound is off/);
+  await act(async () => ui.root.findByProps({ "data-testid": "button-audio-enable-voice-copilot" }).props.onClick());
+  assert.equal(signedIn, true);
+  await act(async () => ui.unmount());
+});
+test("player audio status can enable narration and restore a muted saved volume", async () => {
+  let enabled, volume;
+  globalThis.__voiceTestNarration = {
+    auth: { isAuthenticated: true }, preferencesReady: true, enabled: false, volume: 0,
+    setEnabled(value) { enabled = value; }, setVolume(value) { volume = value; },
+  };
+  let ui;
+  await act(async () => { ui = create(React.createElement(DemoAudioStatus, { id: "voice-copilot" })); });
+  await act(async () => ui.root.findByProps({ "data-testid": "button-audio-enable-voice-copilot" }).props.onClick());
+  assert.equal(enabled, true);
+  assert.equal(volume, .9);
+  await act(async () => ui.unmount());
+});
+test("player audio status unmutes enabled narration without changing voice assignments", async () => {
+  let volume;
+  globalThis.__voiceTestNarration = {
+    auth: { isAuthenticated: true }, preferencesReady: true, enabled: true, volume: 0,
+    setVolume(value) { volume = value; },
+  };
+  let ui;
+  await act(async () => { ui = create(React.createElement(DemoAudioStatus, { id: "voice-copilot" })); });
+  assert.match(JSON.stringify(ui.toJSON()), /saved volume is 0/);
+  await act(async () => ui.root.findByProps({ "data-testid": "button-audio-enable-voice-copilot" }).props.onClick());
+  assert.equal(volume, .9);
+  await act(async () => ui.unmount());
+});
 const audio = [];
 globalThis.Audio = class {
   src = ""; volume = 1; onended = null; onerror = null; pauses = 0;
