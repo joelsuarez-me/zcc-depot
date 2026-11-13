@@ -12,8 +12,9 @@ export const INDUSTRIES: Industry[] = [
   { id: "pharma-life-sciences", name: "Pharmaceuticals & Life Sciences", icon: "Microscope", description: "Coordinate support, medical-information routing and safety handoffs.", qualification: "Validate pharmacovigilance, adverse-event reporting, regulated-data handling and approved content with qualified teams. No diagnosis, medical advice, eligibility determination or regulatory submission is automated by these examples." },
 ];
 
-// Reviewed against these public pages on 2026-11-13. Sources support platform
-// building blocks, not an end-to-end certification of any industry scenario.
+// Initial authoring research: 2026-11-13. Explicit editorial acknowledgements
+// live in review-ledger.json; successful fetching is not editorial approval.
+// Sources support building blocks, not certification of any industry scenario.
 export const USE_CASE_SOURCES: UseCaseSource[] = [
   { id: "zcc", title: "Zendesk Contact Center", url: "https://www.zendesk.com/service/contact-center/", scope: "Unified contact-center positioning and configuration-dependent AI capabilities." },
   { id: "agent", title: "How Contact Center calls become tickets", url: "https://support.zendesk.com/hc/en-us/articles/10912570849050-Understanding-how-Contact-Center-calls-become-tickets", scope: "Answered calls, voicemail and ticket association; recording, transcripts and summaries depend on configuration and licensing." },

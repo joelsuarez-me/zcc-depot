@@ -6,6 +6,7 @@ import { PageHero } from "@/components/kit";
 import { useToast } from "@/hooks/use-toast";
 import { IndustryIcon } from "@/components/vertical-use-cases/industry-icon";
 import { KindBadge, UseCaseDetail } from "@/components/vertical-use-cases/use-case-detail";
+import { IndustryReviewOverview } from "@/components/vertical-use-cases/review-status";
 import "@/components/vertical-use-cases/vuc.css";
 
 const ALL = "all";
@@ -125,6 +126,7 @@ export default function SalesUseCases() {
         lede={<><span className="vuc-sub block mb-1.5">Real-world challenges. Intelligent solutions. Measurable outcomes.</span>Explore how Zendesk Contact Center can help organizations across nine industries modernize customer engagement, streamline operations, and deliver more connected customer experiences.</>} />
 
       <div className="vuc-body">
+        <IndustryReviewOverview />
         <div className="vuc-tools" id="explore" data-section-nav>
           <label className="vuc-search">
             <Search className="h-4 w-4 text-[#11110D]/50" aria-hidden />

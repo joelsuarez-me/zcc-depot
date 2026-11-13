@@ -9,6 +9,12 @@ Keep Amazon Connect / Contact Lens quality and conversation analytics distinct f
 
 **How to apply:** Identify which product supplies each demonstrated capability. Do not silently label Contact Lens evidence as Zendesk QA or imply either is included by default.
 
+Industry documentation monitoring must flag changes for human review, not rewrite claims or equate an accessible source with validation of a complete customer solution.
+
+**Why:** The requested industry-review mechanism explicitly keeps claim assessment with human reviewers and preserves regulatory and capability boundaries.
+
+**How to apply:** Keep source availability, text-change detection and editorial review separate. Retain industry qualifications and configuration/licensing caveats when updating scenarios.
+
 Describe AI, transcription, evaluation, analytics and operational capabilities conditionally, according to the environment. A unified workspace is not a single routing engine across all channels. Do not add Auto Assist unless expressly configured and verified. Caller recognition is not authentication.
 
 **Why:** The user required accurate, configuration-dependent demonstrations rather than claims that every Contact Center environment includes these features.

@@ -4,6 +4,7 @@ import { ArrowRight, CheckCircle2, Maximize2, Minimize2, MessageCircleQuestion }
 import type { CapabilityKind, Industry, UseCaseSource, VerticalUseCase, WorkflowNode } from "@/data/verticals/types";
 import { Ext } from "@/components/kit";
 import { IndustryIcon } from "./industry-icon";
+import { ScenarioReviewStatus, SourceReviewStatus } from "./review-status";
 
 const KIND_CLASS: Record<CapabilityKind, string> = {
   "Zendesk capability": "k-zendesk", "AWS configuration": "k-aws", "External integration": "k-external", "Conceptual workflow": "k-concept",
@@ -71,6 +72,7 @@ export function UseCaseDetail({ useCase, industry, sources, present = false }: {
         <span className="vuc-kind k-concept">Curated hypothetical example</span>
       </div>
       <h2 className="vuc-title mt-3 text-[1.75rem] font-semibold leading-[1.08] tracking-tight md:text-[2.4rem]" data-testid="text-usecase-title">{useCase.title}</h2>
+      <ScenarioReviewStatus useCase={useCase} />
 
       <Sec letter="A" title="Customer challenge" id={`${p}-challenge`}>
         <p className="max-w-3xl text-base leading-relaxed text-[#11110D]/80 md:text-lg">{useCase.challenge}</p>
@@ -127,7 +129,7 @@ export function UseCaseDetail({ useCase, industry, sources, present = false }: {
         <div className="vuc-sec">
           <div className="eyebrow mb-2 text-[#11110D]/55">Public sources for the building blocks</div>
           <ul className="grid gap-1.5 text-sm">
-            {caseSources.map(s => <li key={s.id}><Ext href={s.url} className="font-semibold underline-offset-2 hover:underline" testId={`link-source-${p}-${s.id}`}>{s.title}</Ext><span className="text-[#11110D]/60"> · {s.scope}</span></li>)}
+            {caseSources.map(s => <li key={s.id}><Ext href={s.url} className="font-semibold underline-offset-2 hover:underline" testId={`link-source-${p}-${s.id}`}>{s.title}</Ext><span className="text-[#11110D]/60"> · {s.scope}</span><SourceReviewStatus source={s} /></li>)}
           </ul>
         </div>
       )}

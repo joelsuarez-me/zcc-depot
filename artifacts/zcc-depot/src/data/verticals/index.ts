@@ -9,6 +9,7 @@ import { TELECOMMUNICATIONS } from "./telecommunications";
 import { NONPROFIT } from "./nonprofit";
 import { PHARMA_LIFE_SCIENCES } from "./pharma-life-sciences";
 import type { Category, VerticalUseCase } from "./types";
+import { INDUSTRY_REVIEW_LEDGER as ledger, reviewDate, scenarioReviewState, sourceReviewState } from "./review";
 export { INDUSTRIES, USE_CASE_SOURCES } from "./metadata";
 export type { Industry, VerticalUseCase, WorkflowNode, CapabilityKind, Category } from "./types";
 export const CATEGORIES: Category[] = ["Service & routing", "Risk & escalation", "Applications & onboarding", "Billing & transactions", "Technical support", "Customer engagement"];
@@ -40,7 +41,8 @@ export function useCaseSummary(useCase: VerticalUseCase): string {
     "Discovery:", ...useCase.discovery.map(question => `• ${question}`), "",
     `Qualification: ${INDUSTRIES.find(item => item.id === useCase.industryId)?.qualification}`,
     "", "Public references for platform building blocks:",
-    ...REFERENCES.filter(source => useCase.sourceIds.includes(source.id)).map(source => `${source.title}: ${source.url}`),
+    ...REFERENCES.filter(source => useCase.sourceIds.includes(source.id)).map(source => `${source.title}: ${source.url} — ${sourceReviewState(source, ledger).label}`),
+    `Scenario review: ${scenarioReviewState(useCase, REFERENCES, ledger).label}. Last reviewed: ${reviewDate(ledger.scenarioReviews[useCase.id]?.reviewedAt)}. Source checks: ${reviewDate(ledger.checkedAt)}.`,
     "", "Hypothetical example only. External integrations and regulatory suitability require customer-specific validation.",
   ].join("\n");
 }
