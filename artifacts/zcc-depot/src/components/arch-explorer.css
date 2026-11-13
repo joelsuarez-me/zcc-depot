@@ -80,3 +80,45 @@
   .arx-pro .arx-chip{font-size:.74rem;padding:.3rem .55rem}
 }
 @media (prefers-reduced-motion:reduce){.ub-mark,.ub-link i{animation:none!important}}
+
+/* Reference infographic variant (only .arx-ref) */
+.arx.arx-pro.arx-ref{--paper:#FCFCFB;border:1px solid #D9DCE0;background:#FCFCFB;box-shadow:0 18px 40px -30px rgba(20,24,32,.35);font-family:var(--app-font-sans)}
+.arx-ref .arx-canvas{background:#FDFDFC}
+.arx-ref svg>rect:first-of-type{fill:#FDFDFC}
+.arx-ref .arx-chip{background:#fff;color:#1A1C20;border-color:#C9CDD3;font-weight:700}
+.arx-ref .arx-tool{color:#1A1C20;border-color:#C9CDD3}
+.arx-ref .arx-tool:hover{background:#F1F3F5}
+.arx-ref .arx-tool[aria-pressed=true]{background:#1A1C20;color:#fff}
+.arx-ref .arx-hint{color:#1A1C20!important;background:#F1F3F5!important}
+.arx-ref .arx-hint i{background:#E0352B!important}
+.arx-ref .arx-boundary{fill:#F8F9FA;stroke:#2B2F36;stroke-width:1.4;stroke-dasharray:3 5}
+.arx-ref .arx-boundary.is-z{fill:#F3FAF5;stroke:#3E9B57}
+.arx-ref .arx-boundary-label{font:800 12px var(--app-font-sans);letter-spacing:.06em;fill:#1A1C20}
+.arx-ref .arx-edge path{stroke:#2B2F36;stroke-width:1.4}
+.arx-ref .arx-edge.concept path{stroke-dasharray:4 4}
+.arx-ref .arx-edge.on path:first-child{stroke:#111317;stroke-width:2.2}
+.arx-ref .arx-arrowhead{fill:#2B2F36}
+.arx-ref .arx-dot{fill:#E0352B;offset-distance:0%;animation:arx-ref-run 3.2s linear infinite}
+.arx-ref .arx-edge.on .arx-dot{animation-duration:1.6s}
+.arx-ref .arx-edge.dim .arx-dot{opacity:0}
+@keyframes arx-ref-run{from{offset-distance:0%}to{offset-distance:100%}}
+.arx-ref .arx-card{fill:#fff;stroke:none;filter:drop-shadow(0 2px 3px rgba(20,24,32,.12))}
+.arx-ref .arx-outline{fill:none;stroke:#3A3F47;stroke-width:1.3;pointer-events:none}
+.arx-ref .arx-rule{stroke:#C9CDD3;stroke-width:1}
+.arx-ref .arx-tab{font:800 10px var(--app-font-sans);fill:#fff;letter-spacing:.02em}
+.arx-ref .arx-ico{color:#1A1C20}
+.arx-ref .arx-t{font:800 14.5px var(--app-font-sans);fill:#111317;letter-spacing:-.01em}
+.arx-ref .arx-t.is-two{font-size:13.5px}
+.arx-ref .arx-swatch{border-radius:2px}
+.arx-ref .arx-s{font:600 11.5px var(--app-font-sans);fill:#2B2F36}
+.arx-ref .arx-node:hover .arx-card,.arx-ref .arx-node:focus-visible .arx-card,.arx-ref .arx-node.on .arx-card,.arx-ref .arx-node.sel .arx-card{fill:#fff;stroke:none}
+.arx-ref .arx-node:hover .arx-outline,.arx-ref .arx-node:focus-visible .arx-outline,.arx-ref .arx-node.on .arx-outline{stroke:#111317;stroke-width:2.2}
+.arx-ref .arx-node.sel .arx-outline{stroke:#E0352B;stroke-width:2.6}
+.arx-ref .arx-node.concept .arx-outline{stroke-dasharray:6 4;stroke:#8457C9}
+.arx-ref .arx-node.concept .arx-card{fill:#fff;stroke:none}
+.arx-ref .arx-node:focus{outline:none}
+.arx-ref .arx-tip{background:#fff;color:#111317;border-left:4px solid #E0352B}
+.arx-ref .arx-panel h3{color:#111317;font-weight:800}
+.arx-ref.is-paused .arx-dot{animation-play-state:paused}
+@media (prefers-reduced-motion:reduce){.arx-ref .arx-dot{animation:none!important;offset-distance:50%}}
+@media(max-width:767px){.arx-ref .arx-toolbar{flex-wrap:wrap}.arx-ref .arx-panel{overflow-wrap:anywhere}}

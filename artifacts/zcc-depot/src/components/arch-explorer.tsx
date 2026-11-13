@@ -1,12 +1,40 @@
 import { useCallback, useEffect, useMemo, useRef, useState, type PointerEvent as RPointerEvent, type WheelEvent as RWheelEvent } from "react";
-import { ChevronLeft, ChevronRight, Expand, Minus, Pause, Play, Plus, RotateCcw, Scan, X } from "lucide-react";
+import { BarChart3, Boxes, ChevronLeft, ChevronRight, ClipboardCheck, Cloud, Database, Expand, FileStack, GitBranch, Headset, KeyRound, LayoutDashboard, Mail, Minus, Network, Pause, Phone, Play, Plus, RotateCcw, Scan, Server, Sparkles, Ticket, Users, Waves, X, type LucideIcon } from "lucide-react";
 import { UnitedBrands } from "@/components/united-brands";
 import "./arch-explorer.css";
 import { ARCH_EDGES, ARCH_LAYERS, ARCH_NODES, ARCH_TOUR, type ArchLayer } from "@/data/arch-model";
 
 const W = 1200, H = 640;
 
-export function ArchExplorer({ compact = false, brands = false }: { compact?: boolean; brands?: boolean }) {
+const REF_COLORS: Record<ArchLayer, { tab: string; pale: string; tag: string }> = {
+  channels: { tab: "#6B7280", pale: "#EEF0F2", tag: "Channel" },
+  infra: { tab: "#3B7DD8", pale: "#E3EEFB", tag: "Connect" },
+  aws: { tab: "#E8862A", pale: "#FCEBD9", tag: "AWS" },
+  ai: { tab: "#8457C9", pale: "#EEE6F8", tag: "AI" },
+  zendesk: { tab: "#3E9B57", pale: "#E2F2E6", tag: "Zendesk" },
+  integration: { tab: "#2A9192", pale: "#DDF0EF", tag: "Integrate" },
+  analytics: { tab: "#E8862A", pale: "#FCEBD9", tag: "Report" },
+  security: { tab: "#3B7DD8", pale: "#E3EEFB", tag: "Identity" },
+  conceptual: { tab: "#8457C9", pale: "#F4EFFB", tag: "Concept" },
+};
+const REF_ICONS: Record<string, LucideIcon> = { phone: Phone, digital: Mail, selfservice: Users, a2a: Network, connect: Headset, flows: GitBranch, lex: Waves, lens: FileStack, cfn: Boxes, cognito: KeyRound, lambda: Server, records: Database, profiles: Users, internal: Cloud, zcc: LayoutDashboard, tickets: Ticket, zai: Sparkles, qa: ClipboardCheck, dash: BarChart3 };
+const REF_H = 76;
+/** Split a title into at most two lines that fit `max` characters, breaking at the most balanced word gap. */
+function splitTitle(t: string, max: number): string[] {
+  if (t.length <= max) return [t];
+  const words = t.split(" ");
+  let best: string[] = [t], score = Infinity;
+  for (let i = 1; i < words.length; i++) {
+    const a = words.slice(0, i).join(" "), b = words.slice(i).join(" ");
+    const s = Math.max(a.length, b.length);
+    if (s < score) { score = s; best = [a, b]; }
+  }
+  return best;
+}
+
+export function ArchExplorer({ compact = false, brands = false, variant = "default" }: { compact?: boolean; brands?: boolean; variant?: "default" | "reference" }) {
+  const isRef = variant === "reference";
+  const NODES = useMemo(() => (isRef ? ARCH_NODES.map((n) => ({ ...n, h: REF_H, y: n.y - 6 })) : ARCH_NODES), [isRef]);
   const [paused, setPaused] = useState(false);
   const [layers, setLayers] = useState<Set<ArchLayer>>(() => new Set(ARCH_LAYERS.map((l) => l.id)));
   const [sel, setSel] = useState<string | null>(null);
@@ -58,24 +86,24 @@ export function ArchExplorer({ compact = false, brands = false }: { compact?: bo
   useEffect(() => {
     if (!tourStep) return;
     setSel(null);
-    const pts = tourStep.nodes.map((id) => ARCH_NODES.find((n) => n.id === id)!).filter(Boolean);
+    const pts = tourStep.nodes.map((id) => NODES.find((n) => n.id === id)!).filter(Boolean);
     const cx = pts.reduce((a, n) => a + n.x + n.w / 2, 0) / pts.length, cy = pts.reduce((a, n) => a + n.y + n.h / 2, 0) / pts.length;
     const k = tourStep.zoom ?? 1.25;
     setView({ k, x: W / 2 - cx * k, y: H / 2 - cy * k });
-  }, [tourStep]);
+  }, [tourStep, NODES]);
 
   const detailId = hover ?? sel;
-  const detail = detailId ? ARCH_NODES.find((n) => n.id === detailId) : null;
+  const detail = detailId ? NODES.find((n) => n.id === detailId) : null;
   const toggleLayer = (l: ArchLayer) => setLayers((s) => { const n = new Set(s); if (n.has(l)) n.delete(l); else n.add(l); return n; });
 
   return (
-    <div ref={rootRef} className={`arx arx-pro ${paused ? "is-paused" : ""} ${full ? "is-full" : ""} ${compact ? "is-compact" : ""}`} data-testid="arch-explorer">
+    <div ref={rootRef} className={`arx arx-pro ${isRef ? "arx-ref" : ""} ${paused ? "is-paused" : ""} ${full ? "is-full" : ""} ${compact ? "is-compact" : ""}`} data-testid="arch-explorer">
       {brands && !full && <div className="px-4 pt-3"><UnitedBrands paused={paused} /></div>}
       <div className="arx-toolbar">
         <div className="flex flex-wrap gap-1.5" role="group" aria-label="Diagram layers">
           {ARCH_LAYERS.map((l) => (
             <button key={l.id} type="button" aria-pressed={layers.has(l.id)} onClick={() => toggleLayer(l.id)} className="arx-chip" data-testid={`button-layer-${l.id}`}>
-              <span className="arx-swatch" style={{ background: l.color, borderStyle: l.id === "security" || l.id === "conceptual" ? "dashed" : "solid" }} aria-hidden />{l.label}
+              <span className="arx-swatch" style={{ background: isRef ? REF_COLORS[l.id].tab : l.color, borderStyle: l.id === "security" || l.id === "conceptual" ? "dashed" : "solid" }} aria-hidden />{l.label}
             </button>
           ))}
         </div>
@@ -102,14 +130,14 @@ export function ArchExplorer({ compact = false, brands = false }: { compact?: bo
               {visible("security") && (
                 <g aria-hidden>
                   <rect x={300} y={40} width={560} height={560} rx={28} className="arx-boundary" />
-                  <text x={322} y={68} className="arx-boundary-label">CUSTOMER AWS ACCOUNT · data boundary</text>
+                  <text x={322} y={68} className="arx-boundary-label">{isRef ? "CUSTOMER AWS ACCOUNT (customer-owned data boundary)" : "CUSTOMER AWS ACCOUNT · data boundary"}</text>
                   <rect x={890} y={40} width={290} height={560} rx={28} className="arx-boundary is-z" />
-                  <text x={912} y={68} className="arx-boundary-label">ZENDESK</text>
+                  <text x={912} y={68} className="arx-boundary-label">{isRef ? "ZENDESK (SaaS)" : "ZENDESK"}</text>
                 </g>
               )}
               <g aria-hidden>
                 {ARCH_EDGES.map((e) => {
-                  const a = ARCH_NODES.find((n) => n.id === e.from)!, b = ARCH_NODES.find((n) => n.id === e.to)!;
+                  const a = NODES.find((n) => n.id === e.from)!, b = NODES.find((n) => n.id === e.to)!;
                   if (!visible(a.layer) || !visible(b.layer)) return null;
                   const x1 = a.x + a.w, y1 = a.y + a.h / 2, x2 = b.x, y2 = b.y + b.h / 2;
                   const back = x2 < x1;
@@ -121,12 +149,12 @@ export function ArchExplorer({ compact = false, brands = false }: { compact?: bo
                   return (
                     <g key={e.from + e.to} className={`arx-edge ${on ? "on" : ""} ${dim ? "dim" : ""} ${e.conceptual ? "concept" : ""}`}>
                       <path d={d} markerEnd="url(#arx-arrow)" />
-                      <path d={d} className="arx-flow" />
+                      {isRef ? <circle r={4.2} className="arx-dot" style={{ offsetPath: `path('${d}')`, animationDelay: `${(a.y + b.x) % 9 * -0.31}s` }} /> : <path d={d} className="arx-flow" />}
                     </g>
                   );
                 })}
               </g>
-              {ARCH_NODES.map((n) => {
+              {NODES.map((n) => {
                 if (!visible(n.layer)) return null;
                 const layer = ARCH_LAYERS.find((l) => l.id === n.layer)!;
                 const on = focus.has(n.id), dim = focus.size > 0 && !on;
@@ -137,11 +165,31 @@ export function ArchExplorer({ compact = false, brands = false }: { compact?: bo
                     onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); setTour(null); setSel((s) => (s === n.id ? null : n.id)); } }}
                     onPointerEnter={() => setHover(n.id)} onPointerLeave={() => setHover(null)} onFocus={() => setHover(n.id)} onBlur={() => setHover(null)}
                     data-testid={`node-arch-${n.id}`}>
+                    {isRef ? (() => {
+                      const c = REF_COLORS[n.layer], Icon = REF_ICONS[n.id] ?? Boxes, tx = n.x + 30;
+                      return (<>
+                        <rect x={n.x} y={n.y} width={n.w} height={n.h} rx={10} className="arx-card" />
+                        <path d={`M${n.x + 10} ${n.y} h16 v${n.h} h-16 a10 10 0 0 1 -10 -10 v${-(n.h - 20)} a10 10 0 0 1 10 -10z`} fill={c.tab} />
+                        <text transform={`translate(${n.x + 17} ${n.y + n.h / 2}) rotate(-90)`} textAnchor="middle" className="arx-tab">{c.tag}</text>
+                        <path d={`M${tx} ${n.y + 46} H${n.x + n.w} V${n.y + n.h - 10} a10 10 0 0 1 -10 10 H${tx} Z`} fill={c.pale} className="arx-sub-bg" />
+                        <line x1={tx} x2={n.x + n.w} y1={n.y + 46} y2={n.y + 46} className="arx-rule" />
+                        <Icon x={tx + 8} y={n.y + 12} width={22} height={22} strokeWidth={1.6} className="arx-ico" aria-hidden />
+                        {(() => {
+                          const lines = splitTitle(n.t, Math.floor((n.w - 30 - 46) / 8.2));
+                          return lines.length === 1
+                            ? <text x={tx + 38} y={n.y + 29} className="arx-t">{n.t}</text>
+                            : <text x={tx + 38} y={n.y + 20} className="arx-t is-two">{lines.map((l, i) => <tspan key={i} x={tx + 38} dy={i ? 15 : 0}>{l}</tspan>)}</text>;
+                        })()}
+                        <text x={tx + (n.w - 30) / 2} y={n.y + 64} textAnchor="middle" className="arx-s">{n.sub}</text>
+                        <rect x={n.x} y={n.y} width={n.w} height={n.h} rx={10} className="arx-outline" />
+                      </>);
+                    })() : <>
                     <rect x={n.x} y={n.y} width={n.w} height={n.h} rx={12} className="arx-card" />
                     <rect x={n.x} y={n.y} width={6} height={n.h} rx={2.5} fill={layer.color} />
                     <circle cx={n.x + n.w - 14} cy={n.y + 14} r={3.5} className="arx-pulse" style={{ animationDelay: `${(n.x + n.y) % 7 * -0.45}s` }} />
                     <text x={n.x + 16} y={n.y + 24} className="arx-t">{n.t}</text>
                     <text x={n.x + 16} y={n.y + 42} className="arx-s">{n.sub}</text>
+                    </>}
                   </g>
                 );
               })}
@@ -172,7 +220,7 @@ export function ArchExplorer({ compact = false, brands = false }: { compact?: bo
                 <summary>Technical detail</summary>
                 <ul className="mt-2 space-y-1.5">{detail.tech.map((t) => <li key={t} className="text-sm text-[#11110D]/72">{t}</li>)}</ul>
               </details>
-              <div className="mt-4 text-xs text-[#11110D]/55">Connected to: {ARCH_EDGES.filter((e) => e.from === detail.id || e.to === detail.id).map((e) => ARCH_NODES.find((n) => n.id === (e.from === detail.id ? e.to : e.from))!.t).join(", ")}</div>
+              <div className="mt-4 text-xs text-[#11110D]/55">Connected to: {ARCH_EDGES.filter((e) => e.from === detail.id || e.to === detail.id).map((e) => NODES.find((n) => n.id === (e.from === detail.id ? e.to : e.from))!.t).join(", ")}</div>
             </>
           ) : (
             <>
