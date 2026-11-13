@@ -36,7 +36,8 @@ test("inventory uses live portal exports, chips, component helper, and all sourc
   assert.ok(inventory.resources.some((item) => item.url === aws.replace("example", "concepts-telephony")));
   assert.ok(inventory.resources.some((item) => item.entries.some((entry) => entry.source.includes('COMPONENT_DOCUMENTATION["Corporate MFA policies"]'))));
   assert.ok(inventory.resources.some((item) => item.entries.some((entry) => entry.source.includes("APP_GUIDE_URL"))));
-  assert.ok(inventory.excluded.some((entry) => entry.source.includes('RESOURCES["gtm"]')));
+  assert.ok(!inventory.excluded.some((entry) => entry.source.includes('RESOURCES["gtm"]')),
+    "private GTM data was moved server-side and must not be imported by the public resource inventory");
   assert.ok(inventory.resources.every((item) => publicDocumentationUrl(item.url)));
   const components = inventory.resources.find((item) => item.entries.some((entry) => entry.source.endsWith("LINKS.components")));
   assert.ok(components.entries.length >= 4, "duplicate and fragment references retained");

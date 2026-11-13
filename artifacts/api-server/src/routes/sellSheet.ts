@@ -9,7 +9,7 @@ const storage = new ObjectStorageService();
 // Protect both the readable guide and the raw PDF on the server, not only in UI.
 router.use("/sell-sheet", (req, res, next) => {
   res.setHeader("Cache-Control", "private, no-store");
-  res.setHeader("Vary", "Cookie, Authorization");
+  res.vary("Cookie, Authorization, X-Depot-Mode");
   res.setHeader("X-Robots-Tag", "noindex, nofollow, noarchive");
   if (!req.isAuthenticated()) {
     res.status(401).json({ error: "Sign-in is required to access this internal sales guide." });

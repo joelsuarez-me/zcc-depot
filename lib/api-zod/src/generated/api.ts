@@ -9,6 +9,64 @@ import * as zod from 'zod';
 
 
 /**
+ * @summary Authenticated presenter-only notes and preserved internal enablement
+ */
+export const GetPresenterContentHeader = zod.object({
+  "X-Depot-Mode": zod.enum(['presenter'])
+})
+
+export const GetPresenterContentResponse = zod.object({
+  "legacy": zod.object({
+  "roadmap": zod.object({
+  "executive": zod.array(zod.object({
+  "when": zod.string(),
+  "t": zod.string(),
+  "d": zod.string(),
+  "items": zod.array(zod.string())
+})),
+  "technical": zod.array(zod.object({
+  "when": zod.string(),
+  "t": zod.string(),
+  "d": zod.string(),
+  "items": zod.array(zod.string())
+})),
+  "internal": zod.array(zod.object({
+  "when": zod.string(),
+  "t": zod.string(),
+  "d": zod.string(),
+  "items": zod.array(zod.string())
+}))
+}),
+  "gtm": zod.array(zod.object({
+  "t": zod.string(),
+  "body": zod.string(),
+  "list": zod.array(zod.string())
+})),
+  "briefing": zod.array(zod.string()),
+  "resources": zod.array(zod.object({
+  "id": zod.string(),
+  "title": zod.string(),
+  "url": zod.string(),
+  "category": zod.string(),
+  "kind": zod.string()
+}))
+}),
+  "rooms": zod.array(zod.object({
+  "id": zod.string(),
+  "title": zod.string(),
+  "speakerNotes": zod.array(zod.string()),
+  "technicalPoints": zod.array(zod.string()),
+  "discoveryQuestions": zod.array(zod.string()),
+  "objections": zod.array(zod.object({
+  "question": zod.string(),
+  "answer": zod.string()
+})),
+  "progression": zod.array(zod.string())
+}))
+})
+
+
+/**
  * @summary List shared saved research reports for signed-in portal users
  */
 export const ListResearchReportsResponseItem = zod.object({

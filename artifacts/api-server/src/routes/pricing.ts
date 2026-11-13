@@ -6,7 +6,7 @@ const router: IRouter = Router();
 
 router.get("/pricing-guide", (req, res): void => {
   res.setHeader("Cache-Control", "private, no-store");
-  res.setHeader("Vary", "Cookie, Authorization");
+  res.vary("Cookie, Authorization, X-Depot-Mode");
   res.setHeader("X-Robots-Tag", "noindex, nofollow, noarchive");
   if (!req.isAuthenticated()) {
     res.status(401).json({ error: "Sign-in is required to access pricing and internal packaging guidance." });

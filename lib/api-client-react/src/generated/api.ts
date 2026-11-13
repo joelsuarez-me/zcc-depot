@@ -35,6 +35,7 @@ import type {
   ObjectAuthorizationInput,
   ObjectAuthorizationResult,
   PitchDeck,
+  PresenterContent,
   PricingGuide,
   ResearchCompany,
   ResearchCompanyInput,
@@ -74,6 +75,83 @@ const withQueryKey = <T extends object, K>(query: T, queryKey: K): T & { queryKe
   }
   return result;
 };
+
+export const getGetPresenterContentUrl = () => {
+
+
+
+
+  return `/api/presenter/content`
+}
+
+/**
+ * @summary Authenticated presenter-only notes and preserved internal enablement
+ */
+export const getPresenterContent = async ( options?: Parameters<typeof customFetch>[1]): Promise<PresenterContent> => {
+
+  return customFetch<PresenterContent>(getGetPresenterContentUrl(),
+  {
+    ...options,
+    method: 'GET'
+
+
+  }
+);}
+
+
+
+
+
+export const getGetPresenterContentQueryKey = () => {
+    return [
+    `/api/presenter/content`
+    ] as const;
+    }
+
+
+export const getGetPresenterContentQueryOptions = <TData = Awaited<ReturnType<typeof getPresenterContent>>, TError = ErrorType<void>>( options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getPresenterContent>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getGetPresenterContentQueryKey();
+
+
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof getPresenterContent>>> = ({ signal }) => getPresenterContent({ signal, ...requestOptions });
+
+
+
+
+
+   return  { queryKey, queryFn, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof getPresenterContent>>, TError, TData> & { queryKey: QueryKey }
+}
+
+export type GetPresenterContentQueryResult = NonNullable<Awaited<ReturnType<typeof getPresenterContent>>>
+export type GetPresenterContentQueryError = ErrorType<void>
+
+
+/**
+ * @summary Authenticated presenter-only notes and preserved internal enablement
+ */
+
+export function useGetPresenterContent<TData = Awaited<ReturnType<typeof getPresenterContent>>, TError = ErrorType<void>>(
+  options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getPresenterContent>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+
+ ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+
+  const queryOptions = getGetPresenterContentQueryOptions(options)
+
+  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
+
+  return withQueryKey(query, queryOptions.queryKey);
+}
+
+
+
+
+
+
 
 export const getListResearchReportsUrl = () => {
 

@@ -1,4 +1,5 @@
 import { useEffect } from "react";
+import { ProtectedDownload } from "@/components/protected-download";
 import { useAuth } from "@workspace/replit-auth-web";
 import { useGetSellSheet, getGetSellSheetQueryKey } from "@workspace/api-client-react";
 import { ArrowRight, Download, Lock, RotateCw, ShieldCheck, AlertTriangle } from "lucide-react";
@@ -122,10 +123,10 @@ export default function SellSheetPage() {
         lede="Signed-in internal guide for preparing customer conversations. Do not share externally.">
         <Badges />
         {data && (
-          <a href={data.pdfUrl} download data-testid="link-sellsheet-pdf"
+          <ProtectedDownload url={data.pdfUrl} filename="zcc-sell-sheet.pdf" data-testid="link-sellsheet-pdf"
             className="inline-flex items-center gap-2 rounded-full bg-[#F5F5F2] px-4 py-1.5 text-xs font-semibold text-[#203524] transition hover:bg-white/90">
             <Download className="h-3.5 w-3.5" aria-hidden /> Download source PDF
-          </a>
+          </ProtectedDownload>
         )}
       </PageHero>
 

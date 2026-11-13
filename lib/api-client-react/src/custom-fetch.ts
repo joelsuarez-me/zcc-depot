@@ -336,6 +336,15 @@ export async function customFetch<T = unknown>(
   }
 
   const headers = mergeHeaders(isRequest(input) ? input.headers : undefined, headersInit);
+  // Presentation intent is not authorization: the server also validates the
+  // authenticated session. Default to customer when browser storage is blocked.
+  if (typeof window !== "undefined") {
+    try {
+      headers.set("X-Depot-Mode", window.sessionStorage.getItem("zcc-depot:mode") === "presenter" ? "presenter" : "customer");
+    } catch {
+      headers.set("X-Depot-Mode", "customer");
+    }
+  }
 
   if (
     typeof init.body === "string" &&

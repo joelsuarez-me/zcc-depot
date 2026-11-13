@@ -3,7 +3,9 @@ import { useLocation } from "wouter";
 import { motion, AnimatePresence, useReducedMotion } from "framer-motion";
 import { Plus } from "lucide-react";
 import { Ext, Note, PageHero, Reveal, Section, SectionHead } from "@/components/kit";
-import { GTM, LINKS, OUTCOMES, USE_CASES } from "@/data/content";
+import { LINKS, OUTCOMES, USE_CASES } from "@/data/content";
+import { PresenterOnly } from "@/components/presenter";
+import { usePresenterContent } from "@/hooks/use-presenter-content";
 
 function Details({ q, children, testId }: { q: string; children: ReactNode; testId: string }) {
   return (
@@ -98,19 +100,29 @@ export default function Sales() {
         <Note>Sources: Zendesk Contact Center pitch deck customer proof slides and the commissioned Forrester Consulting study. Confirm approved public-use wording before external distribution.</Note>
       </Section>
 
-      <Section>
-        <SectionHead id="guidance" num="06" eyebrow="Presentation guidance · internal" title="Level 1 Foundation seller reference" lede="Recognize customer pain, tell the platform story, qualify early fit, and bring in the right specialists." />
-        <div className="rounded-[2rem] border border-[#11110D]/10 bg-[#FBFBF8] px-6 md:px-10">
-          {GTM.map((g, k) => (
-            <Details key={g.t} q={g.t} testId={`gtm-${k}`}>
-              <p>{g.body}</p>
-              <ul className="mt-4 space-y-2">{g.list.map((x) => <li key={x} className="flex gap-3"><span className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-[#203524]" />{x}</li>)}</ul>
-            </Details>
-          ))}
-          <div className="py-5"><Ext href={LINKS.gtmDoc} className="text-sm font-semibold underline" testId="link-gtm-doc">Open the internal GTM guide (Zendesk access required)</Ext></div>
-        </div>
-        <Note>Internal enablement summary; verify current commercial and implementation details before customer commitments.</Note>
-      </Section>
+      <PresenterOnly title="Internal seller reference"><GuidanceSection /></PresenterOnly>
     </>
+  );
+}
+
+function GuidanceSection() {
+  const { data, isLoading, isError, refetch } = usePresenterContent();
+  const gtmDoc = data?.legacy.resources.find((r) => r.id === "gtm");
+  return (
+    <Section>
+      <SectionHead id="guidance" eyebrow="Presentation guidance · internal" title="Level 1 Foundation seller reference" lede="Recognize customer pain, tell the platform story, qualify early fit, and bring in the right specialists." />
+      <div className="rounded-[2rem] border border-[#11110D]/10 bg-[#FBFBF8] px-6 md:px-10">
+        {isLoading && <div className="space-y-3 py-6" aria-busy="true">{[0, 1, 2].map((k) => <div key={k} className="h-10 animate-pulse rounded-xl bg-[#11110D]/6" />)}</div>}
+        {(isError || (!isLoading && !data)) && <p className="py-6 text-sm">Guidance could not be loaded. <button type="button" className="underline" onClick={() => void refetch()} data-testid="button-guidance-retry">Retry</button></p>}
+        {data?.legacy.gtm.map((g, k) => (
+          <Details key={g.t} q={g.t} testId={`gtm-${k}`}>
+            <p>{g.body}</p>
+            <ul className="mt-4 space-y-2">{g.list.map((x) => <li key={x} className="flex gap-3"><span className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-[#11110D]" />{x}</li>)}</ul>
+          </Details>
+        ))}
+        {gtmDoc && <div className="py-5"><Ext href={gtmDoc.url} className="text-sm font-semibold underline" testId="link-gtm-doc">Open the internal GTM guide (Zendesk access required)</Ext></div>}
+      </div>
+      <Note>Internal enablement summary; verify current commercial and implementation details before customer commitments.</Note>
+    </Section>
   );
 }

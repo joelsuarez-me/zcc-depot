@@ -15,7 +15,7 @@ export function createPitchDeckRouter(load: Download = download): IRouter {
   const router = Router();
   router.use("/pitch-deck", (req, res, next) => {
     res.setHeader("Cache-Control", "private, no-store");
-    res.setHeader("Vary", "Cookie, Authorization");
+    res.vary("Cookie, Authorization, X-Depot-Mode");
     res.setHeader("X-Robots-Tag", "noindex, nofollow, noarchive");
     if (!req.isAuthenticated()) {
       res.status(401).json({ error: "Sign in to view and download the uploaded pitch deck." }); return;

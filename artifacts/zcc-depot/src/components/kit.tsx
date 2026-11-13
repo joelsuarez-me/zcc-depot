@@ -1,14 +1,17 @@
-import { useEffect, useState, type ReactNode } from "react";
+import { useEffect, useRef, useState, type ReactNode } from "react";
 import { Link, useLocation } from "wouter";
 import { motion, useReducedMotion } from "framer-motion";
-import { ArrowUpRight, Menu, X, PlayCircle } from "lucide-react";
+import { ArrowUpRight, PlayCircle } from "lucide-react";
 import { DEMO_URL, LINKS } from "@/data/content";
 import { NAV } from "@/data/navigation";
 import { HeroArt, RouteBadge, SectionGlyph, type Motif } from "@/components/art";
 import { SearchTrigger } from "@/components/global-search";
-import { MobileNavigationLinks, PrimaryNavigation } from "@/components/header-navigation";
+import { DepotSidebar, DepotTopbar } from "@/components/depot-shell";
+import { useDepot } from "@/lib/depot-mode";
+import { ROUTE_LABELS } from "@/data/depot-rooms";
 import { SectionNavigation } from "@/components/section-navigation";
 import { SectionLink } from "@/components/section-link";
+import { Sheet, SheetContent, SheetDescription, SheetTitle } from "@/components/ui/sheet";
 
 const logo = `${import.meta.env.BASE_URL}brand/zendesk-monochrome-padded.png`;
 
@@ -130,14 +133,11 @@ function useHashScroll() {
 export function Shell({ children }: { children: ReactNode }) {
   const [loc] = useLocation();
   const [open, setOpen] = useState(false);
-  const [scrolled, setScrolled] = useState(false);
+  const menuButtonRef = useRef<HTMLButtonElement>(null);
+  const { sidebarCollapsed, pushRecent } = useDepot();
   useHashScroll();
   useEffect(() => setOpen(false), [loc]);
-  useEffect(() => {
-    const f = () => setScrolled(window.scrollY > 24);
-    f(); window.addEventListener("scroll", f, { passive: true });
-    return () => window.removeEventListener("scroll", f);
-  }, []);
+  useEffect(() => { if (ROUTE_LABELS[loc]) pushRecent(loc); }, [loc]); // eslint-disable-line react-hooks/exhaustive-deps
   useEffect(() => {
     if (!open) return;
     const k = (e: KeyboardEvent) => e.key === "Escape" && setOpen(false);
@@ -146,32 +146,22 @@ export function Shell({ children }: { children: ReactNode }) {
   }, [open]);
 
   return (
-    <div className="min-h-[100dvh]">
+    <div className={`depot-shell min-h-[100dvh] ${sidebarCollapsed ? "is-collapsed" : ""}`}>
       <a href="#main" className="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-[200] focus:rounded-full focus:bg-[#D1F470] focus:px-4 focus:py-2 focus:text-[#11110D]">Skip to content</a>
-      <header className="fixed inset-x-0 top-0 z-50 px-3 pt-3 md:px-6">
-        <div className="pointer-events-none absolute inset-x-0 top-0 h-[4.75rem] bg-[#FDFDFB]" aria-hidden style={{ opacity: scrolled ? 0 : 1 }} />
-        <div className={`relative z-10 mx-auto flex max-w-7xl items-center justify-between rounded-full border px-3 py-2 transition-all duration-300 md:px-4 ${scrolled || open ? "border-[#11110D]/10 bg-[#F5F5F2]/90 shadow-[0_10px_30px_-12px_rgba(32,53,36,.35)] backdrop-blur-md" : "border-transparent bg-[#FDFDFB]"}`}>
-          <Link href="/" className="flex shrink-0 items-center rounded-xl pl-1 pr-2" data-testid="link-home-logo">
-            <img src={logo} alt="Zendesk" className="h-11 w-14 rounded-lg bg-[#11110D] object-contain" />
-          </Link>
-          <PrimaryNavigation />
-          <div className="flex items-center gap-2">
-            <SearchTrigger />
-            <button type="button" onClick={() => setOpen((o) => !o)} aria-expanded={open} aria-controls="mobile-nav" aria-label={open ? "Close menu" : "Open menu"}
-              data-testid="button-mobile-menu" className="grid h-11 w-11 place-items-center rounded-full bg-[#203524] text-[#D1F470] ring-1 ring-[#D1F470]/20 transition-colors hover:bg-[#2b4630] xl:hidden">
-              {open ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
-            </button>
-          </div>
-        </div>
-        {open && (
-          <nav id="mobile-nav" aria-label="Mobile" className="mx-auto mt-2 max-h-[calc(100dvh-100px)] max-w-7xl overflow-y-auto rounded-3xl border border-[#11110D]/10 bg-[#F5F5F2] p-3 shadow-xl xl:hidden">
-            <MobileNavigationLinks onNavigate={() => setOpen(false)} />
-            <div className="p-2 pt-3"><DemoButton testId="button-mobile-demo" /></div>
-          </nav>
-        )}
-      </header>
-      <main id="main" tabIndex={-1} className="outline-none">{children}</main>
-      <Footer />
+      <DepotSidebar logo={logo} />
+      <Sheet open={open} onOpenChange={setOpen}>
+        <SheetContent side="left" className="depot-mobile-drawer z-[90] flex w-[min(20rem,86vw)] flex-col border-0 bg-[#11110D] p-0 [&>button]:text-[#D1F470]"
+          onCloseAutoFocus={event => { event.preventDefault(); menuButtonRef.current?.focus(); }}>
+          <SheetTitle className="sr-only">Depot navigation</SheetTitle>
+          <SheetDescription className="sr-only">Choose a demo room or an existing portal resource.</SheetDescription>
+          <DepotSidebar logo={logo} mobile onNavigate={() => setOpen(false)} />
+        </SheetContent>
+      </Sheet>
+      <div className="depot-content">
+        <DepotTopbar onMenu={() => setOpen(true)} menuButtonRef={menuButtonRef} search={<SearchTrigger />} />
+        <main id="main" tabIndex={-1} className="depot-main outline-none">{children}</main>
+        <Footer />
+      </div>
       <SectionNavigation />
     </div>
   );

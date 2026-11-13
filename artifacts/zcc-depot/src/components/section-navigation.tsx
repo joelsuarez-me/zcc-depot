@@ -18,9 +18,10 @@ function readStops() {
   const max = Math.max(0, document.documentElement.scrollHeight - window.innerHeight);
   const elements = sectionTargets(main);
   const footer = document.querySelector("footer");
+  const offset = window.innerWidth < 1024 ? 128 : 80;
   return sectionStops([
-    ...elements.map(element => documentTop(element) - 96),
-    ...(footer ? [documentTop(footer) - 96] : []),
+    ...elements.map(element => documentTop(element) - offset),
+    ...(footer ? [documentTop(footer) - offset] : []),
   ], max);
 }
 

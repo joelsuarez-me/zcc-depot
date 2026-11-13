@@ -17,6 +17,23 @@ tags:
   - name: Storage
     description: Object storage upload and serving endpoints.
 paths:
+  /presenter/content:
+    get:
+      operationId: getPresenterContent
+      summary: Authenticated presenter-only notes and preserved internal enablement
+      parameters:
+        - in: header
+          name: X-Depot-Mode
+          required: true
+          schema: { type: string, enum: [presenter] }
+      responses:
+        "200":
+          description: Server-authorized presenter content; never public-cacheable.
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/PresenterContent" }
+        "401": { description: Sign-in required. }
+        "403": { description: Presenter mode required. }
   /demo-research/saved:
     get:
       operationId: listResearchReports
@@ -710,6 +727,66 @@ components:
       schema:
         type: string
   schemas:
+    PresenterRoadmapItem:
+      type: object
+      required: [when, t, d, items]
+      properties:
+        when: { type: string }
+        t: { type: string }
+        d: { type: string }
+        items: { type: array, items: { type: string } }
+    PresenterGtmItem:
+      type: object
+      required: [t, body, list]
+      properties:
+        t: { type: string }
+        body: { type: string }
+        list: { type: array, items: { type: string } }
+    PresenterResource:
+      type: object
+      required: [id, title, url, category, kind]
+      properties:
+        id: { type: string }
+        title: { type: string }
+        url: { type: string }
+        category: { type: string }
+        kind: { type: string }
+    PresenterObjection:
+      type: object
+      required: [question, answer]
+      properties:
+        question: { type: string }
+        answer: { type: string }
+    PresenterRoom:
+      type: object
+      required: [id, title, speakerNotes, technicalPoints, discoveryQuestions, objections, progression]
+      properties:
+        id: { type: string }
+        title: { type: string }
+        speakerNotes: { type: array, items: { type: string } }
+        technicalPoints: { type: array, items: { type: string } }
+        discoveryQuestions: { type: array, items: { type: string } }
+        objections: { type: array, items: { $ref: "#/components/schemas/PresenterObjection" } }
+        progression: { type: array, items: { type: string } }
+    PresenterContent:
+      type: object
+      required: [legacy, rooms]
+      properties:
+        legacy:
+          type: object
+          required: [roadmap, gtm, briefing, resources]
+          properties:
+            roadmap:
+              type: object
+              required: [executive, technical, internal]
+              properties:
+                executive: { type: array, items: { $ref: "#/components/schemas/PresenterRoadmapItem" } }
+                technical: { type: array, items: { $ref: "#/components/schemas/PresenterRoadmapItem" } }
+                internal: { type: array, items: { $ref: "#/components/schemas/PresenterRoadmapItem" } }
+            gtm: { type: array, items: { $ref: "#/components/schemas/PresenterGtmItem" } }
+            briefing: { type: array, items: { type: string } }
+            resources: { type: array, items: { $ref: "#/components/schemas/PresenterResource" } }
+        rooms: { type: array, items: { $ref: "#/components/schemas/PresenterRoom" } }
     DemoNarrationPreferences:
       type: object
       additionalProperties: false

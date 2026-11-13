@@ -4,6 +4,8 @@ import { useAuth } from "@workspace/replit-auth-web";
 import { useGetPitchDeck, getGetPitchDeckQueryKey, type PitchSlide } from "@workspace/api-client-react";
 import { ChevronLeft, ChevronRight, Download, Expand, Lock, RotateCw, X, ImageOff, Presentation } from "lucide-react";
 import { Section, SectionHead } from "@/components/kit";
+import { useProtectedObjectUrl } from "@/lib/protected-asset";
+import { ProtectedDownload } from "@/components/protected-download";
 
 function SlideImage({ slide, eager, className = "" }: { slide: PitchSlide; eager?: boolean; className?: string }) {
   const [broken, setBroken] = useState(false);
@@ -25,7 +27,14 @@ function SlideImage({ slide, eager, className = "" }: { slide: PitchSlide; eager
       </div>
     );
   }
-  const src = attempt ? `${slide.imageUrl}${slide.imageUrl.includes("?") ? "&" : "?"}r=${attempt}` : slide.imageUrl;
+  const raw = attempt ? `${slide.imageUrl}${slide.imageUrl.includes("?") ? "&" : "?"}r=${attempt}` : slide.imageUrl;
+  return <ProtectedSlide raw={raw} slide={slide} eager={eager} className={className} loaded={loaded} setLoaded={setLoaded} setBroken={setBroken} />;
+}
+
+function ProtectedSlide({ raw, slide, eager, className, loaded, setLoaded, setBroken }: { raw: string; slide: PitchSlide; eager?: boolean; className: string; loaded: boolean; setLoaded: (v: boolean) => void; setBroken: (v: boolean) => void }) {
+  const { src, error } = useProtectedObjectUrl(raw);
+  useEffect(() => { if (error) setBroken(true); }, [error, setBroken]);
+  if (!src) return <div className="absolute inset-0 animate-pulse bg-[#203524]/8" aria-hidden />;
   return (
     <>
       {!loaded && <div className="absolute inset-0 animate-pulse bg-[#203524]/8" aria-hidden />}
@@ -116,9 +125,9 @@ function Viewer({ slides, title, pdfUrl }: { slides: PitchSlide[]; title: string
           <button ref={expandBtn} type="button" onClick={() => setFull(true)} className="inline-flex items-center gap-1.5 rounded-full border border-[#11110D]/15 px-4 py-2.5 text-sm font-semibold hover:border-[#203524]" data-testid="button-expand-deck">
             <Expand className="h-4 w-4" aria-hidden />Expand
           </button>
-          <a href={pdfUrl} download target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1.5 rounded-full bg-[#D1F470] px-4 py-2.5 text-sm font-semibold text-[#11110D]" data-testid="link-download-deck-pdf">
+          <ProtectedDownload url={pdfUrl} filename={`${title}.pdf`} className="inline-flex items-center gap-1.5 rounded-full bg-[#D1F470] px-4 py-2.5 text-sm font-semibold text-[#11110D]" data-testid="link-download-deck-pdf">
             <Download className="h-4 w-4" aria-hidden />Download PDF<span className="sr-only"> ({n} slides)</span>
-          </a>
+          </ProtectedDownload>
         </div>
       </div>
 

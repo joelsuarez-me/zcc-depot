@@ -5,6 +5,60 @@
  * API specification
  * OpenAPI spec version: 0.1.0
  */
+export interface PresenterRoadmapItem {
+  when: string;
+  t: string;
+  d: string;
+  items: string[];
+}
+
+export interface PresenterGtmItem {
+  t: string;
+  body: string;
+  list: string[];
+}
+
+export interface PresenterResource {
+  id: string;
+  title: string;
+  url: string;
+  category: string;
+  kind: string;
+}
+
+export interface PresenterObjection {
+  question: string;
+  answer: string;
+}
+
+export interface PresenterRoom {
+  id: string;
+  title: string;
+  speakerNotes: string[];
+  technicalPoints: string[];
+  discoveryQuestions: string[];
+  objections: PresenterObjection[];
+  progression: string[];
+}
+
+export type PresenterContentLegacyRoadmap = {
+  executive: PresenterRoadmapItem[];
+  technical: PresenterRoadmapItem[];
+  internal: PresenterRoadmapItem[];
+};
+
+export type PresenterContentLegacy = {
+  roadmap: PresenterContentLegacyRoadmap;
+  gtm: PresenterGtmItem[];
+  briefing: string[];
+  resources: PresenterResource[];
+};
+
+export interface PresenterContent {
+  legacy: PresenterContentLegacy;
+  rooms: PresenterRoom[];
+}
+
 export interface DemoNarrationVoiceChoices {
   /**
      * @minLength 1

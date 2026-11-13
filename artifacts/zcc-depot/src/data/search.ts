@@ -1,6 +1,7 @@
 import { DEMO_URL, FAQ, FEATURES, RESOURCES, USE_CASES } from "@/data/content";
 import { VIDEO_HIGHLIGHTS, WALKTHROUGH_URL } from "@/data/video-highlights";
 import { BLUEPRINT_DESCRIPTION } from "@/data/demo-blueprint";
+import { ROOMS } from "@/data/depot-rooms";
 
 export type SearchGroup = "Pages" | "Sections" | "Features" | "Use cases" | "FAQ" | "Video highlights" | "Resources";
 export type SearchEntry = { id: string; group: SearchGroup; title: string; description: string; keywords?: string; href: string; external?: boolean };
@@ -49,16 +50,15 @@ const SECTIONS: SearchEntry[] = [
   sec("component-app", "Contact Center app · Architecture panel", "/architecture#component-app", "Core component panel: the Zendesk-built agent interface for calls, messages, and dashboards.", "agent interface omnichannel AI tools supervisor dashboard call controls"),
   sec("component-identity", "Identity and sign-in · Architecture panel", "/architecture#component-identity", "Core component panel: Cognito user accounts, Zendesk SAML sign-in, and the corporate identity provider.", "Cognito user pool SAML 2.0 SSO corporate MFA policies IdP Okta Entra Google Workspace"),
   sec("component-cloudformation", "CloudFormation · Architecture panel", "/architecture#component-cloudformation", "Core component panel: automated AWS resource deployment, permissions, and stack lifecycle.", "automated setup AWS permissions stack lifecycle IAM roles Lambda functions streaming connections infrastructure template"),
-  sec("collaboration", "Latest news · Agent-to-Agent collaboration", "/resources#collaboration", "Specialist AI agent delegation and handoffs in Amazon Connect.", "internal briefing orchestrator agents"),
   sec("use-cases", "Use cases", "/sales#use-cases", "Customer scenarios and outcomes.", "scenarios value"),
   sec("outcomes", "Customer outcomes", "/sales#outcomes", "Proof points from customers.", "stats TELUS SupportZebra Good Meal"),
   sec("faq", "FAQ", "/resources#faq", "Common customer questions.", "questions"),
-  sec("roadmap", "Roadmap · confidential", "/resources#roadmap", "Executive, technical, and internal roadmap views.", "2026 future"),
-  sec("guidance", "Presenter guidance", "/sales#guidance", "GTM guide: discovery, positioning, objections.", "gtm qualification pricing"),
   sec("library", "Resource library", "/resources#library", "Browse and filter the official documentation collection.", "documentation articles"),
 ];
 
 export const SEARCH_INDEX: SearchEntry[] = [
+  ...ROOMS.map((r) => page(`room-${r.id}`, `Room ${r.n} · ${r.title}`, r.href, r.summary, `room ${r.audience}`)),
+  ...ROOMS.flatMap((r) => r.sections.map((x) => sec(`room-${r.id}-${x.id}`, `${x.label} · ${r.title}`, `${r.href}#${x.id}`, r.summary, "room"))),
   ...PAGES,
   ...SECTIONS,
   ...FEATURES.map((f, i) => ({ id: `feature-${i}`, group: "Features" as const, title: f.t, description: f.d, keywords: f.tag, href: "/#features" })),

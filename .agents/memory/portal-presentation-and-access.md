@@ -37,11 +37,13 @@ Every content section needs a direct URL.
 
 **How to apply:** Preserve stable fragment IDs and visible permalink controls when adding or moving sections. Keep saved-agenda identifiers in shared URLs, and redirect old section links when content moves.
 
-The Sell Sheet, its source PDF, and the full Pricing guide require sign-in.
+The Sell Sheet, its source PDF, the full Pricing guide and internal enablement require sign-in and explicit Presenter mode.
 
 **Why:** The PDF is marked Internal Only. The Pricing guide combines public prices with internal packaging guidance and an internal source link. The user explicitly selected signed-in access for both guides.
 
-**How to apply:** Protect content and document bytes on the server, not merely by hiding the page. Public search may link to the sign-in gate but must not include the confidential guide text.
+**How to apply:** Protect content and document bytes on the server, not merely by hiding the page. Public search may link to the sign-in gate but must not include the confidential guide text. Customer mode is the presentation-safe default: speaker notes, competitive positioning, historical roadmaps and internal briefings must not be embedded in frontend bundles or returned to Customer-mode requests. A mode toggle is not authentication; preserve the existing shared signed-in audience rather than claiming an unimplemented employee/domain restriction.
+
+**Why for Presenter mode:** The Depot modernization brief explicitly required Customer/Presenter separation with server-side authorization, not just visual hiding.
 
 Saved demo research reports are shared with all signed-in portal users.
 

@@ -1,6 +1,8 @@
 import { BookOpen, RefreshCw, ThumbsUp } from "lucide-react";
 import { Ext, Note, Reveal, Section, SectionHead } from "@/components/kit";
 import { LINKS } from "@/data/content";
+import { PresenterOnly } from "@/components/presenter";
+import { usePresenterContent } from "@/hooks/use-presenter-content";
 
 export function AgentKnowledgeSection() {
   return (
@@ -39,30 +41,28 @@ export function AgentKnowledgeSection() {
   );
 }
 
+function BriefingBody() {
+  const { data, isLoading, isError, refetch } = usePresenterContent();
+  if (isLoading) return <div className="space-y-3" aria-busy="true">{[0, 1, 2, 3].map((k) => <div key={k} className="h-14 animate-pulse rounded-2xl bg-[#F5F5F2]/8" />)}</div>;
+  if (isError || !data) return <p className="text-sm text-[#F5F5F2]/70">Briefing could not be loaded. <button type="button" className="underline" onClick={() => void refetch()} data-testid="button-briefing-retry">Retry</button></p>;
+  const [lead, ...rest] = data.legacy.briefing;
+  return (
+    <>
+      <p className="mb-6 text-lg text-[#F5F5F2]/85">{lead}</p>
+      <ol className="grid gap-3 md:grid-cols-2">
+        {rest.map((line, k) => <li key={k} className="rounded-2xl border border-[#F5F5F2]/12 p-5 text-sm leading-relaxed text-[#F5F5F2]/80" data-testid={`text-briefing-${k}`}><span className="mono mr-2 text-xs text-[#D1F470]">{String(k + 1).padStart(2, "0")}</span>{line}</li>)}
+      </ol>
+    </>
+  );
+}
+
 export function LatestNewsSection() {
   return (
-    <Section tone="ink">
-      <SectionHead id="collaboration" num="06" eyebrow="Latest news · per internal briefing" dark title={<>Agent-to-Agent collaboration <span className="serif italic text-[#D1F470]">in Amazon Connect</span></>}
-        lede="Per the source briefing, AWS launched A2A collaboration (GA, Customer tier), bringing specialist AI agents into live customer contacts under a Connect orchestrator." />
-      <p className="mb-8 rounded-2xl border border-[#D1F470]/30 p-4 text-sm text-[#F5F5F2]/75"><strong className="text-[#D1F470]">Terminology:</strong> A2A here means AI-agent collaboration, not a human agent-to-agent transfer. Connect adds voice streaming, session continuity, and built-in observability to the open A2A protocol.</p>
-      <div className="grid gap-3 md:grid-cols-4">
-        {[["Live contact", "Customer calls Amazon Connect"], ["Connect AI orchestrator", "Chooses whether and when to involve a specialist"], ["Specialist collaborator", "Connect, Bedrock AgentCore, or a compliant external agent"], ["Resolution path", "Return to orchestrator or escalate through the contact flow"]].map(([t, d], k) => (
-          <div key={t} className="relative rounded-2xl border border-[#F5F5F2]/12 p-5"><div className="mono text-xs text-[#D1F470]">0{k + 1}</div><div className="mt-2 font-semibold">{t}</div><p className="mt-1 text-sm text-[#F5F5F2]/60">{d}</p></div>
-        ))}
-      </div>
-      <div className="mt-4 grid gap-4 md:grid-cols-2">
-        {[["Mode 01", "Delegate behind the scenes", "The orchestrator stays with the customer while a specialist handles a focused task, such as a fraud risk assessment, then returns a result."], ["Mode 02", "Hand off to a specialist", "The collaborator speaks with the customer for a multi-turn task, then returns control with a completion or escalation outcome."]].map(([m, t, d]) => (
-          <div key={m} className="rounded-3xl bg-[#203524] p-7"><div className="eyebrow text-[#D1F470]">{m}</div><h3 className="mt-3 text-xl font-semibold">{t}</h3><p className="mt-2 text-[#F5F5F2]/70">{d}</p></div>
-        ))}
-      </div>
-      <div className="mt-8 rounded-3xl bg-[#F5F5F2] p-7 text-[#11110D]">
-        <div className="eyebrow text-[#203524]">What it means for Zendesk Contact Center</div>
-        <p className="mt-3 text-lg">ZCC runs on Amazon Connect, so A2A could fit its voice foundation. Open design questions: account tier, API configuration ownership, context transfer, reporting, and commercial model.</p>
-        <div className="mt-5 grid gap-3 md:grid-cols-3">
-          {[["Availability", "Confirm Connect Customer tier eligibility and regional rollout."], ["Orchestration", "Decide which agent leads and whether Zendesk AI or Forethought should be explored as a collaborator."], ["Context + controls", "Design ticket-data access, trace reporting, human escalation, and combined AI-cost visibility."]].map(([t, d]) => <div key={t} className="rounded-2xl border border-[#11110D]/10 p-4"><div className="font-semibold">{t}</div><p className="mt-1 text-sm text-[#11110D]/65">{d}</p></div>)}
-        </div>
-      </div>
-      <p className="mt-6 text-xs text-[#F5F5F2]/50">Based on an internal A2A briefing; dates and tiers as stated there. Zendesk AI and Forethought collaborator paths require product and technical validation and are not presented as current integrations.</p>
-    </Section>
+    <PresenterOnly title="Internal briefing">
+      <Section tone="ink">
+        <SectionHead id="collaboration" eyebrow="Latest news · per internal briefing" dark title={<>Agent-to-Agent collaboration <span className="serif italic text-[#D1F470]">in Amazon Connect</span></>} />
+        <BriefingBody />
+      </Section>
+    </PresenterOnly>
   );
 }

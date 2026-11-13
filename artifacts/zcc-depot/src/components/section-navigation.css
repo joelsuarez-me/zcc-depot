@@ -1,15 +1,33 @@
-/* All phone routes share the header's unused middle space. Keep 44px arrow
-   targets clear of the logo, search and menu; never float over reading content.
-   Section headings retain their own permalinks. The extra rail link remains on
-   desktop, where the default left-side placement is unchanged. */
-@media (max-width:767px){
+/* The Depot shell has no spare space inside its top bar. Reserve a separate
+   navigation strip rather than covering breadcrumbs or reading content. */
+@media (max-width:1023px){
+  .depot-shell .depot-topbar{z-index:45}
+  .depot-main{padding-top:64px}
   .section-navigation{
     --section-nav-bottom:auto;
-    top:15px;
-    left:calc(50% - .75rem);
-    transform:translateX(-50%);
+    top:60px;
+    left:0;
+    right:0;
+    height:56px;
+    border:0;
+    border-bottom:1px solid rgba(17,17,13,.1);
+    border-radius:0;
+    box-shadow:none;
+    background:#F5F5F2;
+    color:#203524;
+    justify-content:center;
     flex-direction:row;
-    z-index:60;
+    z-index:40;
   }
   .section-navigation [data-testid="link-current-section"]{display:none}
+  .depot-shell [data-section-nav]{scroll-margin-top:132px}
+}
+@media (min-width:1024px){
+  .depot-shell .depot-main{padding-left:64px}
+  .depot-shell .section-navigation{
+    left:calc(var(--sbw) + 6px);
+    top:50%;
+    bottom:auto!important;
+    transform:translateY(-50%);
+  }
 }
