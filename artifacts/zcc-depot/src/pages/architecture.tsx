@@ -1,9 +1,10 @@
 import { useEffect, useState } from "react";
 import { Link, useLocation } from "wouter";
 import { ArrowRight, RefreshCw } from "lucide-react";
-import { Ext, Note, PageHero, Reveal, Section, SectionHead } from "@/components/kit";
-import { CORE_COMPONENTS, LAMBDAS, LINKS } from "@/data/content";
+import { Ext, Note, PageHero, Section, SectionHead } from "@/components/kit";
+import { COMPONENT_DOCUMENTATION, LAMBDAS, LINKS } from "@/data/content";
 import { SystemDataFlow } from "@/components/system-data-flow";
+import { ComponentShowcase } from "@/components/component-showcase";
 
 function Lambdas() {
   const [tab, setTab] = useState<"deployment" | "runtime">("runtime");
@@ -55,7 +56,7 @@ export default function Architecture() {
   }, [navigate]);
 
   return (
-    <>
+    <div className="architecture-page">
       <PageHero eyebrow="Architecture · Interactive explanations" title={<>Two clouds. <span className="serif italic text-[#D1F470]">Connected service paths.</span></>}
         lede="Amazon Connect handles the call and routing. Zendesk Contact Center brings call controls and customer context into the agent workspace. Here is how to explain everything in between.">
         <a href="#data-flow" className="rounded-full border border-[#F5F5F2]/20 px-4 py-2 text-sm hover:border-[#D1F470] hover:text-[#D1F470]" data-testid="link-jump-data-flow">System + data flow</a>
@@ -85,16 +86,7 @@ export default function Architecture() {
           <div className="eyebrow text-[#203524]">Customer data boundary</div>
           <p className="mt-2 text-lg">Contact Center is deployed in the customer's AWS environment. Zendesk's guide says call recordings, customer information, and other Contact Center data stay in that AWS account.</p>
         </div>
-        <div className="grid gap-4 md:grid-cols-2">
-          {CORE_COMPONENTS.map((c, k) => (
-            <Reveal key={c.n} delay={k * 0.05} className="rounded-3xl border border-[#11110D]/10 bg-[#FBFBF8] p-7">
-              <div className="mono text-sm text-[#203524]/50">{c.n}</div>
-              <h3 className="mt-3 text-xl font-semibold">{c.t}</h3>
-              <p className="mt-2 leading-relaxed text-[#11110D]/70">{c.d}</p>
-              <div className="mt-4 flex flex-wrap gap-2">{c.chips.map((x) => <span key={x} className="rounded-full bg-[#203524]/8 px-3 py-1 text-xs">{x}</span>)}</div>
-            </Reveal>
-          ))}
-        </div>
+        <ComponentShowcase resources={COMPONENT_DOCUMENTATION} />
         <Lambdas />
         <div className="mt-6 flex gap-5 rounded-3xl bg-[#203524] p-7 text-[#F5F5F2]">
           <RefreshCw className="h-6 w-6 shrink-0 text-[#D1F470]" aria-hidden />
@@ -103,6 +95,6 @@ export default function Architecture() {
         <Note>Source: <Ext href={LINKS.components} className="underline">Understanding Contact Center components</Ext>. Exact resources and behavior depend on the deployed version and configuration.</Note>
       </Section>
 
-    </>
+    </div>
   );
 }

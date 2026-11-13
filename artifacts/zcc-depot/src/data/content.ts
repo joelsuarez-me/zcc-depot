@@ -107,7 +107,25 @@ export const CORE_COMPONENTS = [
   { n: "02", t: "Contact Center app", d: "A Zendesk-built web app that works with Connect. Agents use it for calls and messages, omnichannel workflows, AI-powered tools, and dashboards.", chips: ["Agent interface", "Omnichannel", "AI tools"] },
   { n: "03", t: "Identity and sign-in", d: "Amazon Cognito holds Contact Center user accounts for agents, supervisors, and admins. Zendesk acts as a SAML 2.0 identity provider for sign-in to Connect, Cognito, and the AWS console after users authenticate through their corporate identity provider.", chips: ["Cognito user pool", "SAML 2.0 SSO", "Corporate MFA policies"] },
   { n: "04", t: "CloudFormation", d: "Automates deployment of the AWS resources and permissions that connect the app and Connect, including Cognito, IAM roles, Lambda functions, and streaming connections.", chips: ["Automated setup", "AWS permissions", "Stack lifecycle"] },
-];
+] as const;
+
+export type ComponentTerm = (typeof CORE_COMPONENTS)[number]["chips"][number];
+/** Official, public destinations verified against the relevant documentation. */
+export const COMPONENT_DOCUMENTATION = {
+  Voice: "https://docs.aws.amazon.com/connect/latest/adminguide/concepts-telephony.html",
+  Chat: "https://docs.aws.amazon.com/connect/latest/adminguide/enable-chat-in-app.html",
+  Queues: "https://docs.aws.amazon.com/connect/latest/adminguide/concepts-queues-standard-and-agent.html",
+  "Contact flows": "https://docs.aws.amazon.com/connect/latest/adminguide/create-contact-flow.html",
+  "Agent interface": "https://support.zendesk.com/hc/en-us/articles/9696121449114",
+  Omnichannel: `${LINKS.components}#cc-app`,
+  "AI tools": LINKS.aiSuggestions,
+  "Cognito user pool": "https://docs.aws.amazon.com/cognito/latest/developerguide/cognito-user-identity-pools.html",
+  "SAML 2.0 SSO": "https://docs.aws.amazon.com/cognito/latest/developerguide/cognito-user-pools-saml-idp.html",
+  "Corporate MFA policies": `${LINKS.components}#zd-id-service`,
+  "Automated setup": "https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/Welcome.html",
+  "AWS permissions": "https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/using-iam-servicerole.html",
+  "Stack lifecycle": "https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/stacks.html",
+} as const satisfies Readonly<Record<ComponentTerm, string>>;
 
 export const LAMBDAS = {
   deployment: [

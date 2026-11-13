@@ -1,7 +1,8 @@
 import { useEffect, useRef, useState, type ReactNode } from "react";
 import { ArrowUpRight, Pause, Play } from "lucide-react";
-import { CORE_COMPONENTS } from "@/data/content";
+import { CORE_COMPONENTS, type ComponentTerm } from "@/data/content";
 import { SectionLink } from "@/components/section-link";
+import { componentDocumentation } from "@/lib/component-documentation";
 import "./component-showcase.css";
 
 type Comp = (typeof CORE_COMPONENTS)[number];
@@ -21,9 +22,9 @@ function useReduced() {
 /** True only while the element is on screen and the tab is visible. */
 function useLive<T extends Element>() {
   const ref = useRef<T>(null);
-  const [live, setLive] = useState(true);
+  const [live, setLive] = useState(false);
   useEffect(() => {
-    let vis = !document.hidden; let inView = true;
+    let vis = !document.hidden; let inView = false;
     const sync = () => setLive(vis && inView);
     const onVis = () => { vis = !document.hidden; sync(); };
     const io = new IntersectionObserver(([e]) => { inView = e.isIntersecting; sync(); }, { threshold: 0.1 });
@@ -45,10 +46,10 @@ function useAuto(count: number, running: boolean, ms: number) {
   return [i, setI] as const;
 }
 
-type IllProps = { running: boolean };
+type IllProps = { running: boolean; onInteract: () => void };
 
 /* ---------- Amazon Connect: contact routed through a flow into queues ---------- */
-function ConnectIll({ running }: IllProps) {
+function ConnectIll({ running, onInteract }: IllProps) {
   const [channel, setChannel] = useState<"voice" | "chat">("voice");
   const [stage, setStage] = useAuto(4, running, 1400);
   const labels = ["Contact arrives", "Contact flow runs", "Queue selected", "Routed to agent"];
@@ -81,29 +82,29 @@ function ConnectIll({ running }: IllProps) {
           <circle cx="336" cy={channel === "voice" ? 38 : 132} r="14" />
           <circle cx="336" cy={(channel === "voice" ? 38 : 132) - 3} r="4.5" className="cs-glyph-fill" />
         </g>
-        {running && <circle r="5" className="cs-pulse" style={{ offsetPath: `path("M42 85 H150 L182 85 C210 85 210 ${channel === "voice" ? 38 : 132} 236 ${channel === "voice" ? 38 : 132} H336")` }} />}
+        <circle r="5" className="cs-pulse" style={{ offsetPath: `path("M42 85 H150 L182 85 C210 85 210 ${channel === "voice" ? 38 : 132} 236 ${channel === "voice" ? 38 : 132} H336")` }} />
       </svg>
       <div className="cs-tools">
         <div className="cs-seg" role="group" aria-label="Illustrative channel">
           {(["voice", "chat"] as const).map((c) => (
-            <button key={c} type="button" aria-pressed={channel === c} onClick={() => { setChannel(c); setStage(0); }} data-testid={`button-connect-${c}`}>{c === "voice" ? "Voice" : "Chat"}</button>
+            <button key={c} type="button" aria-pressed={channel === c} onClick={() => { onInteract(); setChannel(c); setStage(0); }} data-testid={`button-connect-${c}`}>{c === "voice" ? "Voice" : "Chat"}</button>
           ))}
         </div>
-        <button type="button" className="cs-btn" onClick={() => setStage((s) => (s + 1) % 4)} data-testid="button-connect-step">Next: {labels[(stage + 1) % 4]}</button>
+        <button type="button" className="cs-btn" onClick={() => { onInteract(); setStage((s) => (s + 1) % 4); }} data-testid="button-connect-step">Next: {labels[(stage + 1) % 4]}</button>
       </div>
-      <p className="cs-caption" aria-live="polite">{labels[stage]}</p>
+      <p className="cs-caption" aria-live={running ? "off" : "polite"}>{labels[stage]}</p>
     </>
   );
 }
 
 /* ---------- Contact Center app: agent workspace with switchable surfaces ---------- */
-function AppIll({ running }: IllProps) {
+function AppIll({ running, onInteract }: IllProps) {
   const tabs = ["Call", "Messages", "Dashboard"] as const;
   const [t, setT] = useAuto(3, running, 2600);
   return (
     <>
-      <div className="cs-app" aria-hidden>
-        <div className="cs-app-bar"><i /><i /><i /><span>Agent Workspace</span></div>
+      <div className="cs-app-preview" aria-hidden>
+        <div className="cs-app-bar"><i /><i /><i /><span>Contact Center app</span></div>
         <div className="cs-app-body">
           <div className="cs-app-side">{tabs.map((x, k) => <span key={x} className={k === t ? "on" : ""} />)}</div>
           <div className="cs-app-main">
@@ -111,7 +112,7 @@ function AppIll({ running }: IllProps) {
               <div className="cs-app-call" key="c">
                 <div className="cs-wave">{Array.from({ length: 18 }).map((_, k) => <span key={k} style={{ animationDelay: `${(k % 6) * 0.11}s` }} />)}</div>
                 <div className="cs-app-row"><b>Live call</b><em>Hold</em><em>Transfer</em></div>
-                <div className="cs-app-ai">AI summary drafting</div>
+                <div className="cs-app-ai">AI guidance · when configured</div>
               </div>
             )}
             {t === 1 && (
@@ -130,21 +131,21 @@ function AppIll({ running }: IllProps) {
         </div>
       </div>
       <div className="cs-tools">
-        <div className="cs-seg" role="tablist" aria-label="Illustrative workspace view">
+        <div className="cs-seg" role="group" aria-label="Illustrative workspace view">
           {tabs.map((x, k) => (
-            <button key={x} type="button" role="tab" aria-selected={k === t} onClick={() => setT(k)} data-testid={`button-app-${x.toLowerCase()}`}>{x}</button>
+            <button key={x} type="button" aria-pressed={k === t} onClick={() => { onInteract(); setT(k); }} data-testid={`button-app-${x.toLowerCase()}`}>{x}</button>
           ))}
         </div>
       </div>
-      <p className="cs-caption" aria-live="polite">{["Calls with in-line controls and AI tools", "Omnichannel messaging in one place", "Dashboards for supervisors"][t]}</p>
+      <p className="cs-caption" aria-live={running ? "off" : "polite"}>{["Illustrative call controls; AI tools when configured", "Illustrative omnichannel inbox", "Illustrative supervisor dashboard"][t]}</p>
     </>
   );
 }
 
 /* ---------- Identity: corporate IdP -> Zendesk SAML IdP -> Connect / Cognito / console ---------- */
-function IdentityIll({ running }: IllProps) {
+function IdentityIll({ running, onInteract }: IllProps) {
   const [s, setS] = useAuto(4, running, 1500);
-  const steps = ["Corporate identity provider applies MFA", "Zendesk issues a SAML 2.0 assertion", "Signed in to Connect, Cognito and console", "Session established"];
+  const steps = ["Corporate identity provider applies configured MFA and access policies", "Zendesk issues a SAML 2.0 assertion", "Signed in to Connect, Cognito and console", "Session established"];
   const targets = ["Connect", "Cognito", "Console"];
   return (
     <>
@@ -175,17 +176,17 @@ function IdentityIll({ running }: IllProps) {
       </svg>
       <div className="cs-tools">
         <div className="cs-dots" role="group" aria-label="Illustrative sign-in step">
-          {steps.map((x, k) => <button key={k} type="button" aria-pressed={k === s} aria-label={x} onClick={() => setS(k)} data-testid={`button-identity-step-${k + 1}`} />)}
+          {steps.map((x, k) => <button key={k} type="button" aria-pressed={k === s} aria-label={x} onClick={() => { onInteract(); setS(k); }} data-testid={`button-identity-step-${k + 1}`} />)}
         </div>
-        <button type="button" className="cs-btn" onClick={() => setS(0)} data-testid="button-identity-restart">Restart sign-in</button>
+        <button type="button" className="cs-btn" onClick={() => { onInteract(); setS(0); }} data-testid="button-identity-restart">Restart sign-in</button>
       </div>
-      <p className="cs-caption" aria-live="polite">{steps[s]}</p>
+      <p className="cs-caption" aria-live={running ? "off" : "polite"}>{steps[s]}</p>
     </>
   );
 }
 
 /* ---------- CloudFormation: template assembling layered resources ---------- */
-function CfnIll({ running }: IllProps) {
+function CfnIll({ running, onInteract }: IllProps) {
   const layers = ["Cognito", "IAM roles", "Lambda functions", "Streaming connections"];
   const [n, setN] = useAuto(layers.length + 1, running, 1200);
   return (
@@ -213,10 +214,10 @@ function CfnIll({ running }: IllProps) {
       <div className="cs-tools">
         <label className="cs-range">
           <span>Layers shown</span>
-          <input type="range" min={0} max={layers.length} value={n} onChange={(e) => setN(Number(e.target.value))} aria-label="Illustrative resources shown" data-testid="input-cfn-layers" />
+          <input type="range" min={0} max={layers.length} value={n} onChange={(e) => { onInteract(); setN(Number(e.target.value)); }} aria-label="Illustrative resources shown" aria-valuetext={n === 0 ? "Template only" : layers.slice(0, n).join(", ")} data-testid="input-cfn-layers" />
         </label>
       </div>
-      <p className="cs-caption" aria-live="polite">{n === 0 ? "Template describes the resources" : `${layers.slice(0, n).join(", ")}`}</p>
+      <p className="cs-caption" aria-live={running ? "off" : "polite"}>{n === 0 ? "Template describes the resources" : `${layers.slice(0, n).join(", ")}`}</p>
     </>
   );
 }
@@ -224,7 +225,7 @@ function CfnIll({ running }: IllProps) {
 const ILLS: ((p: IllProps) => ReactNode)[] = [ConnectIll, AppIll, IdentityIll, CfnIll];
 const TONES = ["connect", "app", "identity", "cfn"];
 
-function Card({ c, k, resources }: { c: Comp; k: number; resources: Readonly<Record<string, string>> }) {
+function Card({ c, k, resources }: { c: Comp; k: number; resources: Readonly<Record<ComponentTerm, string>> }) {
   const reduced = useReduced();
   const { ref, live } = useLive<HTMLElement>();
   const [paused, setPaused] = useState(reduced);
@@ -233,37 +234,40 @@ function Card({ c, k, resources }: { c: Comp; k: number; resources: Readonly<Rec
   const Ill = ILLS[k];
   const id = IDS[k];
   return (
-    <article ref={ref} id={id} data-section-nav className={`cs-card cs-${TONES[k]} ${running ? "run" : "still"}`} data-testid={`card-${id}`}>
+    <article ref={ref} id={id} data-section-nav aria-labelledby={`${id}-title`} className={`cs-card cs-${TONES[k]} ${running ? "run" : "still"}`} data-testid={`card-${id}`}>
       <div className="cs-stage">
         <div className="cs-stage-head">
           <span className="cs-tag">Illustrative</span>
           <button type="button" className="cs-pp" onClick={() => setPaused((p) => !p)} disabled={reduced}
-            aria-label={paused ? `Play ${c.t} illustration` : `Pause ${c.t} illustration`} data-testid={`button-pause-${id}`}>
+            aria-pressed={paused || reduced} aria-label={reduced ? `${c.t} illustration: motion reduced` : paused ? `Play ${c.t} illustration` : `Pause ${c.t} illustration`} data-testid={`button-pause-${id}`}>
             {paused ? <Play className="h-3.5 w-3.5" aria-hidden /> : <Pause className="h-3.5 w-3.5" aria-hidden />}
             <span>{reduced ? "Motion reduced" : paused ? "Play" : "Pause"}</span>
           </button>
         </div>
-        <Ill running={running} />
+        <Ill running={running} onInteract={() => setPaused(true)} />
       </div>
       <div className="cs-body">
         <div className="flex items-start justify-between gap-3">
-          <h3 className="cs-title">{c.t}</h3>
+          <h3 id={`${id}-title`} className="cs-title">{c.t}</h3>
           <SectionLink id={id} label={c.t} />
         </div>
         <p className="cs-desc">{c.d}</p>
         <div className="cs-chips">
-          {c.chips.map((x) => (
-            <a key={x} href={resources[x]} target="_blank" rel="noopener noreferrer" className="cs-chip" data-testid={`link-chip-${id}-${x.toLowerCase().replace(/[^a-z0-9]+/g, "-")}`}>
-              {x}<ArrowUpRight className="h-3 w-3" aria-hidden />
-            </a>
-          ))}
+          {c.chips.map((x) => {
+            const href = componentDocumentation(x, resources);
+            return href ? (
+              <a key={x} href={href} target="_blank" rel="noopener noreferrer" className="cs-chip" data-testid={`link-chip-${id}-${x.toLowerCase().replace(/[^a-z0-9]+/g, "-")}`}>
+                {x}<ArrowUpRight className="h-3 w-3" aria-hidden /><span className="sr-only">(opens in a new tab)</span>
+              </a>
+            ) : <span key={x} className="cs-chip cs-chip-unavailable">{x} · Documentation unavailable</span>;
+          })}
         </div>
       </div>
     </article>
   );
 }
 
-export function ComponentShowcase({ resources }: { resources: Readonly<Record<string, string>> }) {
+export function ComponentShowcase({ resources }: { resources: Readonly<Record<ComponentTerm, string>> }) {
   return (
     <div className="cs-grid" data-testid="component-showcase">
       {CORE_COMPONENTS.map((c, k) => <Card key={c.t} c={c} k={k} resources={resources} />)}

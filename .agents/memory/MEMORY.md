@@ -5,3 +5,4 @@
 - [Demo product accuracy](demo-product-accuracy.md) — public demonstrations must distinguish Contact Lens from optional Zendesk QA and describe only configured capabilities.
 - [Keyboard test limitations](keyboard-test-limitations.md) — inspect Space keydown events before treating automated native-checkbox failures as application defects.
 - [ElevenLabs connection validation](elevenlabs-connection-validation.md) — a ready connection can still contain a key ID; verify provider acceptance before claiming narration works.
+- [React component test compilation](react-component-test-compilation.md) — automatic JSX plus external React avoids undefined globals and Node scheduler hangs in compiled tests.
