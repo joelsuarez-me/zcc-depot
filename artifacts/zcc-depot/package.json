@@ -14,7 +14,8 @@
     "test:vertical-use-cases": "node scripts/run-vertical-use-case-tests.mjs",
     "check:resource-links": "node scripts/check-resource-links.mjs",
     "test:resource-links": "node --test scripts/resource-links.test.mjs",
-    "test:section-geometry": "playwright test --config playwright.config.ts"
+    "test:section-geometry": "playwright test --config playwright.config.ts",
+    "test:hero-motion": "playwright test --config playwright.config.ts scripts/browser/hero-motion.spec.ts --project chromium-1440"
   },
   "devDependencies": {
     "@hookform/resolvers": "^3.10.0",
