@@ -394,7 +394,7 @@ export default function Agenda() {
             <div className="pointer-events-none absolute right-8 top-1/2 hidden -translate-y-1/2 lg:block" aria-hidden><HeroArt motif="agenda" className="is-sm" /></div>
             <div className="relative max-w-2xl">
               <div className="eyebrow text-[#d4e4a6]">ZCC Depot · Workshop workspace</div>
-              <h1 className="mt-2 text-2xl font-semibold tracking-tight md:text-3xl">Today’s Agenda</h1>
+              <h1 className="mt-2 text-2xl font-semibold tracking-tight md:text-3xl">Demo Agenda</h1>
               <p className="mt-2 max-w-xl text-sm leading-snug text-[#f5f5eb]/75">
                 A shared, reusable conversation brief for Zendesk platform architects and the customers they work alongside.
               </p>
@@ -426,7 +426,7 @@ export default function Agenda() {
           </div>
           <div className="mt-1.5 flex flex-col justify-between gap-2 md:flex-row md:items-end">
             <div>
-              <h1 className="text-2xl font-semibold tracking-tight md:text-3xl" data-testid="heading-agenda">Today’s Agenda</h1>
+              <h1 className="text-2xl font-semibold tracking-tight md:text-3xl" data-testid="heading-agenda">Demo Agenda</h1>
               <p className="mt-1 max-w-2xl text-sm leading-snug text-[#f6f5ec]/70">Objectives, platforms, conversation, validation, and outcomes — ready for the customer demo.</p>
             </div>
             {mode === "library" && <div className="pointer-events-none hidden lg:block" aria-hidden><HeroArt motif="agenda" className="is-sm" /></div>}

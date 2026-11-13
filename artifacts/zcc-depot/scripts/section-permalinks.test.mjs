@@ -27,6 +27,33 @@ test("section links preserve route and query by using native fragments", () => {
   assert.doesNotMatch(source, /href="\/"/);
 });
 
+test("each pricing column has a visible named permalink beside its heading", () => {
+  const source = readFileSync(new URL("../src/pages/pricing.tsx", import.meta.url), "utf8");
+  assert.match(source, /import \{ SectionLink \} from "@\/components\/section-link"/);
+  assert.match(source, /<div className="mt-4 flex items-start justify-between gap-3">\s*<h2[^>]*min-w-0[^>]*>[\s\S]*?<\/h2>\s*<SectionLink id=\{m.id\} label=\{m.name\} dark=\{v.tone === "forest"\} \/>/);
+  assert.match(source, /<section id=\{m.id\}[\s\S]*?scroll-mt-24/);
+  assert.match(source, /grid gap-5 lg:grid-cols-3/);
+  const guide = readFileSync(new URL("../../api-server/src/lib/pricingGuide.ts", import.meta.url), "utf8");
+  for (const id of ["bundle", "byoa", "team"]) {
+    assert.match(guide, new RegExp(`id: "${id}"`));
+    const destination = new URL(`#${encodeURIComponent(id)}`, "https://example.com/depot/pricing?source=internal");
+    assert.equal(destination.pathname, "/depot/pricing");
+    assert.equal(destination.search, "?source=internal");
+    assert.equal(destination.hash, `#${id}`);
+  }
+});
+
+test("pricing fragment visits retain the client and server sign-in gates", () => {
+  const client = readFileSync(new URL("../src/pages/pricing.tsx", import.meta.url), "utf8");
+  const server = readFileSync(new URL("../../api-server/src/routes/pricing.ts", import.meta.url), "utf8");
+  assert.match(client, /enabled: isAuthenticated/);
+  assert.match(client, /if \(!isAuthenticated\) return <SignIn/);
+  assert.match(client, /q.error[\s\S]*?status === 401\) return <SignIn login=\{login\} expired/);
+  assert.match(server, /Cache-Control", "private, no-store"/);
+  assert.match(server, /if \(!req.isAuthenticated\(\)\) \{\s*res.status\(401\)/);
+  assert.match(server, /res.json\(GetPricingGuideResponse.parse\(pricingGuide\)\)/);
+});
+
 test("phone arrow placement is scoped to Components and does not cover its content", () => {
   const nav = readFileSync(new URL("../src/components/section-navigation.tsx", import.meta.url), "utf8");
   const css = readFileSync(new URL("../src/components/contact-center-components/components-guide.css", import.meta.url), "utf8");

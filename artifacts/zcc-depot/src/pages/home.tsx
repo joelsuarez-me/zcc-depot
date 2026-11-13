@@ -24,7 +24,7 @@ export default function Home() {
               <span className="block md:whitespace-nowrap"><span className="text-[#D1F470]">platform</span>{" "}ARCHITECT Depot</span>
             </h1>
             <p className="landing-hero-description max-w-2xl text-sm leading-snug text-[#F5F5F2]/75">
-              Everything you need to prepare the customer conversation: the story, the architecture behind it, the outcomes it supports, and the official sources to back every claim.
+              Developed by Zendesk Contact Center Platform Architects. Everything you need to sell the value of ZCC through a technical lens.
             </p>
             <LandingHeroArt />
           </motion.div>

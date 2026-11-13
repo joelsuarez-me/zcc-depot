@@ -4,6 +4,7 @@ import { useGetPricingGuide, getGetPricingGuideQueryKey } from "@workspace/api-c
 import { AlertTriangle, ArrowRight, ArrowUpRight, Cloud, Layers, Lock, RotateCw, ShieldCheck, Sprout } from "lucide-react";
 import { PageHero, Reveal } from "@/components/kit";
 import { LaneArt, StateArt } from "@/components/art";
+import { SectionLink } from "@/components/section-link";
 
 const title = "Pricing | ZCC Depot";
 const description = "Signed-in internal pricing guide for Zendesk Contact Center conversations. Internal use only.";
@@ -145,7 +146,10 @@ export default function Pricing() {
                     <div className="relative flex h-full flex-col">
                       <div className="pointer-events-none -mt-1 mb-2" aria-hidden><LaneArt id={m.id} dark={v.tone === "forest"} /></div>
                       <div className="eyebrow">{m.tag}</div>
-                      <h2 id={`${m.id}-title`} className="mt-4 min-h-[2.5em] text-2xl font-semibold leading-[1.1] tracking-tight" data-testid={`text-pricing-name-${m.id}`}>{m.name}</h2>
+                      <div className="mt-4 flex items-start justify-between gap-3">
+                        <h2 id={`${m.id}-title`} className="min-w-0 min-h-[2.5em] text-2xl font-semibold leading-[1.1] tracking-tight" data-testid={`text-pricing-name-${m.id}`}>{m.name}</h2>
+                        <SectionLink id={m.id} label={m.name} dark={v.tone === "forest"} />
+                      </div>
                       <div className="mt-3 flex flex-wrap items-center gap-2">
                         <span className={`grid h-8 w-8 place-items-center rounded-full ${t.icon}`}><Icon className="h-4 w-4" aria-hidden /></span>
                         <span className={`mono rounded-full border px-3 py-1 text-[0.68rem] uppercase tracking-wider ${t.chip}`} data-testid={`text-pricing-fit-${m.id}`}>{m.fit}</span>
