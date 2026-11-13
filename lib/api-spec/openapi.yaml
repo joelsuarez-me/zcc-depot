@@ -17,6 +17,88 @@ tags:
   - name: Storage
     description: Object storage upload and serving endpoints.
 paths:
+  /use-case-shortlists:
+    parameters:
+      - $ref: "#/components/parameters/PresenterMode"
+    get:
+      operationId: listUseCaseShortlists
+      summary: List customer shortlists shared by signed-in Presenters
+      responses:
+        "200":
+          description: Shared shortlists, most recently updated first.
+          content:
+            application/json:
+              schema:
+                type: array
+                items: { $ref: "#/components/schemas/UseCaseShortlist" }
+        "401": { description: Sign-in required. }
+        "403": { description: Presenter mode required. }
+    post:
+      operationId: createUseCaseShortlist
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/UseCaseShortlistInput" }
+      responses:
+        "201":
+          description: Saved shortlist.
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/UseCaseShortlist" }
+        "400": { description: Invalid fields or scenario IDs. }
+        "401": { description: Sign-in required. }
+        "403": { description: Presenter mode required. }
+  /use-case-shortlists/{id}:
+    parameters:
+      - $ref: "#/components/parameters/PresenterMode"
+      - name: id
+        in: path
+        required: true
+        schema: { type: string, format: uuid }
+    get:
+      operationId: getUseCaseShortlist
+      responses:
+        "200":
+          description: Saved shortlist.
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/UseCaseShortlist" }
+        "401": { description: Sign-in required. }
+        "403": { description: Presenter mode required. }
+        "404": { description: Shortlist not found. }
+    patch:
+      operationId: updateUseCaseShortlist
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/UseCaseShortlistUpdate" }
+      responses:
+        "200":
+          description: Updated shortlist.
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/UseCaseShortlist" }
+        "400": { description: Invalid fields or scenario IDs. }
+        "401": { description: Sign-in required. }
+        "403": { description: Presenter mode required. }
+        "404": { description: Shortlist not found. }
+        "409": { description: Shortlist changed since it was opened. }
+    delete:
+      operationId: deleteUseCaseShortlist
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/UseCaseShortlistRemoval" }
+      responses:
+        "204": { description: Shortlist deleted. }
+        "400": { description: Invalid revision. }
+        "401": { description: Sign-in required. }
+        "403": { description: Presenter mode required. }
+        "404": { description: Shortlist not found. }
+        "409": { description: Shortlist changed since it was opened. }
   /presenter/content:
     get:
       operationId: getPresenterContent
@@ -737,6 +819,11 @@ paths:
                 $ref: "#/components/schemas/ErrorEnvelope"
 components:
   parameters:
+    PresenterMode:
+      name: X-Depot-Mode
+      in: header
+      required: true
+      schema: { type: string, enum: [presenter] }
     AuthorizationSessionHeader:
       name: Authorization
       in: header
@@ -750,6 +837,89 @@ components:
       schema:
         type: string
   schemas:
+    UseCaseShortlistInput:
+      type: object
+      required: [name, customer, notes, scenarioIds]
+      properties:
+        name: { type: string, minLength: 1, maxLength: 160 }
+        customer: { type: string, minLength: 1, maxLength: 200 }
+        notes: { type: string, maxLength: 10000 }
+        scenarioIds:
+          type: array
+          minItems: 1
+          maxItems: 45
+          uniqueItems: true
+          items: { $ref: "#/components/schemas/PublicScenarioId" }
+    UseCaseShortlistUpdate:
+      allOf:
+        - $ref: "#/components/schemas/UseCaseShortlistInput"
+        - type: object
+          required: [revision]
+          properties:
+            revision: { type: integer, minimum: 1 }
+    UseCaseShortlistRemoval:
+      type: object
+      required: [revision]
+      properties:
+        revision: { type: integer, minimum: 1 }
+    UseCaseShortlist:
+      allOf:
+        - $ref: "#/components/schemas/UseCaseShortlistInput"
+        - type: object
+          required: [id, revision, createdAt, updatedAt]
+          properties:
+            id: { type: string, format: uuid }
+            revision: { type: integer, minimum: 1 }
+            createdAt: { type: string, format: date-time }
+            updatedAt: { type: string, format: date-time }
+    PublicScenarioId:
+      type: string
+      enum:
+        - financial-services-banking-routing
+        - financial-services-fraud-triage
+        - financial-services-lending-support
+        - financial-services-card-disputes
+        - financial-services-cross-channel-banking
+        - healthcare-appointment-scheduling
+        - healthcare-patient-access
+        - healthcare-patient-billing
+        - healthcare-refill-coordination
+        - healthcare-care-follow-up
+        - government-citizen-311
+        - government-benefits-status
+        - government-permits-licensing
+        - government-public-emergency-information
+        - government-public-service-cases
+        - computers-electronics-technical-troubleshooting
+        - computers-electronics-warranty-repair
+        - computers-electronics-product-activation
+        - computers-electronics-orders-returns
+        - computers-electronics-proactive-product-support
+        - energy-utilities-outage-reporting
+        - energy-utilities-utility-billing
+        - energy-utilities-utility-service-changes
+        - energy-utilities-utility-safety-routing
+        - energy-utilities-meter-usage-support
+        - travel-reservation-changes
+        - travel-disruption-rebooking
+        - travel-loyalty-support
+        - travel-baggage-claims
+        - travel-multilingual-travelers
+        - telecommunications-network-outage
+        - telecommunications-telecom-billing
+        - telecommunications-telecom-diagnostics
+        - telecommunications-subscriber-onboarding
+        - telecommunications-subscriber-retention
+        - nonprofit-resource-navigation
+        - nonprofit-donor-support
+        - nonprofit-volunteer-coordination
+        - nonprofit-crisis-intake
+        - nonprofit-program-applications
+        - pharma-life-sciences-patient-programs
+        - pharma-life-sciences-medication-access
+        - pharma-life-sciences-trial-information
+        - pharma-life-sciences-medical-information
+        - pharma-life-sciences-adverse-event
     PresenterRoadmapItem:
       type: object
       required: [when, t, d, items]

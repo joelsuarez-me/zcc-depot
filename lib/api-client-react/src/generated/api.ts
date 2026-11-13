@@ -46,7 +46,11 @@ import type {
   SavedResearchSummary,
   SellSheet,
   UploadUrlRequest,
-  UploadUrlResponse
+  UploadUrlResponse,
+  UseCaseShortlist,
+  UseCaseShortlistInput,
+  UseCaseShortlistRemoval,
+  UseCaseShortlistUpdate
 } from './api.schemas';
 
 import { customFetch } from '../custom-fetch';
@@ -75,6 +79,402 @@ const withQueryKey = <T extends object, K>(query: T, queryKey: K): T & { queryKe
   }
   return result;
 };
+
+export const getListUseCaseShortlistsUrl = () => {
+
+
+
+
+  return `/api/use-case-shortlists`
+}
+
+/**
+ * @summary List customer shortlists shared by signed-in Presenters
+ */
+export const listUseCaseShortlists = async ( options?: Parameters<typeof customFetch>[1]): Promise<UseCaseShortlist[]> => {
+
+  return customFetch<UseCaseShortlist[]>(getListUseCaseShortlistsUrl(),
+  {
+    ...options,
+    method: 'GET'
+
+
+  }
+);}
+
+
+
+
+
+export const getListUseCaseShortlistsQueryKey = () => {
+    return [
+    `/api/use-case-shortlists`
+    ] as const;
+    }
+
+
+export const getListUseCaseShortlistsQueryOptions = <TData = Awaited<ReturnType<typeof listUseCaseShortlists>>, TError = ErrorType<void>>( options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof listUseCaseShortlists>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getListUseCaseShortlistsQueryKey();
+
+
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof listUseCaseShortlists>>> = ({ signal }) => listUseCaseShortlists({ signal, ...requestOptions });
+
+
+
+
+
+   return  { queryKey, queryFn, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof listUseCaseShortlists>>, TError, TData> & { queryKey: QueryKey }
+}
+
+export type ListUseCaseShortlistsQueryResult = NonNullable<Awaited<ReturnType<typeof listUseCaseShortlists>>>
+export type ListUseCaseShortlistsQueryError = ErrorType<void>
+
+
+/**
+ * @summary List customer shortlists shared by signed-in Presenters
+ */
+
+export function useListUseCaseShortlists<TData = Awaited<ReturnType<typeof listUseCaseShortlists>>, TError = ErrorType<void>>(
+  options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof listUseCaseShortlists>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+
+ ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+
+  const queryOptions = getListUseCaseShortlistsQueryOptions(options)
+
+  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
+
+  return withQueryKey(query, queryOptions.queryKey);
+}
+
+
+
+
+
+
+
+export const getCreateUseCaseShortlistUrl = () => {
+
+
+
+
+  return `/api/use-case-shortlists`
+}
+
+export const createUseCaseShortlist = async (useCaseShortlistInput: UseCaseShortlistInput, options?: Parameters<typeof customFetch>[1]): Promise<UseCaseShortlist> => {
+
+    const getHeaders = (h?: NonNullable<RequestInit['headers']>): Record<string, string | readonly string[]> => {
+    if (!h) return {};
+    if (h instanceof Headers) return Object.fromEntries(h.entries());
+    if (Symbol.iterator in h) {
+      return Object.fromEntries(
+        Array.from(h as Iterable<Iterable<string>>, (entry) => Array.from(entry) as [string, string]),
+      );
+    }
+    const headers: Record<string, string | readonly string[]> = {};
+    for (const [name, value] of Object.entries<string | readonly string[] | undefined>(h)) {
+      if (value !== undefined) headers[name] = value;
+    }
+    return headers;
+  };
+return customFetch<UseCaseShortlist>(getCreateUseCaseShortlistUrl(),
+  {
+    ...options,
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', ...getHeaders(options?.headers) },
+    body: JSON.stringify(useCaseShortlistInput)
+  }
+);}
+
+
+
+
+
+export const getCreateUseCaseShortlistMutationKey = () => ['createUseCaseShortlist'] as const;
+
+export const getCreateUseCaseShortlistMutationOptions = <TError = ErrorType<void>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof createUseCaseShortlist>>, TError,CreateUseCaseShortlistMutationVariables, TContext>, request?: SecondParameter<typeof customFetch>}
+): UseMutationOptions<Awaited<ReturnType<typeof createUseCaseShortlist>>, TError,CreateUseCaseShortlistMutationVariables, TContext> => {
+
+const mutationKey = getCreateUseCaseShortlistMutationKey();
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof createUseCaseShortlist>>, CreateUseCaseShortlistMutationVariables> = (props) => {
+          const {data} = props ?? {};
+
+          return  createUseCaseShortlist(data,requestOptions)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type CreateUseCaseShortlistMutationResult = NonNullable<Awaited<ReturnType<typeof createUseCaseShortlist>>>
+    export type CreateUseCaseShortlistMutationBody = BodyType<UseCaseShortlistInput>
+    export type CreateUseCaseShortlistMutationError = ErrorType<void>
+    export type CreateUseCaseShortlistMutationVariables = {data: BodyType<UseCaseShortlistInput>}
+
+    export const useCreateUseCaseShortlist = <TError = ErrorType<void>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof createUseCaseShortlist>>, TError,CreateUseCaseShortlistMutationVariables, TContext>, request?: SecondParameter<typeof customFetch>}
+ ): UseMutationResult<
+        Awaited<ReturnType<typeof createUseCaseShortlist>>,
+        TError,
+        CreateUseCaseShortlistMutationVariables,
+        TContext
+      > => {
+      return useMutation(getCreateUseCaseShortlistMutationOptions(options));
+    }
+
+export const getGetUseCaseShortlistUrl = (id: string,) => {
+
+
+
+
+  return `/api/use-case-shortlists/${id}`
+}
+
+export const getUseCaseShortlist = async (id: string, options?: Parameters<typeof customFetch>[1]): Promise<UseCaseShortlist> => {
+
+  return customFetch<UseCaseShortlist>(getGetUseCaseShortlistUrl(id),
+  {
+    ...options,
+    method: 'GET'
+
+
+  }
+);}
+
+
+
+
+
+export const getGetUseCaseShortlistQueryKey = (id: string,) => {
+    return [
+    `/api/use-case-shortlists/${id}`
+    ] as const;
+    }
+
+
+export const getGetUseCaseShortlistQueryOptions = <TData = Awaited<ReturnType<typeof getUseCaseShortlist>>, TError = ErrorType<void>>(id: string, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getUseCaseShortlist>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getGetUseCaseShortlistQueryKey(id);
+
+
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof getUseCaseShortlist>>> = ({ signal }) => getUseCaseShortlist(id, { signal, ...requestOptions });
+
+
+
+
+
+   return  { queryKey, queryFn, enabled: id !== null && id !== undefined, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof getUseCaseShortlist>>, TError, TData> & { queryKey: QueryKey }
+}
+
+export type GetUseCaseShortlistQueryResult = NonNullable<Awaited<ReturnType<typeof getUseCaseShortlist>>>
+export type GetUseCaseShortlistQueryError = ErrorType<void>
+
+
+
+export function useGetUseCaseShortlist<TData = Awaited<ReturnType<typeof getUseCaseShortlist>>, TError = ErrorType<void>>(
+ id: string, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getUseCaseShortlist>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+
+ ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+
+  const queryOptions = getGetUseCaseShortlistQueryOptions(id,options)
+
+  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
+
+  return withQueryKey(query, queryOptions.queryKey);
+}
+
+
+
+
+
+
+
+export const getUpdateUseCaseShortlistUrl = (id: string,) => {
+
+
+
+
+  return `/api/use-case-shortlists/${id}`
+}
+
+export const updateUseCaseShortlist = async (id: string,
+    useCaseShortlistUpdate: UseCaseShortlistUpdate, options?: Parameters<typeof customFetch>[1]): Promise<UseCaseShortlist> => {
+
+    const getHeaders = (h?: NonNullable<RequestInit['headers']>): Record<string, string | readonly string[]> => {
+    if (!h) return {};
+    if (h instanceof Headers) return Object.fromEntries(h.entries());
+    if (Symbol.iterator in h) {
+      return Object.fromEntries(
+        Array.from(h as Iterable<Iterable<string>>, (entry) => Array.from(entry) as [string, string]),
+      );
+    }
+    const headers: Record<string, string | readonly string[]> = {};
+    for (const [name, value] of Object.entries<string | readonly string[] | undefined>(h)) {
+      if (value !== undefined) headers[name] = value;
+    }
+    return headers;
+  };
+return customFetch<UseCaseShortlist>(getUpdateUseCaseShortlistUrl(id),
+  {
+    ...options,
+    method: 'PATCH',
+    headers: { 'Content-Type': 'application/json', ...getHeaders(options?.headers) },
+    body: JSON.stringify(useCaseShortlistUpdate)
+  }
+);}
+
+
+
+
+
+export const getUpdateUseCaseShortlistMutationKey = () => ['updateUseCaseShortlist'] as const;
+
+export const getUpdateUseCaseShortlistMutationOptions = <TError = ErrorType<void>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof updateUseCaseShortlist>>, TError,UpdateUseCaseShortlistMutationVariables, TContext>, request?: SecondParameter<typeof customFetch>}
+): UseMutationOptions<Awaited<ReturnType<typeof updateUseCaseShortlist>>, TError,UpdateUseCaseShortlistMutationVariables, TContext> => {
+
+const mutationKey = getUpdateUseCaseShortlistMutationKey();
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof updateUseCaseShortlist>>, UpdateUseCaseShortlistMutationVariables> = (props) => {
+          const {id,data} = props ?? {};
+
+          return  updateUseCaseShortlist(id,data,requestOptions)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type UpdateUseCaseShortlistMutationResult = NonNullable<Awaited<ReturnType<typeof updateUseCaseShortlist>>>
+    export type UpdateUseCaseShortlistMutationBody = BodyType<UseCaseShortlistUpdate>
+    export type UpdateUseCaseShortlistMutationError = ErrorType<void>
+    export type UpdateUseCaseShortlistMutationVariables = {id: string;data: BodyType<UseCaseShortlistUpdate>}
+
+    export const useUpdateUseCaseShortlist = <TError = ErrorType<void>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof updateUseCaseShortlist>>, TError,UpdateUseCaseShortlistMutationVariables, TContext>, request?: SecondParameter<typeof customFetch>}
+ ): UseMutationResult<
+        Awaited<ReturnType<typeof updateUseCaseShortlist>>,
+        TError,
+        UpdateUseCaseShortlistMutationVariables,
+        TContext
+      > => {
+      return useMutation(getUpdateUseCaseShortlistMutationOptions(options));
+    }
+
+export const getDeleteUseCaseShortlistUrl = (id: string,) => {
+
+
+
+
+  return `/api/use-case-shortlists/${id}`
+}
+
+export const deleteUseCaseShortlist = async (id: string,
+    useCaseShortlistRemoval: UseCaseShortlistRemoval, options?: Parameters<typeof customFetch>[1]): Promise<void> => {
+
+    const getHeaders = (h?: NonNullable<RequestInit['headers']>): Record<string, string | readonly string[]> => {
+    if (!h) return {};
+    if (h instanceof Headers) return Object.fromEntries(h.entries());
+    if (Symbol.iterator in h) {
+      return Object.fromEntries(
+        Array.from(h as Iterable<Iterable<string>>, (entry) => Array.from(entry) as [string, string]),
+      );
+    }
+    const headers: Record<string, string | readonly string[]> = {};
+    for (const [name, value] of Object.entries<string | readonly string[] | undefined>(h)) {
+      if (value !== undefined) headers[name] = value;
+    }
+    return headers;
+  };
+return customFetch<void>(getDeleteUseCaseShortlistUrl(id),
+  {
+    ...options,
+    method: 'DELETE',
+    headers: { 'Content-Type': 'application/json', ...getHeaders(options?.headers) },
+    body: JSON.stringify(useCaseShortlistRemoval)
+  }
+);}
+
+
+
+
+
+export const getDeleteUseCaseShortlistMutationKey = () => ['deleteUseCaseShortlist'] as const;
+
+export const getDeleteUseCaseShortlistMutationOptions = <TError = ErrorType<void>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof deleteUseCaseShortlist>>, TError,DeleteUseCaseShortlistMutationVariables, TContext>, request?: SecondParameter<typeof customFetch>}
+): UseMutationOptions<Awaited<ReturnType<typeof deleteUseCaseShortlist>>, TError,DeleteUseCaseShortlistMutationVariables, TContext> => {
+
+const mutationKey = getDeleteUseCaseShortlistMutationKey();
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof deleteUseCaseShortlist>>, DeleteUseCaseShortlistMutationVariables> = (props) => {
+          const {id,data} = props ?? {};
+
+          return  deleteUseCaseShortlist(id,data,requestOptions)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type DeleteUseCaseShortlistMutationResult = NonNullable<Awaited<ReturnType<typeof deleteUseCaseShortlist>>>
+    export type DeleteUseCaseShortlistMutationBody = BodyType<UseCaseShortlistRemoval>
+    export type DeleteUseCaseShortlistMutationError = ErrorType<void>
+    export type DeleteUseCaseShortlistMutationVariables = {id: string;data: BodyType<UseCaseShortlistRemoval>}
+
+    export const useDeleteUseCaseShortlist = <TError = ErrorType<void>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof deleteUseCaseShortlist>>, TError,DeleteUseCaseShortlistMutationVariables, TContext>, request?: SecondParameter<typeof customFetch>}
+ ): UseMutationResult<
+        Awaited<ReturnType<typeof deleteUseCaseShortlist>>,
+        TError,
+        DeleteUseCaseShortlistMutationVariables,
+        TContext
+      > => {
+      return useMutation(getDeleteUseCaseShortlistMutationOptions(options));
+    }
 
 export const getGetPresenterContentUrl = () => {
 

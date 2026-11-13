@@ -14,10 +14,12 @@ try {
     plugins: [{
       name: "vertical-dom-independent-components",
       setup(builder) {
-        builder.onResolve({ filter: /^(@\/components\/kit|@\/hooks\/use-toast|framer-motion)$/ }, args => ({ path: args.path, namespace: "vertical-double" }));
+        builder.onResolve({ filter: /^(@\/components\/kit|@\/hooks\/use-toast|@\/components\/vertical-use-cases\/shortlists|framer-motion)$/ }, args => ({ path: args.path, namespace: "vertical-double" }));
         builder.onLoad({ filter: /.*/, namespace: "vertical-double" }, ({ path }) => ({
           loader: "jsx",
-          contents: path === "@/components/kit"
+          contents: path === "@/components/vertical-use-cases/shortlists"
+            ? 'export const UseCaseShortlists=()=>null;'
+            : path === "@/components/kit"
             ? 'import React from "react"; export const PageHero=({eyebrow,title,lede})=><header><p>{eyebrow}</p><h1>{title}</h1><p>{lede}</p></header>; export const Ext=({href,children,testId,...p})=><a href={href} data-testid={testId} {...p}>{children}</a>;'
             : path === "@/hooks/use-toast"
               ? 'export const useToast=()=>({toast:(value)=>globalThis.__verticalToasts.push(value)});'

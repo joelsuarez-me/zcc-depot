@@ -7,7 +7,12 @@ import { INDUSTRIES, USE_CASES, CATEGORIES, USE_CASE_SOURCES, filterUseCases, us
 import { NAV, isNavItemActive } from "../src/data/navigation.ts";
 import SalesUseCases from "../src/pages/sales-use-cases.tsx";
 import { UseCaseDetail } from "../src/components/vertical-use-cases/use-case-detail.tsx";
+import { PublicScenarioId } from "@workspace/api-client-react";
 globalThis.IS_REACT_ACT_ENVIRONMENT = true;
+
+test("saved-shortlist contract matches the complete public scenario library", () => {
+  assert.deepEqual(Object.values(PublicScenarioId).sort(), USE_CASES.map(item => item.id).sort());
+});
 
 test("nine industries contain exactly five complete, uniquely authored use cases each", () => {
   assert.equal(INDUSTRIES.length, 9); assert.equal(USE_CASES.length, 45);

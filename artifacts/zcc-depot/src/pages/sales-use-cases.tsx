@@ -7,6 +7,7 @@ import { useToast } from "@/hooks/use-toast";
 import { IndustryIcon } from "@/components/vertical-use-cases/industry-icon";
 import { KindBadge, UseCaseDetail } from "@/components/vertical-use-cases/use-case-detail";
 import { IndustryReviewOverview } from "@/components/vertical-use-cases/review-status";
+import { UseCaseShortlists } from "@/components/vertical-use-cases/shortlists";
 import "@/components/vertical-use-cases/vuc.css";
 
 const ALL = "all";
@@ -127,6 +128,7 @@ export default function SalesUseCases() {
 
       <div className="vuc-body">
         <IndustryReviewOverview />
+        <UseCaseShortlists selectedId={selected?.id} onOpen={id => update({ q: "", industry: ALL, category: ALL, uc: id })} />
         <div className="vuc-tools" id="explore" data-section-nav>
           <label className="vuc-search">
             <Search className="h-4 w-4 text-[#11110D]/50" aria-hidden />

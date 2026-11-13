@@ -5,6 +5,95 @@
  * API specification
  * OpenAPI spec version: 0.1.0
  */
+export type PublicScenarioId = typeof PublicScenarioId[keyof typeof PublicScenarioId];
+
+
+export const PublicScenarioId = {
+  'financial-services-banking-routing': 'financial-services-banking-routing',
+  'financial-services-fraud-triage': 'financial-services-fraud-triage',
+  'financial-services-lending-support': 'financial-services-lending-support',
+  'financial-services-card-disputes': 'financial-services-card-disputes',
+  'financial-services-cross-channel-banking': 'financial-services-cross-channel-banking',
+  'healthcare-appointment-scheduling': 'healthcare-appointment-scheduling',
+  'healthcare-patient-access': 'healthcare-patient-access',
+  'healthcare-patient-billing': 'healthcare-patient-billing',
+  'healthcare-refill-coordination': 'healthcare-refill-coordination',
+  'healthcare-care-follow-up': 'healthcare-care-follow-up',
+  'government-citizen-311': 'government-citizen-311',
+  'government-benefits-status': 'government-benefits-status',
+  'government-permits-licensing': 'government-permits-licensing',
+  'government-public-emergency-information': 'government-public-emergency-information',
+  'government-public-service-cases': 'government-public-service-cases',
+  'computers-electronics-technical-troubleshooting': 'computers-electronics-technical-troubleshooting',
+  'computers-electronics-warranty-repair': 'computers-electronics-warranty-repair',
+  'computers-electronics-product-activation': 'computers-electronics-product-activation',
+  'computers-electronics-orders-returns': 'computers-electronics-orders-returns',
+  'computers-electronics-proactive-product-support': 'computers-electronics-proactive-product-support',
+  'energy-utilities-outage-reporting': 'energy-utilities-outage-reporting',
+  'energy-utilities-utility-billing': 'energy-utilities-utility-billing',
+  'energy-utilities-utility-service-changes': 'energy-utilities-utility-service-changes',
+  'energy-utilities-utility-safety-routing': 'energy-utilities-utility-safety-routing',
+  'energy-utilities-meter-usage-support': 'energy-utilities-meter-usage-support',
+  'travel-reservation-changes': 'travel-reservation-changes',
+  'travel-disruption-rebooking': 'travel-disruption-rebooking',
+  'travel-loyalty-support': 'travel-loyalty-support',
+  'travel-baggage-claims': 'travel-baggage-claims',
+  'travel-multilingual-travelers': 'travel-multilingual-travelers',
+  'telecommunications-network-outage': 'telecommunications-network-outage',
+  'telecommunications-telecom-billing': 'telecommunications-telecom-billing',
+  'telecommunications-telecom-diagnostics': 'telecommunications-telecom-diagnostics',
+  'telecommunications-subscriber-onboarding': 'telecommunications-subscriber-onboarding',
+  'telecommunications-subscriber-retention': 'telecommunications-subscriber-retention',
+  'nonprofit-resource-navigation': 'nonprofit-resource-navigation',
+  'nonprofit-donor-support': 'nonprofit-donor-support',
+  'nonprofit-volunteer-coordination': 'nonprofit-volunteer-coordination',
+  'nonprofit-crisis-intake': 'nonprofit-crisis-intake',
+  'nonprofit-program-applications': 'nonprofit-program-applications',
+  'pharma-life-sciences-patient-programs': 'pharma-life-sciences-patient-programs',
+  'pharma-life-sciences-medication-access': 'pharma-life-sciences-medication-access',
+  'pharma-life-sciences-trial-information': 'pharma-life-sciences-trial-information',
+  'pharma-life-sciences-medical-information': 'pharma-life-sciences-medical-information',
+  'pharma-life-sciences-adverse-event': 'pharma-life-sciences-adverse-event',
+} as const;
+
+export interface UseCaseShortlistInput {
+  /**
+     * @minLength 1
+     * @maxLength 160
+     */
+  name: string;
+  /**
+     * @minLength 1
+     * @maxLength 200
+     */
+  customer: string;
+  /** @maxLength 10000 */
+  notes: string;
+  /**
+     * @minItems 1
+     * @maxItems 45
+     */
+  scenarioIds: PublicScenarioId[];
+}
+
+export type UseCaseShortlistUpdate = UseCaseShortlistInput & {
+  /** @minimum 1 */
+  revision: number;
+};
+
+export interface UseCaseShortlistRemoval {
+  /** @minimum 1 */
+  revision: number;
+}
+
+export type UseCaseShortlist = UseCaseShortlistInput & {
+  id: string;
+  /** @minimum 1 */
+  revision: number;
+  createdAt: string;
+  updatedAt: string;
+};
+
 export interface PresenterRoadmapItem {
   when: string;
   t: string;
@@ -470,6 +559,13 @@ export interface PitchDeck {
   pdfUrl: string;
   slides: PitchSlide[];
 }
+
+export type PresenterModeParameter = typeof PresenterModeParameter[keyof typeof PresenterModeParameter];
+
+
+export const PresenterModeParameter = {
+  presenter: 'presenter',
+} as const;
 
 export type AuthorizationSessionHeaderParameter = string;
 

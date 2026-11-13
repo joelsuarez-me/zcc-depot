@@ -1,6 +1,7 @@
 import { createContext, useCallback, useContext, useEffect, useMemo, useRef, useState, type ReactNode } from "react";
 import { useQueryClient } from "@tanstack/react-query";
 import { useAuth } from "@workspace/replit-auth-web";
+import { mayLeavePrivateContext } from "./unsaved-shortlist";
 
 export type DepotMode = "customer" | "presenter";
 export const MODE_KEY = "zcc-depot:mode";
@@ -59,10 +60,12 @@ export function DepotProvider({ children }: { children: ReactNode }) {
   }, [qc]);
 
   const setMode = useCallback((m: DepotMode) => {
+    if (m === mode) return;
+    if (!mayLeavePrivateContext()) return;
     writeMode(m);
     setModeState(m);
     purgeInternal();
-  }, [purgeInternal]);
+  }, [mode, purgeInternal]);
 
   // When the signed-in identity changes (sign-out or a different account), drop presenter state and cached internal data.
   const lastUser = useRef<string | null | undefined>(undefined);
@@ -87,6 +90,7 @@ export function DepotProvider({ children }: { children: ReactNode }) {
 
   const authLogout = auth.logout;
   const signOut = useCallback(() => {
+    if (!mayLeavePrivateContext()) return;
     writeMode("customer");
     setModeState("customer");
     purgeInternal();

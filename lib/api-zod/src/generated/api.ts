@@ -9,6 +9,185 @@ import * as zod from 'zod';
 
 
 /**
+ * @summary List customer shortlists shared by signed-in Presenters
+ */
+export const ListUseCaseShortlistsHeader = zod.object({
+  "X-Depot-Mode": zod.enum(['presenter'])
+})
+
+export const listUseCaseShortlistsResponseOneNameMax = 160;
+
+export const listUseCaseShortlistsResponseOneCustomerMax = 200;
+
+export const listUseCaseShortlistsResponseOneNotesMax = 10000;
+
+export const listUseCaseShortlistsResponseOneScenarioIdsMax = 45;
+
+
+
+
+export const ListUseCaseShortlistsResponseItem = zod.object({
+  "name": zod.string().min(1).max(listUseCaseShortlistsResponseOneNameMax),
+  "customer": zod.string().min(1).max(listUseCaseShortlistsResponseOneCustomerMax),
+  "notes": zod.string().max(listUseCaseShortlistsResponseOneNotesMax),
+  "scenarioIds": zod.array(zod.enum(['financial-services-banking-routing', 'financial-services-fraud-triage', 'financial-services-lending-support', 'financial-services-card-disputes', 'financial-services-cross-channel-banking', 'healthcare-appointment-scheduling', 'healthcare-patient-access', 'healthcare-patient-billing', 'healthcare-refill-coordination', 'healthcare-care-follow-up', 'government-citizen-311', 'government-benefits-status', 'government-permits-licensing', 'government-public-emergency-information', 'government-public-service-cases', 'computers-electronics-technical-troubleshooting', 'computers-electronics-warranty-repair', 'computers-electronics-product-activation', 'computers-electronics-orders-returns', 'computers-electronics-proactive-product-support', 'energy-utilities-outage-reporting', 'energy-utilities-utility-billing', 'energy-utilities-utility-service-changes', 'energy-utilities-utility-safety-routing', 'energy-utilities-meter-usage-support', 'travel-reservation-changes', 'travel-disruption-rebooking', 'travel-loyalty-support', 'travel-baggage-claims', 'travel-multilingual-travelers', 'telecommunications-network-outage', 'telecommunications-telecom-billing', 'telecommunications-telecom-diagnostics', 'telecommunications-subscriber-onboarding', 'telecommunications-subscriber-retention', 'nonprofit-resource-navigation', 'nonprofit-donor-support', 'nonprofit-volunteer-coordination', 'nonprofit-crisis-intake', 'nonprofit-program-applications', 'pharma-life-sciences-patient-programs', 'pharma-life-sciences-medication-access', 'pharma-life-sciences-trial-information', 'pharma-life-sciences-medical-information', 'pharma-life-sciences-adverse-event'])).min(1).max(listUseCaseShortlistsResponseOneScenarioIdsMax)
+}).and(zod.object({
+  "id": zod.string().uuid(),
+  "revision": zod.number().int().min(1),
+  "createdAt": zod.coerce.date(),
+  "updatedAt": zod.coerce.date()
+}))
+export const ListUseCaseShortlistsResponse = zod.array(ListUseCaseShortlistsResponseItem)
+
+
+export const CreateUseCaseShortlistHeader = zod.object({
+  "X-Depot-Mode": zod.enum(['presenter'])
+})
+
+export const createUseCaseShortlistBodyNameMax = 160;
+
+export const createUseCaseShortlistBodyCustomerMax = 200;
+
+export const createUseCaseShortlistBodyNotesMax = 10000;
+
+export const createUseCaseShortlistBodyScenarioIdsMax = 45;
+
+
+
+export const CreateUseCaseShortlistBody = zod.object({
+  "name": zod.string().min(1).max(createUseCaseShortlistBodyNameMax),
+  "customer": zod.string().min(1).max(createUseCaseShortlistBodyCustomerMax),
+  "notes": zod.string().max(createUseCaseShortlistBodyNotesMax),
+  "scenarioIds": zod.array(zod.enum(['financial-services-banking-routing', 'financial-services-fraud-triage', 'financial-services-lending-support', 'financial-services-card-disputes', 'financial-services-cross-channel-banking', 'healthcare-appointment-scheduling', 'healthcare-patient-access', 'healthcare-patient-billing', 'healthcare-refill-coordination', 'healthcare-care-follow-up', 'government-citizen-311', 'government-benefits-status', 'government-permits-licensing', 'government-public-emergency-information', 'government-public-service-cases', 'computers-electronics-technical-troubleshooting', 'computers-electronics-warranty-repair', 'computers-electronics-product-activation', 'computers-electronics-orders-returns', 'computers-electronics-proactive-product-support', 'energy-utilities-outage-reporting', 'energy-utilities-utility-billing', 'energy-utilities-utility-service-changes', 'energy-utilities-utility-safety-routing', 'energy-utilities-meter-usage-support', 'travel-reservation-changes', 'travel-disruption-rebooking', 'travel-loyalty-support', 'travel-baggage-claims', 'travel-multilingual-travelers', 'telecommunications-network-outage', 'telecommunications-telecom-billing', 'telecommunications-telecom-diagnostics', 'telecommunications-subscriber-onboarding', 'telecommunications-subscriber-retention', 'nonprofit-resource-navigation', 'nonprofit-donor-support', 'nonprofit-volunteer-coordination', 'nonprofit-crisis-intake', 'nonprofit-program-applications', 'pharma-life-sciences-patient-programs', 'pharma-life-sciences-medication-access', 'pharma-life-sciences-trial-information', 'pharma-life-sciences-medical-information', 'pharma-life-sciences-adverse-event'])).min(1).max(createUseCaseShortlistBodyScenarioIdsMax)
+})
+
+export const createUseCaseShortlistResponseOneNameMax = 160;
+
+export const createUseCaseShortlistResponseOneCustomerMax = 200;
+
+export const createUseCaseShortlistResponseOneNotesMax = 10000;
+
+export const createUseCaseShortlistResponseOneScenarioIdsMax = 45;
+
+
+
+
+export const CreateUseCaseShortlistResponse = zod.object({
+  "name": zod.string().min(1).max(createUseCaseShortlistResponseOneNameMax),
+  "customer": zod.string().min(1).max(createUseCaseShortlistResponseOneCustomerMax),
+  "notes": zod.string().max(createUseCaseShortlistResponseOneNotesMax),
+  "scenarioIds": zod.array(zod.enum(['financial-services-banking-routing', 'financial-services-fraud-triage', 'financial-services-lending-support', 'financial-services-card-disputes', 'financial-services-cross-channel-banking', 'healthcare-appointment-scheduling', 'healthcare-patient-access', 'healthcare-patient-billing', 'healthcare-refill-coordination', 'healthcare-care-follow-up', 'government-citizen-311', 'government-benefits-status', 'government-permits-licensing', 'government-public-emergency-information', 'government-public-service-cases', 'computers-electronics-technical-troubleshooting', 'computers-electronics-warranty-repair', 'computers-electronics-product-activation', 'computers-electronics-orders-returns', 'computers-electronics-proactive-product-support', 'energy-utilities-outage-reporting', 'energy-utilities-utility-billing', 'energy-utilities-utility-service-changes', 'energy-utilities-utility-safety-routing', 'energy-utilities-meter-usage-support', 'travel-reservation-changes', 'travel-disruption-rebooking', 'travel-loyalty-support', 'travel-baggage-claims', 'travel-multilingual-travelers', 'telecommunications-network-outage', 'telecommunications-telecom-billing', 'telecommunications-telecom-diagnostics', 'telecommunications-subscriber-onboarding', 'telecommunications-subscriber-retention', 'nonprofit-resource-navigation', 'nonprofit-donor-support', 'nonprofit-volunteer-coordination', 'nonprofit-crisis-intake', 'nonprofit-program-applications', 'pharma-life-sciences-patient-programs', 'pharma-life-sciences-medication-access', 'pharma-life-sciences-trial-information', 'pharma-life-sciences-medical-information', 'pharma-life-sciences-adverse-event'])).min(1).max(createUseCaseShortlistResponseOneScenarioIdsMax)
+}).and(zod.object({
+  "id": zod.string().uuid(),
+  "revision": zod.number().int().min(1),
+  "createdAt": zod.coerce.date(),
+  "updatedAt": zod.coerce.date()
+}))
+
+
+export const GetUseCaseShortlistParams = zod.object({
+  "id": zod.coerce.string().uuid()
+})
+
+export const GetUseCaseShortlistHeader = zod.object({
+  "X-Depot-Mode": zod.enum(['presenter'])
+})
+
+export const getUseCaseShortlistResponseOneNameMax = 160;
+
+export const getUseCaseShortlistResponseOneCustomerMax = 200;
+
+export const getUseCaseShortlistResponseOneNotesMax = 10000;
+
+export const getUseCaseShortlistResponseOneScenarioIdsMax = 45;
+
+
+
+
+export const GetUseCaseShortlistResponse = zod.object({
+  "name": zod.string().min(1).max(getUseCaseShortlistResponseOneNameMax),
+  "customer": zod.string().min(1).max(getUseCaseShortlistResponseOneCustomerMax),
+  "notes": zod.string().max(getUseCaseShortlistResponseOneNotesMax),
+  "scenarioIds": zod.array(zod.enum(['financial-services-banking-routing', 'financial-services-fraud-triage', 'financial-services-lending-support', 'financial-services-card-disputes', 'financial-services-cross-channel-banking', 'healthcare-appointment-scheduling', 'healthcare-patient-access', 'healthcare-patient-billing', 'healthcare-refill-coordination', 'healthcare-care-follow-up', 'government-citizen-311', 'government-benefits-status', 'government-permits-licensing', 'government-public-emergency-information', 'government-public-service-cases', 'computers-electronics-technical-troubleshooting', 'computers-electronics-warranty-repair', 'computers-electronics-product-activation', 'computers-electronics-orders-returns', 'computers-electronics-proactive-product-support', 'energy-utilities-outage-reporting', 'energy-utilities-utility-billing', 'energy-utilities-utility-service-changes', 'energy-utilities-utility-safety-routing', 'energy-utilities-meter-usage-support', 'travel-reservation-changes', 'travel-disruption-rebooking', 'travel-loyalty-support', 'travel-baggage-claims', 'travel-multilingual-travelers', 'telecommunications-network-outage', 'telecommunications-telecom-billing', 'telecommunications-telecom-diagnostics', 'telecommunications-subscriber-onboarding', 'telecommunications-subscriber-retention', 'nonprofit-resource-navigation', 'nonprofit-donor-support', 'nonprofit-volunteer-coordination', 'nonprofit-crisis-intake', 'nonprofit-program-applications', 'pharma-life-sciences-patient-programs', 'pharma-life-sciences-medication-access', 'pharma-life-sciences-trial-information', 'pharma-life-sciences-medical-information', 'pharma-life-sciences-adverse-event'])).min(1).max(getUseCaseShortlistResponseOneScenarioIdsMax)
+}).and(zod.object({
+  "id": zod.string().uuid(),
+  "revision": zod.number().int().min(1),
+  "createdAt": zod.coerce.date(),
+  "updatedAt": zod.coerce.date()
+}))
+
+
+export const UpdateUseCaseShortlistParams = zod.object({
+  "id": zod.coerce.string().uuid()
+})
+
+export const UpdateUseCaseShortlistHeader = zod.object({
+  "X-Depot-Mode": zod.enum(['presenter'])
+})
+
+export const updateUseCaseShortlistBodyOneNameMax = 160;
+
+export const updateUseCaseShortlistBodyOneCustomerMax = 200;
+
+export const updateUseCaseShortlistBodyOneNotesMax = 10000;
+
+export const updateUseCaseShortlistBodyOneScenarioIdsMax = 45;
+
+
+
+
+export const UpdateUseCaseShortlistBody = zod.object({
+  "name": zod.string().min(1).max(updateUseCaseShortlistBodyOneNameMax),
+  "customer": zod.string().min(1).max(updateUseCaseShortlistBodyOneCustomerMax),
+  "notes": zod.string().max(updateUseCaseShortlistBodyOneNotesMax),
+  "scenarioIds": zod.array(zod.enum(['financial-services-banking-routing', 'financial-services-fraud-triage', 'financial-services-lending-support', 'financial-services-card-disputes', 'financial-services-cross-channel-banking', 'healthcare-appointment-scheduling', 'healthcare-patient-access', 'healthcare-patient-billing', 'healthcare-refill-coordination', 'healthcare-care-follow-up', 'government-citizen-311', 'government-benefits-status', 'government-permits-licensing', 'government-public-emergency-information', 'government-public-service-cases', 'computers-electronics-technical-troubleshooting', 'computers-electronics-warranty-repair', 'computers-electronics-product-activation', 'computers-electronics-orders-returns', 'computers-electronics-proactive-product-support', 'energy-utilities-outage-reporting', 'energy-utilities-utility-billing', 'energy-utilities-utility-service-changes', 'energy-utilities-utility-safety-routing', 'energy-utilities-meter-usage-support', 'travel-reservation-changes', 'travel-disruption-rebooking', 'travel-loyalty-support', 'travel-baggage-claims', 'travel-multilingual-travelers', 'telecommunications-network-outage', 'telecommunications-telecom-billing', 'telecommunications-telecom-diagnostics', 'telecommunications-subscriber-onboarding', 'telecommunications-subscriber-retention', 'nonprofit-resource-navigation', 'nonprofit-donor-support', 'nonprofit-volunteer-coordination', 'nonprofit-crisis-intake', 'nonprofit-program-applications', 'pharma-life-sciences-patient-programs', 'pharma-life-sciences-medication-access', 'pharma-life-sciences-trial-information', 'pharma-life-sciences-medical-information', 'pharma-life-sciences-adverse-event'])).min(1).max(updateUseCaseShortlistBodyOneScenarioIdsMax)
+}).and(zod.object({
+  "revision": zod.number().int().min(1)
+}))
+
+export const updateUseCaseShortlistResponseOneNameMax = 160;
+
+export const updateUseCaseShortlistResponseOneCustomerMax = 200;
+
+export const updateUseCaseShortlistResponseOneNotesMax = 10000;
+
+export const updateUseCaseShortlistResponseOneScenarioIdsMax = 45;
+
+
+
+
+export const UpdateUseCaseShortlistResponse = zod.object({
+  "name": zod.string().min(1).max(updateUseCaseShortlistResponseOneNameMax),
+  "customer": zod.string().min(1).max(updateUseCaseShortlistResponseOneCustomerMax),
+  "notes": zod.string().max(updateUseCaseShortlistResponseOneNotesMax),
+  "scenarioIds": zod.array(zod.enum(['financial-services-banking-routing', 'financial-services-fraud-triage', 'financial-services-lending-support', 'financial-services-card-disputes', 'financial-services-cross-channel-banking', 'healthcare-appointment-scheduling', 'healthcare-patient-access', 'healthcare-patient-billing', 'healthcare-refill-coordination', 'healthcare-care-follow-up', 'government-citizen-311', 'government-benefits-status', 'government-permits-licensing', 'government-public-emergency-information', 'government-public-service-cases', 'computers-electronics-technical-troubleshooting', 'computers-electronics-warranty-repair', 'computers-electronics-product-activation', 'computers-electronics-orders-returns', 'computers-electronics-proactive-product-support', 'energy-utilities-outage-reporting', 'energy-utilities-utility-billing', 'energy-utilities-utility-service-changes', 'energy-utilities-utility-safety-routing', 'energy-utilities-meter-usage-support', 'travel-reservation-changes', 'travel-disruption-rebooking', 'travel-loyalty-support', 'travel-baggage-claims', 'travel-multilingual-travelers', 'telecommunications-network-outage', 'telecommunications-telecom-billing', 'telecommunications-telecom-diagnostics', 'telecommunications-subscriber-onboarding', 'telecommunications-subscriber-retention', 'nonprofit-resource-navigation', 'nonprofit-donor-support', 'nonprofit-volunteer-coordination', 'nonprofit-crisis-intake', 'nonprofit-program-applications', 'pharma-life-sciences-patient-programs', 'pharma-life-sciences-medication-access', 'pharma-life-sciences-trial-information', 'pharma-life-sciences-medical-information', 'pharma-life-sciences-adverse-event'])).min(1).max(updateUseCaseShortlistResponseOneScenarioIdsMax)
+}).and(zod.object({
+  "id": zod.string().uuid(),
+  "revision": zod.number().int().min(1),
+  "createdAt": zod.coerce.date(),
+  "updatedAt": zod.coerce.date()
+}))
+
+
+export const DeleteUseCaseShortlistParams = zod.object({
+  "id": zod.coerce.string().uuid()
+})
+
+export const DeleteUseCaseShortlistHeader = zod.object({
+  "X-Depot-Mode": zod.enum(['presenter'])
+})
+
+
+
+
+export const DeleteUseCaseShortlistBody = zod.object({
+  "revision": zod.number().int().min(1)
+})
+
+export const DeleteUseCaseShortlistResponse = zod.void()
+
+
+/**
  * @summary Authenticated presenter-only notes and preserved internal enablement
  */
 export const GetPresenterContentHeader = zod.object({

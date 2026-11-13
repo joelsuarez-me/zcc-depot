@@ -10,6 +10,7 @@ import savedResearchRouter from "./saved-research";
 import pitchDeckRouter from "./pitch-deck";
 import videoVoiceRouter from "./video-demo-voice";
 import presenterRouter from "./presenter";
+import shortlistsRouter from "./use-case-shortlists";
 import { presenterAccess } from "../middlewares/presenterAccess";
 
 const router: IRouter = Router();
@@ -28,5 +29,6 @@ router.use(savedResearchRouter);
 router.use(pitchDeckRouter);
 router.use(videoVoiceRouter);
 router.use(presenterRouter);
+router.use(shortlistsRouter);
 
 export default router;
