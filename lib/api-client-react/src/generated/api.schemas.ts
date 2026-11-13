@@ -5,6 +5,45 @@
  * API specification
  * OpenAPI spec version: 0.1.0
  */
+export interface VideoDemoVoice {
+  id: string;
+  name: string;
+}
+
+export type VideoDemoLineRole = typeof VideoDemoLineRole[keyof typeof VideoDemoLineRole];
+
+
+export const VideoDemoLineRole = {
+  caller: 'caller',
+  agent: 'agent',
+  narrator: 'narrator',
+} as const;
+
+export interface VideoDemoLine {
+  id: string;
+  role: VideoDemoLineRole;
+  text: string;
+}
+
+export interface VideoDemoVoices {
+  voices: VideoDemoVoice[];
+  lines: VideoDemoLine[];
+}
+
+export interface VideoDemoSpeechInput {
+  /**
+     * @minLength 1
+     * @maxLength 40
+     */
+  lineId: string;
+  /**
+     * @minLength 1
+     * @maxLength 100
+     * @pattern ^[a-zA-Z0-9_-]+$
+     */
+  voiceId: string;
+}
+
 export type PricingMethodId = typeof PricingMethodId[keyof typeof PricingMethodId];
 
 

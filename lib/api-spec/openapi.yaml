@@ -17,6 +17,51 @@ tags:
   - name: Storage
     description: Object storage upload and serving endpoints.
 paths:
+  /demo-nuggets/video/voices:
+    get:
+      operationId: getVideoDemoVoices
+      summary: Get available ElevenLabs voices and the fixed video-demo script
+      responses:
+        "200":
+          description: Available voices and prepared simulation dialogue.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/VideoDemoVoices"
+        "401":
+          description: Sign-in required for voice services.
+        "403":
+          description: Cross-site request rejected.
+        "429":
+          description: Voice-service rate limit.
+        "503":
+          description: ElevenLabs connection unavailable.
+  /demo-nuggets/video/speech:
+    post:
+      operationId: createVideoDemoSpeech
+      summary: Narrate one fixed simulation line with an available ElevenLabs voice
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/VideoDemoSpeechInput"
+      responses:
+        "200":
+          description: Generated speech; not a real call recording.
+          content:
+            audio/mpeg:
+              schema: { type: string, format: binary }
+        "400":
+          description: Invalid line or unavailable voice.
+        "401":
+          description: Sign-in required.
+        "403":
+          description: Cross-site request rejected.
+        "429":
+          description: Generation or concurrency limit.
+        "503":
+          description: ElevenLabs speech unavailable.
   /pitch-deck:
     get:
       operationId: getPitchDeck
@@ -539,6 +584,36 @@ components:
       schema:
         type: string
   schemas:
+    VideoDemoVoice:
+      type: object
+      required: [id, name]
+      properties:
+        id: { type: string }
+        name: { type: string }
+    VideoDemoLine:
+      type: object
+      required: [id, role, text]
+      properties:
+        id: { type: string }
+        role: { type: string, enum: [caller, agent, narrator] }
+        text: { type: string }
+    VideoDemoVoices:
+      type: object
+      required: [voices, lines]
+      properties:
+        voices:
+          type: array
+          items: { $ref: "#/components/schemas/VideoDemoVoice" }
+        lines:
+          type: array
+          items: { $ref: "#/components/schemas/VideoDemoLine" }
+    VideoDemoSpeechInput:
+      type: object
+      additionalProperties: false
+      required: [lineId, voiceId]
+      properties:
+        lineId: { type: string, minLength: 1, maxLength: 40 }
+        voiceId: { type: string, minLength: 1, maxLength: 100, pattern: "^[a-zA-Z0-9_-]+$" }
     PricingGuide:
       type: object
       required: [intro, billing, methods, costs, notes, sources]

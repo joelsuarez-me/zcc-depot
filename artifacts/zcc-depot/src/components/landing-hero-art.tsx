@@ -9,17 +9,21 @@ export function LandingHeroArt() {
   const label = paused ? "Play hero image animation" : "Pause hero image animation";
 
   return (
-    <figure className="landing-hero-art" data-testid="landing-hero-art">
-      <div className="landing-hero-art-clip">
-        <img
-          src={`${import.meta.env.BASE_URL}brand/contact-center-hero.png`}
-          alt="A contact center agent on a call, surrounded by caller details and live conversation insights."
-          width={1484}
-          height={1114}
-          fetchPriority="high"
-          decoding="async"
-          style={{ animationPlayState: paused ? "paused" : "running" }}
-        />
+    <figure className={`landing-hero-art${paused ? " is-paused" : ""}`} data-testid="landing-hero-art">
+      <div className="landing-hero-art-halo" aria-hidden />
+      <div className="landing-hero-art-float">
+        <div className="landing-hero-art-clip">
+          <img
+            src={`${import.meta.env.BASE_URL}brand/contact-center-hero.png`}
+            alt="A contact center agent on a call, surrounded by caller details and live conversation insights."
+            width={1484}
+            height={1114}
+            fetchPriority="high"
+            decoding="async"
+          />
+        </div>
+        <div className="landing-hero-art-rings" aria-hidden><span /><span /><span /><i /></div>
+        <div className="landing-hero-art-wave" aria-hidden><b /><b /><b /><b /><b /></div>
       </div>
       {!reduce && (
         <button

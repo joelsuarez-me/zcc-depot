@@ -38,3 +38,8 @@ export * from './sellSheetPreparation';
 export * from './uploadUrlRequest';
 export * from './uploadUrlRequestContentType';
 export * from './uploadUrlResponse';
+export * from './videoDemoLine';
+export * from './videoDemoLineRole';
+export * from './videoDemoSpeechInput';
+export * from './videoDemoVoice';
+export * from './videoDemoVoices';

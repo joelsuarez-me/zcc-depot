@@ -7,6 +7,7 @@ import sellSheetRouter from "./sellSheet";
 import pricingRouter from "./pricing";
 import researchRouter from "./demo-research";
 import pitchDeckRouter from "./pitch-deck";
+import videoVoiceRouter from "./video-demo-voice";
 
 const router: IRouter = Router();
 
@@ -18,5 +19,6 @@ router.use(sellSheetRouter);
 router.use(pricingRouter);
 router.use(researchRouter);
 router.use(pitchDeckRouter);
+router.use(videoVoiceRouter);
 
 export default router;

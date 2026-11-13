@@ -10,12 +10,13 @@ test("bespoke section fragments are readable and unique", () => {
   assert.equal(sectionAnchorId("💡", new Set()), "section-untitled");
 });
 
-test("Overview has a full-viewport hero and fixed arrows are on the left", () => {
+test("Overview has a compact linked hero and fixed arrows remain on the left", () => {
   const home = readFileSync(new URL("../src/pages/home.tsx", import.meta.url), "utf8");
   const css = readFileSync(new URL("../src/components/landing-hero-art.css", import.meta.url), "utf8");
   const nav = readFileSync(new URL("../src/components/section-navigation.tsx", import.meta.url), "utf8");
   assert.match(home, /id="overview" data-section-nav/);
-  assert.match(css, /landing-overview-wrap[\s\S]*?min-height: 100svh/);
+  assert.match(css, /landing-overview-wrap\s*\{[^}]*min-height: 0/);
+  assert.doesNotMatch(css, /(?:min-)?height:\s*(?:calc\([^;]*|\d+)(?:svh|vh)/);
   assert.match(nav, /fixed left-3/);
   assert.match(nav, /data-testid="link-current-section"/);
 });

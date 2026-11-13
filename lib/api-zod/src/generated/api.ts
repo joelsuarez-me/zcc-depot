@@ -9,6 +9,41 @@ import * as zod from 'zod';
 
 
 /**
+ * @summary Get available ElevenLabs voices and the fixed video-demo script
+ */
+export const GetVideoDemoVoicesResponse = zod.object({
+  "voices": zod.array(zod.object({
+  "id": zod.string(),
+  "name": zod.string()
+})),
+  "lines": zod.array(zod.object({
+  "id": zod.string(),
+  "role": zod.enum(['caller', 'agent', 'narrator']),
+  "text": zod.string()
+}))
+})
+
+
+/**
+ * @summary Narrate one fixed simulation line with an available ElevenLabs voice
+ */
+export const createVideoDemoSpeechBodyLineIdMax = 40;
+
+export const createVideoDemoSpeechBodyVoiceIdMax = 100;
+
+
+export const createVideoDemoSpeechBodyVoiceIdRegExp = new RegExp('^[a-zA-Z0-9_-]+$');
+
+
+export const CreateVideoDemoSpeechBody = zod.object({
+  "lineId": zod.string().min(1).max(createVideoDemoSpeechBodyLineIdMax),
+  "voiceId": zod.string().min(1).max(createVideoDemoSpeechBodyVoiceIdMax).regex(createVideoDemoSpeechBodyVoiceIdRegExp)
+})
+
+export const CreateVideoDemoSpeechResponse = zod.unknown()
+
+
+/**
  * @summary Read the signed-in product deep-dive slide collection
  */
 export const GetPitchDeckResponse = zod.object({

@@ -24,11 +24,11 @@ test("diagram typography follows the site stack without removing technical monos
   assert.doesNotMatch(css, /DM\+Sans|Instrument\+Serif|Vanilla Sans/);
 });
 
-test("landing title scales every responsive size by 50 percent and can wrap on phones", () => {
+test("compact landing title keeps the two-line identity and can wrap on phones", () => {
   const hero = readFileSync(new URL("../src/components/landing-hero-art.css", import.meta.url), "utf8");
   const home = readFileSync(new URL("../src/pages/home.tsx", import.meta.url), "utf8");
-  assert.match(hero, /font-size: clamp\(1\.95rem, 4\.65vw, 3\.975rem\)/);
-  assert.match(hero, /font-size: clamp\(1\.5rem, 8\.25vw, 3\.15rem\)/);
-  assert.match(hero, /grid-template-areas: "title title" "description art"/);
+  assert.match(hero, /font-size: clamp\(1\.9rem, 3\.5vw, 3\.25rem\)/);
+  assert.match(hero, /font-size: clamp\(1\.45rem, 7vw, 2\.4rem\); overflow-wrap: anywhere/);
+  assert.match(hero, /grid-template-areas: "title art" "description art"/);
   assert.equal((home.match(/className="block md:whitespace-nowrap"/g) || []).length, 2);
 });
