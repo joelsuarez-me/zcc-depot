@@ -17,6 +17,20 @@ tags:
   - name: Storage
     description: Object storage upload and serving endpoints.
 paths:
+  /voice-comparison:
+    parameters:
+      - $ref: "#/components/parameters/PresenterMode"
+    get:
+      operationId: getVoiceComparison
+      summary: Internal Zendesk Contact Center versus Voice enablement guide
+      responses:
+        "200":
+          description: Curated internal comparison from supplied enablement documents.
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/VoiceComparisonGuide" }
+        "401": { description: Sign-in required. }
+        "403": { description: Presenter mode required. }
   /use-case-shortlists:
     parameters:
       - $ref: "#/components/parameters/PresenterMode"
@@ -837,6 +851,61 @@ components:
       schema:
         type: string
   schemas:
+    VoiceComparisonGuide:
+      type: object
+      required: [title, notice, sections, sources]
+      properties:
+        title: { type: string }
+        notice: { type: string }
+        sections:
+          type: array
+          items: { $ref: "#/components/schemas/VoiceComparisonSection" }
+        sources:
+          type: array
+          items: { $ref: "#/components/schemas/VoiceComparisonSource" }
+    VoiceComparisonSource:
+      type: object
+      required: [id, title, note]
+      properties:
+        id: { type: string }
+        title: { type: string }
+        note: { type: string }
+    VoiceComparisonSection:
+      type: object
+      required: [id, eyebrow, title, intro, cards, rows, questions, references]
+      properties:
+        id: { type: string }
+        eyebrow: { type: string }
+        title: { type: string }
+        intro: { type: string }
+        cards:
+          type: array
+          items: { $ref: "#/components/schemas/VoiceComparisonCard" }
+        rows:
+          type: array
+          items: { $ref: "#/components/schemas/VoiceComparisonRow" }
+        questions:
+          type: array
+          items: { type: string }
+        references:
+          type: array
+          items: { type: string }
+    VoiceComparisonCard:
+      type: object
+      required: [title, body, points]
+      properties:
+        title: { type: string }
+        body: { type: string }
+        points:
+          type: array
+          items: { type: string }
+    VoiceComparisonRow:
+      type: object
+      required: [topic, voice, contactCenter]
+      properties:
+        topic: { type: string }
+        voice: { type: string }
+        contactCenter: { type: string }
     UseCaseShortlistInput:
       type: object
       required: [name, customer, notes, scenarioIds]

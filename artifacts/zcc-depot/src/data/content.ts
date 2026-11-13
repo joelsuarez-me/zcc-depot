@@ -1,6 +1,7 @@
 export const DEMO_URL = "https://zendesk.storylane.io/share/contactcenter-feb2026-en-us";
 const HC = "https://support.zendesk.com/hc/en-us/";
 export const LINKS = {
+  contactCenterHub: "https://zendesk.seismic.com/apps/doccenter/7539bb8b-0524-4a3d-8d95-ac543d21e4d0/doc/%25252Fdd75de31f7-c9a0-f233-6a1e-9d7fc11fa278%25252FdfOTE0MzE2NTctOTE3Yy00NmQ2LTkwMjItNjA3OWZiZGI4YmNi%25252CPT0%25253D%25252CWmVuZGVzayBmb3IgQ29udGFjdCBDZW50ZXI%25253D%25252FdfNzU1OTBmOWMtNzk3NC00ZTg0LTlhOWEtZTRjYzAwNjI3NmZi%25252CPT0%25253D%25252CUHJvZHVjdCB8IFNvbHV0aW9uIGxldmVs%25252Flf076b0e11-5737-4ea6-98c4-450a57427dea//",
   product: "https://www.zendesk.com/service/contact-center/",
   resolution: "https://www.zendesk.com/au/blog/zendesk-insights/innovation/advancing-resolution-platform/",
   marketplace: "https://www.zendesk.com/marketplace/apps/support/1162892/zendesk-for-contact-center-dashboards/",
@@ -21,6 +22,7 @@ const s = (id: string, title: string, slug: string, category: string): Resource 
 export const RESOURCE_CATEGORIES = ["Basics", "Using Contact Center", "Setting up", "Marketplace app", "AI & analytics", "Platform & product"] as const;
 
 export const RESOURCES: Resource[] = [
+  { id: "contact-center-hub", title: "Zendesk Contact Center Hub", url: LINKS.contactCenterHub, category: "Basics", kind: "Internal" },
   a("about", "About Zendesk Contact Center", "9459059241626-About-Zendesk-Contact-Center", "Basics"),
   a("managing-calls", "Managing calls in Contact Center", "10946560449050-Managing-calls-in-Contact-Center", "Basics"),
   a("accept-decline", "Accepting and declining calls in Contact Center", "10937641189786-Accepting-and-declining-calls-in-Contact-Center", "Basics"),

@@ -1,3 +1,5 @@
+import { LINKS } from "./content";
+
 export type SubNavItem = { label: string; href: string; external?: boolean };
 export type NavItem = { href: string; label: string; children?: SubNavItem[] };
 
@@ -35,6 +37,7 @@ export const NAV: NavItem[] = [
   },
   { href: "/resources", label: "Resources", children: [
     { label: "Resource library", href: "/resources#library" },
+    { label: "Zendesk Contact Center Hub", href: LINKS.contactCenterHub, external: true },
     { label: "Agent knowledge", href: "/resources#ai-suggestions" },
     { label: "Latest news · per internal briefing", href: "/resources#collaboration" },
     { label: "Pitch Deck", href: "/resources#pitch-deck" },

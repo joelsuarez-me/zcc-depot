@@ -66,7 +66,9 @@ export function DepotSidebar({ logo, mobile = false, onNavigate }: { logo: strin
                     {active && n.children && (
                       <ul className="mb-1 ml-4 border-l border-[#F5F5F2]/10 pl-2">
                         {n.children.filter((c) => isPresenter || !["/resources#roadmap", "/resources#collaboration", "/resources#pitch-deck"].includes(c.href)).map((c) => (
-                          <li key={c.href}><Link href={c.href} onClick={onNavigate} className={`depot-side-sublink ${loc === c.href ? "is-active" : ""}`} data-testid={`link-subnav-${c.label.toLowerCase().replace(/\W+/g, "-")}`}>{c.label}</Link></li>
+                          <li key={c.href}>{c.external
+                            ? <a href={c.href} target="_blank" rel="noopener noreferrer" onClick={onNavigate} className="depot-side-sublink" data-testid={`link-subnav-${c.label.toLowerCase().replace(/\W+/g, "-")}`}>{c.label}<span className="sr-only"> (opens in a new tab)</span></a>
+                            : <Link href={c.href} onClick={onNavigate} className={`depot-side-sublink ${loc === c.href ? "is-active" : ""}`} data-testid={`link-subnav-${c.label.toLowerCase().replace(/\W+/g, "-")}`}>{c.label}</Link>}</li>
                         ))}
                       </ul>
                     )}
