@@ -5,16 +5,29 @@ import { test } from "node:test";
 const css = readFileSync(new URL("../src/components/landing-hero-art.css", import.meta.url), "utf8");
 const art = readFileSync(new URL("../src/components/landing-hero-art.tsx", import.meta.url), "utf8");
 const home = readFileSync(new URL("../src/pages/home.tsx", import.meta.url), "utf8");
+const intro = readFileSync(new URL("../src/components/landing-hero-intro.tsx", import.meta.url), "utf8");
 
 test("landing copy includes the new title, subtitle, positioning and image tagline", () => {
   assert.match(home, />Platform<\/span>\{" "\}Architect Depot/);
   assert.ok(home.includes("Where technical expertise meets business value."));
-  assert.ok(home.includes("Built by Zendesk Contact Center Platform Architects, this centralized resource"));
-  assert.ok(home.includes("confidently position, demonstrate, and accelerate the adoption of Zendesk Contact Center."));
+  assert.ok(intro.includes("Built by Zendesk Contact Center Platform Architects, this centralized resource"));
+  assert.ok(intro.includes("confidently position, demonstrate, and accelerate the adoption of Zendesk Contact Center."));
   for (const line of ["Architect the solution.", "Demonstrate the value.", "Accelerate the win."]) {
     assert.ok(art.includes(line));
   }
   assert.doesNotMatch(home, /Developed by Zendesk|ZENDESK CONTACT CENTER ·/);
+});
+
+test("compact introduction ends on a stable line, supports pause/replay and keeps full copy expandable", () => {
+  assert.match(home, /<LandingHeroIntro \/>/);
+  assert.doesNotMatch(home, /this centralized resource/);
+  assert.match(intro, /if \(reduce \|\| paused \|\| finished\) return/);
+  assert.match(intro, /clearTimeout\(timer\)/);
+  assert.match(intro, /Replay intro animation/);
+  assert.match(intro, /<details[\s\S]*<summary>About this depot<\/summary>/);
+  assert.match(intro, /HIGHLIGHTS\[reduce \? HIGHLIGHTS.length - 1 : index\]/);
+  assert.match(intro, /aria-hidden="true"/);
+  assert.match(intro, /className="sr-only"/);
 });
 
 test("landing hero pairs the title and description with a contained right-hand image", () => {

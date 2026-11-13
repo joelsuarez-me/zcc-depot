@@ -58,6 +58,46 @@
 }
 .landing-hero-art-tagline span { display: block; }
 .landing-hero-art-tagline span:last-child { color: #d1f470; }
+.landing-intro { max-width: 31rem; }
+.landing-intro-credit { margin: 0; font-size: .875rem; color: #f5f5f2b3; }
+.landing-intro-highlight { display: flex; align-items: center; gap: .5rem; margin-top: .25rem; }
+.landing-intro-slot {
+  display: grid;
+  flex: 1;
+  min-width: 0;
+  min-height: 2.8em;
+  align-items: center;
+  font-size: clamp(1rem, 1.55vw, 1.3rem);
+  line-height: 1.35;
+  font-weight: 600;
+  letter-spacing: -.015em;
+  color: #d1f470;
+}
+.landing-intro-slot > span { grid-area: 1 / 1; }
+.landing-intro-control {
+  display: grid;
+  flex-shrink: 0;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  border: 1px solid #d1f47040;
+  border-radius: 50%;
+  color: #d1f470;
+  background: #14271e80;
+  cursor: pointer;
+}
+.landing-intro-control:hover { background: #d1f47020; }
+.landing-intro-control:focus-visible,
+.landing-intro-about summary:focus-visible { outline: 2px solid #d1f470; outline-offset: 3px; }
+.landing-intro-about { font-size: .85rem; line-height: 1.6; }
+.landing-intro-about summary {
+  width: fit-content;
+  padding-block: .35rem;
+  color: #f5f5f2b3;
+  cursor: pointer;
+}
+.landing-intro-about summary:hover { color: #d1f470; }
+.landing-intro-about p { margin: .5rem 0 0; color: #f5f5f2bf; }
 
 .landing-hero-art {
   grid-area: art;

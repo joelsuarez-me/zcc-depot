@@ -4,6 +4,7 @@ import { Ext, Note, Reveal, Section, SectionHead } from "@/components/kit";
 import { Pause, Play } from "lucide-react";
 import { PillarArt } from "@/components/art";
 import { LandingHeroArt } from "@/components/landing-hero-art";
+import { LandingHeroIntro } from "@/components/landing-hero-intro";
 import { CallJourney } from "@/components/call-journey";
 import { FEATURES, LINKS, PILLARS } from "@/data/content";
 
@@ -24,9 +25,7 @@ export default function Home() {
             </h1>
             <div className="landing-hero-description max-w-2xl text-sm leading-snug text-[#F5F5F2]/75">
               <p className="landing-hero-subtitle">Where technical expertise meets business value.</p>
-              <p>
-                Built by Zendesk Contact Center Platform Architects, this centralized resource brings together the architecture, technical insights, demo experiences, and sales enablement tools needed to confidently position, demonstrate, and accelerate the adoption of Zendesk Contact Center.
-              </p>
+              <LandingHeroIntro />
             </div>
             <LandingHeroArt />
           </motion.div>
