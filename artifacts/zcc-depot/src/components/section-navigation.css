@@ -1,0 +1,15 @@
+/* All phone routes share the header's unused middle space. Keep 44px arrow
+   targets clear of the logo, search and menu; never float over reading content.
+   Section headings retain their own permalinks. The extra rail link remains on
+   desktop, where the default left-side placement is unchanged. */
+@media (max-width:767px){
+  .section-navigation{
+    --section-nav-bottom:auto;
+    top:15px;
+    left:calc(50% - .75rem);
+    transform:translateX(-50%);
+    flex-direction:row;
+    z-index:60;
+  }
+  .section-navigation [data-testid="link-current-section"]{display:none}
+}

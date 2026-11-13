@@ -7,7 +7,7 @@ Keep page heroes compact, including the landing-page Overview. Preserve its own 
 
 **Why:** The user repeatedly requested less vertical space for titles, subtitles, and shaded headers, aiming to see useful content in one browser viewport at 90% zoom. After trying an enlarged Overview, they requested a shorter hero with better-proportioned text and art.
 
-**How to apply:** Keep the landing title and description close together and the illustration proportionate. Its decorative animation should run continuously by default, not only on hover, with a pause control and reduced-motion support. Keep the always-visible section arrows on the left by default, including before the first content section. Use header placement on phones for the Components guide, and while the main menu is collapsed for Demos, so controls do not obscure map content or blueprint stages.
+**How to apply:** Keep the landing title and description close together and the illustration proportionate. Its decorative animation should run continuously by default, not only on hover, with a pause control and reduced-motion support. Keep the always-visible section arrows on the left by default on desktop, including before the first content section. On phones, keep arrows in the header across all routes, including signed-in pages, so they never obscure reading content. Preserve the wider collapsed-menu header treatment for Architecture and Demos.
 
 Keep the gap between each main hero and its first content section compact too; do not recreate a large blank area through first-section padding.
 

@@ -54,14 +54,15 @@ test("pricing fragment visits retain the client and server sign-in gates", () =>
   assert.match(server, /res.json\(GetPricingGuideResponse.parse\(pricingGuide\)\)/);
 });
 
-test("phone arrow placement is scoped to Components and does not cover its content", () => {
+test("phone arrows use shared header placement on every route without covering content", () => {
   const nav = readFileSync(new URL("../src/components/section-navigation.tsx", import.meta.url), "utf8");
-  const css = readFileSync(new URL("../src/components/contact-center-components/components-guide.css", import.meta.url), "utf8");
-  assert.match(nav, /location === "\/architecture\/components" \? "section-nav-components" : ""/);
+  const css = readFileSync(new URL("../src/components/section-navigation.css", import.meta.url), "utf8");
+  assert.match(nav, /import "\.\/section-navigation\.css"/);
+  assert.match(nav, /className=\{`section-navigation fixed left-3/);
   assert.match(nav, /bottom: "var\(--section-nav-bottom, calc\(env\(safe-area-inset-bottom/);
-  assert.match(css, /@media \(max-width:767px\)\{\s*\.section-nav-components\{/);
+  assert.match(css, /@media \(max-width:767px\)\{\s*\.section-navigation\{/);
   assert.match(css, /--section-nav-bottom:auto;[\s\S]*?top:15px;[\s\S]*?flex-direction:row;/);
-  assert.match(css, /\.section-nav-components \[data-testid="link-current-section"\]\{display:none\}/);
+  assert.match(css, /\.section-navigation \[data-testid="link-current-section"\]\{display:none\}/);
   assert.match(nav, /h-11 w-11/);
 });
 
