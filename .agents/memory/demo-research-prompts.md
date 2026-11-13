@@ -38,3 +38,9 @@ sections, rather than applying the visual treatment to the previous research out
 **How to apply:** Organize grounded research around the upcoming demo conversation,
 retain an explicit cited evidence trail, and keep speculative fit separate from
 verified facts. Do not copy customer facts from a sample agenda into new reports.
+
+Saved Demo Agenda PDFs must use the executive report format and the naming convention `Demo-Agenda-<Customer Name>-<Current Date>.pdf`.
+
+**Why:** The user requested Print PDF after Save Agenda and explicitly specified this file naming convention.
+
+**How to apply:** Use the export's current calendar date, not the agenda's last-saved date, and require updated drafts to be saved before printing.

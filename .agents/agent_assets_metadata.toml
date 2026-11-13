@@ -14,3 +14,17 @@ mtime_ms = 1794491796091
 storage_uri = "gcs://replit-rams-assets-spock/rams/assets/repl:a5317541-3b36-4634-98e4-c41c651ba0cc/41eef60b-f1d2-4081-87ad-016e7b1d2e6d/53c86b99-89e3-412b-97ea-5c998c3bdb4b"
 storage_version_token = "1794491884269996"
 content_type = "image/png"
+
+[[outputs]]
+id = "eeSFVHbMG73WLlFyeu7zY"
+uri = "file://generated-artifacts/pdf-review/Demo-Agenda-Northstar%20Service%20Group-2026-11-13.pdf"
+type = "pdf"
+title = "Demo Agenda PDF formatting sample"
+description = "Fictional Northstar sample showing the executive-style layout. This is not real customer research."
+logical_id = "6fdd08c4-5680-4403-be21-996bf0d4c633"
+content_hash = "sha256:89b2e8ae9f8f04bfbff0d3ff6089d04fed055df522a98df98739f6ed6c106c93"
+size = 202222
+mtime_ms = 1794584762776
+storage_uri = "gcs://replit-rams-assets-spock/rams/assets/repl:a5317541-3b36-4634-98e4-c41c651ba0cc/6fdd08c4-5680-4403-be21-996bf0d4c633/11a95c06-f454-44c7-8787-6b238277b81d"
+storage_version_token = "1794584794944563"
+content_type = "application/pdf"

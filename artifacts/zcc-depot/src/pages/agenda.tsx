@@ -40,6 +40,7 @@ import { HeroArt, SectionGlyph, StateArt } from "@/components/art";
 import { useAgendaCompanyLogo } from "@/hooks/use-agenda-company-logo";
 import { companyLogoKey } from "@/lib/agenda-company-logo";
 import { ResearchAgendaPicker } from "@/components/research-agenda-picker";
+import { AgendaPdfAction } from "@/components/agenda-pdf-action";
 
 const TEXT_KEY = "zcc-depot:agenda:v1";
 const LOGO_KEY = "zcc-depot:agenda-logo:v1";
@@ -688,6 +689,7 @@ export default function Agenda() {
                     {busy ? "Saving…" : "Save agenda"}
                   </button>
                 </div>
+                {selectedId && !creating && activeAgenda && <AgendaPdfAction agenda={activeAgenda} dirty={dirty} busy={busy || uploading || queryBusy} />}
                 {selectedId && (
                   <button type="button" onClick={() => setConfirmDelete(true)} className="inline-flex min-h-10 w-full items-center justify-center gap-2 rounded-full px-4 py-2 text-sm font-semibold text-[#895646] transition hover:bg-[#f3e4de]" data-testid="button-agenda-delete">
                     <Trash2 className="h-4 w-4" aria-hidden /> Delete agenda
@@ -717,10 +719,13 @@ export default function Agenda() {
                   <p className="text-sm text-[#536157]">
                     {creating ? "Unsaved draft. Edit this agenda, then save it to the shared library." : `Saved agenda · updated ${displayDate(activeAgenda?.updatedAt)}. Save after making changes.`}
                   </p>
-                  <button type="button" onClick={() => void saveAgenda()} disabled={busy || uploading} className={primaryButton} data-testid="button-agenda-save-presentation">
-                    {busy ? <LoaderCircle className="h-4 w-4 animate-spin" aria-hidden /> : <Save className="h-4 w-4" aria-hidden />}
-                    {busy ? "Saving…" : "Save agenda"}
-                  </button>
+                  <div className="flex flex-wrap items-start gap-3">
+                    <button type="button" onClick={() => void saveAgenda()} disabled={busy || uploading} className={primaryButton} data-testid="button-agenda-save-presentation">
+                      {busy ? <LoaderCircle className="h-4 w-4 animate-spin" aria-hidden /> : <Save className="h-4 w-4" aria-hidden />}
+                      {busy ? "Saving…" : "Save agenda"}
+                    </button>
+                    {selectedId && !creating && activeAgenda && <AgendaPdfAction agenda={activeAgenda} dirty={dirty} busy={busy || uploading || queryBusy} />}
+                  </div>
                 </div>
                 <AgendaDocument fields={fields} logoUrl={protectedLogoUrl(fields.logoPath)} />
               </>
