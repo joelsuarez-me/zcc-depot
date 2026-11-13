@@ -1,17 +1,20 @@
 import type { ReactNode } from "react";
-import { Pause, Play, RotateCcw } from "lucide-react";
-import { useDemoPlayback, type DemoPlayback } from "@/hooks/use-demo-playback";
+import { Loader2, Pause, Play, RotateCcw } from "lucide-react";
+import type { DemoPlayback } from "@/hooks/use-demo-playback";
+import { useNarratedDemo } from "@/hooks/use-narrated-demo";
+import { useNarration, VOICE_ROLES } from "./narration-provider";
 import type { DemoNugget, NuggetId } from "@/data/demo-nuggets";
 import "./demo-nuggets.css";
 
 type Props = { nugget: DemoNugget; activeId: NuggetId | null; onActiveChange: (id: NuggetId | null) => void; children: (pb: DemoPlayback) => ReactNode; dark?: boolean };
 
 export function DemoPlayer({ nugget, activeId, onActiveChange, children, dark = false }: Props) {
-  const pb = useDemoPlayback({ id: nugget.id, stages: nugget.stages, activeId, onActiveChange });
+  const { pb, pending, error, caption, voiced } = useNarratedDemo({ nugget, activeId, onActiveChange });
+  const narration = useNarration();
   const id = nugget.id;
-  const label = pb.playing ? "Pause" : pb.status === "paused" ? "Resume" : pb.complete ? "Play again" : "Play";
-  const toggle = () => (pb.playing ? pb.pause() : pb.play());
-  const statusText = { idle: "Ready to play", playing: "Playing", paused: "Paused", complete: "Complete" }[pb.status];
+  const label = pending ? "Cancel" : pb.playing ? "Pause" : pb.status === "paused" ? "Resume" : pb.complete ? "Play again" : "Play";
+  const toggle = () => (pb.playing || pending ? pb.pause() : pb.play());
+  const statusText = pending ? "Preparing ElevenLabs audio…" : error ? "Audio unavailable — retry or use visual-only mode" : { idle: "Ready to play", playing: "Playing", paused: "Paused", complete: "Complete" }[pb.status];
   const ink = dark ? "text-[#F5F5F2]" : "text-[#11110D]";
 
   return (
@@ -30,19 +33,29 @@ export function DemoPlayer({ nugget, activeId, onActiveChange, children, dark = 
             </button>
           )}
         </div>
+        {caption && <div className={`mt-3 rounded-2xl border p-4 text-sm leading-relaxed ${dark ? "border-white/15 bg-white/5 text-[#F5F5F2]" : "border-[#203524]/15 bg-[#FBFBF8] text-[#11110D]"}`} data-testid={`caption-${id}`}>
+          <span className={`mb-1 block text-xs font-semibold ${dark ? "text-[#D1F470]" : "text-[#203524]"}`}>{VOICE_ROLES.find(role => role.id === caption.role)?.label} · AI-generated dialogue</span>
+          {caption.text}
+        </div>}
       </div>
 
       <div className={`flex min-w-0 flex-col gap-4 lg:col-span-4 ${ink}`}>
         <div className="flex items-center gap-2">
           <button type="button" onClick={toggle} aria-pressed={pb.playing} aria-label={`${label} ${nugget.title} demo`} data-testid={`button-play-${id}`}
             className="inline-flex items-center gap-2 rounded-full bg-[#D1F470] px-5 py-2.5 text-sm font-semibold text-[#11110D] transition-transform hover:-translate-y-0.5">
-            {pb.playing ? <Pause className="h-4 w-4" aria-hidden /> : <Play className="h-4 w-4" aria-hidden />}{label}
+            {pending ? <Loader2 className="h-4 w-4 animate-spin" aria-hidden /> : pb.playing ? <Pause className="h-4 w-4" aria-hidden /> : <Play className="h-4 w-4" aria-hidden />}{label}
           </button>
           <button type="button" onClick={pb.replay} aria-label={`Restart ${nugget.title} demo from the beginning`} data-testid={`button-replay-${id}`}
             className={`inline-flex items-center gap-2 rounded-full border px-4 py-2.5 text-sm font-semibold transition-colors ${dark ? "border-[#F5F5F2]/20 hover:bg-[#F5F5F2]/10" : "border-[#11110D]/15 hover:bg-[#11110D]/5"}`}>
             <RotateCcw className="h-4 w-4" aria-hidden />Restart
           </button>
         </div>
+        <p className="text-xs opacity-65">{voiced ? "ElevenLabs narration · audio-paced stages" : "Visual-only playback · no audio"}</p>
+        {error && <div role="alert" className={`rounded-xl border p-3 text-sm ${dark ? "border-[#D1F470]/30 bg-white/10" : "border-[#9A4C2C]/25 bg-[#FFF7EF]"}`} data-testid={`error-narration-${id}`}>
+          <p>{error}</p>
+          <button type="button" onClick={pb.play} className="mr-4 mt-2 min-h-11 font-semibold underline">Retry narration</button>
+          <button type="button" onClick={() => narration.setEnabled(false)} className="mt-2 min-h-11 font-semibold underline">Use visual-only playback</button>
+        </div>}
         <div>
           <div className="mono mb-1.5 flex justify-between text-[0.68rem] uppercase tracking-[.14em] opacity-60">
             <span data-testid={`status-${id}`} role="status">{statusText}</span>

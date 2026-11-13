@@ -9,16 +9,17 @@ import * as zod from 'zod';
 
 
 /**
- * @summary Get available ElevenLabs voices and the fixed video-demo script
+ * @summary Get available ElevenLabs voices and prepared demo scripts
  */
-export const GetVideoDemoVoicesResponse = zod.object({
+export const GetDemoVoicesResponse = zod.object({
   "voices": zod.array(zod.object({
   "id": zod.string(),
   "name": zod.string()
 })),
   "lines": zod.array(zod.object({
+  "nuggetId": zod.enum(['voice-copilot', 'voice-qa', 'voice-ai-agents', 'video-screen-sharing']),
   "id": zod.string(),
-  "role": zod.enum(['caller', 'agent', 'narrator']),
+  "role": zod.enum(['caller', 'ai-agent', 'human-agent', 'narrator']),
   "text": zod.string()
 }))
 })
@@ -27,20 +28,21 @@ export const GetVideoDemoVoicesResponse = zod.object({
 /**
  * @summary Narrate one fixed simulation line with an available ElevenLabs voice
  */
-export const createVideoDemoSpeechBodyLineIdMax = 40;
+export const createDemoSpeechBodyLineIdMax = 40;
 
-export const createVideoDemoSpeechBodyVoiceIdMax = 100;
-
-
-export const createVideoDemoSpeechBodyVoiceIdRegExp = new RegExp('^[a-zA-Z0-9_-]+$');
+export const createDemoSpeechBodyVoiceIdMax = 100;
 
 
-export const CreateVideoDemoSpeechBody = zod.object({
-  "lineId": zod.string().min(1).max(createVideoDemoSpeechBodyLineIdMax),
-  "voiceId": zod.string().min(1).max(createVideoDemoSpeechBodyVoiceIdMax).regex(createVideoDemoSpeechBodyVoiceIdRegExp)
+export const createDemoSpeechBodyVoiceIdRegExp = new RegExp('^[a-zA-Z0-9_-]+$');
+
+
+export const CreateDemoSpeechBody = zod.object({
+  "nuggetId": zod.enum(['voice-copilot', 'voice-qa', 'voice-ai-agents', 'video-screen-sharing']),
+  "lineId": zod.string().min(1).max(createDemoSpeechBodyLineIdMax),
+  "voiceId": zod.string().min(1).max(createDemoSpeechBodyVoiceIdMax).regex(createDemoSpeechBodyVoiceIdRegExp)
 })
 
-export const CreateVideoDemoSpeechResponse = zod.unknown()
+export const CreateDemoSpeechResponse = zod.unknown()
 
 
 /**

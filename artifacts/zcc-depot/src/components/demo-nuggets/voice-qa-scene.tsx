@@ -40,7 +40,7 @@ export function VoiceQaScene({ pb }: { pb: DemoPlayback }) {
         <div className="relative overflow-hidden rounded-[1.25rem] bg-[#FBFBF8] shadow-[0_30px_60px_-30px_rgba(32,53,36,.6)] sm:w-[68%]">
           <div className="flex items-center justify-between bg-[#11110D] px-4 py-3 text-[#F5F5F2]">
             <span className="text-sm font-semibold">Call recording</span>
-            <span className="mono text-[0.6rem] uppercase tracking-[.14em] text-[#D1F470]">Sample · no audio</span>
+            <span className="mono text-[0.6rem] uppercase tracking-[.14em] text-[#D1F470]">Prepared sample</span>
           </div>
           <div className="space-y-3 p-4">
             <div className={`vq-row relative rounded-2xl bg-[#11110D]/[.06] p-3 ${custShown ? "opacity-100" : "translate-y-2 opacity-0"}`}>

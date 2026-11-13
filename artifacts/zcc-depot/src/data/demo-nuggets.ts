@@ -1,9 +1,9 @@
 import type { DemoStage } from "@/lib/demo-playback";
 
-export type NuggetId = "voice-copilot" | "voice-qa" | "voice-ai-agents";
+export type NuggetId = "voice-copilot" | "voice-qa" | "voice-ai-agents" | "video-screen-sharing";
 export type DemoNugget = { id: NuggetId; title: string; description: string; stages: readonly DemoStage[] };
 
-/** Illustrative, local-only sequences — no AI, telephony, recordings or actions. */
+/** Prepared visual sequences; optional ElevenLabs speech is synthetic, not a call. */
 export const DEMO_NUGGETS: readonly DemoNugget[] = [
   {
     id: "voice-copilot",
@@ -39,6 +39,19 @@ export const DEMO_NUGGETS: readonly DemoNugget[] = [
       { id: "replacement", label: "Replacement created", description: "A simulated action marks the replacement as created. No order is actually changed.", durationMs: 3000 },
       { id: "pickup", label: "Pickup scheduled", description: "A second simulated action illustrates arranging a carrier pickup.", durationMs: 3000 },
       { id: "notification", label: "Confirmation sent", description: "A final simulated action illustrates sending the details. No email or notification is actually sent.", durationMs: 3500 },
+    ],
+  },
+  {
+    id: "video-screen-sharing",
+    title: "Video calling & screen sharing",
+    description: "Escalate a sample messaging conversation to video, preview audio and camera, and guide a customer through a shared setup window without losing ticket context.",
+    stages: [
+      { id: "invitation", label: "Invite from the ticket", description: "The human agent sends a video invitation in the existing messaging conversation.", durationMs: 4000 },
+      { id: "preview", label: "Preview before joining", description: "Both participants can check audio and video before joining the browser-based call.", durationMs: 4000 },
+      { id: "connected", label: "Connect on video", description: "The customer and agent meet on video while their ticket context stays visible.", durationMs: 4000 },
+      { id: "select-screen", label: "Choose a window", description: "Select a prepared setup window to share. No real screen capture takes place.", durationMs: 4000 },
+      { id: "sharing", label: "Guide with visual context", description: "The selected window and participant video remain visible together.", durationMs: 5000 },
+      { id: "resolution", label: "Resolve in context", description: "The sample device is paired and the conversation remains on the same ticket.", durationMs: 4000 },
     ],
   },
 ];

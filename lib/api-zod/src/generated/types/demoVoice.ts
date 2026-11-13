@@ -6,7 +6,7 @@
  * OpenAPI spec version: 0.1.0
  */
 
-export interface VideoDemoVoice {
+export interface DemoVoice {
   id: string;
   name: string;
 }

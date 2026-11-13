@@ -6,9 +6,11 @@ import { CopilotScene } from "@/components/demo-nuggets/copilot-scene";
 import { VoiceAiScene } from "@/components/demo-nuggets/voice-ai-scene";
 import { VoiceQaScene } from "@/components/demo-nuggets/voice-qa-scene";
 import { NuggetLibrary } from "@/components/demo-nuggets/nugget-library";
+import { VideoSharingScene } from "@/components/demo-nuggets/video-sharing-scene";
+import { NarrationControls, NarrationProvider } from "@/components/demo-nuggets/narration-provider";
 
 const TITLE = "Demo Nuggets | ZCC Depot";
-const DESC = "Explore the Demo Nuggets library: animated Voice Copilot, Voice QA and Voice AI Agents simulations with sample data.";
+const DESC = "Explore animated Voice Copilot, Voice QA, Voice AI Agents, and video calling and screen sharing demos, with optional ElevenLabs narration.";
 
 function useMeta() {
   useEffect(() => {
@@ -30,19 +32,20 @@ function useMeta() {
 export default function DemoNuggets() {
   useMeta();
   const [activeId, setActiveId] = useState<NuggetId | null>(null);
-  const [copilot, qa, voice] = DEMO_NUGGETS;
+  const [copilot, qa, voice, video] = DEMO_NUGGETS;
 
   return (
-    <>
+    <NarrationProvider onStop={() => setActiveId(null)}>
       <PageHero motif="flow" eyebrow="Demos · Feature simulations" title={<>Demo <span className="serif italic text-[#D1F470]">Nuggets</span></>}
-        lede="Playable illustrations of single features. Visual simulations with sample data: no live Zendesk or Amazon session, audio, or external actions." />
+        lede="Playable feature illustrations with sample data and optional ElevenLabs voice overlays. No live Zendesk or Amazon session, real calls, or external actions." />
       <Section tone="white" className="[&>.section-body]:!pb-8">
         <SectionHead id="library" eyebrow="Feature library" title="Library"
           lede="Choose a feature, open its demo, and play through an illustrated customer-service moment." />
         <NuggetLibrary nuggets={DEMO_NUGGETS} onSelect={() => setActiveId(null)} />
+        <NarrationControls />
       </Section>
       <Section tone="paper" className="[&>.section-body]:!pt-10">
-        <SectionHead id="voice-copilot" num="01" eyebrow="Voice Copilot" title={<>Knowledge, <span className="hl">mid-call</span>.</>} lede={copilot.description} />
+        <SectionHead id="voice-copilot" eyebrow="Voice Copilot" title={<>Knowledge, <span className="hl">mid-call</span>.</>} lede={copilot.description} />
         <DemoPlayer nugget={copilot} activeId={activeId} onActiveChange={setActiveId}>{pb => <CopilotScene pb={pb} />}</DemoPlayer>
         <Note>Illustrative only. Sample customer Terry Silva and number +1 (415) 555-0143 are fictional. Guidance and the source article are sample content; availability depends on your Zendesk plan and configuration.</Note>
       </Section>
@@ -53,10 +56,15 @@ export default function DemoNuggets() {
         <Note>Illustrative sample only, based on the supplied Voice QA reference. No call is recorded or analyzed, no quality score is calculated, and no customer or agent action is taken.</Note>
       </Section>
       <Section tone="ink">
-        <SectionHead dark id="voice-ai-agents" num="02" eyebrow="Voice AI Agents" title={<>From request to <span className="serif italic text-[#D1F470]">resolution</span>.</>} lede={voice.description} />
+        <SectionHead dark id="voice-ai-agents" eyebrow="Voice AI Agents" title={<>From request to <span className="serif italic text-[#D1F470]">resolution</span>.</>} lede={voice.description} />
         <DemoPlayer dark nugget={voice} activeId={activeId} onActiveChange={setActiveId}>{pb => <VoiceAiScene pb={pb} />}</DemoPlayer>
         <p className="mt-8 border-l-2 border-[#D1F470]/40 pl-4 text-xs leading-relaxed text-[#F5F5F2]/55">Simulated activity. No replacement, pickup or notification is created or sent. Real actions require integrations configured for your environment.</p>
       </Section>
-    </>
+      <Section tone="paper">
+        <SectionHead id="video-screen-sharing" eyebrow="Video calling & screen sharing" title={<>See it together. <span className="hl">Solve it in context.</span></>} lede={video.description} />
+        <DemoPlayer nugget={video} activeId={activeId} onActiveChange={setActiveId}>{pb => <VideoSharingScene pb={pb} />}</DemoPlayer>
+        <Note>Prepared simulation based on the supplied interim slides, whose scope is subject to change. No camera, microphone, video call, recording or screen capture is used. Confirm current availability and configuration before presenting the capability to customers.</Note>
+      </Section>
+    </NarrationProvider>
   );
 }

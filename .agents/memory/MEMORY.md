@@ -4,3 +4,4 @@
 - [Seismic PDF rendering](pdf-rendering.md) — use MuPDF when Poppler drops gradient backgrounds and white text from uploaded slides.
 - [Demo product accuracy](demo-product-accuracy.md) — public demonstrations must distinguish Contact Lens from optional Zendesk QA and describe only configured capabilities.
 - [Keyboard test limitations](keyboard-test-limitations.md) — inspect Space keydown events before treating automated native-checkbox failures as application defects.
+- [ElevenLabs connection validation](elevenlabs-connection-validation.md) — a ready connection can still contain a key ID; verify provider acceptance before claiming narration works.

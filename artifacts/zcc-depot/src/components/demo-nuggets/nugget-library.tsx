@@ -1,17 +1,18 @@
-import { ArrowDownRight, Bot, ClipboardCheck, Sparkles } from "lucide-react";
+import { ArrowDownRight, Bot, ClipboardCheck, Sparkles, Video } from "lucide-react";
 import type { DemoNugget } from "@/data/demo-nuggets";
 
 const cues = [
   { Icon: Sparkles, tag: "Agent assist", bg: "bg-[#D1F470]", fg: "text-[#203524]" },
   { Icon: ClipboardCheck, tag: "Quality review", bg: "bg-[#203524]", fg: "text-[#D1F470]" },
   { Icon: Bot, tag: "Autonomous voice", bg: "bg-[#11110D]", fg: "text-[#F5F5F2]" },
+  { Icon: Video, tag: "Visual support", bg: "bg-[#D1F470]", fg: "text-[#203524]" },
 ];
 
 /** Compact list of demos; each item is a native anchor to its section. */
 export function NuggetLibrary({ nuggets, onSelect }: { nuggets: readonly DemoNugget[]; onSelect: () => void }) {
   return (
     <nav aria-label="Demo library" className="rounded-[1.25rem] border border-[#11110D]/15 bg-[#FBFBF8] p-2" data-testid="nav-nugget-library">
-      <ul className="grid gap-3 md:grid-cols-3">
+      <ul className="grid gap-3 md:grid-cols-2 xl:grid-cols-4">
         {nuggets.map((n, i) => {
           const c = cues[i % cues.length];
           const dark = i % 2 === 1;

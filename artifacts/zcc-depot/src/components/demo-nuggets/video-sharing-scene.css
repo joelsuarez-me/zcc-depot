@@ -34,4 +34,5 @@
 .vs-scan{position:absolute;inset:0;pointer-events:none;background:linear-gradient(transparent 0,rgba(209,244,112,.18) 50%,transparent 100%);background-size:100% 40%;background-repeat:no-repeat;animation:vs-scan 2.8s linear infinite}
 @keyframes vs-scan{from{background-position:0 -60%}to{background-position:0 160%}}
 .vs-paused *,.vs-paused *::before,.vs-paused *::after{animation-play-state:paused!important}
+.vs-paused .vs-in,.vs-paused .vs-pop{opacity:1;transform:none;animation:none}
 @media (prefers-reduced-motion:reduce){.vs-root *,.vs-root *::before,.vs-root *::after{animation:none!important;transition:none!important}}

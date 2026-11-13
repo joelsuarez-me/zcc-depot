@@ -63,8 +63,8 @@ test("negative elapsed time is clamped and invalid timelines fail explicitly", (
   }
 });
 
-test("the library orders Copilot, QA and AI Agents and every timeline replays cleanly", () => {
-  assert.deepEqual(DEMO_NUGGETS.map(demo => demo.id), ["voice-copilot", "voice-qa", "voice-ai-agents"]);
+test("the library preserves existing order, appends video, and every timeline replays cleanly", () => {
+  assert.deepEqual(DEMO_NUGGETS.map(demo => demo.id), ["voice-copilot", "voice-qa", "voice-ai-agents", "video-screen-sharing"]);
   for (const demo of DEMO_NUGGETS) {
     assert.equal(new Set(demo.stages.map(stage => stage.id)).size, demo.stages.length);
     demo.stages.forEach((stage, index) => {
@@ -73,7 +73,7 @@ test("the library orders Copilot, QA and AI Agents and every timeline replays cl
       assert.equal(frame.stepIndex, index);
       assert.equal(frame.stepProgress, 0);
     });
-    assert.equal(playbackFrame(demo.stages, 15000).complete, true);
+    assert.equal(playbackFrame(demo.stages, demo.stages.reduce((sum, stage) => sum + stage.durationMs, 0)).complete, true);
     assert.equal(playbackFrame(demo.stages, 0).stepIndex, 0);
     assert.equal(playbackFrame(demo.stages, 0).complete, false);
   }

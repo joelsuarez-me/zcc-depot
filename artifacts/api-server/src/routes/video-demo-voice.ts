@@ -1,15 +1,15 @@
 import { Router, type IRouter } from "express";
-import { CreateVideoDemoSpeechBody, GetVideoDemoVoicesResponse } from "@workspace/api-zod";
-import { VIDEO_DEMO_LINES, VoiceUnavailable, listVideoVoices, cachedVideoClip, generateVideoClip } from "../lib/video-demo-voice";
+import { CreateDemoSpeechBody, GetDemoVoicesResponse } from "@workspace/api-zod";
+import { DEMO_NARRATION_LINES, VoiceUnavailable, listDemoVoices, cachedVideoClip, generateVideoClip } from "../lib/video-demo-voice";
 
 type Services = {
-  voices: typeof listVideoVoices;
+  voices: typeof listDemoVoices;
   cached: typeof cachedVideoClip;
   speech: typeof generateVideoClip;
 };
 
 /** Exported for isolated tests; all paid operations remain authenticated. */
-export function createVideoVoiceRouter(services: Services = { voices: listVideoVoices, cached: cachedVideoClip, speech: generateVideoClip }): IRouter {
+export function createVideoVoiceRouter(services: Services = { voices: listDemoVoices, cached: cachedVideoClip, speech: generateVideoClip }): IRouter {
   const router = Router();
   const windows = new Map<string, { count: number; until: number }>();
   const owners = new Set<string>();
@@ -21,7 +21,7 @@ export function createVideoVoiceRouter(services: Services = { voices: listVideoV
     if (item.count >= limit) return false;
     item.count++; windows.set(key, item); return true;
   };
-  router.use("/demo-nuggets/video", (req, res, next): void => {
+  router.use("/demo-nuggets", (req, res, next): void => {
     res.setHeader("Cache-Control", "private, no-store");
     res.setHeader("Vary", "Cookie, Authorization");
     res.setHeader("X-Content-Type-Options", "nosniff");
@@ -39,22 +39,22 @@ export function createVideoVoiceRouter(services: Services = { voices: listVideoV
     }
     next();
   });
-  router.get("/demo-nuggets/video/voices", async (req, res): Promise<void> => {
+  router.get("/demo-nuggets/voices", async (req, res): Promise<void> => {
     if (!consume(`voices:${req.user!.id}`, 60) || !consume("voices:global", 500)) {
       res.setHeader("Retry-After", "3600");
       res.status(429).json({ error: "Voice lookup limit reached. Try again later." }); return;
     }
     try {
       const voices = await services.voices(AbortSignal.timeout(20_000));
-      res.json(GetVideoDemoVoicesResponse.parse({ voices, lines: VIDEO_DEMO_LINES }));
+      res.json(GetDemoVoicesResponse.parse({ voices, lines: DEMO_NARRATION_LINES }));
     } catch (error) {
       req.log?.warn("Video demo voice lookup unavailable");
       res.status(503).json({ error: error instanceof VoiceUnavailable ? error.message : "ElevenLabs is unavailable. Check Integrations and retry." });
     }
   });
-  router.post("/demo-nuggets/video/speech", async (req, res): Promise<void> => {
-    const parsed = CreateVideoDemoSpeechBody.strict().safeParse(req.body);
-    if (!parsed.success || !VIDEO_DEMO_LINES.some(line => line.id === parsed.data.lineId)) {
+  router.post("/demo-nuggets/speech", async (req, res): Promise<void> => {
+    const parsed = CreateDemoSpeechBody.strict().safeParse(req.body);
+    if (!parsed.success || !DEMO_NARRATION_LINES.some(line => line.nuggetId === parsed.data.nuggetId && line.id === parsed.data.lineId)) {
       res.status(400).json({ error: "Choose a prepared demo line and an available voice. Custom text is not accepted." }); return;
     }
     const owner = req.user!.id;
@@ -69,17 +69,17 @@ export function createVideoVoiceRouter(services: Services = { voices: listVideoV
     const signal = AbortSignal.any([controller.signal, AbortSignal.timeout(60_000)]);
     owners.add(owner);
     try {
-      const { lineId, voiceId } = parsed.data;
+      const { nuggetId, lineId, voiceId } = parsed.data;
       const voices = await services.voices(signal);
       if (!voices.some(voice => voice.id === voiceId)) {
         res.status(400).json({ error: "That voice is no longer available. Reload the voice list." }); return;
       }
-      let bytes = services.cached(lineId, voiceId);
+      let bytes = services.cached(nuggetId, lineId, voiceId);
       if (!bytes) {
         if (!consume(`speech:${owner}`, 36) || !consume("speech:global", 180)) {
           res.setHeader("Retry-After", "3600"); res.status(429).json({ error: "Hourly speech-generation limit reached. Try again later." }); return;
         }
-        bytes = await services.speech(lineId, voiceId, signal);
+        bytes = await services.speech(nuggetId, lineId, voiceId, signal);
       }
       if (!res.destroyed) res.type("audio/mpeg").send(bytes);
     } catch (error) {

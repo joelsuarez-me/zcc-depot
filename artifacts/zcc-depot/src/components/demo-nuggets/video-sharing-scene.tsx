@@ -1,4 +1,5 @@
 import { AppWindow, BarChart3, CheckCircle2, Home, Inbox, MessageSquare, Mic, MicOff, Monitor, MonitorUp, PhoneOff, Settings, Users, Video, VideoOff } from "lucide-react";
+import { useState } from "react";
 import type { DemoPlayback } from "@/hooks/use-demo-playback";
 import "./video-sharing-scene.css";
 
@@ -61,6 +62,8 @@ const windows = [
 ];
 
 export function VideoSharingScene({ pb }: { pb: DemoPlayback }) {
+  const [micMuted, setMicMuted] = useState(false);
+  const [cameraOff, setCameraOff] = useState(false);
   const idle = pb.status === "idle";
   const s = idle ? 4 : Math.max(0, Math.min(5, pb.stepIndex));
   const live = pb.playing;
@@ -115,7 +118,7 @@ export function VideoSharingScene({ pb }: { pb: DemoPlayback }) {
             )}
             {s === 5 && (
               <div key={k("res")} className="vs-in space-y-1.5">
-                <p className="ml-8 flex items-center gap-2 rounded-xl bg-[#11110D]/[.06] px-3 py-1.5 text-xs"><Video className="h-3.5 w-3.5" />Video call ended · 6 min 42 s</p>
+                <p className="ml-8 flex items-center gap-2 rounded-xl bg-[#11110D]/[.06] px-3 py-1.5 text-xs"><Video className="h-3.5 w-3.5" />Sample video call ended</p>
                 <p className="mr-8 rounded-xl bg-[#11110D]/[.06] px-3 py-1.5 text-xs">It's paired and showing 21.5 degrees. Thank you!</p>
               </div>
             )}
@@ -132,8 +135,8 @@ export function VideoSharingScene({ pb }: { pb: DemoPlayback }) {
                     <Video className="h-4 w-4" />Share video call invite
                   </button>
                 ) : (
-                  <button type="button" onClick={() => go(0)} className="vs-btn border border-[#203524]/30 text-[#203524]" data-testid="button-restart-call-demo">
-                    <CheckCircle2 className="h-4 w-4" />Submit as Solved
+                  <button type="button" onClick={pb.replay} className="vs-btn border border-[#203524]/30 text-[#203524]" data-testid="button-restart-call-demo">
+                    <CheckCircle2 className="h-4 w-4" />Replay this example
                   </button>
                 )}
               </div>
@@ -144,14 +147,14 @@ export function VideoSharingScene({ pb }: { pb: DemoPlayback }) {
           {s >= 1 && s <= 4 && (
             <section key={k("console")} className="vs-in mt-3 rounded-2xl bg-[#11110D] p-2.5 text-[#F5F5F2] md:max-w-[68%]" aria-label="Agent video call console (simulated)">
               <div className="mb-2 flex items-center justify-between text-[0.7rem]">
-                <span className="font-semibold">{s === 1 ? "Check audio and video" : sharing ? "Priya is sharing a window" : "Video call · 00:0" + (s + 1) + ":14"}</span>
+                <span className="font-semibold">{s === 1 ? "Check audio and video" : sharing ? "Priya is sharing a window" : "Prepared video conversation"}</span>
                 <span className="opacity-60">Agent console</span>
               </div>
 
               {s === 3 ? (
                 <div className="grid grid-cols-1 gap-2 rounded-xl bg-[#F5F5F2] p-2 text-[#11110D] sm:grid-cols-3" role="group" aria-label="Choose what to share">
                   {windows.map((w, i) => (
-                    <button key={w.id} type="button" onClick={() => go(4)} className={`vs-win vs-in p-2 ${i === 0 ? "is-on" : ""}`} style={{ animationDelay: `${i * 0.12}s` }} data-testid={`button-share-${w.id}`}>
+                    <button key={w.id} type="button" onClick={() => go(4)} disabled={i !== 0} title={i === 0 ? "Share the prepared setup window" : "Only the prepared setup window is available in this simulation"} className={`vs-win vs-in p-2 disabled:cursor-not-allowed disabled:opacity-45 ${i === 0 ? "is-on" : ""}`} style={{ animationDelay: `${i * 0.12}s` }} data-testid={`button-share-${w.id}`}>
                       <div className="mb-1.5 h-12 rounded-md bg-[#203524]/10 p-1.5">{i === 0 && <div className="h-full rounded bg-[#3C6E8F]/30" />}</div>
                       <span className="flex items-center gap-1 text-xs font-semibold"><w.icon className="h-3.5 w-3.5" />{w.label}</span>
                     </button>
@@ -167,19 +170,21 @@ export function VideoSharingScene({ pb }: { pb: DemoPlayback }) {
                     <div className="flex-1 rounded-lg border-2 border-[#203524] bg-[#D1F470]/50 p-2 text-xs"><b>Switch to 2.4 GHz</b><div className="opacity-70">Required for T2</div></div>
                   </div>
                   <svg className="vs-cursor absolute bottom-6 left-1/2 h-5 w-5" viewBox="0 0 20 20" aria-hidden><path d="M3 2l13 7-6 1-3 6z" fill="#11110D" stroke="#fff" /></svg>
-                  <Tile who="agent" talking={live} label="You" className="absolute right-2 top-2 h-16 w-24 border-2 border-[#11110D] sm:h-20 sm:w-28" />
-                  <Tile who="customer" talking={false} label="Priya" className="absolute bottom-2 right-2 h-16 w-24 border-2 border-[#11110D] sm:h-20 sm:w-28" />
+                  <div className="mt-3 flex justify-end gap-2">
+                    <Tile who="agent" talking={live && !micMuted} camOff={cameraOff} label="You" className="h-16 w-24 border-2 border-[#11110D] sm:h-20 sm:w-28" />
+                    <Tile who="customer" talking={false} label="Priya" className="h-16 w-24 border-2 border-[#11110D] sm:h-20 sm:w-28" />
+                  </div>
                 </div>
               ) : (
                 <div className="grid grid-cols-2 gap-2">
                   <Tile who="customer" talking={live && s === 2} camOff={s === 1} label={s === 1 ? "Priya · joining" : "Priya Raman"} className="aspect-[4/3]" />
-                  <Tile who="agent" talking={live && s >= 1} label="You (Morgan)" className="aspect-[4/3]" />
+                  <Tile who="agent" talking={live && !micMuted && s >= 1} camOff={cameraOff} label="You (Morgan)" className="aspect-[4/3]" />
                 </div>
               )}
 
               <div className="mt-2 flex flex-wrap items-center justify-center gap-1.5">
-                <button type="button" className="vs-ctl" aria-pressed={s === 1} aria-label="Microphone preview" onClick={() => go(1)} data-testid="button-mic">{s === 1 ? <MicOff className="h-4 w-4" /> : <Mic className="h-4 w-4" />}</button>
-                <button type="button" className="vs-ctl" aria-pressed={s === 2} aria-label="Camera" onClick={() => go(2)} data-testid="button-camera">{s === 1 ? <VideoOff className="h-4 w-4" /> : <Video className="h-4 w-4" />}</button>
+                <button type="button" className="vs-ctl" aria-pressed={micMuted} aria-label="Mute simulated agent microphone" onClick={() => setMicMuted(value => !value)} data-testid="button-mic">{micMuted ? <MicOff className="h-4 w-4" /> : <Mic className="h-4 w-4" />}</button>
+                <button type="button" className="vs-ctl" aria-pressed={cameraOff} aria-label="Turn off simulated agent camera" onClick={() => setCameraOff(value => !value)} data-testid="button-camera">{cameraOff ? <VideoOff className="h-4 w-4" /> : <Video className="h-4 w-4" />}</button>
                 <button type="button" className="vs-ctl" aria-pressed={s >= 3} aria-label="Share screen" onClick={() => go(3)} data-testid="button-share-screen"><MonitorUp className="h-4 w-4" /></button>
                 <button type="button" className="vs-ctl is-end" aria-label="End call" onClick={() => go(5)} data-testid="button-end-call"><PhoneOff className="h-4 w-4" /></button>
                 {s === 1 && <button type="button" onClick={() => go(2)} className="vs-btn ml-1 bg-[#D1F470] text-[#11110D]" data-testid="button-join-call">Start call</button>}
@@ -210,7 +215,7 @@ export function VideoSharingScene({ pb }: { pb: DemoPlayback }) {
                 <div className="flex items-center gap-2"><Mic className="h-3.5 w-3.5" />Mic level<span className={`vs-meter ml-auto flex h-3 items-end gap-[2px] text-[#7DA33A]`}><i /><i /><i /><i /><i /></span></div>
               </div>
             ) : (
-              <Tile who="agent" talking={live} label={sharing ? "Morgan · you are sharing" : "Morgan (Agent)"} className="aspect-[4/3]" />
+              <Tile who="agent" talking={live && !micMuted} camOff={cameraOff} label={sharing ? "Morgan · you are sharing" : "Morgan (Agent)"} className="aspect-[4/3]" />
             )}
           </div>
         )}

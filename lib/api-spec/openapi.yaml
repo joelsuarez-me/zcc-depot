@@ -17,17 +17,17 @@ tags:
   - name: Storage
     description: Object storage upload and serving endpoints.
 paths:
-  /demo-nuggets/video/voices:
+  /demo-nuggets/voices:
     get:
-      operationId: getVideoDemoVoices
-      summary: Get available ElevenLabs voices and the fixed video-demo script
+      operationId: getDemoVoices
+      summary: Get available ElevenLabs voices and prepared demo scripts
       responses:
         "200":
           description: Available voices and prepared simulation dialogue.
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/VideoDemoVoices"
+                $ref: "#/components/schemas/DemoVoiceCatalog"
         "401":
           description: Sign-in required for voice services.
         "403":
@@ -36,16 +36,16 @@ paths:
           description: Voice-service rate limit.
         "503":
           description: ElevenLabs connection unavailable.
-  /demo-nuggets/video/speech:
+  /demo-nuggets/speech:
     post:
-      operationId: createVideoDemoSpeech
+      operationId: createDemoSpeech
       summary: Narrate one fixed simulation line with an available ElevenLabs voice
       requestBody:
         required: true
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/VideoDemoSpeechInput"
+              $ref: "#/components/schemas/DemoSpeechInput"
       responses:
         "200":
           description: Generated speech; not a real call recording.
@@ -584,34 +584,42 @@ components:
       schema:
         type: string
   schemas:
-    VideoDemoVoice:
+    DemoVoice:
       type: object
       required: [id, name]
       properties:
         id: { type: string }
         name: { type: string }
-    VideoDemoLine:
+    DemoNarrationLine:
       type: object
-      required: [id, role, text]
+      required: [nuggetId, id, role, text]
       properties:
+        nuggetId: { $ref: "#/components/schemas/DemoNuggetId" }
         id: { type: string }
-        role: { type: string, enum: [caller, agent, narrator] }
+        role: { $ref: "#/components/schemas/DemoVoiceRole" }
         text: { type: string }
-    VideoDemoVoices:
+    DemoNuggetId:
+      type: string
+      enum: [voice-copilot, voice-qa, voice-ai-agents, video-screen-sharing]
+    DemoVoiceRole:
+      type: string
+      enum: [caller, ai-agent, human-agent, narrator]
+    DemoVoiceCatalog:
       type: object
       required: [voices, lines]
       properties:
         voices:
           type: array
-          items: { $ref: "#/components/schemas/VideoDemoVoice" }
+          items: { $ref: "#/components/schemas/DemoVoice" }
         lines:
           type: array
-          items: { $ref: "#/components/schemas/VideoDemoLine" }
-    VideoDemoSpeechInput:
+          items: { $ref: "#/components/schemas/DemoNarrationLine" }
+    DemoSpeechInput:
       type: object
       additionalProperties: false
-      required: [lineId, voiceId]
+      required: [nuggetId, lineId, voiceId]
       properties:
+        nuggetId: { $ref: "#/components/schemas/DemoNuggetId" }
         lineId: { type: string, minLength: 1, maxLength: 40 }
         voiceId: { type: string, minLength: 1, maxLength: 100, pattern: "^[a-zA-Z0-9_-]+$" }
     PricingGuide:

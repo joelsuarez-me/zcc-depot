@@ -6,11 +6,12 @@
  * OpenAPI spec version: 0.1.0
  */
 
-export type VideoDemoLineRole = typeof VideoDemoLineRole[keyof typeof VideoDemoLineRole];
+export type DemoVoiceRole = typeof DemoVoiceRole[keyof typeof DemoVoiceRole];
 
 
-export const VideoDemoLineRole = {
+export const DemoVoiceRole = {
   caller: 'caller',
-  agent: 'agent',
+  'ai-agent': 'ai-agent',
+  'human-agent': 'human-agent',
   narrator: 'narrator',
 } as const;

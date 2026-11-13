@@ -5,32 +5,45 @@
  * API specification
  * OpenAPI spec version: 0.1.0
  */
-export interface VideoDemoVoice {
+export interface DemoVoice {
   id: string;
   name: string;
 }
 
-export type VideoDemoLineRole = typeof VideoDemoLineRole[keyof typeof VideoDemoLineRole];
+export type DemoNuggetId = typeof DemoNuggetId[keyof typeof DemoNuggetId];
 
 
-export const VideoDemoLineRole = {
+export const DemoNuggetId = {
+  'voice-copilot': 'voice-copilot',
+  'voice-qa': 'voice-qa',
+  'voice-ai-agents': 'voice-ai-agents',
+  'video-screen-sharing': 'video-screen-sharing',
+} as const;
+
+export type DemoVoiceRole = typeof DemoVoiceRole[keyof typeof DemoVoiceRole];
+
+
+export const DemoVoiceRole = {
   caller: 'caller',
-  agent: 'agent',
+  'ai-agent': 'ai-agent',
+  'human-agent': 'human-agent',
   narrator: 'narrator',
 } as const;
 
-export interface VideoDemoLine {
+export interface DemoNarrationLine {
+  nuggetId: DemoNuggetId;
   id: string;
-  role: VideoDemoLineRole;
+  role: DemoVoiceRole;
   text: string;
 }
 
-export interface VideoDemoVoices {
-  voices: VideoDemoVoice[];
-  lines: VideoDemoLine[];
+export interface DemoVoiceCatalog {
+  voices: DemoVoice[];
+  lines: DemoNarrationLine[];
 }
 
-export interface VideoDemoSpeechInput {
+export interface DemoSpeechInput {
+  nuggetId: DemoNuggetId;
   /**
      * @minLength 1
      * @maxLength 40

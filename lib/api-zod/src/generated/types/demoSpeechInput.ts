@@ -5,8 +5,10 @@
  * API specification
  * OpenAPI spec version: 0.1.0
  */
+import type { DemoNuggetId } from './demoNuggetId';
 
-export interface VideoDemoSpeechInput {
+export interface DemoSpeechInput {
+  nuggetId: DemoNuggetId;
   /**
      * @minLength 1
      * @maxLength 40

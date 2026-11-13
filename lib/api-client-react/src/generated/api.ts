@@ -26,6 +26,8 @@ import type {
   AgendaUpdate,
   AuthUserEnvelope,
   BeginBrowserLoginParams,
+  DemoSpeechInput,
+  DemoVoiceCatalog,
   ErrorEnvelope,
   HealthStatus,
   LogoutBrowserSessionParams,
@@ -39,9 +41,7 @@ import type {
   ResearchReportInput,
   SellSheet,
   UploadUrlRequest,
-  UploadUrlResponse,
-  VideoDemoSpeechInput,
-  VideoDemoVoices
+  UploadUrlResponse
 } from './api.schemas';
 
 import { customFetch } from '../custom-fetch';
@@ -71,20 +71,20 @@ const withQueryKey = <T extends object, K>(query: T, queryKey: K): T & { queryKe
   return result;
 };
 
-export const getGetVideoDemoVoicesUrl = () => {
+export const getGetDemoVoicesUrl = () => {
 
 
 
 
-  return `/api/demo-nuggets/video/voices`
+  return `/api/demo-nuggets/voices`
 }
 
 /**
- * @summary Get available ElevenLabs voices and the fixed video-demo script
+ * @summary Get available ElevenLabs voices and prepared demo scripts
  */
-export const getVideoDemoVoices = async ( options?: Parameters<typeof customFetch>[1]): Promise<VideoDemoVoices> => {
+export const getDemoVoices = async ( options?: Parameters<typeof customFetch>[1]): Promise<DemoVoiceCatalog> => {
 
-  return customFetch<VideoDemoVoices>(getGetVideoDemoVoicesUrl(),
+  return customFetch<DemoVoiceCatalog>(getGetDemoVoicesUrl(),
   {
     ...options,
     method: 'GET'
@@ -97,45 +97,45 @@ export const getVideoDemoVoices = async ( options?: Parameters<typeof customFetc
 
 
 
-export const getGetVideoDemoVoicesQueryKey = () => {
+export const getGetDemoVoicesQueryKey = () => {
     return [
-    `/api/demo-nuggets/video/voices`
+    `/api/demo-nuggets/voices`
     ] as const;
     }
 
 
-export const getGetVideoDemoVoicesQueryOptions = <TData = Awaited<ReturnType<typeof getVideoDemoVoices>>, TError = ErrorType<void>>( options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getVideoDemoVoices>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+export const getGetDemoVoicesQueryOptions = <TData = Awaited<ReturnType<typeof getDemoVoices>>, TError = ErrorType<void>>( options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getDemoVoices>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
 ) => {
 
 const {query: queryOptions, request: requestOptions} = options ?? {};
 
-  const queryKey =  queryOptions?.queryKey ?? getGetVideoDemoVoicesQueryKey();
+  const queryKey =  queryOptions?.queryKey ?? getGetDemoVoicesQueryKey();
 
 
 
-    const queryFn: QueryFunction<Awaited<ReturnType<typeof getVideoDemoVoices>>> = ({ signal }) => getVideoDemoVoices({ signal, ...requestOptions });
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof getDemoVoices>>> = ({ signal }) => getDemoVoices({ signal, ...requestOptions });
 
 
 
 
 
-   return  { queryKey, queryFn, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof getVideoDemoVoices>>, TError, TData> & { queryKey: QueryKey }
+   return  { queryKey, queryFn, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof getDemoVoices>>, TError, TData> & { queryKey: QueryKey }
 }
 
-export type GetVideoDemoVoicesQueryResult = NonNullable<Awaited<ReturnType<typeof getVideoDemoVoices>>>
-export type GetVideoDemoVoicesQueryError = ErrorType<void>
+export type GetDemoVoicesQueryResult = NonNullable<Awaited<ReturnType<typeof getDemoVoices>>>
+export type GetDemoVoicesQueryError = ErrorType<void>
 
 
 /**
- * @summary Get available ElevenLabs voices and the fixed video-demo script
+ * @summary Get available ElevenLabs voices and prepared demo scripts
  */
 
-export function useGetVideoDemoVoices<TData = Awaited<ReturnType<typeof getVideoDemoVoices>>, TError = ErrorType<void>>(
-  options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getVideoDemoVoices>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+export function useGetDemoVoices<TData = Awaited<ReturnType<typeof getDemoVoices>>, TError = ErrorType<void>>(
+  options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getDemoVoices>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
 
  ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
 
-  const queryOptions = getGetVideoDemoVoicesQueryOptions(options)
+  const queryOptions = getGetDemoVoicesQueryOptions(options)
 
   const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
 
@@ -148,18 +148,18 @@ export function useGetVideoDemoVoices<TData = Awaited<ReturnType<typeof getVideo
 
 
 
-export const getCreateVideoDemoSpeechUrl = () => {
+export const getCreateDemoSpeechUrl = () => {
 
 
 
 
-  return `/api/demo-nuggets/video/speech`
+  return `/api/demo-nuggets/speech`
 }
 
 /**
  * @summary Narrate one fixed simulation line with an available ElevenLabs voice
  */
-export const createVideoDemoSpeech = async (videoDemoSpeechInput: VideoDemoSpeechInput, options?: Parameters<typeof customFetch>[1]): Promise<Blob> => {
+export const createDemoSpeech = async (demoSpeechInput: DemoSpeechInput, options?: Parameters<typeof customFetch>[1]): Promise<Blob> => {
 
     const getHeaders = (h?: NonNullable<RequestInit['headers']>): Record<string, string | readonly string[]> => {
     if (!h) return {};
@@ -175,12 +175,12 @@ export const createVideoDemoSpeech = async (videoDemoSpeechInput: VideoDemoSpeec
     }
     return headers;
   };
-return customFetch<Blob>(getCreateVideoDemoSpeechUrl(),
+return customFetch<Blob>(getCreateDemoSpeechUrl(),
   {
     ...options,
     method: 'POST',
     headers: { 'Content-Type': 'application/json', ...getHeaders(options?.headers) },
-    body: JSON.stringify(videoDemoSpeechInput)
+    body: JSON.stringify(demoSpeechInput)
   }
 );}
 
@@ -188,13 +188,13 @@ return customFetch<Blob>(getCreateVideoDemoSpeechUrl(),
 
 
 
-export const getCreateVideoDemoSpeechMutationKey = () => ['createVideoDemoSpeech'] as const;
+export const getCreateDemoSpeechMutationKey = () => ['createDemoSpeech'] as const;
 
-export const getCreateVideoDemoSpeechMutationOptions = <TError = ErrorType<void>,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof createVideoDemoSpeech>>, TError,CreateVideoDemoSpeechMutationVariables, TContext>, request?: SecondParameter<typeof customFetch>}
-): UseMutationOptions<Awaited<ReturnType<typeof createVideoDemoSpeech>>, TError,CreateVideoDemoSpeechMutationVariables, TContext> => {
+export const getCreateDemoSpeechMutationOptions = <TError = ErrorType<void>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof createDemoSpeech>>, TError,CreateDemoSpeechMutationVariables, TContext>, request?: SecondParameter<typeof customFetch>}
+): UseMutationOptions<Awaited<ReturnType<typeof createDemoSpeech>>, TError,CreateDemoSpeechMutationVariables, TContext> => {
 
-const mutationKey = getCreateVideoDemoSpeechMutationKey();
+const mutationKey = getCreateDemoSpeechMutationKey();
 const {mutation: mutationOptions, request: requestOptions} = options ?
       options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
       options
@@ -204,10 +204,10 @@ const {mutation: mutationOptions, request: requestOptions} = options ?
 
 
 
-      const mutationFn: MutationFunction<Awaited<ReturnType<typeof createVideoDemoSpeech>>, CreateVideoDemoSpeechMutationVariables> = (props) => {
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof createDemoSpeech>>, CreateDemoSpeechMutationVariables> = (props) => {
           const {data} = props ?? {};
 
-          return  createVideoDemoSpeech(data,requestOptions)
+          return  createDemoSpeech(data,requestOptions)
         }
 
 
@@ -217,23 +217,23 @@ const {mutation: mutationOptions, request: requestOptions} = options ?
 
   return  { mutationFn, ...mutationOptions }}
 
-    export type CreateVideoDemoSpeechMutationResult = NonNullable<Awaited<ReturnType<typeof createVideoDemoSpeech>>>
-    export type CreateVideoDemoSpeechMutationBody = BodyType<VideoDemoSpeechInput>
-    export type CreateVideoDemoSpeechMutationError = ErrorType<void>
-    export type CreateVideoDemoSpeechMutationVariables = {data: BodyType<VideoDemoSpeechInput>}
+    export type CreateDemoSpeechMutationResult = NonNullable<Awaited<ReturnType<typeof createDemoSpeech>>>
+    export type CreateDemoSpeechMutationBody = BodyType<DemoSpeechInput>
+    export type CreateDemoSpeechMutationError = ErrorType<void>
+    export type CreateDemoSpeechMutationVariables = {data: BodyType<DemoSpeechInput>}
 
     /**
  * @summary Narrate one fixed simulation line with an available ElevenLabs voice
  */
-export const useCreateVideoDemoSpeech = <TError = ErrorType<void>,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof createVideoDemoSpeech>>, TError,CreateVideoDemoSpeechMutationVariables, TContext>, request?: SecondParameter<typeof customFetch>}
+export const useCreateDemoSpeech = <TError = ErrorType<void>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof createDemoSpeech>>, TError,CreateDemoSpeechMutationVariables, TContext>, request?: SecondParameter<typeof customFetch>}
  ): UseMutationResult<
-        Awaited<ReturnType<typeof createVideoDemoSpeech>>,
+        Awaited<ReturnType<typeof createDemoSpeech>>,
         TError,
-        CreateVideoDemoSpeechMutationVariables,
+        CreateDemoSpeechMutationVariables,
         TContext
       > => {
-      return useMutation(getCreateVideoDemoSpeechMutationOptions(options));
+      return useMutation(getCreateDemoSpeechMutationOptions(options));
     }
 
 export const getGetPitchDeckUrl = () => {
