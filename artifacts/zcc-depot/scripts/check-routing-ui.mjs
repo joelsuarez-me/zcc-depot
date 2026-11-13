@@ -57,6 +57,13 @@ for(const m of METHODS){
  if(r.selectedAgent)ok(find("status-agent-"+r.selectedAgent).children.includes("selected"),"selected agent synchronized "+m.id);
  const nodes=new Set(m.diagram.nodes.map(x=>x.id));
  ok(m.diagram.edges.every(([a,b])=>nodes.has(a)&&nodes.has(b)),"diagram edges valid "+m.id);
+ const diagram=find("routing-diagram");
+ const boxes=diagram.findAll(x=>x.type==="rect"&&x.props.className==="rt-node-card");
+ ok(boxes.length===m.diagram.nodes.length,"Architecture card treatment on every node "+m.id);
+ ok(diagram.findAll(x=>x.type==="marker"&&x.props.id==="rt-"+m.id+"-arrow").length===1,"scoped directional arrowheads "+m.id);
+ ok(diagram.findAll(x=>x.type==="svg"&&x.props.className?.split(" ").includes("rt-icon")).length===m.diagram.nodes.length,"consistent component icons "+m.id);
+ ok(boxes.every(b=>b.props.x>=0&&b.props.y>=0&&b.props.x+b.props.width<=1380&&b.props.y+b.props.height<=500),"nodes within canvas "+m.id);
+ ok(boxes.every((a,i)=>boxes.every((b,j)=>i===j||a.props.x+a.props.width<=b.props.x||b.props.x+b.props.width<=a.props.x||a.props.y+a.props.height<=b.props.y||b.props.y+b.props.height<=a.props.y)),"no overlapping node cards "+m.id);
  ok(m.guide.docs.every(d=>d.url.startsWith("https://docs.aws.amazon.com/")),"official docs "+m.id);
  click("button-replay");ok(exists("panel-outcome-pending")&&exists("button-pause"),"replay resets "+m.id);
  click("button-reset");ok(exists("button-resume"),"reset stops "+m.id);

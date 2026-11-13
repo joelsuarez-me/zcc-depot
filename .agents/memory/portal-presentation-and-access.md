@@ -43,6 +43,12 @@ Every content section needs a direct URL.
 
 **How to apply:** Preserve stable fragment IDs and visible permalink controls when adding or moving sections. Keep saved-agenda identifiers in shared URLs, and redirect old section links when content moves.
 
+Keep the twelve Routing diagrams visually aligned with the Architecture diagram while preserving each distinct routing flow.
+
+**Why:** The user explicitly requested a consistent modern presentation after finding the Routing diagrams less polished than Architecture.
+
+**How to apply:** Use the Architecture reference view as the visual benchmark for future Routing changes; do not simplify the scenarios into identical diagrams to achieve consistency.
+
 The Sell Sheet, its source PDF, the full Pricing guide and internal enablement require sign-in and explicit Presenter mode.
 
 **Why:** The PDF is marked Internal Only. The Pricing guide combines public prices with internal packaging guidance and an internal source link. The user explicitly selected signed-in access for both guides.

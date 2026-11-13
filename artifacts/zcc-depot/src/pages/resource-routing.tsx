@@ -68,13 +68,13 @@ export default function ResourceRouting() {
         <span id={`method-${methodId}`} className="rt-method-anchor" aria-hidden="true" />
         <RoomSection id="simulator" eyebrow={`Simulator · method ${method.n} of 12`} title={method.title} lede={method.tagline} tone="panel">
           <RoutingControls idx={idx} len={len} running={pb.running} speed={speed} presenter={presenter} still={still} onAction={act} onSpeed={setSpeed} onPresenter={() => setPresenter((p) => !p)} onStill={() => setStill((s) => !s)} />
-          <div className={`mt-4 grid gap-4 lg:grid-cols-[17rem_1fr] ${still ? "rt-still" : ""}`}>
-            <RoutingConfigurationPanel method={method} config={config} onChange={change} />
+          <div className={`mt-4 ${still ? "rt-still" : ""}`}>
             <RoutingDiagram key={methodId} method={method} config={config} result={result} idx={idx} running={pb.running} still={still} />
           </div>
-          <div className="mt-4 grid gap-4 lg:grid-cols-[1.2fr_1fr]">
+          <div className="mt-4 grid gap-4 md:grid-cols-2 xl:grid-cols-[17rem_1.25fr_1fr]">
+            <RoutingConfigurationPanel method={method} config={config} onChange={change} />
             <AgentEligibilityPanel result={result} idx={idx} config={config} />
-            <RoutingExecutionTimeline result={result} idx={idx} onJump={(i) => setPb({ index: i, running: false })} />
+            <div className="md:col-span-2 xl:col-span-1"><RoutingExecutionTimeline result={result} idx={idx} onJump={(i) => setPb({ index: i, running: false })} /></div>
           </div>
           <div className="mt-4"><RoutingOutcomePanel result={result} done={done} /></div>
           {presenter && <div className="mt-4"><RoutingPresenterNotes method={method} result={result} /></div>}
