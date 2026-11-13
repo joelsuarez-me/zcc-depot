@@ -9,6 +9,8 @@ import { DEMO_NUGGETS } from "../src/data/demo-nuggets.ts";
 globalThis.IS_REACT_ACT_ENVIRONMENT = true;
 globalThis.document = new EventTarget();
 globalThis.document.hidden = false;
+globalThis.window = new EventTarget();
+globalThis.window.location = { search: "" };
 let audioPlays = 0;
 globalThis.Audio = class extends EventTarget {
   src = ""; volume = 1; currentTime = 0; duration = 10;
@@ -31,7 +33,7 @@ function Probe() {
   player = useNarratedDemo({ nugget: DEMO_NUGGETS[0], activeId: null, onActiveChange });
   return null;
 }
-async function mount(t, options = {}) {
+async function mount(t, options = {}, requireOptIn = false) {
   audioPlays = 0;
   const records = new Map([["one", saved()], ["two", { ...defaults(), enabled: false }]]);
   const writes = [], speech = [], loads = [];
@@ -46,7 +48,7 @@ async function mount(t, options = {}) {
     ...options,
   };
   let root, stops = 0;
-  const element = () => React.createElement(NarrationProvider, { onStop() { stops++; } }, React.createElement(Probe));
+  const element = () => React.createElement(NarrationProvider, { requireOptIn, onStop() { stops++; } }, React.createElement(Probe));
   await act(async () => { root = create(element()); });
   t.after(async () => {
     assert.equal(audioPlays, 0, "restoring, changing, retrying or resetting settings must never play audio");
@@ -165,4 +167,55 @@ test("a late load from the previous account cannot replace the new account", asy
   await act(async () => finishFirst(saved()));
   assert.equal(n.volume, .7);
   assert.equal(h.speech.length, 0);
+});
+
+test("shared playlists require fresh narration consent without overwriting saved overlay settings", async t => {
+  const h = await mount(t, {}, true);
+  assert.equal(n.enabled, false);
+  assert.equal(n.wanted, false, "the receiving presenter's checkbox starts off");
+  await assert.rejects(n.getClip("voice-copilot", "line", new AbortController().signal), /Enable/);
+  await wait();
+  assert.deepEqual(h.writes, [], "opening a link does not save a preference change");
+  assert.equal(h.records.get("one").enabled, true);
+  await act(() => n.setEnabled(true));
+  assert.equal(n.enabled, true);
+  assert.equal(h.speech.length, 0, "opting in still requires Play");
+  await h.revisit();
+  assert.equal(n.enabled, false, "each shared-link visit needs consent");
+});
+
+test("hiding the tab, page navigation, and unmount stop demos and voice auditions", async t => {
+  await mount(t);
+  let demoStops = 0, previewStops = 0;
+  n.register("voice-copilot", () => demoStops++);
+  n.registerPreview(() => previewStops++);
+  await act(() => {
+    document.hidden = true;
+    document.dispatchEvent(new Event("visibilitychange"));
+  });
+  assert.equal(demoStops, 1);
+  assert.equal(previewStops, 1);
+  await act(() => window.dispatchEvent(new Event("pagehide")));
+  assert.equal(demoStops, 2);
+  assert.equal(previewStops, 2);
+  document.hidden = false;
+  window.location.search = "?playlist=voice-qa";
+  await act(() => window.dispatchEvent(new Event("popstate")));
+  assert.equal(n.enabled, false, "history navigation into shared playback also requires consent");
+  assert.equal(demoStops, 3);
+  assert.equal(previewStops, 3);
+  window.location.search = "";
+});
+
+test("claiming a demo stops every other narration and any voice audition", async t => {
+  await mount(t);
+  const counts = Object.fromEntries(DEMO_NUGGETS.map(demo => [demo.id, 0]));
+  for (const demo of DEMO_NUGGETS) n.register(demo.id, () => counts[demo.id]++);
+  let previews = 0;
+  n.registerPreview(() => previews++);
+  await act(() => n.claim("voice-qa"));
+  assert.deepEqual(counts, { "voice-copilot": 1, "voice-qa": 0, "voice-ai-agents": 1, "video-screen-sharing": 1 });
+  assert.equal(previews, 1);
+  await act(() => n.claim("video-screen-sharing"));
+  assert.equal(counts["voice-qa"], 1, "switching demos synchronously stops the previous narration");
 });

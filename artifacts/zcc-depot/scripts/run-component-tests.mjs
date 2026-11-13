@@ -11,6 +11,7 @@ const entry = resolve(packageDir, "scripts/component-showcase.test.mjs");
 const output = resolve(temporary, "showcase.test.cjs");
 const voiceOutput = resolve(temporary, "voice-controls.test.cjs");
 const researchOutput = resolve(temporary, "research-library.test.cjs");
+const playlistOutput = resolve(temporary, "playlist.test.cjs");
 try {
   await build({
     entryPoints: [entry], outfile: output, bundle: true, platform: "node", format: "cjs",
@@ -53,8 +54,20 @@ export const convertResearchReportToAgenda=(...a)=>globalThis.__researchApi.conv
     } }],
     logLevel: "warning",
   });
+  await build({
+    entryPoints: [resolve(packageDir, "scripts/playlist.test.mjs")],
+    outfile: playlistOutput, bundle: true, platform: "node", format: "cjs", jsx: "automatic",
+    loader: { ".css": "empty" },
+    external: ["react", "react/*", "react-test-renderer"],
+    plugins: [{ name: "playlist-narration-context", setup(builder) {
+      builder.onResolve({ filter: /(?:components\/demo-nuggets\/|\.\/)narration-provider$/ }, () => ({ path: "narration", namespace: "playlist-fixture" }));
+      builder.onLoad({ filter: /.*/, namespace: "playlist-fixture" }, () => ({
+        contents: `export const VOICE_ROLES=[]; export const useNarration=()=>globalThis.__playlistNarration;`, loader: "js",
+      }));
+    } }], logLevel: "warning",
+  });
   const result = spawnSync(process.execPath, [
-    "--test", output, voiceOutput, researchOutput, resolve(packageDir, "scripts/voice-preview.test.mjs"),
+    "--test", output, voiceOutput, researchOutput, playlistOutput, resolve(packageDir, "scripts/voice-preview.test.mjs"),
     resolve(packageDir, "scripts/contact-center-components.test.mjs"),
   ], { cwd: packageDir, stdio: "inherit" });
   if (result.error) throw result.error;

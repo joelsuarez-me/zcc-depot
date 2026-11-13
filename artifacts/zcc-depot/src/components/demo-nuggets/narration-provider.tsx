@@ -1,4 +1,4 @@
-import { createContext, useCallback, useContext, useEffect, useRef, type ReactNode } from "react";
+import { createContext, useCallback, useContext, useEffect, useRef, useState, type ReactNode } from "react";
 import { useAuth } from "@workspace/replit-auth-web";
 import { createDemoSpeech, getGetDemoVoicesQueryKey, useGetDemoVoices, type DemoVoiceRole } from "@workspace/api-client-react";
 import type { NuggetId } from "@/data/demo-nuggets";
@@ -10,11 +10,13 @@ export const VOICE_ROLES: { id: DemoVoiceRole; label: string }[] = [
   { id: "human-agent", label: "Human Agent" }, { id: "narrator", label: "Narrator" },
 ];
 
-function useNarrationSettings(auth: ReturnType<typeof useAuth>, onStop: () => void) {
+function useNarrationSettings(auth: ReturnType<typeof useAuth>, onStop: () => void, requireOptIn: boolean) {
   const owner = auth.user?.id ?? "";
   const preferences = useSavedNarration(owner);
   const { enabled: wanted, volume, captions, voices: choices } = preferences.settings;
-  const enabled = wanted && auth.isAuthenticated && preferences.preferencesReady;
+  const [consented, setConsented] = useState(!requireOptIn);
+  const effectiveWanted = wanted && consented;
+  const enabled = effectiveWanted && auth.isAuthenticated && preferences.preferencesReady;
   const catalog = useGetDemoVoices({ query: {
     queryKey: [...getGetDemoVoicesQueryKey(), owner], enabled: auth.isAuthenticated && preferences.preferencesReady, retry: false, staleTime: 60_000,
   } });
@@ -31,6 +33,21 @@ function useNarrationSettings(auth: ReturnType<typeof useAuth>, onStop: () => vo
     blobs.current.clear(); clearPlayback();
   }, [owner, clearPlayback]);
   useEffect(() => () => { previewStop.current?.(); stops.current.forEach(stop => stop()); blobs.current.clear(); }, []);
+  useEffect(() => {
+    const hide = () => { if (document.hidden) clearPlayback(); };
+    const navigate = () => {
+      clearPlayback();
+      if (new URLSearchParams(window.location.search).has("playlist")) setConsented(false);
+    };
+    document.addEventListener("visibilitychange", hide);
+    window.addEventListener("pagehide", clearPlayback);
+    window.addEventListener("popstate", navigate);
+    return () => {
+      document.removeEventListener("visibilitychange", hide);
+      window.removeEventListener("pagehide", clearPlayback);
+      window.removeEventListener("popstate", navigate);
+    };
+  }, [clearPlayback]);
   const voices = catalog.data?.voices ?? [];
   const selected = Object.fromEntries(VOICE_ROLES.map((role, index) => [
     role.id, choices[role.id] ?? voices[index % Math.max(1, voices.length)]?.id ?? "",
@@ -87,13 +104,13 @@ function useNarrationSettings(auth: ReturnType<typeof useAuth>, onStop: () => vo
     }
   }, [lines, getClip]);
   return {
-    auth, enabled, wanted, volume, captions, voices, selected, settingsKey, lines, unavailableRoles,
+    auth, enabled, wanted: effectiveWanted, volume, captions, voices, selected, settingsKey, lines, unavailableRoles,
     preferencesReady: preferences.preferencesReady,
     preferencesStatus: preferences.preferencesStatus,
     preferencesError: preferences.preferencesError,
     retryPreferences: preferences.retryPreferences,
     catalog, getClip, getPreviewClip, register, claim, registerPreview, stopPlayback: clearPlayback,
-    setEnabled(value: boolean) { clearPlayback(); preferences.update({ enabled: value }); },
+    setEnabled(value: boolean) { clearPlayback(); setConsented(value); preferences.update({ enabled: value }); },
     setVoice(role: DemoVoiceRole, id: string) {
       clearPlayback(); preferences.update({ voices: { ...selected, [role]: id } });
     },
@@ -108,12 +125,12 @@ function useNarrationSettings(auth: ReturnType<typeof useAuth>, onStop: () => vo
 type Narration = ReturnType<typeof useNarrationSettings>;
 const NarrationContext = createContext<Narration | null>(null);
 
-export function NarrationProvider({ children, onStop }: { children: ReactNode; onStop: () => void }) {
+export function NarrationProvider({ children, onStop, requireOptIn = false }: { children: ReactNode; onStop: () => void; requireOptIn?: boolean }) {
   const auth = useAuth();
-  return <OwnedNarrationProvider key={auth.user?.id ?? ""} auth={auth} onStop={onStop}>{children}</OwnedNarrationProvider>;
+  return <OwnedNarrationProvider key={auth.user?.id ?? ""} auth={auth} onStop={onStop} requireOptIn={requireOptIn}>{children}</OwnedNarrationProvider>;
 }
-function OwnedNarrationProvider({ auth, children, onStop }: { auth: ReturnType<typeof useAuth>; children: ReactNode; onStop: () => void }) {
-  const settings = useNarrationSettings(auth, onStop);
+function OwnedNarrationProvider({ auth, children, onStop, requireOptIn }: { auth: ReturnType<typeof useAuth>; children: ReactNode; onStop: () => void; requireOptIn: boolean }) {
+  const settings = useNarrationSettings(auth, onStop, requireOptIn);
   return <NarrationContext.Provider value={settings}>{children}</NarrationContext.Provider>;
 }
 export function useNarration() {

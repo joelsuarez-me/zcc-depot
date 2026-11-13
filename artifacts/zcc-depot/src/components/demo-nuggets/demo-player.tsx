@@ -1,4 +1,4 @@
-import type { ReactNode } from "react";
+import { useEffect, useImperativeHandle, type ReactNode, type Ref } from "react";
 import { Loader2, Pause, Play, RotateCcw } from "lucide-react";
 import type { DemoPlayback } from "@/hooks/use-demo-playback";
 import { useNarratedDemo } from "@/hooks/use-narrated-demo";
@@ -6,10 +6,22 @@ import { useNarration, VOICE_ROLES } from "./narration-provider";
 import type { DemoNugget, NuggetId } from "@/data/demo-nuggets";
 import "./demo-nuggets.css";
 
-type Props = { nugget: DemoNugget; activeId: NuggetId | null; onActiveChange: (id: NuggetId | null) => void; children: (pb: DemoPlayback) => ReactNode; dark?: boolean };
+export type DemoPlayerControls = Pick<DemoPlayback, "play">;
+type Props = {
+  nugget: DemoNugget; activeId: NuggetId | null; onActiveChange: (id: NuggetId | null) => void;
+  children: (pb: DemoPlayback) => ReactNode; dark?: boolean;
+  controlsRef?: Ref<DemoPlayerControls>;
+  onPendingChange?: (id: NuggetId, pending: boolean) => void;
+  playlistNavigation?: { index: number; total: number; onPrevious: () => void; onNext: () => void; onStop: () => void };
+};
 
-export function DemoPlayer({ nugget, activeId, onActiveChange, children, dark = false }: Props) {
+export function DemoPlayer({ nugget, activeId, onActiveChange, children, dark = false, controlsRef, onPendingChange, playlistNavigation }: Props) {
   const { pb, pending, error, caption, voiced } = useNarratedDemo({ nugget, activeId, onActiveChange });
+  useImperativeHandle(controlsRef, () => ({ play: pb.play }), [pb.play]);
+  useEffect(() => {
+    onPendingChange?.(nugget.id, pending);
+    return () => onPendingChange?.(nugget.id, false);
+  }, [nugget.id, pending, onPendingChange]);
   const narration = useNarration();
   const id = nugget.id;
   const label = pending ? "Cancel" : pb.playing ? "Pause" : pb.status === "paused" ? "Resume" : pb.complete ? "Play again" : "Play";
@@ -40,6 +52,12 @@ export function DemoPlayer({ nugget, activeId, onActiveChange, children, dark = 
       </div>
 
       <div className={`flex min-w-0 flex-col gap-4 lg:col-span-4 ${ink}`}>
+        {playlistNavigation && <nav aria-label="Playlist transport" className="flex flex-wrap items-center gap-3 rounded-xl border border-current/20 p-3 text-xs">
+          <span className="w-full font-semibold">Playlist · Demo {playlistNavigation.index + 1} of {playlistNavigation.total}</span>
+          <button type="button" data-testid={`button-playlist-previous-${id}`} disabled={playlistNavigation.index === 0} onClick={playlistNavigation.onPrevious} className="min-h-11 font-semibold underline disabled:opacity-40">Previous demo</button>
+          <button type="button" data-testid={`button-playlist-next-${id}`} disabled={playlistNavigation.index === playlistNavigation.total - 1} onClick={playlistNavigation.onNext} className="min-h-11 font-semibold underline disabled:opacity-40">Next demo</button>
+          <a href="#playlist" onClick={playlistNavigation.onStop} data-testid={`link-playlist-edit-${id}`} className="inline-flex min-h-11 items-center underline">Edit / share playlist</a>
+        </nav>}
         <div className="flex items-center gap-2">
           <button type="button" onClick={toggle} aria-pressed={pb.playing} aria-label={`${label} ${nugget.title} demo`} data-testid={`button-play-${id}`}
             className="inline-flex items-center gap-2 rounded-full bg-[#D1F470] px-5 py-2.5 text-sm font-semibold text-[#11110D] transition-transform hover:-translate-y-0.5">
