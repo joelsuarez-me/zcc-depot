@@ -38,6 +38,7 @@ export const NAV: NavItem[] = [
   },
   { href: "/resources", label: "Resources", children: [
     { label: "Resource library", href: "/resources#library" },
+    { label: "How it Works", href: "/resources/how-it-works" },
     { label: "Zendesk Contact Center Hub", href: LINKS.contactCenterHub, external: true },
     { label: "Agent knowledge", href: "/resources#ai-suggestions" },
     { label: "Latest news · per internal briefing", href: "/resources#collaboration" },

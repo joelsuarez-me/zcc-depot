@@ -17,6 +17,7 @@ const ArchitectureSystemOverview = lazy(() => import('@/pages/architecture-syste
 const Sales = lazy(() => import('@/pages/sales'));
 const SalesUseCases = lazy(() => import('@/pages/sales-use-cases'));
 const Resources = lazy(() => import('@/pages/resources'));
+const ResourceHowItWorks = lazy(() => import('@/pages/resource-how-it-works'));
 const Agenda = lazy(() => import('@/pages/agenda'));
 const DemoInstanceDetails = lazy(() => import('@/pages/demo-instance-details'));
 const Pricing = lazy(() => import('@/pages/pricing'));
@@ -75,6 +76,7 @@ function Router() {
             <Route path="/sales/use-cases-by-vertical" component={SalesUseCases} />
             <Route path="/pricing" component={GatedPricing} />
             <Route path="/sell-sheet" component={GatedSellSheet} />
+            <Route path="/resources/how-it-works" component={ResourceHowItWorks} />
             <Route path="/resources" component={Resources} />
             <Route path="/agenda" component={GatedAgenda} />
             <Route component={NotFound} />

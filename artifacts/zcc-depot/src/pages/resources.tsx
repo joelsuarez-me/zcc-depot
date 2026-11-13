@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
+import { Link } from "wouter";
 import { Search, Bookmark, BookmarkCheck, ArrowUpRight, X } from "lucide-react";
 import { Ext, Note, PageHero, Section, SectionHead } from "@/components/kit";
 import { PitchDeckSection } from "@/components/pitch-deck-section";
@@ -39,6 +40,14 @@ export default function Resources() {
 
       <Section id="library">
         <SectionHead permalinkId="library" num="01" eyebrow="Resource library" title="Find the guidance you need" />
+        <Link href="/resources/how-it-works" className="mb-7 flex flex-wrap items-center justify-between gap-4 rounded-3xl border border-[#203524]/20 bg-[#EAF2DB] p-5 transition hover:border-[#203524] md:p-6" data-testid="link-resources-how-it-works">
+          <span>
+            <span className="eyebrow text-[#203524]">Interactive resource guide</span>
+            <span className="mt-1 block text-2xl font-semibold tracking-tight text-[#11110D]">How it Works</span>
+            <span className="mt-1 block text-sm text-[#203524]">Explore every slide of the November 2025 deck, rebuilt as illustrated web chapters.</span>
+          </span>
+          <span className="inline-flex items-center gap-2 rounded-full bg-[#203524] px-4 py-2 text-sm font-semibold text-[#D1F470]">Explore the guide<ArrowUpRight className="h-4 w-4" aria-hidden /></span>
+        </Link>
         <div className="grid gap-8 lg:grid-cols-12">
           <aside className="lg:col-span-3">
             <div className="lg:sticky lg:top-28">
