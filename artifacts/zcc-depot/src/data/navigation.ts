@@ -45,6 +45,7 @@ export const NAV: NavItem[] = [
     { label: "Pitch Deck", href: "/resources#pitch-deck" },
     { label: "FAQ", href: "/resources#faq" },
     { label: "Roadmap · confidential", href: "/resources#roadmap" },
+    { label: "Routing", href: "/resources/routing" },
   ] },
 ];
 
