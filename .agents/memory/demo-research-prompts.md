@@ -44,3 +44,9 @@ Saved Demo Agenda PDFs must use the executive report format and the naming conve
 **Why:** The user requested Print PDF after Save Agenda and explicitly specified this file naming convention.
 
 **How to apply:** Use the export's current calendar date, not the agenda's last-saved date, and require updated drafts to be saved before printing.
+
+Keep the Demo Agenda Print PDF controls easy to discover on phones as well as desktop.
+
+**Why:** The user repeated the Print PDF request after being unable to find the controls in the published phone view.
+
+**How to apply:** Communicate save-first requirements visibly rather than hiding export controls, and explicitly distinguish Preview changes from what is currently published.

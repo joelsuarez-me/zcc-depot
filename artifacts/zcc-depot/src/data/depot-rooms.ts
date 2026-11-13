@@ -100,6 +100,7 @@ export const ROUTE_LABELS: Record<string, { label: string; parent?: string }> = 
   "/sales": { label: "Sales" },
   "/pricing": { label: "Pricing", parent: "/sales" },
   "/sell-sheet": { label: "Sell Sheet", parent: "/sales" },
+  "/sales/use-cases-by-vertical": { label: "Use Cases by Vertical", parent: "/sales" },
   "/resources": { label: "Resources" },
   "/agenda": { label: "Demo Agenda", parent: "/demos" },
   ...Object.fromEntries(ROOMS.map((r) => [r.href, { label: r.title, parent: "/rooms" }])),

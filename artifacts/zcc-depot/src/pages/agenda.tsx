@@ -689,7 +689,7 @@ export default function Agenda() {
                     {busy ? "Saving…" : "Save agenda"}
                   </button>
                 </div>
-                {selectedId && !creating && activeAgenda && <AgendaPdfAction agenda={activeAgenda} dirty={dirty} busy={busy || uploading || queryBusy} />}
+                <AgendaPdfAction agenda={selectedId && !creating ? activeAgenda : undefined} dirty={dirty} busy={busy || uploading || queryBusy} />
                 {selectedId && (
                   <button type="button" onClick={() => setConfirmDelete(true)} className="inline-flex min-h-10 w-full items-center justify-center gap-2 rounded-full px-4 py-2 text-sm font-semibold text-[#895646] transition hover:bg-[#f3e4de]" data-testid="button-agenda-delete">
                     <Trash2 className="h-4 w-4" aria-hidden /> Delete agenda
@@ -724,7 +724,7 @@ export default function Agenda() {
                       {busy ? <LoaderCircle className="h-4 w-4 animate-spin" aria-hidden /> : <Save className="h-4 w-4" aria-hidden />}
                       {busy ? "Saving…" : "Save agenda"}
                     </button>
-                    {selectedId && !creating && activeAgenda && <AgendaPdfAction agenda={activeAgenda} dirty={dirty} busy={busy || uploading || queryBusy} />}
+                    <AgendaPdfAction agenda={selectedId && !creating ? activeAgenda : undefined} dirty={dirty} busy={busy || uploading || queryBusy} />
                   </div>
                 </div>
                 <AgendaDocument fields={fields} logoUrl={protectedLogoUrl(fields.logoPath)} />

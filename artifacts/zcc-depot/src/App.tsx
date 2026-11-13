@@ -14,6 +14,7 @@ const Demos = lazy(() => import('@/pages/demos'));
 const Architecture = lazy(() => import('@/pages/architecture'));
 const ArchitectureComponents = lazy(() => import('@/pages/architecture-components'));
 const Sales = lazy(() => import('@/pages/sales'));
+const SalesUseCases = lazy(() => import('@/pages/sales-use-cases'));
 const Resources = lazy(() => import('@/pages/resources'));
 const Agenda = lazy(() => import('@/pages/agenda'));
 const DemoInstanceDetails = lazy(() => import('@/pages/demo-instance-details'));
@@ -69,6 +70,7 @@ function Router() {
             <Route path="/architecture" component={Architecture} />
             <Route path="/architecture/components" component={ArchitectureComponents} />
             <Route path="/sales" component={Sales} />
+            <Route path="/sales/use-cases-by-vertical" component={SalesUseCases} />
             <Route path="/pricing" component={GatedPricing} />
             <Route path="/sell-sheet" component={GatedSellSheet} />
             <Route path="/resources" component={Resources} />

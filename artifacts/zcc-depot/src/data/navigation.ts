@@ -20,6 +20,7 @@ export const NAV: NavItem[] = [
     href: "/sales", label: "Sales", children: [
       { label: "Sell Sheet", href: "/sell-sheet" },
       { label: "Pricing", href: "/pricing" },
+      { label: "Use Cases by Vertical", href: "/sales/use-cases-by-vertical" },
     ],
   },
   {

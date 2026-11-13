@@ -31,11 +31,12 @@ test("agenda filenames use the current local date and preserve customer capitali
   assert.equal(agendaPdfFilename({ ...agendaFixture, company: "Morningstar", updatedAt: "2025-01-01T00:00:00Z" }, now), "Demo-Agenda-Morningstar-2026-12-02.pdf");
   assert.equal(agendaPdfFilename({ ...agendaFixture, company: "  ACME / North: West?  " }, now), "Demo-Agenda-ACME - North- West--2026-12-02.pdf");
 });
-test("Print PDF is offered only for saved agendas and the action blocks unsaved changes", () => {
+test("Print PDF stays visible for drafts but requires a saved agenda and blocks unsaved changes", () => {
   const page = readFileSync(new URL("../src/pages/agenda.tsx", import.meta.url), "utf8");
   const action = readFileSync(new URL("../src/components/agenda-pdf-action.tsx", import.meta.url), "utf8");
-  assert.equal((page.match(/selectedId && !creating && activeAgenda && <AgendaPdfAction/g) ?? []).length, 2);
-  assert.match(action, /disabled=\{dirty \|\| busy \|\| preparing\}/);
+  assert.equal((page.match(/<AgendaPdfAction agenda=\{selectedId && !creating \? activeAgenda : undefined\}/g) ?? []).length, 2);
+  assert.match(action, /disabled=\{!agenda \|\| dirty \|\| busy \|\| preparing\}/);
+  assert.match(action, /Save agenda to enable PDF export/);
   assert.match(action, /Save your changes to enable Print PDF/);
   assert.match(action, /doc\.autoPrint\(\)/);
   assert.match(action, /URL\.revokeObjectURL/);

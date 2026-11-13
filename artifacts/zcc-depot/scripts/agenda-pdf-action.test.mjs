@@ -6,7 +6,7 @@ import { AgendaPdfAction } from "../src/components/agenda-pdf-action.tsx";
 globalThis.IS_REACT_ACT_ENVIRONMENT = true;
 
 const agenda = { id: "saved-id", company: "Morningstar", updatedAt: "2020-01-01T00:00:00Z", logoPath: null };
-async function harness(run, { dirty = false, blocked = false, fail = false, logoPath = null } = {}) {
+async function harness(run, { dirty = false, blocked = false, fail = false, logoPath = null, unsaved = false } = {}) {
   const originalWindow = globalThis.window, originalFetch = globalThis.fetch;
   const calls = [], timers = [], viewer = { opener: "parent", document: {}, location: {}, closed: false, close() { this.closed = true; } };
   const filename = "Demo-Agenda-Morningstar-2026-11-13.pdf";
@@ -25,7 +25,7 @@ async function harness(run, { dirty = false, blocked = false, fail = false, logo
   };
   let root;
   try {
-    await act(async () => { root = create(React.createElement(AgendaPdfAction, { agenda: { ...agenda, logoPath }, dirty, busy: false })); });
+    await act(async () => { root = create(React.createElement(AgendaPdfAction, { agenda: unsaved ? undefined : { ...agenda, logoPath }, dirty, busy: false })); });
     const click = async id => act(async () => { root.root.findByProps({ "data-testid": id }).props.onClick(); await new Promise(resolve => setImmediate(resolve)); });
     await run({ root, click, calls, viewer, filename });
   } finally {
@@ -34,6 +34,12 @@ async function harness(run, { dirty = false, blocked = false, fail = false, logo
     delete globalThis.__agendaPdf;
   }
 }
+test("new drafts display both PDF buttons with a clear save-first instruction", () => harness(async ({ root, click, calls }) => {
+  assert.equal(root.root.findByProps({ "data-testid": "button-print-agenda-pdf" }).props.disabled, true);
+  assert.equal(root.root.findByProps({ "data-testid": "button-download-agenda-pdf" }).props.disabled, true);
+  assert.match(JSON.stringify(root.toJSON()), /Save agenda to enable PDF export/);
+  await click("button-print-agenda-pdf"); assert.equal(calls.length, 0);
+}, { unsaved: true }));
 test("unsaved edits block both print and download without opening a viewer", () => harness(async ({ root, click, calls }) => {
   assert.equal(root.root.findByProps({ "data-testid": "button-print-agenda-pdf" }).props.disabled, true);
   await click("button-print-agenda-pdf"); await click("button-download-agenda-pdf");

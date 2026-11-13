@@ -11,6 +11,7 @@
     "test:components": "node scripts/run-component-tests.mjs",
     "test:narration": "node scripts/run-narration-tests.mjs",
     "test:research-export": "node scripts/run-research-export-tests.mjs",
+    "test:vertical-use-cases": "node scripts/run-vertical-use-case-tests.mjs",
     "check:resource-links": "node scripts/check-resource-links.mjs",
     "test:resource-links": "node --test scripts/resource-links.test.mjs",
     "test:section-geometry": "playwright test --config playwright.config.ts"
