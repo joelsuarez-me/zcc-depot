@@ -734,6 +734,15 @@ components:
       properties:
         id: { type: string }
         name: { type: string }
+        languageAccents:
+          type: array
+          description: Provider catalog labels and verified language/accent pairs for the current narration model. Missing values are omitted, never inferred.
+          items: { $ref: "#/components/schemas/DemoVoiceLanguageAccent" }
+    DemoVoiceLanguageAccent:
+      type: object
+      properties:
+        language: { type: string }
+        accent: { type: string }
     DemoNarrationLine:
       type: object
       required: [nuggetId, id, role, text]

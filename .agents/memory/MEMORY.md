@@ -7,3 +7,4 @@
 - [ElevenLabs connection validation](elevenlabs-connection-validation.md) — a ready connection can still contain a key ID; verify provider acceptance before claiming narration works.
 - [React component test compilation](react-component-test-compilation.md) — automatic JSX plus external React avoids undefined globals and Node scheduler hangs in compiled tests.
 - [Browser preview overlays](browser-preview-overlays.md) — top-level development browsers can show a header-covering notice absent from the embedded app preview.
+- [Voice catalog interpretation](voice-catalog-interpretation.md) — provider labels describe catalog metadata, not script translation or exhaustive speech-language support.

@@ -43,9 +43,16 @@ export interface DemoNarrationPreferences {
   captions: boolean;
 }
 
+export interface DemoVoiceLanguageAccent {
+  language?: string;
+  accent?: string;
+}
+
 export interface DemoVoice {
   id: string;
   name: string;
+  /** Provider catalog labels and verified language/accent pairs for the current narration model. Missing values are omitted, never inferred. */
+  languageAccents?: DemoVoiceLanguageAccent[];
 }
 
 export type DemoNuggetId = typeof DemoNuggetId[keyof typeof DemoNuggetId];

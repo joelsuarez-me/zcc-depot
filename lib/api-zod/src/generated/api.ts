@@ -321,7 +321,11 @@ export const SaveDemoNarrationPreferencesResponse = zod.object({
 export const GetDemoVoicesResponse = zod.object({
   "voices": zod.array(zod.object({
   "id": zod.string(),
-  "name": zod.string()
+  "name": zod.string(),
+  "languageAccents": zod.array(zod.object({
+  "language": zod.string().optional(),
+  "accent": zod.string().optional()
+})).optional().describe('Provider catalog labels and verified language/accent pairs for the current narration model. Missing values are omitted, never inferred.')
 })),
   "lines": zod.array(zod.object({
   "nuggetId": zod.enum(['voice-copilot', 'voice-qa', 'voice-ai-agents', 'video-screen-sharing']),

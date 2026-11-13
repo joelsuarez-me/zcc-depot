@@ -5,8 +5,26 @@ import express from "express";
 import { createVideoVoiceRouter } from "../src/routes/video-demo-voice.ts";
 import { DEMO_NARRATION_LINES, VoiceUnavailable } from "../src/lib/video-demo-voice.ts";
 import { DEMO_NUGGETS } from "../../zcc-depot/src/data/demo-nuggets.ts";
+import { voiceCatalogMetadata, DEMO_SPEECH_MODEL } from "../src/lib/voice-catalog-metadata.ts";
 
-const voices = [{ id: "voiceA", name: "Caller" }, { id: "voiceB", name: "AI" }, { id: "voiceC", name: "Human" }];
+const voices = [{ id: "voiceA", name: "Caller", languageAccents: [{ language: "en", accent: "american" }] }, { id: "voiceB", name: "AI" }, { id: "voiceC", name: "Human" }];
+test("catalog metadata preserves pairs, deduplicates and ignores unrelated models and malformed labels", () => {
+  assert.deepEqual(voiceCatalogMetadata({
+    labels: { language: " en ", accent: "American", gender: "female" },
+    verified_languages: [
+      { language: "en", accent: "american", model_id: DEMO_SPEECH_MODEL },
+      { language: "fr", accent: "standard", model_id: DEMO_SPEECH_MODEL },
+      { language: "de", accent: "standard", model_id: "other_model" },
+      { language: null, accent: "  ", model_id: DEMO_SPEECH_MODEL },
+      null,
+    ],
+  }), [{ language: "en", accent: "American" }, { language: "fr", accent: "standard" }]);
+  for (const input of [null, {}, { labels: [] }, { labels: { language: 4, accent: {} }, verified_languages: "en" }]) {
+    assert.deepEqual(voiceCatalogMetadata(input), []);
+  }
+  assert.deepEqual(voiceCatalogMetadata({ labels: { accent: "british" } }), [{ accent: "british" }]);
+  assert.deepEqual(voiceCatalogMetadata({ labels: { language: "x".repeat(200) } }), [{ language: "x".repeat(120) }]);
+});
 const prepared = { nuggetId: "video-screen-sharing", lineId: "invitation", voiceId: "voiceC" };
 const tick = () => new Promise(resolve => setImmediate(resolve));
 async function fixture(t, overrides = {}) {

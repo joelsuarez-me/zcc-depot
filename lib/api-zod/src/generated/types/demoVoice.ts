@@ -5,8 +5,11 @@
  * API specification
  * OpenAPI spec version: 0.1.0
  */
+import type { DemoVoiceLanguageAccent } from './demoVoiceLanguageAccent';
 
 export interface DemoVoice {
   id: string;
   name: string;
+  /** Provider catalog labels and verified language/accent pairs for the current narration model. Missing values are omitted, never inferred. */
+  languageAccents?: DemoVoiceLanguageAccent[];
 }

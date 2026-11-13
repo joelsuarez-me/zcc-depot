@@ -5,6 +5,7 @@ import { useNarration, VOICE_ROLES } from "./narration-provider";
 import { voiceError } from "@/lib/narrated-playback";
 import { IDLE_VOICE_PREVIEW, VoicePreviewController, type VoicePreviewState } from "@/lib/voice-preview";
 import { SectionLink } from "@/components/section-link";
+import { filterVoiceCatalog, voiceFilterOptions, voiceLabelKey, voiceLabelText, voiceLanguageAccents } from "@/lib/voice-catalog";
 
 const roleLabel = (id: DemoVoiceRole | null) => VOICE_ROLES.find(r => r.id === id)?.label ?? "";
 const initials = (name: string) => name.split(/\s+/).filter(Boolean).slice(0, 2).map(w => w[0]!.toUpperCase()).join("") || "V";
@@ -14,6 +15,8 @@ export function VoiceTalentControls() {
   const [preview, setPreview] = useState<VoicePreviewState>(IDLE_VOICE_PREVIEW);
   const [target, setTarget] = useState<DemoVoiceRole>("caller");
   const [query, setQuery] = useState("");
+  const [language, setLanguage] = useState("");
+  const [accent, setAccent] = useState("");
   const [announce, setAnnounce] = useState("");
 
   const loadRef = useRef(n.getPreviewClip);
@@ -32,10 +35,10 @@ export function VoiceTalentControls() {
   useEffect(() => { controllerRef.current?.setVolume(n.volume); }, [n.volume]);
 
   const voiceName = (id: string) => n.voices.find(v => v.id === id)?.name ?? (id ? `Unavailable voice (${id})` : "Not assigned");
-  const filtered = useMemo(() => {
-    const q = query.trim().toLowerCase();
-    return q ? n.voices.filter(v => v.name.toLowerCase().includes(q)) : n.voices;
-  }, [n.voices, query]);
+  const languages = useMemo(() => voiceFilterOptions(n.voices, "language"), [n.voices]);
+  const accents = useMemo(() => voiceFilterOptions(n.voices, "accent"), [n.voices]);
+  const filtered = useMemo(() => filterVoiceCatalog(n.voices, query, language, accent), [n.voices, query, language, accent]);
+  const clearFilters = () => { setQuery(""); setLanguage(""); setAccent(""); };
 
   const togglePreview = (voiceId: string, name: string) => {
     const c = controllerRef.current;
@@ -166,6 +169,25 @@ export function VoiceTalentControls() {
                     <input type="search" value={query} onChange={e => setQuery(e.target.value)} placeholder="Search voices by name"
                       data-testid="input-voice-search" className="min-h-11 w-full rounded-xl border border-[#203524]/25 bg-white pl-9 pr-3 text-sm" />
                   </label>
+                  <div className="mt-2 grid gap-2 sm:grid-cols-2">
+                    <label className="min-w-0 text-xs font-semibold">Language
+                      <select value={language} onChange={e => setLanguage(e.target.value)} data-testid="select-voice-language"
+                        className="mt-1 min-h-11 w-full rounded-xl border border-[#203524]/25 bg-white px-3 text-sm">
+                        <option value="">All languages</option>
+                        {languages.map(option => <option key={option.value} value={option.value}>{option.label}</option>)}
+                      </select>
+                    </label>
+                    <label className="min-w-0 text-xs font-semibold">Accent
+                      <select value={accent} onChange={e => setAccent(e.target.value)} data-testid="select-voice-accent"
+                        className="mt-1 min-h-11 w-full rounded-xl border border-[#203524]/25 bg-white px-3 text-sm">
+                        <option value="">All accents</option>
+                        {accents.map(option => <option key={option.value} value={option.value}>{option.label}</option>)}
+                      </select>
+                    </label>
+                  </div>
+                  <p className="mt-2 text-xs leading-relaxed opacity-70">Language/accent pairs come from ElevenLabs catalog labels and verified entries for this demo’s speech model. “Not provided” means no label was supplied, not that a language is unsupported. Filters do not translate the prepared sample dialogue.</p>
+                  {(query || language || accent) && <button type="button" onClick={clearFilters} data-testid="button-clear-voice-filters" className="min-h-11 text-xs font-semibold underline underline-offset-4">Clear filters</button>}
+                  <p className="sr-only" role="status" aria-live="polite">{filtered.length} of {n.voices.length} voices match the current filters.</p>
                   {n.lines?.find(line => line.role === target) && <p className="mt-2 text-xs leading-relaxed opacity-70" data-testid="text-preview-script">Sample: {n.lines.find(line => line.role === target)?.text}</p>}
                   {statusText && (
                     <div className="vt-in mt-2 flex items-center justify-between gap-2 rounded-lg bg-[#D1F470]/50 px-3 py-2 text-xs font-semibold">
@@ -176,7 +198,7 @@ export function VoiceTalentControls() {
                     </div>
                   )}
                   <ul className="mt-2 max-h-[26rem] divide-y divide-[#203524]/10 overflow-y-auto rounded-xl border border-[#203524]/15 bg-white" data-testid="list-voices">
-                    {filtered.length === 0 && <li className="p-4 text-sm opacity-70" data-testid="empty-voice-search">No voices match "{query}".</li>}
+                    {filtered.length === 0 && <li className="p-4 text-sm opacity-70" data-testid="empty-voice-search">No voices match the current search and language/accent filters. Clear filters to see all voices.</li>}
                     {filtered.map(v => {
                       const mine = preview.voiceId === v.id && preview.role === target;
                       const loading = mine && preview.status === "loading";
@@ -190,6 +212,13 @@ export function VoiceTalentControls() {
                             <span aria-hidden className="grid h-9 w-9 shrink-0 place-items-center rounded-full bg-[#203524] text-xs font-semibold text-[#D1F470]">{playing ? <Eq light /> : initials(v.name)}</span>
                             <div className="min-w-0 flex-1">
                               <p className="truncate text-sm font-semibold">{v.name}</p>
+                              <ul className="mt-1 flex flex-wrap gap-1 text-[11px] opacity-80" aria-label={`Language and accent for ${v.name}`}>
+                                {voiceLanguageAccents(v).map((pair, index) => (
+                                  <li key={index} className="rounded-md bg-[#203524]/5 px-2 py-1">
+                                    Language: {voiceLabelText(voiceLabelKey(pair.language), "language")} · Accent: {voiceLabelText(voiceLabelKey(pair.accent), "accent")}
+                                  </li>
+                                ))}
+                              </ul>
                               {applied.length > 0 && (
                                 <div className="mt-0.5 flex flex-wrap gap-1">
                                   {applied.map(r => <span key={r.id} className="vt-in inline-flex items-center gap-1 rounded-full bg-[#D1F470] px-2 py-0.5 text-[10px] font-semibold text-[#203524]" data-testid={`badge-applied-${v.id}-${r.id}`}><Check className="h-3 w-3" aria-hidden />{r.label}</span>)}

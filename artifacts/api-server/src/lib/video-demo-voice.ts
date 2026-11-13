@@ -1,5 +1,6 @@
 import { ReplitConnectors } from "@replit/connectors-sdk";
 import type { DemoNarrationLine, DemoVoice, DemoNuggetId, DemoVoiceRole } from "@workspace/api-zod";
+import { DEMO_SPEECH_MODEL, voiceCatalogMetadata } from "./voice-catalog-metadata";
 
 /** Prepared dialogue only: never accept arbitrary text or customer information. */
 const scripts: Record<DemoNuggetId, { id: string; role: DemoVoiceRole; text: string }[]> = {
@@ -74,7 +75,9 @@ export async function listDemoVoices(signal: AbortSignal): Promise<DemoVoice[]> 
         !!v && typeof v === "object" && "voice_id" in v && "name" in v &&
         typeof v.voice_id === "string" && /^[a-zA-Z0-9_-]{1,100}$/.test(v.voice_id) && typeof v.name === "string")
       .slice(0, 500)
-      .map((v: { voice_id: string; name: string }) => ({ id: v.voice_id, name: v.name.slice(0, 120) }));
+      .map((v: { voice_id: string; name: string }) => ({
+        id: v.voice_id, name: v.name.slice(0, 120), languageAccents: voiceCatalogMetadata(v),
+      }));
     if (!voices.length) throw new VoiceUnavailable("No usable voices are available in the connected ElevenLabs account.");
     voiceCache = { voices, until: Date.now() + 60_000 };
     return voices;
@@ -98,7 +101,7 @@ export async function generateVideoClip(nuggetId: DemoNuggetId, lineId: string, 
   if (!line) throw new Error("Unknown prepared line.");
   const response = await connectors.proxy("elevenlabs", `/v1/text-to-speech/${encodeURIComponent(voiceId)}?output_format=mp3_44100_128`, {
     method: "POST", signal, headers: { "Content-Type": "application/json", Accept: "audio/mpeg" },
-    body: JSON.stringify({ text: line.text, model_id: "eleven_multilingual_v2", voice_settings: { stability: 0.55, similarity_boost: 0.75 } }),
+    body: JSON.stringify({ text: line.text, model_id: DEMO_SPEECH_MODEL, voice_settings: { stability: 0.55, similarity_boost: 0.75 } }),
   });
   if (!response.ok) await providerError(response);
   if (!response.headers.get("content-type")?.startsWith("audio/") || !response.body) {

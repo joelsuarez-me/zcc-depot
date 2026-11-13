@@ -20,7 +20,10 @@ function fixture(authenticated = true) {
   const n = {
     auth: { isAuthenticated: authenticated, login() {} },
     enabled: authenticated, wanted: true, volume: .9, captions: true,
-    voices: [{ id: "a", name: "Liam" }, { id: "b", name: "Laura" }],
+    voices: [
+      { id: "a", name: "Liam", languageAccents: [{ language: "en", accent: "american" }, { language: "fr", accent: "standard" }] },
+      { id: "b", name: "Laura", languageAccents: [{ language: "en", accent: "british" }] },
+    ],
     selected: { caller: "a", "ai-agent": "b", "human-agent": "b", narrator: "a" },
     lines: [{ role: "caller", text: "A prepared caller sample." }],
     catalog: { isFetching: false, error: null, refetch() {} },
@@ -77,6 +80,37 @@ test("search and role selection do not apply voices; explicit Apply changes only
   assert.equal(h.n.selected["ai-agent"], "b");
   assert.equal(byId(h.root, "button-apply-a").props.disabled, true);
 });
+test("language and accent filters match pairs without changing saved cast or auditioning", async t => {
+  const h = await mount(t);
+  const selected = { ...h.n.selected };
+  assert.match(JSON.stringify(h.root.toJSON()), /English/);
+  assert.match(JSON.stringify(h.root.toJSON()), /French/);
+  await act(() => byId(h.root, "select-voice-language").props.onChange({ target: { value: "fr" } }));
+  assert.equal(h.root.root.findAllByProps({ "data-testid": "row-voice-b" }).length, 0);
+  assert.ok(byId(h.root, "row-voice-a"));
+  await act(() => byId(h.root, "select-voice-accent").props.onChange({ target: { value: "american" } }));
+  assert.ok(byId(h.root, "empty-voice-search")); // American applies to English, not French.
+  await act(() => byId(h.root, "button-clear-voice-filters").props.onClick());
+  assert.ok(byId(h.root, "row-voice-b"));
+  assert.deepEqual(h.n.selected, selected);
+  assert.deepEqual(h.applied, []);
+  assert.deepEqual(h.requests, []);
+});
+test("voices without metadata remain visible and can be filtered as not provided", async t => {
+  const h = await mount(t);
+  h.n.voices = [...h.n.voices, { id: "c", name: "Unknown" }, { id: "d", name: "Partial", languageAccents: [{ accent: "irish" }] }];
+  await act(() => h.root.update(React.createElement(VoiceTalentControls)));
+  assert.ok(byId(h.root, "row-voice-c"));
+  assert.match(byId(h.root, "row-voice-c").findAllByType("li").flatMap(li => li.children.filter(child => typeof child === "string")).join(""), /Not provided/);
+  await act(() => byId(h.root, "select-voice-language").props.onChange({ target: { value: "__not_provided__" } }));
+  assert.ok(byId(h.root, "row-voice-c"));
+  assert.ok(byId(h.root, "row-voice-d"));
+  assert.equal(h.root.root.findAllByProps({ "data-testid": "row-voice-a" }).length, 0);
+  await act(() => byId(h.root, "select-voice-accent").props.onChange({ target: { value: "irish" } }));
+  assert.ok(byId(h.root, "row-voice-d"));
+  assert.equal(h.root.root.findAllByProps({ "data-testid": "row-voice-c" }).length, 0);
+  assert.deepEqual(h.requests, []);
+});
 test("Preview auditions the candidate without applying it and Stop remains available after filtering", async t => {
   const h = await mount(t);
   await act(async () => byId(h.root, "button-preview-b").props.onClick());
@@ -84,6 +118,7 @@ test("Preview auditions the candidate without applying it and Stop remains avail
   assert.equal(h.n.selected.caller, "a");
   assert.deepEqual(h.applied, []);
   await act(() => byId(h.root, "input-voice-search").props.onChange({ target: { value: "liam" } }));
+  await act(() => byId(h.root, "select-voice-language").props.onChange({ target: { value: "fr" } }));
   assert.equal(h.root.root.findAllByProps({ "data-testid": "row-voice-b" }).length, 0);
   await act(() => byId(h.root, "button-stop-preview").props.onClick());
   assert.equal(audio.at(-1).src, "");

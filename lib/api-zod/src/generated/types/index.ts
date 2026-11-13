@@ -21,6 +21,7 @@ export * from './demoNuggetId';
 export * from './demoSpeechInput';
 export * from './demoVoice';
 export * from './demoVoiceCatalog';
+export * from './demoVoiceLanguageAccent';
 export * from './demoVoiceRole';
 export * from './errorEnvelope';
 export * from './healthStatus';
