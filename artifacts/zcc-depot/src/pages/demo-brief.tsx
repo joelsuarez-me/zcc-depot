@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useRef, useState, type FormEvent } from "react";
+import { useCallback, useEffect, useRef, useState, type FormEvent } from "react";
 import {
   AlertTriangle, Building2, CircleSlash, Download, ExternalLink, FileSearch, Globe2, ImageOff,
   Loader2, Lock, LogIn, RefreshCw, RotateCcw, Search, Sparkles, Square, Users,
@@ -6,12 +6,13 @@ import {
 import { useAuth } from "@workspace/replit-auth-web";
 import { resolveResearchCompany, type ResearchCompany, type ResearchReport } from "@workspace/api-client-react";
 import { PageHero } from "@/components/kit";
-import { ResearchMarkdown } from "@/components/research-markdown";
+import { ResearchAgendaCards } from "@/components/research-agenda-cards";
+import { RESEARCH_AGENDA_HEADINGS } from "@/lib/research-agenda";
 import { BRIEF_FIELDS, EMPTY_BRIEF_FIELDS, validateBriefFields, type DemoBriefFields } from "@/data/demo-brief-prompt";
 import { streamResearchReport, ResearchStreamError } from "@/lib/research-stream";
 
 const TITLE = "Demo Researcher | ZCC Depot";
-const DESC = "Research a company from current public sources before a Zendesk Contact Center demo: cited eight-section report, company logo and PDF export.";
+const DESC = "Research a company from current public sources before a Zendesk Contact Center demo: cited report in the Demo Agenda format (five sections plus sources), company logo and PDF export.";
 
 function useMeta() {
   useEffect(() => {
@@ -45,7 +46,7 @@ type Report =
   | { kind: "canceled"; ctx: Ctx; text: string };
 type Pdf = { kind: "idle" } | { kind: "busy" } | { kind: "error"; msg: string } | { kind: "warn"; msg: string };
 
-const SECTIONS = ["Executive snapshot", "Company context", "Technology stack", "Support channels", "Zendesk use cases", "Demo flow", "Discovery questions", "Sources"];
+const SECTIONS = [...RESEARCH_AGENDA_HEADINGS, "Sources"];
 const ICONS = { companyName: Building2, companyWebsite: Globe2, region: Search, audience: Users } as const;
 const norm = (s: string) => s.trim().toLowerCase().replace(/\s+/g, " ").replace(/^https?:\/\//, "").replace(/^www\./, "").replace(/\/+$/, "");
 
@@ -243,7 +244,7 @@ export default function DemoBriefPage() {
   return (
     <div className="bg-[#F5F5F2]">
       <PageHero eyebrow="Demos · Live research" title="Demo Researcher"
-        lede="Research a company from current public sources and get a cited, eight-section prep report for your Zendesk Contact Center demo." />
+        lede="Research a company from current public sources and get a cited prep report in the Demo Agenda format: five agenda sections plus sources for your Zendesk Contact Center demo." />
 
       <div className="mx-auto grid max-w-7xl gap-6 px-5 pb-10 pt-6 md:px-8 md:pt-8 lg:grid-cols-12">
         <aside className="space-y-5 lg:col-span-4 lg:self-start lg:sticky lg:top-24">
@@ -386,15 +387,10 @@ function LogoPanel({ lookup, current, company, failed, onFail, canRetry, onRetry
   );
 }
 
-function headings(md: string) {
-  return md.split("\n").map((l) => /^##\s+(.*)$/.exec(l.trim())?.[1]).filter((h): h is string => !!h).map((h) => h.replace(/[*_`]/g, ""));
-}
-
 function ReportArea({ report, headRef, pdf, onExport, onRetry, onLogin, signedIn }: {
   report: Report; headRef: React.RefObject<HTMLHeadingElement | null>; pdf: Pdf; onExport: () => void; onRetry: () => void; onLogin: () => void; signedIn: boolean;
 }) {
   const markdown = report.kind === "complete" ? report.report.markdown : report.kind === "idle" ? "" : report.text;
-  const toc = useMemo(() => headings(markdown), [markdown]);
 
   if (report.kind === "idle") {
     return (
@@ -405,10 +401,10 @@ function ReportArea({ report, headRef, pdf, onExport, onRetry, onLogin, signedIn
             <span className="mx-auto grid h-12 w-12 place-items-center rounded-2xl bg-[#203524] text-[#D1F470]"><FileSearch className="h-5 w-5" aria-hidden /></span>
             <p className="mt-4 text-base font-semibold text-[#11110D]">No report yet</p>
             <p className="mt-1.5 text-sm leading-relaxed text-[#11110D]/60">{signedIn ? "Fill in the account context and choose Generate report. Editing any field clears the previous report so it can't be mistaken for a different account." : "Sign in, then generate a cited report for any account."}</p>
-            <ol className="mt-6 grid grid-cols-2 gap-1.5 text-left sm:grid-cols-4">
-              {SECTIONS.map((s, i) => (
+            <ol className="mt-6 grid grid-cols-2 gap-1.5 text-left sm:grid-cols-3">
+              {SECTIONS.map((s) => (
                 <li key={s} className="rounded-lg border border-[#11110D]/10 bg-[#FBFBF8] px-2 py-1.5 text-[0.68rem] leading-tight text-[#11110D]/65">
-                  <span className="mono block text-[0.6rem] text-[#203524]">{String(i + 1).padStart(2, "0")}</span>{s}
+                  {s}
                 </li>
               ))}
             </ol>
@@ -482,13 +478,12 @@ function ReportArea({ report, headRef, pdf, onExport, onRetry, onLogin, signedIn
         </div>
       )}
 
-      <div className="grid flex-1 gap-8 p-6 md:p-8 xl:grid-cols-[1fr_11rem]">
+      <div className="flex-1 rounded-b-3xl bg-[#f1f2eb] p-4 md:p-6">
         <article className={`min-w-0 ${complete ? "" : "relative"}`} data-testid="text-report-body">
           {markdown ? (
             <>
               {!complete && <p className="mono mb-4 inline-block rounded-full border border-dashed border-[#11110D]/25 px-3 py-1 text-[0.65rem] uppercase tracking-widest text-[#11110D]/55">Unfinished draft</p>}
-              <div className={complete ? "" : "opacity-90"}><ResearchMarkdown markdown={markdown} /></div>
-              {report.kind === "streaming" && <span className="mt-2 inline-block h-4 w-2 animate-pulse bg-[#203524]" aria-hidden />}
+              <div className={complete ? "" : "opacity-95"}><ResearchAgendaCards markdown={markdown} companyName={ctx.fields.companyName} streaming={report.kind === "streaming"} /></div>
             </>
           ) : report.kind === "streaming" ? (
             <div className="space-y-3" aria-hidden data-testid="skeleton-report">
@@ -503,16 +498,6 @@ function ReportArea({ report, headRef, pdf, onExport, onRetry, onLogin, signedIn
             </p>
           )}
         </article>
-        {toc.length > 1 && (
-          <nav aria-label="Report sections" className="hidden xl:block">
-            <div className="sticky top-28">
-              <p className="eyebrow text-[0.6rem] text-[#11110D]/45">Sections</p>
-              <ol className="mt-3 space-y-1.5 border-l border-[#11110D]/10">
-                {toc.map((h, i) => <li key={`${h}-${i}`} className="-ml-px border-l-2 border-transparent pl-3 text-xs leading-snug text-[#11110D]/65">{h}</li>)}
-              </ol>
-            </div>
-          </nav>
-        )}
       </div>
     </>
   );

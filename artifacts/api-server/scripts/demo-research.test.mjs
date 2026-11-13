@@ -7,9 +7,10 @@ import { createResearchRouter } from "../src/routes/demo-research.ts";
 import { publicUrl, isPublicAddress } from "../src/lib/demo-research/public-web.ts";
 import { normalizeLogo, logoCandidates } from "../src/lib/demo-research/company.ts";
 import { groundReport } from "../src/lib/demo-research/report.ts";
+import { REPORT_HEADINGS } from "../src/lib/demo-research/report-format.ts";
 
 const input = { companyName: "Acme", companyWebsite: "https://example.com/", region: "North America", audience: "Platform architects" };
-const report = { ...input, researchedAt: "2026-11-12T12:00:00.000Z", markdown: "## 1. Executive snapshot\nVerified public evidence. [1](https://example.com/)\n\n## 8. Sources\n1. Official source", sources: [{ id: 1, title: "Official company", publisher: "example.com", url: "https://example.com/", accessedAt: "2026-11-12" }] };
+const report = { ...input, researchedAt: "2026-11-12T12:00:00.000Z", markdown: REPORT_HEADINGS.map(heading => `## ${heading}\nVerified public evidence. [1](https://example.com/)`).join("\n\n") + "\n\n## Sources\n1. Official source", sources: [{ id: 1, title: "Official company", publisher: "example.com", url: "https://example.com/", accessedAt: "2026-11-12" }] };
 
 async function withRouter(signedIn, services, run) {
   const app = express();
@@ -86,7 +87,7 @@ test("grounding attaches only attributable source links and requires live eviden
   const metadata = [{ webSearchQueries: ["company source"], groundingChunks: [{ web: { uri: "https://example.com/", title: "Official company" } }], groundingSupports: [{ segment: { startIndex: 0, endIndex: 15, text: "A verified fact" }, groundingChunkIndices: [0] }] }];
   const grounded = groundReport("A verified fact", metadata, "2026-11-12");
   assert.match(grounded.markdown, /\[1\]\(https:\/\/example\.com\/\)/);
-  assert.match(grounded.markdown, /## 8\. Sources/);
+  assert.match(grounded.markdown, /## Sources/);
   assert.equal(grounded.sources.length, 1);
   assert.throws(() => groundReport("Fact", [], "2026-11-12"), /no attributable sources/);
   assert.throws(() => groundReport("Other text", metadata, "2026-11-12"), /no attributable statements/);

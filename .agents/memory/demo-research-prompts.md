@@ -16,3 +16,13 @@ verified evidence, hypotheses, and unknowns; never present model memory as curre
 research. Generate only on explicit submission, not each field edit. A completed
 report can be downloaded as a PDF; no report history/database persistence was
 requested. Do not reintroduce OpenAI or a personal API-key requirement.
+
+Research reports are customer-conversation agendas, not general company dossiers:
+match Demo Agenda in both the on-screen report and its PDF.
+
+**Why:** The user explicitly confirmed matching both the agenda's layout and its
+sections, rather than applying the visual treatment to the previous research outline.
+
+**How to apply:** Organize grounded research around the upcoming demo conversation,
+retain an explicit cited evidence trail, and keep speculative fit separate from
+verified facts. Do not copy customer facts from a sample agenda into new reports.

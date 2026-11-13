@@ -12,4 +12,4 @@ const report = await generateReport({
   region: "North America", audience: "Platform architects preparing a contact center demo",
 }, signal, () => { chunks++; });
 await writeFile("/tmp/zcc-demo-research-smoke.json", JSON.stringify(report));
-console.log(JSON.stringify({ phase: "report", characters: report.markdown.length, sourceCount: report.sources.length, chunks, hasSourcesSection: report.markdown.includes("## 8. Sources") }));
+console.log(JSON.stringify({ phase: "report", characters: report.markdown.length, sourceCount: report.sources.length, chunks, hasSourcesSection: report.markdown.includes("## Sources") }));

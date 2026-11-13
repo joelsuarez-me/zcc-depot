@@ -1,5 +1,6 @@
 import { jsPDF } from "jspdf";
 import type { ResearchReport } from "@workspace/api-client-react";
+import { splitResearchAgenda } from "./research-agenda";
 
 /** Normalise typography for jsPDF's built-in (WinAnsi) Helvetica font. */
 export function pdfText(s: string): string {
@@ -38,115 +39,130 @@ export function createResearchPdf(report: ResearchReport, logoDataUrl?: string):
   const doc = new jsPDF({ unit: "pt", format: "letter" });
   const W = doc.internal.pageSize.getWidth();
   const H = doc.internal.pageSize.getHeight();
-  const M = 54;
+  const M = 36;
   const CW = W - M * 2;
+  const BOTTOM = H - 54;
+  const PAD = 18;
+  const PAPER: [number, number, number] = [241, 242, 235];
+  const CARD: [number, number, number] = [251, 251, 246];
+  type Row = { text: string; size: number; height: number; bold?: boolean; url?: string; muted?: boolean };
   let y = M;
-
-  const ensure = (h: number) => { if (y + h > H - M - 16) { doc.addPage(); y = M; } };
-  const write = (text: string, o: { size?: number; bold?: boolean; color?: [number, number, number]; indent?: number; gap?: number; lead?: number; url?: string } = {}) => {
-    const size = o.size ?? 10;
-    const indent = o.indent ?? 0;
-    doc.setFont("helvetica", o.bold ? "bold" : "normal");
+  const safeLink = (url: string) => /^https?:\/\//i.test(url);
+  const background = () => {
+    doc.setFillColor(...PAPER);
+    doc.rect(0, 0, W, H, "F");
+  };
+  const newPage = () => { doc.addPage(); background(); y = M; };
+  const rows = (text: string, options: Partial<Row> = {}): Row[] => {
+    const size = options.size ?? 10.5;
+    doc.setFont("helvetica", options.bold ? "bold" : "normal");
     doc.setFontSize(size);
-    doc.setTextColor(...(o.color ?? INK));
-    const lh = size * (o.lead ?? 1.4);
-    const lines = doc.splitTextToSize(text, CW - indent) as string[];
-    for (const line of lines) {
-      ensure(lh); doc.text(line, M + indent, y + size);
-      if (o.url) doc.link(M + indent, y, CW - indent, lh, { url: o.url });
-      y += lh;
+    return (doc.splitTextToSize(pdfText(text), CW - 2 * PAD) as string[]).map(line => ({
+      text: line, size, height: size * 1.45, ...options,
+    }));
+  };
+  const paintRow = (row: Row, x: number, top: number) => {
+    doc.setFont("helvetica", row.bold ? "bold" : "normal");
+    doc.setFontSize(row.size);
+    doc.setTextColor(...(row.muted ? MUTED : INK));
+    doc.text(row.text, x, top + row.size);
+    if (row.url && safeLink(row.url)) doc.link(x, top, CW - 2 * PAD, row.height, { url: row.url });
+    // Each visible inline reference links to its own authoritative source.
+    for (const match of row.text.matchAll(/\[(\d+)\]/g)) {
+      const source = report.sources.find(item => item.id === Number(match[1]));
+      if (!source || !safeLink(source.url)) continue;
+      const offset = doc.getTextWidth(row.text.slice(0, match.index));
+      doc.link(x + offset, top, doc.getTextWidth(match[0]), row.height, { url: source.url });
     }
-    y += o.gap ?? 4;
+  };
+  const card = (title: string, body: Row[]) => {
+    if (!body.length) body = rows("No text provided.");
+    const heading = pdfText(title);
+    let cursor = 0;
+    let continued = false;
+    while (cursor < body.length) {
+      doc.setFont("helvetica", "bold"); doc.setFontSize(15);
+      const headingLines = doc.splitTextToSize(`${heading}${continued ? " (continued)" : ""}`, CW - 2 * PAD) as string[];
+      const headingHeight = headingLines.length * 19 + 12;
+      const overhead = PAD * 2 + headingHeight;
+      const remaining = body.slice(cursor).reduce((sum, row) => sum + row.height, 0);
+      // Keep a short card intact; split only a card larger than a whole page.
+      if (y + overhead + Math.min(remaining, 35) > BOTTOM ||
+          (remaining + overhead <= BOTTOM - M && y + remaining + overhead > BOTTOM)) newPage();
+      let end = cursor;
+      let height = overhead;
+      while (end < body.length && y + height + body[end].height <= BOTTOM) height += body[end++].height;
+      if (end === cursor) throw new Error("A report section could not fit on the PDF page.");
+      doc.setFillColor(...CARD); doc.setDrawColor(217, 221, 210); doc.setLineWidth(.6);
+      doc.roundedRect(M, y, CW, height, 16, 16, "FD");
+      doc.setFont("helvetica", "bold"); doc.setFontSize(15); doc.setTextColor(...FOREST);
+      doc.text(headingLines, M + PAD, y + PAD + 15, { lineHeightFactor: 19 / 15 });
+      let lineY = y + PAD + headingHeight;
+      for (; cursor < end; cursor++) { paintRow(body[cursor], M + PAD, lineY); lineY += body[cursor].height; }
+      y += height + 12;
+      if (cursor < body.length) { continued = true; newPage(); }
+    }
   };
 
-  // Header
-  const date = new Date(report.researchedAt);
-  const dateStr = isNaN(date.getTime()) ? report.researchedAt : date.toUTCString().replace(/ GMT$/, " UTC");
-  let textX = M;
+  background();
+  doc.setProperties({ title: `${report.companyName} | Zendesk Contact Center Demo`, author: "ZCC Depot" });
+  doc.setFont("helvetica", "bold"); doc.setFontSize(20);
+  const nameLines = doc.splitTextToSize(pdfText(report.companyName), CW - 2 * PAD - (logoDataUrl ? 92 : 0)) as string[];
+  const headerHeight = 84 + nameLines.length * 24;
+  doc.setFillColor(...FOREST);
+  doc.roundedRect(M, y, CW, headerHeight, 18, 18, "F");
+  doc.setTextColor(209, 244, 112); doc.setFontSize(8);
+  doc.text("CUSTOMER WORKSHOP - RESEARCH BRIEF", M + PAD, y + 24);
+  doc.setTextColor(245, 245, 242); doc.setFontSize(20);
+  doc.text(nameLines, M + PAD, y + 51, { lineHeightFactor: 1.2 });
+  doc.setFont("helvetica", "normal"); doc.setFontSize(9);
+  doc.text("Zendesk Contact Center Demo", M + PAD, y + 59 + nameLines.length * 24);
   if (logoDataUrl) {
     try {
-      const p = doc.getImageProperties(logoDataUrl);
-      const box = 64;
-      const s = Math.min((box - 8) / p.width, (box - 8) / p.height);
-      const w = p.width * s, h = p.height * s;
-      doc.setDrawColor(220, 222, 214); doc.setFillColor(255, 255, 255);
-      doc.roundedRect(M, y, box, box, 6, 6, "FD");
-      doc.addImage(logoDataUrl, "PNG", M + (box - w) / 2, y + (box - h) / 2, w, h);
-      textX = M + box + 14;
+      const p = doc.getImageProperties(logoDataUrl), box = 72;
+      const scale = Math.min((box - 16) / p.width, (box - 16) / p.height);
+      const width = p.width * scale, height = p.height * scale;
+      const x = W - M - PAD - box, top = y + PAD;
+      doc.setFillColor(255, 255, 255); doc.roundedRect(x, top, box, box, 8, 8, "F");
+      doc.addImage(logoDataUrl, "PNG", x + (box - width) / 2, top + (box - height) / 2, width, height);
     } catch { throw new Error("The company logo could not be added to the PDF. Refresh its lookup or export without a logo."); }
   }
-  doc.setFont("helvetica", "bold"); doc.setFontSize(8); doc.setTextColor(...FOREST);
-  doc.text("ZENDESK CONTACT CENTER - DEMO RESEARCH", textX, y + 10);
-  doc.setFontSize(20); doc.setTextColor(...INK);
-  const titleLines = doc.splitTextToSize(pdfText(report.companyName), W - M - textX) as string[];
-  doc.text(titleLines, textX, y + 32);
-  doc.setFont("helvetica", "normal"); doc.setFontSize(9); doc.setTextColor(...MUTED);
-  const websiteLines = doc.splitTextToSize(pdfText(report.companyWebsite), W - M - textX) as string[];
-  doc.text(websiteLines, textX, y + 28 + titleLines.length * 22);
-  y += Math.max(logoDataUrl ? 72 : 0, 40 + titleLines.length * 22 + Math.max(0, websiteLines.length - 1) * 12);
-
-  doc.setDrawColor(...FOREST); doc.setLineWidth(1); doc.line(M, y, W - M, y); y += 10;
-  const meta: [string, string][] = [["Region", report.region], ["Audience", report.audience], ["Researched", dateStr], ["Sources", String(report.sources.length)]];
-  for (const [k, v] of meta) {
-    doc.setFont("helvetica", "bold"); doc.setFontSize(9); doc.setTextColor(...FOREST);
-    ensure(14); doc.text(k.toUpperCase(), M, y + 9);
-    doc.setFont("helvetica", "normal"); doc.setTextColor(...INK);
-    const lines = doc.splitTextToSize(pdfText(v), CW - 80) as string[];
-    lines.forEach((l, i) => { ensure(13); doc.text(l, M + 80, y + 9 + (i ? 0 : 0)); y += 13; });
+  y += headerHeight + 12;
+  const contextRows = [
+    ...rows(`Website: ${report.companyWebsite}`, { size: 9, url: report.companyWebsite }),
+    ...rows(`Region: ${report.region}`, { size: 9 }),
+    ...rows(`Audience: ${report.audience}`, { size: 9 }),
+    ...rows(`Researched: ${report.researchedAt.slice(0, 10)} | ${report.sources.length} cited sources`, { size: 9 }),
+    ...rows("AI-generated from public sources. Verify cited claims and configured capabilities before customer use.", { size: 8.5, muted: true }),
+  ];
+  for (const row of contextRows) {
+    if (y + row.height > BOTTOM) newPage();
+    paintRow(row, M + PAD, y);
+    y += row.height;
   }
-  y += 4;
-  write("AI-generated from public sources. Verify each cited claim before customer use.", { size: 8, color: MUTED, gap: 12 });
-
-  // Body
-  let inCode = false;
-  for (const raw of report.markdown.replace(/\r\n?/g, "\n").split("\n")) {
-    const line = raw.replace(/\s+$/, "");
-    // Render the authoritative structured sources once, below the seven sections.
-    if (/^##\s+8\.\s+Sources/i.test(line)) break;
-    if (/^```/.test(line)) { inCode = !inCode; continue; }
-    if (inCode) { write(pdfText(line), { size: 8.5, color: MUTED, gap: 0 }); continue; }
-    if (!line.trim()) { y += 3; continue; }
-    if (/^\s*(-{3,}|\*{3,})\s*$/.test(line)) { ensure(10); doc.setDrawColor(220, 222, 214); doc.line(M, y + 4, W - M, y + 4); y += 10; continue; }
-    if (/^\s*\|?\s*:?-{2,}/.test(line) && line.includes("|")) continue;
-    const h = /^(#{1,6})\s+(.*)$/.exec(line);
-    if (h) {
-      const lvl = h[1].length;
-      y += lvl <= 2 ? 10 : 5;
-      ensure(40);
-      write(inline(h[2]), { size: lvl === 1 ? 16 : lvl === 2 ? 13.5 : 11.5, bold: true, color: lvl <= 2 ? FOREST : INK, gap: 4, lead: 1.25 });
-      continue;
+  y += 14;
+  for (const section of splitResearchAgenda(report.markdown)) {
+    if (/^(?:\d+\.\s*)?sources$/i.test(section.title)) continue;
+    const body: Row[] = [];
+    if (section.title === "Company and objective") {
+      body.push(...rows("Company name", { size: 8.5, bold: true, muted: true }), ...rows(report.companyName, { bold: true }));
+      body.push(...rows("Objective", { size: 8.5, bold: true, muted: true }));
     }
-    const b = /^(\s*)([-*+]|\d+[.)])\s+(.*)$/.exec(line);
-    if (b) {
-      const depth = Math.min(3, Math.floor(b[1].length / 2));
-      const marker = /\d/.test(b[2]) ? b[2] : "-";
-      const indent = 12 + depth * 14;
-      doc.setFont("helvetica", "normal"); doc.setFontSize(10); doc.setTextColor(...FOREST);
-      ensure(14); doc.text(marker, M + indent - 12, y + 10);
-      write(inline(b[3]), { indent: indent + (marker.length > 2 ? 6 : 0), gap: 2 });
-      continue;
+    for (const line of section.markdown.split("\n")) {
+      if (!line.trim()) { body.push({ text: "", size: 1, height: 5 }); continue; }
+      if (/^```/.test(line) || /^\s*\|?\s*:?-{2,}/.test(line)) continue;
+      const heading = /^#{1,6}\s+(.*)$/.exec(line);
+      body.push(...rows(inline(heading ? heading[1] : line.replace(/^\s*[-*+]\s+/, "- ").replace(/^>\s?/, "")), { bold: !!heading }));
     }
-    if (line.includes("|") && /^\s*\|/.test(line)) {
-      const cells = line.split("|").map((c) => c.trim()).filter(Boolean);
-      write(inline(cells.join("  |  ")), { size: 9, gap: 2 });
-      continue;
-    }
-    const q = /^>\s?(.*)$/.exec(line);
-    if (q) { write(inline(q[1]), { indent: 12, color: MUTED, gap: 3 }); continue; }
-    write(inline(line), { gap: 5 });
+    card(section.title, body);
   }
-
-  // Source list (structured)
-  if (report.sources.length) {
-    y += 12; ensure(60);
-    write("8. Sources", { size: 13.5, bold: true, color: FOREST, gap: 6 });
-    for (const s of report.sources) {
-      ensure(40);
-      write(`[${s.id}] ${pdfText(s.title)}`, { bold: true, size: 9.5, gap: 1 });
-      write(pdfText(`${s.publisher} - accessed ${s.accessedAt}`), { size: 8.5, color: MUTED, indent: 14, gap: 1 });
-      write(s.url, { size: 8.5, color: FOREST, indent: 14, gap: 6, url: s.url });
-    }
+  const sourceRows: Row[] = [];
+  for (const source of report.sources) {
+    sourceRows.push(...rows(`[${source.id}] ${source.title}`, { bold: true, size: 10, url: source.url }));
+    sourceRows.push(...rows(`${source.publisher} - accessed ${source.accessedAt}`, { size: 8.5, muted: true }));
+    sourceRows.push(...rows(source.url, { size: 8.5, url: source.url }), { text: "", size: 1, height: 7 });
   }
+  if (sourceRows.length) card("Sources", sourceRows);
 
   const n = doc.getNumberOfPages();
   for (let i = 1; i <= n; i++) {
