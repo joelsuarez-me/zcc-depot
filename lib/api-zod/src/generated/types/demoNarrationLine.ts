@@ -6,9 +6,11 @@
  * OpenAPI spec version: 0.1.0
  */
 import type { DemoNuggetId } from './demoNuggetId';
+import type { DemoScriptLocale } from './demoScriptLocale';
 import type { DemoVoiceRole } from './demoVoiceRole';
 
 export interface DemoNarrationLine {
+  locale: DemoScriptLocale;
   nuggetId: DemoNuggetId;
   id: string;
   role: DemoVoiceRole;

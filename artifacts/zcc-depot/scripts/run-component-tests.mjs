@@ -30,7 +30,7 @@ try {
       setup(builder) {
         builder.onResolve({ filter: /^\.\/narration-provider$/ }, () => ({ path: "voice-test-context", namespace: "fixture" }));
         builder.onLoad({ filter: /.*/, namespace: "fixture" }, () => ({
-          contents: `export const VOICE_ROLES=[{id:"caller",label:"Caller"},{id:"ai-agent",label:"AI Agent"},{id:"human-agent",label:"Human Agent"},{id:"narrator",label:"Narrator"}]; export function useNarration(){return globalThis.__voiceTestNarration;}`,
+          contents: `export const SCRIPT_LANGUAGES=[{id:"en-US",label:"English (US)"},{id:"es-ES",label:"Español (España)"},{id:"fr-FR",label:"Français (France)"}]; export const VOICE_ROLES=[{id:"caller",label:"Caller"},{id:"ai-agent",label:"AI Agent"},{id:"human-agent",label:"Human Agent"},{id:"narrator",label:"Narrator"}]; export function useNarration(){return globalThis.__voiceTestNarration;}`,
           loader: "js",
         }));
       },

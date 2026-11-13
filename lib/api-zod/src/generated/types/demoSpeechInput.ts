@@ -6,8 +6,10 @@
  * OpenAPI spec version: 0.1.0
  */
 import type { DemoNuggetId } from './demoNuggetId';
+import type { DemoScriptLocale } from './demoScriptLocale';
 
 export interface DemoSpeechInput {
+  locale?: DemoScriptLocale;
   nuggetId: DemoNuggetId;
   /**
      * @minLength 1

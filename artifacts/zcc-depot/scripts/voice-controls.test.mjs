@@ -20,6 +20,8 @@ function fixture(authenticated = true) {
   const n = {
     auth: { isAuthenticated: authenticated, login() {} },
     enabled: authenticated, wanted: true, volume: .9, captions: true,
+    scriptLocale: "en-US",
+    setScriptLanguage(locale) { n.stopPlayback(); n.scriptLocale = locale; n.lines = [{ role: "caller", locale, text: "Una muestra preparada." }]; },
     voices: [
       { id: "a", name: "Liam", languageAccents: [{ language: "en", accent: "american" }, { language: "fr", accent: "standard" }] },
       { id: "b", name: "Laura", languageAccents: [{ language: "en", accent: "british" }] },
@@ -54,6 +56,22 @@ test("signed-out controls do not expose or generate voice auditions", async t =>
   assert.ok(byId(h.root, "button-narration-sign-in"));
   assert.equal(h.root.root.findAllByProps({ "data-testid": "list-voices" }).length, 0);
   assert.deepEqual(h.requests, []);
+  assert.equal(byId(h.root, "select-script-language").props.disabled, true);
+});
+test("script language is separate from catalog filters and changing it stops an audition without generating", async t => {
+  const h = await mount(t);
+  await act(async () => byId(h.root, "button-preview-b").props.onClick());
+  assert.equal(h.requests.length, 1);
+  await act(() => byId(h.root, "select-script-language").props.onChange({ target: { value: "es-ES" } }));
+  assert.equal(audio.at(-1).src, "");
+  assert.equal(h.requests.length, 1);
+  assert.equal(h.n.scriptLocale, "es-ES");
+  assert.equal(byId(h.root, "select-voice-language").props.value, "");
+  assert.match(byId(h.root, "text-preview-script").children.join(""), /Una muestra preparada/);
+  assert.equal(byId(h.root, "text-preview-script").props.lang, "es-ES");
+  await act(() => byId(h.root, "select-voice-language").props.onChange({ target: { value: "fr" } }));
+  assert.equal(h.n.scriptLocale, "es-ES");
+  assert.equal(h.requests.length, 1);
 });
 test("unavailable saved voices are explained and reset never auditions or starts a demo", async t => {
   const h = await mount(t);

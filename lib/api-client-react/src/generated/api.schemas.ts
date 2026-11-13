@@ -55,6 +55,18 @@ export interface DemoVoice {
   languageAccents?: DemoVoiceLanguageAccent[];
 }
 
+/**
+ * Language of the fixed, reviewed script, independent of provider voice catalog labels. Omitted speech locale defaults to en-US for older clients.
+ */
+export type DemoScriptLocale = typeof DemoScriptLocale[keyof typeof DemoScriptLocale];
+
+
+export const DemoScriptLocale = {
+  'en-US': 'en-US',
+  'es-ES': 'es-ES',
+  'fr-FR': 'fr-FR',
+} as const;
+
 export type DemoNuggetId = typeof DemoNuggetId[keyof typeof DemoNuggetId];
 
 
@@ -76,6 +88,7 @@ export const DemoVoiceRole = {
 } as const;
 
 export interface DemoNarrationLine {
+  locale: DemoScriptLocale;
   nuggetId: DemoNuggetId;
   id: string;
   role: DemoVoiceRole;
@@ -88,6 +101,7 @@ export interface DemoVoiceCatalog {
 }
 
 export interface DemoSpeechInput {
+  locale?: DemoScriptLocale;
   nuggetId: DemoNuggetId;
   /**
      * @minLength 1

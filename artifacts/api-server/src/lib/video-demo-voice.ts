@@ -1,6 +1,8 @@
 import { ReplitConnectors } from "@replit/connectors-sdk";
-import type { DemoNarrationLine, DemoVoice, DemoNuggetId, DemoVoiceRole } from "@workspace/api-zod";
+import { createHash } from "node:crypto";
+import type { DemoNarrationLine, DemoVoice, DemoNuggetId, DemoVoiceRole, DemoScriptLocale } from "@workspace/api-zod";
 import { DEMO_SPEECH_MODEL, voiceCatalogMetadata } from "./voice-catalog-metadata";
+import { DEMO_SCRIPT_TRANSLATIONS } from "./demo-script-translations";
 
 /** Prepared dialogue only: never accept arbitrary text or customer information. */
 const scripts: Record<DemoNuggetId, { id: string; role: DemoVoiceRole; text: string }[]> = {
@@ -35,7 +37,24 @@ const scripts: Record<DemoNuggetId, { id: string; role: DemoVoiceRole; text: str
   ],
 };
 export const DEMO_NARRATION_LINES: DemoNarrationLine[] = Object.entries(scripts)
-  .flatMap(([nuggetId, lines]) => lines.map(line => ({ ...line, nuggetId: nuggetId as DemoNuggetId })));
+  .flatMap(([nuggetId, lines]) => lines.map(line => ({ ...line, nuggetId: nuggetId as DemoNuggetId, locale: "en-US" })));
+
+export const LOCALIZED_DEMO_LINES: DemoNarrationLine[] = [
+  ...DEMO_NARRATION_LINES,
+  ...Object.entries(DEMO_SCRIPT_TRANSLATIONS).flatMap(([locale, translations]) =>
+    DEMO_NARRATION_LINES.map(line => {
+      const text = translations[line.nuggetId][line.id];
+      if (!text?.trim()) throw new Error(`Missing prepared translation: ${locale}/${line.nuggetId}/${line.id}`);
+      return { ...line, text, locale: locale as DemoScriptLocale };
+    })),
+];
+
+export function demoClipCacheKey(owner: string, nuggetId: DemoNuggetId, lineId: string, voiceId: string, locale: DemoScriptLocale): string {
+  const line = LOCALIZED_DEMO_LINES.find(item => item.locale === locale && item.nuggetId === nuggetId && item.id === lineId);
+  if (!line) throw new Error("Unknown prepared line or script language.");
+  // Revision follows the exact text and model, so editorial fixes cannot reuse old audio.
+  return createHash("sha256").update(JSON.stringify([owner, locale, nuggetId, lineId, voiceId, DEMO_SPEECH_MODEL, line.text])).digest("hex");
+}
 
 export class VoiceUnavailable extends Error {}
 const connectors = new ReplitConnectors();
@@ -89,15 +108,16 @@ export async function listDemoVoices(signal: AbortSignal): Promise<DemoVoice[]> 
   return voicePending;
 }
 
-export function cachedVideoClip(nuggetId: DemoNuggetId, lineId: string, voiceId: string): Buffer | undefined {
-  const key = `${nuggetId}:${lineId}:${voiceId}`;
+export function cachedVideoClip(nuggetId: DemoNuggetId, lineId: string, voiceId: string, owner: string, locale: DemoScriptLocale): Buffer | undefined {
+  const key = demoClipCacheKey(owner, nuggetId, lineId, voiceId, locale);
   const entry = clips.get(key);
   if (!entry || entry.until < Date.now()) { clips.delete(key); return; }
   return entry.bytes;
 }
 
-export async function generateVideoClip(nuggetId: DemoNuggetId, lineId: string, voiceId: string, signal: AbortSignal): Promise<Buffer> {
-  const line = DEMO_NARRATION_LINES.find(item => item.nuggetId === nuggetId && item.id === lineId);
+export async function generateVideoClip(nuggetId: DemoNuggetId, lineId: string, voiceId: string, signal: AbortSignal, owner: string, locale: DemoScriptLocale): Promise<Buffer> {
+  const key = demoClipCacheKey(owner, nuggetId, lineId, voiceId, locale);
+  const line = LOCALIZED_DEMO_LINES.find(item => item.locale === locale && item.nuggetId === nuggetId && item.id === lineId);
   if (!line) throw new Error("Unknown prepared line.");
   const response = await connectors.proxy("elevenlabs", `/v1/text-to-speech/${encodeURIComponent(voiceId)}?output_format=mp3_44100_128`, {
     method: "POST", signal, headers: { "Content-Type": "application/json", Accept: "audio/mpeg" },
@@ -131,6 +151,6 @@ export async function generateVideoClip(nuggetId: DemoNuggetId, lineId: string, 
     if (used + bytes.length <= MAX_CACHE_BYTES && clips.size < 64) break;
     used -= entry.bytes.length; clips.delete(key);
   }
-  clips.set(`${nuggetId}:${lineId}:${voiceId}`, { bytes, until: Date.now() + 60 * 60_000 });
+  clips.set(key, { bytes, until: Date.now() + 60 * 60_000 });
   return bytes;
 }

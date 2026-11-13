@@ -18,6 +18,7 @@ export * from './demoNarrationLine';
 export * from './demoNarrationPreferences';
 export * from './demoNarrationVoiceChoices';
 export * from './demoNuggetId';
+export * from './demoScriptLocale';
 export * from './demoSpeechInput';
 export * from './demoVoice';
 export * from './demoVoiceCatalog';

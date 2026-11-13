@@ -47,7 +47,7 @@ export function DemoPlayer({ nugget, activeId, onActiveChange, children, dark = 
         </div>
         {caption && <div className={`mt-3 rounded-2xl border p-4 text-sm leading-relaxed ${dark ? "border-white/15 bg-white/5 text-[#F5F5F2]" : "border-[#203524]/15 bg-[#FBFBF8] text-[#11110D]"}`} data-testid={`caption-${id}`}>
           <span className={`mb-1 block text-xs font-semibold ${dark ? "text-[#D1F470]" : "text-[#203524]"}`}>{VOICE_ROLES.find(role => role.id === caption.role)?.label} · AI-generated dialogue</span>
-          {caption.text}
+          <span lang={caption.locale}>{caption.text}</span>
         </div>}
       </div>
 

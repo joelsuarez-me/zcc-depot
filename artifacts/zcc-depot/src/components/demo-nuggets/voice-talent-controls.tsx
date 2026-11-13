@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useRef, useState } from "react";
-import type { DemoVoiceRole } from "@workspace/api-client-react";
+import type { DemoVoiceRole, DemoScriptLocale } from "@workspace/api-client-react";
 import { Check, Loader2, Play, RefreshCw, Search, Square, Volume2, AlertTriangle } from "lucide-react";
-import { useNarration, VOICE_ROLES } from "./narration-provider";
+import { useNarration, VOICE_ROLES, SCRIPT_LANGUAGES } from "./narration-provider";
 import { voiceError } from "@/lib/narrated-playback";
 import { IDLE_VOICE_PREVIEW, VoicePreviewController, type VoicePreviewState } from "@/lib/voice-preview";
 import { SectionLink } from "@/components/section-link";
@@ -93,6 +93,21 @@ export function VoiceTalentControls() {
       <p className="sr-only" role="status" aria-live="polite" data-testid="status-voice-announce">{announce}</p>
 
       <div className="p-5">
+        <div className="mb-4">
+          <label className="block max-w-sm text-xs font-semibold">Script language
+            <select value={n.scriptLocale} disabled={!n.auth.isAuthenticated || n.preferencesReady === false}
+              onChange={e => { n.setScriptLanguage(e.target.value as DemoScriptLocale); setAnnounce("Script language changed. Demos and previews stopped. Press Play or Preview to hear the selected language."); }}
+              data-testid="select-script-language" aria-describedby="script-language-help"
+              className="mt-1 min-h-11 w-full rounded-xl border border-[#203524]/25 bg-white px-3 text-sm disabled:opacity-50">
+              {SCRIPT_LANGUAGES.map(language => <option key={language.id} value={language.id}>{language.label}</option>)}
+            </select>
+          </label>
+          <p id="script-language-help" className="mt-2 text-xs leading-relaxed opacity-70">
+            Selects the prepared dialogue for voice previews, narration and dialogue captions for this visit. Other demo visuals remain in English.
+            Changing language stops playback and does not generate audio. Press Play or Preview to generate speech, which may use ElevenLabs credits.
+            Voice catalog filters below do not change the script language or guarantee a voice’s accent in that language.
+          </p>
+        </div>
         {n.auth.isAuthenticated && (
           <div className="mb-4 flex flex-wrap items-center gap-3 text-xs">
             <p role={n.preferencesError ? "alert" : "status"} data-testid="status-narration-preferences">{n.preferencesStatus}</p>
@@ -170,14 +185,14 @@ export function VoiceTalentControls() {
                       data-testid="input-voice-search" className="min-h-11 w-full rounded-xl border border-[#203524]/25 bg-white pl-9 pr-3 text-sm" />
                   </label>
                   <div className="mt-2 grid gap-2 sm:grid-cols-2">
-                    <label className="min-w-0 text-xs font-semibold">Language
+                    <label className="min-w-0 text-xs font-semibold">Catalog language
                       <select value={language} onChange={e => setLanguage(e.target.value)} data-testid="select-voice-language"
                         className="mt-1 min-h-11 w-full rounded-xl border border-[#203524]/25 bg-white px-3 text-sm">
                         <option value="">All languages</option>
                         {languages.map(option => <option key={option.value} value={option.value}>{option.label}</option>)}
                       </select>
                     </label>
-                    <label className="min-w-0 text-xs font-semibold">Accent
+                    <label className="min-w-0 text-xs font-semibold">Catalog accent
                       <select value={accent} onChange={e => setAccent(e.target.value)} data-testid="select-voice-accent"
                         className="mt-1 min-h-11 w-full rounded-xl border border-[#203524]/25 bg-white px-3 text-sm">
                         <option value="">All accents</option>
@@ -188,7 +203,7 @@ export function VoiceTalentControls() {
                   <p className="mt-2 text-xs leading-relaxed opacity-70">Language/accent pairs come from ElevenLabs catalog labels and verified entries for this demo’s speech model. “Not provided” means no label was supplied, not that a language is unsupported. Filters do not translate the prepared sample dialogue.</p>
                   {(query || language || accent) && <button type="button" onClick={clearFilters} data-testid="button-clear-voice-filters" className="min-h-11 text-xs font-semibold underline underline-offset-4">Clear filters</button>}
                   <p className="sr-only" role="status" aria-live="polite">{filtered.length} of {n.voices.length} voices match the current filters.</p>
-                  {n.lines?.find(line => line.role === target) && <p className="mt-2 text-xs leading-relaxed opacity-70" data-testid="text-preview-script">Sample: {n.lines.find(line => line.role === target)?.text}</p>}
+                  {n.lines?.find(line => line.role === target) && <p lang={n.scriptLocale} className="mt-2 text-xs leading-relaxed opacity-70" data-testid="text-preview-script">Sample: {n.lines.find(line => line.role === target)?.text}</p>}
                   {statusText && (
                     <div className="vt-in mt-2 flex items-center justify-between gap-2 rounded-lg bg-[#D1F470]/50 px-3 py-2 text-xs font-semibold">
                       <p role="status" className="flex items-center gap-2" data-testid="status-voice-preview">

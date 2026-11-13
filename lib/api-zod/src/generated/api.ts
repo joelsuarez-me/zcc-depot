@@ -328,6 +328,7 @@ export const GetDemoVoicesResponse = zod.object({
 })).optional().describe('Provider catalog labels and verified language/accent pairs for the current narration model. Missing values are omitted, never inferred.')
 })),
   "lines": zod.array(zod.object({
+  "locale": zod.enum(['en-US', 'es-ES', 'fr-FR']).describe('Language of the fixed, reviewed script, independent of provider voice catalog labels. Omitted speech locale defaults to en-US for older clients.'),
   "nuggetId": zod.enum(['voice-copilot', 'voice-qa', 'voice-ai-agents', 'video-screen-sharing']),
   "id": zod.string(),
   "role": zod.enum(['caller', 'ai-agent', 'human-agent', 'narrator']),
@@ -348,6 +349,7 @@ export const createDemoSpeechBodyVoiceIdRegExp = new RegExp('^[a-zA-Z0-9_-]+$');
 
 
 export const CreateDemoSpeechBody = zod.object({
+  "locale": zod.enum(['en-US', 'es-ES', 'fr-FR']).optional().describe('Language of the fixed, reviewed script, independent of provider voice catalog labels. Omitted speech locale defaults to en-US for older clients.'),
   "nuggetId": zod.enum(['voice-copilot', 'voice-qa', 'voice-ai-agents', 'video-screen-sharing']),
   "lineId": zod.string().min(1).max(createDemoSpeechBodyLineIdMax),
   "voiceId": zod.string().min(1).max(createDemoSpeechBodyVoiceIdMax).regex(createDemoSpeechBodyVoiceIdRegExp)

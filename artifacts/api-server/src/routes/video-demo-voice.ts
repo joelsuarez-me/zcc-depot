@@ -1,6 +1,6 @@
 import { Router, type IRouter } from "express";
 import { CreateDemoSpeechBody, GetDemoVoicesResponse, GetDemoNarrationPreferencesResponse, SaveDemoNarrationPreferencesBody } from "@workspace/api-zod";
-import { DEMO_NARRATION_LINES, VoiceUnavailable, listDemoVoices, cachedVideoClip, generateVideoClip } from "../lib/video-demo-voice";
+import { LOCALIZED_DEMO_LINES, VoiceUnavailable, listDemoVoices, cachedVideoClip, generateVideoClip } from "../lib/video-demo-voice";
 import { narrationPreferencesStore } from "../lib/narration-preferences";
 
 type Services = {
@@ -62,7 +62,7 @@ export function createVideoVoiceRouter(
     }
     try {
       const voices = await services.voices(AbortSignal.timeout(20_000));
-      res.json(GetDemoVoicesResponse.parse({ voices, lines: DEMO_NARRATION_LINES }));
+      res.json(GetDemoVoicesResponse.parse({ voices, lines: LOCALIZED_DEMO_LINES }));
     } catch (error) {
       req.log?.warn("Video demo voice lookup unavailable");
       res.status(503).json({ error: error instanceof VoiceUnavailable ? error.message : "ElevenLabs is unavailable. Check Integrations and retry." });
@@ -70,7 +70,7 @@ export function createVideoVoiceRouter(
   });
   router.post("/demo-nuggets/speech", async (req, res): Promise<void> => {
     const parsed = CreateDemoSpeechBody.strict().safeParse(req.body);
-    if (!parsed.success || !DEMO_NARRATION_LINES.some(line => line.nuggetId === parsed.data.nuggetId && line.id === parsed.data.lineId)) {
+    if (!parsed.success || !LOCALIZED_DEMO_LINES.some(line => line.locale === (parsed.data.locale ?? "en-US") && line.nuggetId === parsed.data.nuggetId && line.id === parsed.data.lineId)) {
       res.status(400).json({ error: "Choose a prepared demo line and an available voice. Custom text is not accepted." }); return;
     }
     const owner = req.user!.id;
@@ -85,17 +85,17 @@ export function createVideoVoiceRouter(
     const signal = AbortSignal.any([controller.signal, AbortSignal.timeout(60_000)]);
     owners.add(owner);
     try {
-      const { nuggetId, lineId, voiceId } = parsed.data;
+      const { nuggetId, lineId, voiceId, locale = "en-US" } = parsed.data;
       const voices = await services.voices(signal);
       if (!voices.some(voice => voice.id === voiceId)) {
         res.status(400).json({ error: "That voice is no longer available. Reload the voice list." }); return;
       }
-      let bytes = services.cached(nuggetId, lineId, voiceId);
+      let bytes = services.cached(nuggetId, lineId, voiceId, owner, locale);
       if (!bytes) {
         if (!consume(`speech:${owner}`, 36) || !consume("speech:global", 180)) {
           res.setHeader("Retry-After", "3600"); res.status(429).json({ error: "Hourly speech-generation limit reached. Try again later." }); return;
         }
-        bytes = await services.speech(nuggetId, lineId, voiceId, signal);
+        bytes = await services.speech(nuggetId, lineId, voiceId, signal, owner, locale);
       }
       if (!res.destroyed) res.type("audio/mpeg").send(bytes);
     } catch (error) {

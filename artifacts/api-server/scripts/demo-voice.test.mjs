@@ -3,9 +3,12 @@ import assert from "node:assert/strict";
 import { once } from "node:events";
 import express from "express";
 import { createVideoVoiceRouter } from "../src/routes/video-demo-voice.ts";
-import { DEMO_NARRATION_LINES, VoiceUnavailable } from "../src/lib/video-demo-voice.ts";
+import { DEMO_NARRATION_LINES, LOCALIZED_DEMO_LINES, demoClipCacheKey, VoiceUnavailable } from "../src/lib/video-demo-voice.ts";
+import { DEMO_SCRIPT_TRANSLATIONS } from "../src/lib/demo-script-translations.ts";
 import { DEMO_NUGGETS } from "../../zcc-depot/src/data/demo-nuggets.ts";
 import { voiceCatalogMetadata, DEMO_SPEECH_MODEL } from "../src/lib/voice-catalog-metadata.ts";
+import { ReplitConnectors } from "@replit/connectors-sdk";
+import { cachedVideoClip, generateVideoClip } from "../src/lib/video-demo-voice.ts";
 
 const voices = [{ id: "voiceA", name: "Caller", languageAccents: [{ language: "en", accent: "american" }] }, { id: "voiceB", name: "AI" }, { id: "voiceC", name: "Human" }];
 test("catalog metadata preserves pairs, deduplicates and ignores unrelated models and malformed labels", () => {
@@ -73,7 +76,8 @@ test("voice catalog returns all fixed scripts only to signed-in users", async t 
   const r = await fetch(`${f.url}/demo-nuggets/voices`, { headers: { "x-test-user": "tester" } });
   assert.equal(r.status, 200);
   const data = await r.json();
-  assert.equal(data.lines.length, 21);
+  assert.equal(data.lines.length, 63);
+  assert.deepEqual(data.lines, LOCALIZED_DEMO_LINES);
   assert.deepEqual(data.voices, voices);
 });
 test("valid fixed speech is returned privately as audio bytes", async t => {
@@ -90,6 +94,9 @@ test("rejects arbitrary text, unknown nugget/line pairs, missing fields and malf
   const f = await fixture(t);
   for (const body of [
     { ...prepared, text: "arbitrary billable customer text" },
+    { ...prepared, locale: "de-DE" },
+    { ...prepared, locale: "" },
+    { ...prepared, locale: null },
     { ...prepared, nuggetId: "voice-copilot" },
     { ...prepared, nuggetId: "unknown" },
     { ...prepared, lineId: "anything" },
@@ -98,6 +105,65 @@ test("rejects arbitrary text, unknown nugget/line pairs, missing fields and malf
     { nuggetId: "voice-qa", lineId: "risk" },
   ]) assert.equal((await f.post(body)).status, 400);
   assert.equal(f.calls.length, 0);
+});
+test("all supported locales have identical stage/role coverage and no English fallback", () => {
+  const signature = line => `${line.nuggetId}:${line.id}:${line.role}`;
+  for (const locale of ["en-US", "es-ES", "fr-FR"]) {
+    const lines = LOCALIZED_DEMO_LINES.filter(line => line.locale === locale);
+    assert.deepEqual(lines.map(signature), DEMO_NARRATION_LINES.map(signature));
+    assert.equal(new Set(lines.map(signature)).size, 21);
+    for (const [i, line] of lines.entries()) {
+      assert.ok(line.text.trim());
+      if (locale !== "en-US") assert.notEqual(line.text, DEMO_NARRATION_LINES[i].text);
+    }
+  }
+  for (const translations of Object.values(DEMO_SCRIPT_TRANSLATIONS)) {
+    for (const [nugget, lines] of Object.entries(translations)) {
+      assert.deepEqual(Object.keys(lines).sort(), DEMO_NARRATION_LINES.filter(l => l.nuggetId === nugget).map(l => l.id).sort());
+    }
+  }
+});
+test("audio identity separates accounts, locales, lines and voices and follows script revisions", () => {
+  const key = (owner = "one", locale = "en-US", id = "connected", voice = "a") => demoClipCacheKey(owner, "voice-copilot", id, voice, locale);
+  assert.equal(key(), key());
+  assert.equal(new Set([key(), key("two"), key("one", "es-ES"), key("one", "fr-FR"), key("one", "en-US", "intent"), key("one", "en-US", "connected", "b")]).size, 6);
+  assert.throws(() => key("one", "de-DE"), /Unknown prepared/);
+  const line = LOCALIZED_DEMO_LINES[0];
+  const original = line.text, before = key();
+  try { line.text += " Revised."; assert.notEqual(key(), before); }
+  finally { line.text = original; }
+});
+test("requested script locale and authenticated owner reach both cache and generation; old clients use English", async t => {
+  const lookups = [];
+  const f = await fixture(t, { cached: (...args) => { lookups.push(args); } });
+  for (const locale of ["en-US", "es-ES", "fr-FR"]) {
+    assert.equal((await f.post({ ...prepared, locale }, {}, "presenter")).status, 200);
+    assert.deepEqual(lookups.at(-1).slice(3), ["presenter", locale]);
+    assert.deepEqual(f.calls.at(-1).slice(4), ["presenter", locale]);
+  }
+  assert.equal((await f.post()).status, 200);
+  assert.deepEqual(f.calls.at(-1).slice(4), ["tester", "en-US"]);
+});
+test("provider receives the exact localized caption text and caches it only for that presenter and locale", async () => {
+  const original = ReplitConnectors.prototype.proxy;
+  const requests = [];
+  // No network and no paid generation: inspect the real generation function's transport.
+  ReplitConnectors.prototype.proxy = async (...args) => {
+    requests.push(args);
+    return new Response("mock audio", { headers: { "Content-Type": "audio/mpeg" } });
+  };
+  try {
+    for (const locale of ["es-ES", "fr-FR"]) {
+      const bytes = await generateVideoClip("voice-copilot", "wrap-up", "testVoice", new AbortController().signal, "cache-owner", locale);
+      const payload = JSON.parse(requests.at(-1)[2].body);
+      assert.equal(payload.text, LOCALIZED_DEMO_LINES.find(l => l.nuggetId === "voice-copilot" && l.id === "wrap-up" && l.locale === locale).text);
+      assert.equal(payload.model_id, DEMO_SPEECH_MODEL);
+      assert.deepEqual(cachedVideoClip("voice-copilot", "wrap-up", "testVoice", "cache-owner", locale), bytes);
+      assert.equal(cachedVideoClip("voice-copilot", "wrap-up", "testVoice", "another-owner", locale), undefined);
+    }
+    assert.equal(cachedVideoClip("voice-copilot", "wrap-up", "testVoice", "cache-owner", "en-US"), undefined);
+    assert.equal(requests.length, 2);
+  } finally { ReplitConnectors.prototype.proxy = original; }
 });
 test("stale or unavailable voices are rejected before speech generation", async t => {
   const f = await fixture(t);

@@ -1,6 +1,6 @@
-import { createContext, useCallback, useContext, useEffect, useRef, useState, type ReactNode } from "react";
+import { createContext, useCallback, useContext, useEffect, useMemo, useRef, useState, type ReactNode } from "react";
 import { useAuth } from "@workspace/replit-auth-web";
-import { createDemoSpeech, getGetDemoVoicesQueryKey, useGetDemoVoices, type DemoVoiceRole } from "@workspace/api-client-react";
+import { createDemoSpeech, getGetDemoVoicesQueryKey, useGetDemoVoices, type DemoVoiceRole, type DemoScriptLocale } from "@workspace/api-client-react";
 import type { NuggetId } from "@/data/demo-nuggets";
 import { voiceError } from "@/lib/narrated-playback";
 import { defaultNarrationPreferences, useSavedNarration } from "./use-saved-narration";
@@ -9,10 +9,17 @@ export const VOICE_ROLES: { id: DemoVoiceRole; label: string }[] = [
   { id: "caller", label: "Caller" }, { id: "ai-agent", label: "AI Agent" },
   { id: "human-agent", label: "Human Agent" }, { id: "narrator", label: "Narrator" },
 ];
+export const SCRIPT_LANGUAGES: { id: DemoScriptLocale; label: string }[] = [
+  { id: "en-US", label: "English (US)" },
+  { id: "es-ES", label: "Español (España)" },
+  { id: "fr-FR", label: "Français (France)" },
+];
 
 function useNarrationSettings(auth: ReturnType<typeof useAuth>, onStop: () => void, requireOptIn: boolean) {
   const owner = auth.user?.id ?? "";
   const preferences = useSavedNarration(owner);
+  // Visit-only and account-owned; shared playlist URLs never select a paid script.
+  const [scriptLocale, setScriptLocale] = useState<DemoScriptLocale>("en-US");
   const { enabled: wanted, volume, captions, voices: choices } = preferences.settings;
   const [consented, setConsented] = useState(!requireOptIn);
   const effectiveWanted = wanted && consented;
@@ -53,8 +60,8 @@ function useNarrationSettings(auth: ReturnType<typeof useAuth>, onStop: () => vo
     role.id, choices[role.id] ?? voices[index % Math.max(1, voices.length)]?.id ?? "",
   ])) as Record<DemoVoiceRole, string>;
   const unavailableRoles = catalog.data ? VOICE_ROLES.filter(role => choices[role.id] && !voices.some(v => v.id === choices[role.id])) : [];
-  const settingsKey = `${owner}:${enabled}:${VOICE_ROLES.map(r => selected[r.id]).join(":")}`;
-  const lines = catalog.data?.lines;
+  const settingsKey = `${owner}:${enabled}:${scriptLocale}:${VOICE_ROLES.map(r => selected[r.id]).join(":")}`;
+  const lines = useMemo(() => catalog.data?.lines.filter(line => line.locale === scriptLocale), [catalog.data?.lines, scriptLocale]);
   const getClip = useCallback(async (nuggetId: NuggetId, lineId: string, signal: AbortSignal, auditionVoiceId?: string) => {
     if (!enabled) throw new Error("Enable the ElevenLabs voice overlay and sign in to prepare narration.");
     if (catalog.error) throw catalog.error;
@@ -66,10 +73,10 @@ function useNarrationSettings(auth: ReturnType<typeof useAuth>, onStop: () => vo
     const voiceId = auditionVoiceId ?? selected[line.role];
     if (!voiceId) throw new Error(`Choose a voice for ${line.role} before playing.`);
     if (!voices.some(voice => voice.id === voiceId)) throw new Error("That voice is no longer available. Reload the voice list.");
-    const key = `${owner}:${nuggetId}:${lineId}:${voiceId}`;
+    const key = JSON.stringify([owner, scriptLocale, nuggetId, lineId, voiceId, line.text]);
     const cached = blobs.current.get(key);
     if (cached) return cached;
-    const blob = await createDemoSpeech({ nuggetId, lineId, voiceId }, { signal, credentials: "include" });
+    const blob = await createDemoSpeech({ nuggetId, lineId, voiceId, locale: scriptLocale }, { signal, credentials: "include" });
     signal.throwIfAborted();
     if (!(blob instanceof Blob) || !blob.type.startsWith("audio/") || !blob.size) throw new Error("No playable speech was returned.");
     let bytes = [...blobs.current.values()].reduce((sum, b) => sum + b.size, 0);
@@ -105,6 +112,12 @@ function useNarrationSettings(auth: ReturnType<typeof useAuth>, onStop: () => vo
   }, [lines, getClip]);
   return {
     auth, enabled, wanted: effectiveWanted, volume, captions, voices, selected, settingsKey, lines, unavailableRoles,
+    scriptLocale,
+    setScriptLanguage(locale: DemoScriptLocale) {
+      if (!SCRIPT_LANGUAGES.some(language => language.id === locale)) return;
+      clearPlayback();
+      setScriptLocale(locale);
+    },
     preferencesReady: preferences.preferencesReady,
     preferencesStatus: preferences.preferencesStatus,
     preferencesError: preferences.preferencesError,
@@ -118,6 +131,7 @@ function useNarrationSettings(auth: ReturnType<typeof useAuth>, onStop: () => vo
     setCaptions(value: boolean) { preferences.update({ captions: value }); },
     resetPreferences() {
       clearPlayback();
+      setScriptLocale("en-US");
       preferences.update(defaultNarrationPreferences());
     },
   };

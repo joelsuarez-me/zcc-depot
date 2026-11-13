@@ -39,7 +39,10 @@ async function mount(t, options = {}, requireOptIn = false) {
   const writes = [], speech = [], loads = [];
   globalThis.__narrationAuth = { user: { id: "one" }, isAuthenticated: true };
   globalThis.__narrationCatalog = {
-    data: { voices: [{ id: "a", name: "A" }, { id: "b", name: "B" }], lines: [{ nuggetId: "voice-copilot", id: "line", role: "caller" }] },
+    data: { voices: [{ id: "a", name: "A" }, { id: "b", name: "B" }], lines: ["en-US", "es-ES", "fr-FR"].flatMap(locale => [
+      { nuggetId: "voice-copilot", id: "connected", role: "caller", locale, text: `Prepared caller ${locale}` },
+      { nuggetId: "voice-ai-agents", id: "confirmation", role: "ai-agent", locale, text: `Prepared AI ${locale}` },
+    ]) },
   };
   globalThis.__narrationApi = {
     async get() { const owner = globalThis.__narrationAuth.user.id; loads.push(owner); return structuredClone(records.get(owner) ?? defaults()); },
@@ -218,4 +221,42 @@ test("claiming a demo stops every other narration and any voice audition", async
   assert.equal(previews, 1);
   await act(() => n.claim("video-screen-sharing"));
   assert.equal(counts["voice-qa"], 1, "switching demos synchronously stops the previous narration");
+});
+
+test("language selection changes captions and auditions together, stops playback, and never generates on its own", async t => {
+  const h = await mount(t);
+  let demoStops = 0, previewStops = 0;
+  n.register("voice-copilot", () => demoStops++);
+  n.registerPreview(() => previewStops++);
+  const previous = n.settingsKey;
+  await act(() => n.setScriptLanguage("es-ES"));
+  assert.equal(n.scriptLocale, "es-ES");
+  assert.notEqual(n.settingsKey, previous);
+  assert.equal(demoStops, 1);
+  assert.equal(previewStops, 1);
+  assert.ok(n.lines.every(line => line.locale === "es-ES"));
+  assert.match(n.lines.find(line => line.role === "caller").text, /es-ES/);
+  assert.equal(h.speech.length, 0);
+  await n.getPreviewClip("caller", "a", new AbortController().signal);
+  assert.deepEqual(h.speech.at(-1)[0], { nuggetId: "voice-copilot", lineId: "connected", voiceId: "a", locale: "es-ES" });
+  await n.getPreviewClip("ai-agent", "a", new AbortController().signal);
+  assert.equal(h.speech.at(-1)[0].nuggetId, "voice-ai-agents");
+  assert.equal(h.speech.at(-1)[0].locale, "es-ES");
+  const paid = h.speech.length;
+  await act(() => n.setScriptLanguage("fr-FR"));
+  assert.equal(h.speech.length, paid);
+  await n.getPreviewClip("caller", "a", new AbortController().signal);
+  assert.equal(h.speech.length, paid + 1, "another language cannot reuse the Spanish clip");
+  assert.equal(h.speech.at(-1)[0].locale, "fr-FR");
+  await act(() => n.setScriptLanguage("es-ES"));
+  await n.getPreviewClip("caller", "a", new AbortController().signal);
+  assert.equal(h.speech.length, paid + 1, "same language and voice reuse the private clip");
+  await h.revisit();
+  assert.equal(n.scriptLocale, "en-US", "language selection applies only to this visit");
+  globalThis.__narrationAuth = { user: { id: "two" }, isAuthenticated: true };
+  await h.rerender();
+  assert.equal(n.scriptLocale, "en-US");
+  await act(() => { n.setEnabled(true); n.setScriptLanguage("es-ES"); });
+  await n.getPreviewClip("caller", "a", new AbortController().signal);
+  assert.equal(h.speech.length, paid + 2, "another account cannot reuse the first presenter's blob");
 });

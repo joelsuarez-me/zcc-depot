@@ -745,12 +745,17 @@ components:
         accent: { type: string }
     DemoNarrationLine:
       type: object
-      required: [nuggetId, id, role, text]
+      required: [nuggetId, id, role, text, locale]
       properties:
+        locale: { $ref: "#/components/schemas/DemoScriptLocale" }
         nuggetId: { $ref: "#/components/schemas/DemoNuggetId" }
         id: { type: string }
         role: { $ref: "#/components/schemas/DemoVoiceRole" }
         text: { type: string }
+    DemoScriptLocale:
+      type: string
+      description: Language of the fixed, reviewed script, independent of provider voice catalog labels. Omitted speech locale defaults to en-US for older clients.
+      enum: [en-US, es-ES, fr-FR]
     DemoNuggetId:
       type: string
       enum: [voice-copilot, voice-qa, voice-ai-agents, video-screen-sharing]
@@ -772,6 +777,7 @@ components:
       additionalProperties: false
       required: [nuggetId, lineId, voiceId]
       properties:
+        locale: { $ref: "#/components/schemas/DemoScriptLocale" }
         nuggetId: { $ref: "#/components/schemas/DemoNuggetId" }
         lineId: { type: string, minLength: 1, maxLength: 40 }
         voiceId: { type: string, minLength: 1, maxLength: 100, pattern: "^[a-zA-Z0-9_-]+$" }
