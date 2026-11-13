@@ -31,6 +31,12 @@ treatment across the interior pages with animation in the background fill. Overv
 title/subtitle area. Use the shared rounded-banner treatment on new pages, and
 respect reduced-motion settings.
 
+Use the Hope Air Agentic AI hero's orbit-and-glow animation style across the Depot's main hero sections, adapted to Zendesk colors.
+
+**Why:** The user explicitly requested this reference animation on all hero sections.
+
+**How to apply:** Keep motion decorative and behind legible content, preserve compact sizing, and provide pause and reduced-motion behavior.
+
 Every content section needs a direct URL.
 
 **Why:** The user explicitly asked for direct section links.

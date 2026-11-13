@@ -4,6 +4,7 @@ import { ChevronRight, Clock3, Expand, LogOut, Menu, Minimize, PanelLeftClose, P
 import { NAV, isNavItemActive } from "@/data/navigation";
 import { ROOMS, ROUTE_LABELS } from "@/data/depot-rooms";
 import { useDepot } from "@/lib/depot-mode";
+import { HeroMotionControl } from "@/components/hero-motion-control";
 
 function labelFor(href: string) {
   const [path, hash] = href.split("#");
@@ -195,6 +196,7 @@ export function DepotTopbar({ onMenu, search, menuButtonRef }: { onMenu: () => v
       <Breadcrumbs />
       <div className="ml-auto flex items-center gap-2">
         {search}
+        <HeroMotionControl />
         <ModeSwitch />
         <button type="button" onClick={toggle} className="depot-icon-btn is-light hidden sm:grid" aria-label={full ? "Exit full screen" : "Full-screen presentation"} title="Full screen (F in presenter rooms)" data-testid="button-fullscreen">
           {full ? <Minimize className="h-4 w-4" /> : <Expand className="h-4 w-4" />}
