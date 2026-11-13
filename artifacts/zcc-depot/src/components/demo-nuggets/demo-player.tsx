@@ -2,8 +2,9 @@ import { useEffect, useImperativeHandle, type ReactNode, type Ref } from "react"
 import { Loader2, Pause, Play, RotateCcw } from "lucide-react";
 import type { DemoPlayback } from "@/hooks/use-demo-playback";
 import { useNarratedDemo } from "@/hooks/use-narrated-demo";
-import { useNarration, VOICE_ROLES } from "./narration-provider";
+import { useNarration } from "./narration-provider";
 import type { DemoNugget, NuggetId } from "@/data/demo-nuggets";
+import { useSceneText, SCENE_ROLE_LABELS } from "./scene-copy";
 import "./demo-nuggets.css";
 import { DemoAudioStatus } from "./demo-audio-status";
 
@@ -24,6 +25,7 @@ export function DemoPlayer({ nugget, activeId, onActiveChange, children, dark = 
     return () => onPendingChange?.(nugget.id, false);
   }, [nugget.id, pending, onPendingChange]);
   const narration = useNarration();
+  const { locale, t } = useSceneText();
   const id = nugget.id;
   const label = pending ? "Cancel" : pb.playing ? "Pause" : pb.status === "paused" ? "Resume" : pb.complete ? "Play again" : "Play";
   const toggle = () => (pb.playing || pending ? pb.pause() : pb.play());
@@ -34,7 +36,7 @@ export function DemoPlayer({ nugget, activeId, onActiveChange, children, dark = 
     <div className={`grid gap-6 lg:grid-cols-12 ${pb.playing ? "" : "dn-paused"} ${pb.status === "idle" ? "dn-idle" : ""}`} data-testid={`demo-${id}`}>
       <div className="relative min-w-0 lg:col-span-8">
         <div className={`dn-stage ${dark ? "is-dark" : ""}`} data-testid={`stage-${id}`} data-step={pb.stage.id}>
-          <div className="pointer-events-none absolute left-4 top-4 z-20 rounded-full bg-[#11110D]/80 px-3 py-1 text-[0.62rem] uppercase tracking-[.14em] text-[#D1F470] mono">Simulation · sample data</div>
+          <div lang={locale} className="pointer-events-none absolute left-4 top-4 z-20 rounded-full bg-[#11110D]/80 px-3 py-1 text-[0.62rem] uppercase tracking-[.14em] text-[#D1F470] mono">{t("Simulation · sample data")}</div>
           {children(pb)}
           {pb.status === "idle" && (
             <button type="button" onClick={pb.play} data-testid={`button-overlay-play-${id}`} aria-label={`Play ${nugget.title} demo`}
@@ -47,7 +49,7 @@ export function DemoPlayer({ nugget, activeId, onActiveChange, children, dark = 
           )}
         </div>
         {caption && <div className={`mt-3 rounded-2xl border p-4 text-sm leading-relaxed ${dark ? "border-white/15 bg-white/5 text-[#F5F5F2]" : "border-[#203524]/15 bg-[#FBFBF8] text-[#11110D]"}`} data-testid={`caption-${id}`}>
-          <span className={`mb-1 block text-xs font-semibold ${dark ? "text-[#D1F470]" : "text-[#203524]"}`}>{VOICE_ROLES.find(role => role.id === caption.role)?.label} · AI-generated dialogue</span>
+          <span lang={locale} className={`mb-1 block text-xs font-semibold ${dark ? "text-[#D1F470]" : "text-[#203524]"}`}>{t(SCENE_ROLE_LABELS[caption.role])} · {t("AI-generated dialogue")}</span>
           <span lang={caption.locale}>{caption.text}</span>
         </div>}
       </div>
@@ -84,7 +86,7 @@ export function DemoPlayer({ nugget, activeId, onActiveChange, children, dark = 
             <div className="h-full w-full origin-left rounded-full bg-[#7DA33A]" style={{ transform: `scaleX(${pb.progress})` }} />
           </div>
         </div>
-        <ol className="space-y-1.5" aria-label={`${nugget.title} steps`}>
+        <ol lang={locale} className="space-y-1.5" aria-label={`${nugget.title} steps`}>
           {nugget.stages.map((s, i) => {
             const cur = i === pb.stepIndex && pb.status !== "idle";
             const done = i < pb.stepIndex || pb.complete;

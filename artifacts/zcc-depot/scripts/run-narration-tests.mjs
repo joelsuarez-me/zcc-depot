@@ -6,10 +6,14 @@ import { fileURLToPath } from "node:url";
 const root = resolve(dirname(fileURLToPath(import.meta.url)), "..");
 const temp = await mkdtemp(resolve(root, "node_modules/.narration-tests-"));
 try {
-  const output = resolve(temp, "narration-preferences.test.cjs");
+  const outputs = [];
+  for (const name of ["narration-preferences", "scene-localization"]) {
+  const output = resolve(temp, `${name}.test.cjs`);
+  outputs.push(output);
   await build({
-    entryPoints: [resolve(root, "scripts/narration-preferences.test.mjs")], outfile: output,
+    entryPoints: [resolve(root, `scripts/${name}.test.mjs`)], outfile: output,
     bundle: true, platform: "node", format: "cjs", jsx: "automatic",
+    loader: { ".css": "empty" },
     external: ["react", "react/*", "react-test-renderer"],
     plugins: [{ name: "narration-services", setup(builder) {
       builder.onResolve({ filter: /^@workspace\/(?:api-client-react|replit-auth-web)$/ }, args => ({ path: args.path, namespace: "fixture" }));
@@ -25,6 +29,7 @@ export const useGetDemoVoices=()=>globalThis.__narrationAuth.isAuthenticated ? g
       }));
     } }], logLevel: "warning",
   });
-  const result = spawnSync(process.execPath, ["--test", output], { cwd: root, stdio: "inherit" });
+  }
+  const result = spawnSync(process.execPath, ["--test", ...outputs], { cwd: root, stdio: "inherit" });
   process.exitCode = result.status ?? 1;
 } finally { await rm(temp, { recursive: true, force: true }); }

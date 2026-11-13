@@ -103,7 +103,7 @@ export function VoiceTalentControls() {
             </select>
           </label>
           <p id="script-language-help" className="mt-2 text-xs leading-relaxed opacity-70">
-            Selects the prepared dialogue for voice previews, narration and dialogue captions for this visit. Other demo visuals remain in English.
+            Selects the prepared dialogue, demo scenes and stage labels for this visit, including visual-only playback. The surrounding site and external source documents are not translated.
             Changing language stops playback and does not generate audio. Press Play or Preview to generate speech, which may use ElevenLabs credits.
             Voice catalog filters below do not change the script language or guarantee a voice’s accent in that language.
           </p>

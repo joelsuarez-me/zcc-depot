@@ -1,13 +1,13 @@
 import { useEffect, useState } from "react";
 import { PageHero, Section, SectionHead, Note } from "@/components/kit";
-import { DEMO_NUGGETS, type NuggetId } from "@/data/demo-nuggets";
+import { getDemoNuggets, type NuggetId } from "@/data/demo-nuggets";
 import { DemoPlayer, type DemoPlayerControls } from "@/components/demo-nuggets/demo-player";
 import { CopilotScene } from "@/components/demo-nuggets/copilot-scene";
 import { VoiceAiScene } from "@/components/demo-nuggets/voice-ai-scene";
 import { VoiceQaScene } from "@/components/demo-nuggets/voice-qa-scene";
 import { NuggetLibrary } from "@/components/demo-nuggets/nugget-library";
 import { VideoSharingScene } from "@/components/demo-nuggets/video-sharing-scene";
-import { NarrationProvider } from "@/components/demo-nuggets/narration-provider";
+import { NarrationProvider, useNarration } from "@/components/demo-nuggets/narration-provider";
 import { VoiceTalentControls as NarrationControls } from "@/components/demo-nuggets/voice-talent-controls";
 import { NuggetPlaylist } from "@/components/demo-nuggets/nugget-playlist";
 import { useNuggetPlaylist } from "@/hooks/use-nugget-playlist";
@@ -44,7 +44,9 @@ export default function DemoNuggets() {
 
 function DemoNuggetsContent({ activeId, setActiveId }: { activeId: NuggetId | null; setActiveId: (id: NuggetId | null) => void }) {
   const playlist = useNuggetPlaylist(activeId);
-  const [copilot, qa, voice, video] = DEMO_NUGGETS;
+  const { scriptLocale } = useNarration();
+  const nuggets = getDemoNuggets(scriptLocale);
+  const [copilot, qa, voice, video] = nuggets;
   const playerProps = (id: NuggetId) => ({
     activeId, onActiveChange: setActiveId,
     controlsRef: (controls: DemoPlayerControls | null) => playlist.registerPlayer(id, controls),
@@ -62,7 +64,7 @@ function DemoNuggetsContent({ activeId, setActiveId }: { activeId: NuggetId | nu
       <Section tone="white" className="[&>.section-body]:!pb-8">
         <SectionHead id="library" eyebrow="Feature library" title="Library"
           lede="Choose a feature, open its demo, and play through an illustrated customer-service moment." />
-        <NuggetLibrary nuggets={DEMO_NUGGETS} onSelect={playlist.onStop} />
+        <NuggetLibrary nuggets={nuggets} onSelect={playlist.onStop} />
         <NuggetPlaylist {...playlist} />
         <NarrationControls />
       </Section>
