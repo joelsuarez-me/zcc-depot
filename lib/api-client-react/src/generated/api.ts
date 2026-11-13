@@ -26,6 +26,7 @@ import type {
   AgendaUpdate,
   AuthUserEnvelope,
   BeginBrowserLoginParams,
+  DemoNarrationPreferences,
   DemoSpeechInput,
   DemoVoiceCatalog,
   ErrorEnvelope,
@@ -466,6 +467,171 @@ export function useGetSavedResearchLogo<TData = Awaited<ReturnType<typeof getSav
 
 
 
+
+export const getGetDemoNarrationPreferencesUrl = () => {
+
+
+
+
+  return `/api/demo-nuggets/preferences`
+}
+
+/**
+ * @summary Read only the signed-in presenter's narration preferences
+ */
+export const getDemoNarrationPreferences = async ( options?: Parameters<typeof customFetch>[1]): Promise<DemoNarrationPreferences> => {
+
+  return customFetch<DemoNarrationPreferences>(getGetDemoNarrationPreferencesUrl(),
+  {
+    ...options,
+    method: 'GET'
+
+
+  }
+);}
+
+
+
+
+
+export const getGetDemoNarrationPreferencesQueryKey = () => {
+    return [
+    `/api/demo-nuggets/preferences`
+    ] as const;
+    }
+
+
+export const getGetDemoNarrationPreferencesQueryOptions = <TData = Awaited<ReturnType<typeof getDemoNarrationPreferences>>, TError = ErrorType<void>>( options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getDemoNarrationPreferences>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getGetDemoNarrationPreferencesQueryKey();
+
+
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof getDemoNarrationPreferences>>> = ({ signal }) => getDemoNarrationPreferences({ signal, ...requestOptions });
+
+
+
+
+
+   return  { queryKey, queryFn, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof getDemoNarrationPreferences>>, TError, TData> & { queryKey: QueryKey }
+}
+
+export type GetDemoNarrationPreferencesQueryResult = NonNullable<Awaited<ReturnType<typeof getDemoNarrationPreferences>>>
+export type GetDemoNarrationPreferencesQueryError = ErrorType<void>
+
+
+/**
+ * @summary Read only the signed-in presenter's narration preferences
+ */
+
+export function useGetDemoNarrationPreferences<TData = Awaited<ReturnType<typeof getDemoNarrationPreferences>>, TError = ErrorType<void>>(
+  options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getDemoNarrationPreferences>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+
+ ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+
+  const queryOptions = getGetDemoNarrationPreferencesQueryOptions(options)
+
+  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
+
+  return withQueryKey(query, queryOptions.queryKey);
+}
+
+
+
+
+
+
+
+export const getSaveDemoNarrationPreferencesUrl = () => {
+
+
+
+
+  return `/api/demo-nuggets/preferences`
+}
+
+/**
+ * @summary Replace only the signed-in presenter's narration preferences
+ */
+export const saveDemoNarrationPreferences = async (demoNarrationPreferences: DemoNarrationPreferences, options?: Parameters<typeof customFetch>[1]): Promise<DemoNarrationPreferences> => {
+
+    const getHeaders = (h?: NonNullable<RequestInit['headers']>): Record<string, string | readonly string[]> => {
+    if (!h) return {};
+    if (h instanceof Headers) return Object.fromEntries(h.entries());
+    if (Symbol.iterator in h) {
+      return Object.fromEntries(
+        Array.from(h as Iterable<Iterable<string>>, (entry) => Array.from(entry) as [string, string]),
+      );
+    }
+    const headers: Record<string, string | readonly string[]> = {};
+    for (const [name, value] of Object.entries<string | readonly string[] | undefined>(h)) {
+      if (value !== undefined) headers[name] = value;
+    }
+    return headers;
+  };
+return customFetch<DemoNarrationPreferences>(getSaveDemoNarrationPreferencesUrl(),
+  {
+    ...options,
+    method: 'PUT',
+    headers: { 'Content-Type': 'application/json', ...getHeaders(options?.headers) },
+    body: JSON.stringify(demoNarrationPreferences)
+  }
+);}
+
+
+
+
+
+export const getSaveDemoNarrationPreferencesMutationKey = () => ['saveDemoNarrationPreferences'] as const;
+
+export const getSaveDemoNarrationPreferencesMutationOptions = <TError = ErrorType<void>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof saveDemoNarrationPreferences>>, TError,SaveDemoNarrationPreferencesMutationVariables, TContext>, request?: SecondParameter<typeof customFetch>}
+): UseMutationOptions<Awaited<ReturnType<typeof saveDemoNarrationPreferences>>, TError,SaveDemoNarrationPreferencesMutationVariables, TContext> => {
+
+const mutationKey = getSaveDemoNarrationPreferencesMutationKey();
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof saveDemoNarrationPreferences>>, SaveDemoNarrationPreferencesMutationVariables> = (props) => {
+          const {data} = props ?? {};
+
+          return  saveDemoNarrationPreferences(data,requestOptions)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type SaveDemoNarrationPreferencesMutationResult = NonNullable<Awaited<ReturnType<typeof saveDemoNarrationPreferences>>>
+    export type SaveDemoNarrationPreferencesMutationBody = BodyType<DemoNarrationPreferences>
+    export type SaveDemoNarrationPreferencesMutationError = ErrorType<void>
+    export type SaveDemoNarrationPreferencesMutationVariables = {data: BodyType<DemoNarrationPreferences>}
+
+    /**
+ * @summary Replace only the signed-in presenter's narration preferences
+ */
+export const useSaveDemoNarrationPreferences = <TError = ErrorType<void>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof saveDemoNarrationPreferences>>, TError,SaveDemoNarrationPreferencesMutationVariables, TContext>, request?: SecondParameter<typeof customFetch>}
+ ): UseMutationResult<
+        Awaited<ReturnType<typeof saveDemoNarrationPreferences>>,
+        TError,
+        SaveDemoNarrationPreferencesMutationVariables,
+        TContext
+      > => {
+      return useMutation(getSaveDemoNarrationPreferencesMutationOptions(options));
+    }
 
 export const getGetDemoVoicesUrl = () => {
 

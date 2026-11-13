@@ -106,6 +106,43 @@ paths:
           description: Sign-in required.
         "404":
           description: Logo not available.
+  /demo-nuggets/preferences:
+    get:
+      operationId: getDemoNarrationPreferences
+      summary: Read only the signed-in presenter's narration preferences
+      responses:
+        "200":
+          description: Saved preferences, or defaults for a new presenter.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/DemoNarrationPreferences"
+        "401":
+          description: Sign-in required.
+        "403":
+          description: Cross-site request rejected.
+    put:
+      operationId: saveDemoNarrationPreferences
+      summary: Replace only the signed-in presenter's narration preferences
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/DemoNarrationPreferences"
+      responses:
+        "200":
+          description: Saved preferences. Voice availability is checked against the catalog before playback.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/DemoNarrationPreferences"
+        "400":
+          description: Invalid preferences.
+        "401":
+          description: Sign-in required.
+        "403":
+          description: Cross-site request rejected.
   /demo-nuggets/voices:
     get:
       operationId: getDemoVoices
@@ -673,6 +710,24 @@ components:
       schema:
         type: string
   schemas:
+    DemoNarrationPreferences:
+      type: object
+      additionalProperties: false
+      required: [voices, enabled, volume, captions]
+      properties:
+        voices:
+          $ref: "#/components/schemas/DemoNarrationVoiceChoices"
+        enabled: { type: boolean }
+        volume: { type: number, minimum: 0, maximum: 1 }
+        captions: { type: boolean }
+    DemoNarrationVoiceChoices:
+      type: object
+      additionalProperties: false
+      properties:
+        caller: { type: string, minLength: 1, maxLength: 100, pattern: "^[a-zA-Z0-9_-]+$" }
+        ai-agent: { type: string, minLength: 1, maxLength: 100, pattern: "^[a-zA-Z0-9_-]+$" }
+        human-agent: { type: string, minLength: 1, maxLength: 100, pattern: "^[a-zA-Z0-9_-]+$" }
+        narrator: { type: string, minLength: 1, maxLength: 100, pattern: "^[a-zA-Z0-9_-]+$" }
     DemoVoice:
       type: object
       required: [id, name]

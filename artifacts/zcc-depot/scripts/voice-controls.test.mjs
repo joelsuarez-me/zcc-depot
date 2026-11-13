@@ -24,6 +24,9 @@ function fixture(authenticated = true) {
     selected: { caller: "a", "ai-agent": "b", "human-agent": "b", narrator: "a" },
     lines: [{ role: "caller", text: "A prepared caller sample." }],
     catalog: { isFetching: false, error: null, refetch() {} },
+    preferencesReady: true, preferencesStatus: "Settings saved to your account.", preferencesError: false,
+    unavailableRoles: [],
+    resetPreferences() { n.stopPlayback(); n.unavailableRoles = []; },
     setVoice(role, id) { n.stopPlayback(); applied.push([role, id]); n.selected[role] = id; },
     setEnabled(value) { n.stopPlayback(); n.enabled = value; n.wanted = value; },
     setVolume(value) { n.volume = value; }, setCaptions(value) { n.captions = value; },
@@ -47,6 +50,18 @@ test("signed-out controls do not expose or generate voice auditions", async t =>
   const h = await mount(t, false);
   assert.ok(byId(h.root, "button-narration-sign-in"));
   assert.equal(h.root.root.findAllByProps({ "data-testid": "list-voices" }).length, 0);
+  assert.deepEqual(h.requests, []);
+});
+test("unavailable saved voices are explained and reset never auditions or starts a demo", async t => {
+  const h = await mount(t);
+  h.n.unavailableRoles = [{ id: "caller", label: "Caller" }];
+  h.n.selected.caller = "removedVoice";
+  await act(() => h.root.update(React.createElement(VoiceTalentControls)));
+  const warning = byId(h.root, "error-saved-voices");
+  assert.match(warning.children.join(""), /will not use substitute voices/);
+  assert.match(JSON.stringify(h.root.toJSON()), /Unavailable voice/);
+  await act(() => byId(h.root, "button-reset-narration").props.onClick());
+  assert.deepEqual(h.n.unavailableRoles, []);
   assert.deepEqual(h.requests, []);
 });
 test("search and role selection do not apply voices; explicit Apply changes only its role", async t => {

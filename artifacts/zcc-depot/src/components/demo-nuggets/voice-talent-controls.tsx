@@ -31,7 +31,7 @@ export function VoiceTalentControls() {
   }, [registerPreview]);
   useEffect(() => { controllerRef.current?.setVolume(n.volume); }, [n.volume]);
 
-  const voiceName = (id: string) => n.voices.find(v => v.id === id)?.name ?? "Not assigned";
+  const voiceName = (id: string) => n.voices.find(v => v.id === id)?.name ?? (id ? `Unavailable voice (${id})` : "Not assigned");
   const filtered = useMemo(() => {
     const q = query.trim().toLowerCase();
     return q ? n.voices.filter(v => v.name.toLowerCase().includes(q)) : n.voices;
@@ -77,7 +77,7 @@ export function VoiceTalentControls() {
         </div>
         {n.auth.isAuthenticated ? (
           <label className="inline-flex min-h-11 items-center gap-2 rounded-full bg-white/10 px-4 text-sm font-semibold">
-            <input type="checkbox" checked={n.wanted} onChange={e => n.setEnabled(e.target.checked)} className="h-4 w-4 accent-[#D1F470]" data-testid="toggle-narration" />
+            <input type="checkbox" checked={n.wanted} disabled={n.preferencesReady === false} onChange={e => n.setEnabled(e.target.checked)} className="h-4 w-4 accent-[#D1F470]" data-testid="toggle-narration" />
             Voice overlay {n.enabled ? "on" : "off"}
           </label>
         ) : (
@@ -90,6 +90,22 @@ export function VoiceTalentControls() {
       <p className="sr-only" role="status" aria-live="polite" data-testid="status-voice-announce">{announce}</p>
 
       <div className="p-5">
+        {n.auth.isAuthenticated && (
+          <div className="mb-4 flex flex-wrap items-center gap-3 text-xs">
+            <p role={n.preferencesError ? "alert" : "status"} data-testid="status-narration-preferences">{n.preferencesStatus}</p>
+            {n.preferencesError && <button type="button" onClick={n.retryPreferences} className="min-h-11 font-semibold underline">Retry settings</button>}
+            <button type="button" disabled={n.preferencesReady === false} onClick={n.resetPreferences} className="min-h-11 font-semibold underline" data-testid="button-reset-narration">
+              Reset my narration settings
+            </button>
+            <p className="w-full opacity-70">Voice assignments, overlay mode, volume and captions save automatically to your account. Restoring or resetting settings never starts playback.</p>
+          </div>
+        )}
+        {(n.unavailableRoles?.length ?? 0) > 0 && (
+          <p role="alert" className="mb-4 rounded-xl border border-[#9A4C2C]/30 p-3 text-sm" data-testid="error-saved-voices">
+            Saved voices for {n.unavailableRoles.map(role => role.label).join(", ")} are no longer in the available voice catalog.
+            Narration will not use substitute voices. Enable the overlay to apply replacements below, or reset your settings to the current catalog defaults.
+          </p>
+        )}
         {!n.auth.isAuthenticated && <p className="text-xs opacity-70">Visual-only playback is available without signing in. Speech generation requires a signed-in session.</p>}
         {n.auth.isAuthenticated && !n.enabled && (
           <p className="text-xs opacity-70" data-testid="text-visual-only">Visual-only mode. Enable the overlay to browse, preview and apply the connected ElevenLabs voices.</p>

@@ -15,6 +15,8 @@ export * from './authUser';
 export * from './authUserEnvelope';
 export * from './beginBrowserLoginParams';
 export * from './demoNarrationLine';
+export * from './demoNarrationPreferences';
+export * from './demoNarrationVoiceChoices';
 export * from './demoNuggetId';
 export * from './demoSpeechInput';
 export * from './demoVoice';

@@ -5,6 +5,44 @@
  * API specification
  * OpenAPI spec version: 0.1.0
  */
+export interface DemoNarrationVoiceChoices {
+  /**
+     * @minLength 1
+     * @maxLength 100
+     * @pattern ^[a-zA-Z0-9_-]+$
+     */
+  caller?: string;
+  /**
+     * @minLength 1
+     * @maxLength 100
+     * @pattern ^[a-zA-Z0-9_-]+$
+     */
+  'ai-agent'?: string;
+  /**
+     * @minLength 1
+     * @maxLength 100
+     * @pattern ^[a-zA-Z0-9_-]+$
+     */
+  'human-agent'?: string;
+  /**
+     * @minLength 1
+     * @maxLength 100
+     * @pattern ^[a-zA-Z0-9_-]+$
+     */
+  narrator?: string;
+}
+
+export interface DemoNarrationPreferences {
+  voices: DemoNarrationVoiceChoices;
+  enabled: boolean;
+  /**
+     * @minimum 0
+     * @maximum 1
+     */
+  volume: number;
+  captions: boolean;
+}
+
 export interface DemoVoice {
   id: string;
   name: string;

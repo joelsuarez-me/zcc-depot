@@ -209,6 +209,113 @@ export const GetSavedResearchLogoResponse = zod.unknown()
 
 
 /**
+ * @summary Read only the signed-in presenter's narration preferences
+ */
+export const getDemoNarrationPreferencesResponseVoicesCallerMax = 100;
+
+
+export const getDemoNarrationPreferencesResponseVoicesCallerRegExp = new RegExp('^[a-zA-Z0-9_-]+$');
+export const getDemoNarrationPreferencesResponseVoicesAiAgentMax = 100;
+
+
+export const getDemoNarrationPreferencesResponseVoicesAiAgentRegExp = new RegExp('^[a-zA-Z0-9_-]+$');
+export const getDemoNarrationPreferencesResponseVoicesHumanAgentMax = 100;
+
+
+export const getDemoNarrationPreferencesResponseVoicesHumanAgentRegExp = new RegExp('^[a-zA-Z0-9_-]+$');
+export const getDemoNarrationPreferencesResponseVoicesNarratorMax = 100;
+
+
+export const getDemoNarrationPreferencesResponseVoicesNarratorRegExp = new RegExp('^[a-zA-Z0-9_-]+$');
+export const getDemoNarrationPreferencesResponseVolumeMin = 0;
+export const getDemoNarrationPreferencesResponseVolumeMax = 1;
+
+
+
+export const GetDemoNarrationPreferencesResponse = zod.object({
+  "voices": zod.object({
+  "caller": zod.string().min(1).max(getDemoNarrationPreferencesResponseVoicesCallerMax).regex(getDemoNarrationPreferencesResponseVoicesCallerRegExp).optional(),
+  "ai-agent": zod.string().min(1).max(getDemoNarrationPreferencesResponseVoicesAiAgentMax).regex(getDemoNarrationPreferencesResponseVoicesAiAgentRegExp).optional(),
+  "human-agent": zod.string().min(1).max(getDemoNarrationPreferencesResponseVoicesHumanAgentMax).regex(getDemoNarrationPreferencesResponseVoicesHumanAgentRegExp).optional(),
+  "narrator": zod.string().min(1).max(getDemoNarrationPreferencesResponseVoicesNarratorMax).regex(getDemoNarrationPreferencesResponseVoicesNarratorRegExp).optional()
+}),
+  "enabled": zod.boolean(),
+  "volume": zod.number().min(getDemoNarrationPreferencesResponseVolumeMin).max(getDemoNarrationPreferencesResponseVolumeMax),
+  "captions": zod.boolean()
+})
+
+
+/**
+ * @summary Replace only the signed-in presenter's narration preferences
+ */
+export const saveDemoNarrationPreferencesBodyVoicesCallerMax = 100;
+
+
+export const saveDemoNarrationPreferencesBodyVoicesCallerRegExp = new RegExp('^[a-zA-Z0-9_-]+$');
+export const saveDemoNarrationPreferencesBodyVoicesAiAgentMax = 100;
+
+
+export const saveDemoNarrationPreferencesBodyVoicesAiAgentRegExp = new RegExp('^[a-zA-Z0-9_-]+$');
+export const saveDemoNarrationPreferencesBodyVoicesHumanAgentMax = 100;
+
+
+export const saveDemoNarrationPreferencesBodyVoicesHumanAgentRegExp = new RegExp('^[a-zA-Z0-9_-]+$');
+export const saveDemoNarrationPreferencesBodyVoicesNarratorMax = 100;
+
+
+export const saveDemoNarrationPreferencesBodyVoicesNarratorRegExp = new RegExp('^[a-zA-Z0-9_-]+$');
+export const saveDemoNarrationPreferencesBodyVolumeMin = 0;
+export const saveDemoNarrationPreferencesBodyVolumeMax = 1;
+
+
+
+export const SaveDemoNarrationPreferencesBody = zod.object({
+  "voices": zod.object({
+  "caller": zod.string().min(1).max(saveDemoNarrationPreferencesBodyVoicesCallerMax).regex(saveDemoNarrationPreferencesBodyVoicesCallerRegExp).optional(),
+  "ai-agent": zod.string().min(1).max(saveDemoNarrationPreferencesBodyVoicesAiAgentMax).regex(saveDemoNarrationPreferencesBodyVoicesAiAgentRegExp).optional(),
+  "human-agent": zod.string().min(1).max(saveDemoNarrationPreferencesBodyVoicesHumanAgentMax).regex(saveDemoNarrationPreferencesBodyVoicesHumanAgentRegExp).optional(),
+  "narrator": zod.string().min(1).max(saveDemoNarrationPreferencesBodyVoicesNarratorMax).regex(saveDemoNarrationPreferencesBodyVoicesNarratorRegExp).optional()
+}),
+  "enabled": zod.boolean(),
+  "volume": zod.number().min(saveDemoNarrationPreferencesBodyVolumeMin).max(saveDemoNarrationPreferencesBodyVolumeMax),
+  "captions": zod.boolean()
+})
+
+export const saveDemoNarrationPreferencesResponseVoicesCallerMax = 100;
+
+
+export const saveDemoNarrationPreferencesResponseVoicesCallerRegExp = new RegExp('^[a-zA-Z0-9_-]+$');
+export const saveDemoNarrationPreferencesResponseVoicesAiAgentMax = 100;
+
+
+export const saveDemoNarrationPreferencesResponseVoicesAiAgentRegExp = new RegExp('^[a-zA-Z0-9_-]+$');
+export const saveDemoNarrationPreferencesResponseVoicesHumanAgentMax = 100;
+
+
+export const saveDemoNarrationPreferencesResponseVoicesHumanAgentRegExp = new RegExp('^[a-zA-Z0-9_-]+$');
+export const saveDemoNarrationPreferencesResponseVoicesNarratorMax = 100;
+
+
+export const saveDemoNarrationPreferencesResponseVoicesNarratorRegExp = new RegExp('^[a-zA-Z0-9_-]+$');
+export const saveDemoNarrationPreferencesResponseVolumeMin = 0;
+export const saveDemoNarrationPreferencesResponseVolumeMax = 1;
+
+
+
+export const SaveDemoNarrationPreferencesResponse = zod.object({
+  "voices": zod.object({
+  "caller": zod.string().min(1).max(saveDemoNarrationPreferencesResponseVoicesCallerMax).regex(saveDemoNarrationPreferencesResponseVoicesCallerRegExp).optional(),
+  "ai-agent": zod.string().min(1).max(saveDemoNarrationPreferencesResponseVoicesAiAgentMax).regex(saveDemoNarrationPreferencesResponseVoicesAiAgentRegExp).optional(),
+  "human-agent": zod.string().min(1).max(saveDemoNarrationPreferencesResponseVoicesHumanAgentMax).regex(saveDemoNarrationPreferencesResponseVoicesHumanAgentRegExp).optional(),
+  "narrator": zod.string().min(1).max(saveDemoNarrationPreferencesResponseVoicesNarratorMax).regex(saveDemoNarrationPreferencesResponseVoicesNarratorRegExp).optional()
+}),
+  "enabled": zod.boolean(),
+  "volume": zod.number().min(saveDemoNarrationPreferencesResponseVolumeMin).max(saveDemoNarrationPreferencesResponseVolumeMax),
+  "captions": zod.boolean()
+})
+
+
+/**
  * @summary Get available ElevenLabs voices and prepared demo scripts
  */
 export const GetDemoVoicesResponse = zod.object({

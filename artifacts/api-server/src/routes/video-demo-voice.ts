@@ -1,6 +1,7 @@
 import { Router, type IRouter } from "express";
-import { CreateDemoSpeechBody, GetDemoVoicesResponse } from "@workspace/api-zod";
+import { CreateDemoSpeechBody, GetDemoVoicesResponse, GetDemoNarrationPreferencesResponse, SaveDemoNarrationPreferencesBody } from "@workspace/api-zod";
 import { DEMO_NARRATION_LINES, VoiceUnavailable, listDemoVoices, cachedVideoClip, generateVideoClip } from "../lib/video-demo-voice";
+import { narrationPreferencesStore } from "../lib/narration-preferences";
 
 type Services = {
   voices: typeof listDemoVoices;
@@ -9,7 +10,10 @@ type Services = {
 };
 
 /** Exported for isolated tests; all paid operations remain authenticated. */
-export function createVideoVoiceRouter(services: Services = { voices: listDemoVoices, cached: cachedVideoClip, speech: generateVideoClip }): IRouter {
+export function createVideoVoiceRouter(
+  services: Services = { voices: listDemoVoices, cached: cachedVideoClip, speech: generateVideoClip },
+  preferences = narrationPreferencesStore,
+): IRouter {
   const router = Router();
   const windows = new Map<string, { count: number; until: number }>();
   const owners = new Set<string>();
@@ -38,6 +42,18 @@ export function createVideoVoiceRouter(services: Services = { voices: listDemoVo
       res.status(403).json({ error: "Start narration from the portal." }); return;
     }
     next();
+  });
+  router.get("/demo-nuggets/preferences", async (req, res): Promise<void> => {
+    res.json(GetDemoNarrationPreferencesResponse.parse(await preferences.get(req.user!.id)));
+  });
+  router.put("/demo-nuggets/preferences", async (req, res): Promise<void> => {
+    const parsed = SaveDemoNarrationPreferencesBody.extend({
+      voices: SaveDemoNarrationPreferencesBody.shape.voices.strict(),
+    }).strict().safeParse(req.body);
+    if (!parsed.success) {
+      res.status(400).json({ error: "Choose valid voice assignments, volume, captions and narration settings only." }); return;
+    }
+    res.json(GetDemoNarrationPreferencesResponse.parse(await preferences.save(req.user!.id, parsed.data)));
   });
   router.get("/demo-nuggets/voices", async (req, res): Promise<void> => {
     if (!consume(`voices:${req.user!.id}`, 60) || !consume("voices:global", 500)) {

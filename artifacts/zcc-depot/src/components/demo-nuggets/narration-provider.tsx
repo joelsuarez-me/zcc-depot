@@ -1,24 +1,22 @@
-import { createContext, useCallback, useContext, useEffect, useRef, useState, type ReactNode } from "react";
+import { createContext, useCallback, useContext, useEffect, useRef, type ReactNode } from "react";
 import { useAuth } from "@workspace/replit-auth-web";
 import { createDemoSpeech, getGetDemoVoicesQueryKey, useGetDemoVoices, type DemoVoiceRole } from "@workspace/api-client-react";
 import type { NuggetId } from "@/data/demo-nuggets";
 import { voiceError } from "@/lib/narrated-playback";
+import { defaultNarrationPreferences, useSavedNarration } from "./use-saved-narration";
 
 export const VOICE_ROLES: { id: DemoVoiceRole; label: string }[] = [
   { id: "caller", label: "Caller" }, { id: "ai-agent", label: "AI Agent" },
   { id: "human-agent", label: "Human Agent" }, { id: "narrator", label: "Narrator" },
 ];
 
-function useNarrationSettings(onStop: () => void) {
-  const auth = useAuth();
-  const [wanted, setWanted] = useState(true);
-  const [volume, setVolume] = useState(0.9);
-  const [captions, setCaptions] = useState(true);
-  const [choices, setChoices] = useState<Partial<Record<DemoVoiceRole, string>>>({});
-  const enabled = wanted && auth.isAuthenticated;
+function useNarrationSettings(auth: ReturnType<typeof useAuth>, onStop: () => void) {
   const owner = auth.user?.id ?? "";
+  const preferences = useSavedNarration(owner);
+  const { enabled: wanted, volume, captions, voices: choices } = preferences.settings;
+  const enabled = wanted && auth.isAuthenticated && preferences.preferencesReady;
   const catalog = useGetDemoVoices({ query: {
-    queryKey: [...getGetDemoVoicesQueryKey(), owner], enabled, retry: false, staleTime: 60_000,
+    queryKey: [...getGetDemoVoicesQueryKey(), owner], enabled: auth.isAuthenticated && preferences.preferencesReady, retry: false, staleTime: 60_000,
   } });
   const stopRef = useRef(onStop); stopRef.current = onStop;
   const stops = useRef(new Map<NuggetId, () => void>());
@@ -30,18 +28,22 @@ function useNarrationSettings(onStop: () => void) {
     stopRef.current();
   }, []);
   useEffect(() => {
-    setChoices({}); blobs.current.clear(); clearPlayback();
+    blobs.current.clear(); clearPlayback();
   }, [owner, clearPlayback]);
   useEffect(() => () => { previewStop.current?.(); stops.current.forEach(stop => stop()); blobs.current.clear(); }, []);
   const voices = catalog.data?.voices ?? [];
   const selected = Object.fromEntries(VOICE_ROLES.map((role, index) => [
-    role.id, voices.some(v => v.id === choices[role.id]) ? choices[role.id]! : voices[index % Math.max(1, voices.length)]?.id ?? "",
+    role.id, choices[role.id] ?? voices[index % Math.max(1, voices.length)]?.id ?? "",
   ])) as Record<DemoVoiceRole, string>;
+  const unavailableRoles = catalog.data ? VOICE_ROLES.filter(role => choices[role.id] && !voices.some(v => v.id === choices[role.id])) : [];
   const settingsKey = `${owner}:${enabled}:${VOICE_ROLES.map(r => selected[r.id]).join(":")}`;
   const lines = catalog.data?.lines;
   const getClip = useCallback(async (nuggetId: NuggetId, lineId: string, signal: AbortSignal, auditionVoiceId?: string) => {
     if (!enabled) throw new Error("Enable the ElevenLabs voice overlay and sign in to prepare narration.");
     if (catalog.error) throw catalog.error;
+    if (!auditionVoiceId && VOICE_ROLES.some(role => choices[role.id] && !voices.some(v => v.id === choices[role.id]))) {
+      throw new Error("A saved voice is unavailable. Assign a replacement or reset your narration settings. No substitute voice will be used.");
+    }
     const line = lines?.find(item => item.nuggetId === nuggetId && item.id === lineId);
     if (!line) throw new Error("Available voices are still loading. Wait for the voice list or retry it before playing narration.");
     const voiceId = auditionVoiceId ?? selected[line.role];
@@ -62,7 +64,7 @@ function useNarrationSettings(onStop: () => void) {
     return blob;
   // The settings key captures the selected voices without object-identity churn.
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [enabled, owner, settingsKey, lines, catalog.error]);
+  }, [enabled, owner, settingsKey, lines, catalog.data, catalog.error]);
   const register = useCallback((id: NuggetId, stop: () => void) => {
     stops.current.set(id, stop);
     return () => { if (stops.current.get(id) === stop) stops.current.delete(id); };
@@ -85,20 +87,33 @@ function useNarrationSettings(onStop: () => void) {
     }
   }, [lines, getClip]);
   return {
-    auth, enabled, wanted, volume, captions, voices, selected, settingsKey, lines,
+    auth, enabled, wanted, volume, captions, voices, selected, settingsKey, lines, unavailableRoles,
+    preferencesReady: preferences.preferencesReady,
+    preferencesStatus: preferences.preferencesStatus,
+    preferencesError: preferences.preferencesError,
+    retryPreferences: preferences.retryPreferences,
     catalog, getClip, getPreviewClip, register, claim, registerPreview, stopPlayback: clearPlayback,
-    setEnabled(value: boolean) { clearPlayback(); setWanted(value); },
+    setEnabled(value: boolean) { clearPlayback(); preferences.update({ enabled: value }); },
     setVoice(role: DemoVoiceRole, id: string) {
-      clearPlayback(); setChoices(previous => ({ ...previous, ...selected, [role]: id }));
+      clearPlayback(); preferences.update({ voices: { ...selected, [role]: id } });
     },
-    setVolume, setCaptions,
+    setVolume(value: number) { preferences.update({ volume: value }); },
+    setCaptions(value: boolean) { preferences.update({ captions: value }); },
+    resetPreferences() {
+      clearPlayback();
+      preferences.update(defaultNarrationPreferences());
+    },
   };
 }
 type Narration = ReturnType<typeof useNarrationSettings>;
 const NarrationContext = createContext<Narration | null>(null);
 
 export function NarrationProvider({ children, onStop }: { children: ReactNode; onStop: () => void }) {
-  const settings = useNarrationSettings(onStop);
+  const auth = useAuth();
+  return <OwnedNarrationProvider key={auth.user?.id ?? ""} auth={auth} onStop={onStop}>{children}</OwnedNarrationProvider>;
+}
+function OwnedNarrationProvider({ auth, children, onStop }: { auth: ReturnType<typeof useAuth>; children: ReactNode; onStop: () => void }) {
+  const settings = useNarrationSettings(auth, onStop);
   return <NarrationContext.Provider value={settings}>{children}</NarrationContext.Provider>;
 }
 export function useNarration() {
