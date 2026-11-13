@@ -51,11 +51,11 @@ export function SearchTrigger() {
         <DialogContent onCloseAutoFocus={(event) => { event.preventDefault(); trigger.current?.focus(); }} className="top-[12vh] max-w-[calc(100vw-1.5rem)] translate-y-0 gap-0 overflow-hidden rounded-3xl border border-[#11110D]/10 bg-[#F5F5F2] p-0 shadow-[0_30px_80px_-20px_rgba(32,53,36,.55)] sm:max-w-2xl [&>button]:hidden">
           <DialogTitle className="sr-only">Search ZCC Depot</DialogTitle>
           <DialogDescription className="sr-only">Search pages, sections, features, FAQs, video highlights, and resources. Use arrow keys to move and Enter to open.</DialogDescription>
-          <CommandPrimitive label="Search ZCC Depot" loop className="flex flex-col">
+          <CommandPrimitive label="Search ZCC Depot" loop className="flex min-w-0 flex-col">
             <div className="flex items-center gap-3 border-b border-[#11110D]/10 px-5">
               <Search className="h-5 w-5 shrink-0 text-[#203524]" aria-hidden />
               <CommandPrimitive.Input value={query} onValueChange={setQuery} placeholder="Search pages, features, resources..." data-testid="input-global-search"
-                className="h-14 w-full bg-transparent text-base text-[#11110D] outline-none placeholder:text-[#11110D]/40" />
+                className="h-14 min-w-0 flex-1 bg-transparent text-base text-[#11110D] outline-none placeholder:text-[#11110D]/40" />
               <kbd className="mono hidden rounded border border-[#11110D]/15 px-1.5 py-0.5 text-[10px] text-[#11110D]/50 sm:inline">ESC</kbd>
               <button type="button" onClick={() => onOpenChange(false)} aria-label="Close search" className="grid h-9 w-9 shrink-0 place-items-center rounded-full hover:bg-[#203524]/10"><X className="h-4 w-4" aria-hidden /></button>
             </div>
