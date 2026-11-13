@@ -21,6 +21,11 @@ export function LandingHeroArt() {
             fetchPriority="high"
             decoding="async"
           />
+          <p className="landing-hero-art-tagline">
+            <span>Architect the solution.</span>
+            <span>Demonstrate the value.</span>
+            <span>Accelerate the win.</span>
+          </p>
         </div>
         <div className="landing-hero-art-rings" aria-hidden><span /><span /><span /><i /></div>
         <div className="landing-hero-art-wave" aria-hidden><b /><b /><b /><b /><b /></div>

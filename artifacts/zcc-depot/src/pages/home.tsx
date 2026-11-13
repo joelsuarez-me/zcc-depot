@@ -20,12 +20,14 @@ export default function Home() {
         <div className="relative w-full px-6 pb-3 pt-4 md:px-12">
           <motion.div className="landing-hero-grid" initial={reduce ? false : { opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8, ease: [0.2, 0.7, 0.2, 1] }}>
             <h1 className="landing-hero-title max-w-3xl font-sans font-semibold leading-tight tracking-[-0.035em] text-[#F5F5F2]">
-              <span className="block md:whitespace-nowrap">ZENDESK CONTACT CENTER ·</span>{" "}
-              <span className="block md:whitespace-nowrap"><span className="text-[#D1F470]">platform</span>{" "}ARCHITECT Depot</span>
+              <span className="text-[#D1F470]">Platform</span>{" "}Architect Depot
             </h1>
-            <p className="landing-hero-description max-w-2xl text-sm leading-snug text-[#F5F5F2]/75">
-              Developed by Zendesk Contact Center Platform Architects. Everything you need to sell the value of ZCC through a technical lens.
-            </p>
+            <div className="landing-hero-description max-w-2xl text-sm leading-snug text-[#F5F5F2]/75">
+              <p className="landing-hero-subtitle">Where technical expertise meets business value.</p>
+              <p>
+                Built by Zendesk Contact Center Platform Architects, this centralized resource brings together the architecture, technical insights, demo experiences, and sales enablement tools needed to confidently position, demonstrate, and accelerate the adoption of Zendesk Contact Center.
+              </p>
+            </div>
             <LandingHeroArt />
           </motion.div>
         </div>
