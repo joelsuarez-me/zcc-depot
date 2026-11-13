@@ -12,7 +12,7 @@ export interface AgendaUpdate {
      * @maxLength 120
      */
   company?: string;
-  /** @maxLength 500 */
+  /** @maxLength 5000 */
   description?: string;
   /** @maxLength 5000 */
   currentState?: string;

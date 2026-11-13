@@ -39,6 +39,9 @@ import type {
   ResearchCompanyInput,
   ResearchReport,
   ResearchReportInput,
+  SavedResearchInput,
+  SavedResearchReport,
+  SavedResearchSummary,
   SellSheet,
   UploadUrlRequest,
   UploadUrlResponse
@@ -70,6 +73,399 @@ const withQueryKey = <T extends object, K>(query: T, queryKey: K): T & { queryKe
   }
   return result;
 };
+
+export const getListResearchReportsUrl = () => {
+
+
+
+
+  return `/api/demo-research/saved`
+}
+
+/**
+ * @summary List shared saved research reports for signed-in portal users
+ */
+export const listResearchReports = async ( options?: Parameters<typeof customFetch>[1]): Promise<SavedResearchSummary[]> => {
+
+  return customFetch<SavedResearchSummary[]>(getListResearchReportsUrl(),
+  {
+    ...options,
+    method: 'GET'
+
+
+  }
+);}
+
+
+
+
+
+export const getListResearchReportsQueryKey = () => {
+    return [
+    `/api/demo-research/saved`
+    ] as const;
+    }
+
+
+export const getListResearchReportsQueryOptions = <TData = Awaited<ReturnType<typeof listResearchReports>>, TError = ErrorType<void>>( options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof listResearchReports>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getListResearchReportsQueryKey();
+
+
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof listResearchReports>>> = ({ signal }) => listResearchReports({ signal, ...requestOptions });
+
+
+
+
+
+   return  { queryKey, queryFn, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof listResearchReports>>, TError, TData> & { queryKey: QueryKey }
+}
+
+export type ListResearchReportsQueryResult = NonNullable<Awaited<ReturnType<typeof listResearchReports>>>
+export type ListResearchReportsQueryError = ErrorType<void>
+
+
+/**
+ * @summary List shared saved research reports for signed-in portal users
+ */
+
+export function useListResearchReports<TData = Awaited<ReturnType<typeof listResearchReports>>, TError = ErrorType<void>>(
+  options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof listResearchReports>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+
+ ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+
+  const queryOptions = getListResearchReportsQueryOptions(options)
+
+  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
+
+  return withQueryKey(query, queryOptions.queryKey);
+}
+
+
+
+
+
+
+
+export const getSaveResearchReportUrl = () => {
+
+
+
+
+  return `/api/demo-research/saved`
+}
+
+/**
+ * @summary Save a complete research snapshot without rerunning research
+ */
+export const saveResearchReport = async (savedResearchInput: SavedResearchInput, options?: Parameters<typeof customFetch>[1]): Promise<SavedResearchReport> => {
+
+    const getHeaders = (h?: NonNullable<RequestInit['headers']>): Record<string, string | readonly string[]> => {
+    if (!h) return {};
+    if (h instanceof Headers) return Object.fromEntries(h.entries());
+    if (Symbol.iterator in h) {
+      return Object.fromEntries(
+        Array.from(h as Iterable<Iterable<string>>, (entry) => Array.from(entry) as [string, string]),
+      );
+    }
+    const headers: Record<string, string | readonly string[]> = {};
+    for (const [name, value] of Object.entries<string | readonly string[] | undefined>(h)) {
+      if (value !== undefined) headers[name] = value;
+    }
+    return headers;
+  };
+return customFetch<SavedResearchReport>(getSaveResearchReportUrl(),
+  {
+    ...options,
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', ...getHeaders(options?.headers) },
+    body: JSON.stringify(savedResearchInput)
+  }
+);}
+
+
+
+
+
+export const getSaveResearchReportMutationKey = () => ['saveResearchReport'] as const;
+
+export const getSaveResearchReportMutationOptions = <TError = ErrorType<void>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof saveResearchReport>>, TError,SaveResearchReportMutationVariables, TContext>, request?: SecondParameter<typeof customFetch>}
+): UseMutationOptions<Awaited<ReturnType<typeof saveResearchReport>>, TError,SaveResearchReportMutationVariables, TContext> => {
+
+const mutationKey = getSaveResearchReportMutationKey();
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof saveResearchReport>>, SaveResearchReportMutationVariables> = (props) => {
+          const {data} = props ?? {};
+
+          return  saveResearchReport(data,requestOptions)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type SaveResearchReportMutationResult = NonNullable<Awaited<ReturnType<typeof saveResearchReport>>>
+    export type SaveResearchReportMutationBody = BodyType<SavedResearchInput>
+    export type SaveResearchReportMutationError = ErrorType<void>
+    export type SaveResearchReportMutationVariables = {data: BodyType<SavedResearchInput>}
+
+    /**
+ * @summary Save a complete research snapshot without rerunning research
+ */
+export const useSaveResearchReport = <TError = ErrorType<void>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof saveResearchReport>>, TError,SaveResearchReportMutationVariables, TContext>, request?: SecondParameter<typeof customFetch>}
+ ): UseMutationResult<
+        Awaited<ReturnType<typeof saveResearchReport>>,
+        TError,
+        SaveResearchReportMutationVariables,
+        TContext
+      > => {
+      return useMutation(getSaveResearchReportMutationOptions(options));
+    }
+
+export const getGetSavedResearchReportUrl = (id: string,) => {
+
+
+
+
+  return `/api/demo-research/saved/${id}`
+}
+
+/**
+ * @summary Open a shared saved research report
+ */
+export const getSavedResearchReport = async (id: string, options?: Parameters<typeof customFetch>[1]): Promise<SavedResearchReport> => {
+
+  return customFetch<SavedResearchReport>(getGetSavedResearchReportUrl(id),
+  {
+    ...options,
+    method: 'GET'
+
+
+  }
+);}
+
+
+
+
+
+export const getGetSavedResearchReportQueryKey = (id: string,) => {
+    return [
+    `/api/demo-research/saved/${id}`
+    ] as const;
+    }
+
+
+export const getGetSavedResearchReportQueryOptions = <TData = Awaited<ReturnType<typeof getSavedResearchReport>>, TError = ErrorType<void>>(id: string, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getSavedResearchReport>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getGetSavedResearchReportQueryKey(id);
+
+
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof getSavedResearchReport>>> = ({ signal }) => getSavedResearchReport(id, { signal, ...requestOptions });
+
+
+
+
+
+   return  { queryKey, queryFn, enabled: id !== null && id !== undefined, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof getSavedResearchReport>>, TError, TData> & { queryKey: QueryKey }
+}
+
+export type GetSavedResearchReportQueryResult = NonNullable<Awaited<ReturnType<typeof getSavedResearchReport>>>
+export type GetSavedResearchReportQueryError = ErrorType<void>
+
+
+/**
+ * @summary Open a shared saved research report
+ */
+
+export function useGetSavedResearchReport<TData = Awaited<ReturnType<typeof getSavedResearchReport>>, TError = ErrorType<void>>(
+ id: string, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getSavedResearchReport>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+
+ ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+
+  const queryOptions = getGetSavedResearchReportQueryOptions(id,options)
+
+  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
+
+  return withQueryKey(query, queryOptions.queryKey);
+}
+
+
+
+
+
+
+
+export const getConvertResearchReportToAgendaUrl = (id: string,) => {
+
+
+
+
+  return `/api/demo-research/saved/${id}/agenda`
+}
+
+/**
+ * @summary Create or reopen the editable agenda linked to a saved report
+ */
+export const convertResearchReportToAgenda = async (id: string, options?: Parameters<typeof customFetch>[1]): Promise<Agenda> => {
+
+  return customFetch<Agenda>(getConvertResearchReportToAgendaUrl(id),
+  {
+    ...options,
+    method: 'POST'
+
+
+  }
+);}
+
+
+
+
+
+export const getConvertResearchReportToAgendaMutationKey = () => ['convertResearchReportToAgenda'] as const;
+
+export const getConvertResearchReportToAgendaMutationOptions = <TError = ErrorType<void>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof convertResearchReportToAgenda>>, TError,ConvertResearchReportToAgendaMutationVariables, TContext>, request?: SecondParameter<typeof customFetch>}
+): UseMutationOptions<Awaited<ReturnType<typeof convertResearchReportToAgenda>>, TError,ConvertResearchReportToAgendaMutationVariables, TContext> => {
+
+const mutationKey = getConvertResearchReportToAgendaMutationKey();
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof convertResearchReportToAgenda>>, ConvertResearchReportToAgendaMutationVariables> = (props) => {
+          const {id} = props ?? {};
+
+          return  convertResearchReportToAgenda(id,requestOptions)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type ConvertResearchReportToAgendaMutationResult = NonNullable<Awaited<ReturnType<typeof convertResearchReportToAgenda>>>
+
+    export type ConvertResearchReportToAgendaMutationError = ErrorType<void>
+    export type ConvertResearchReportToAgendaMutationVariables = {id: string}
+
+    /**
+ * @summary Create or reopen the editable agenda linked to a saved report
+ */
+export const useConvertResearchReportToAgenda = <TError = ErrorType<void>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof convertResearchReportToAgenda>>, TError,ConvertResearchReportToAgendaMutationVariables, TContext>, request?: SecondParameter<typeof customFetch>}
+ ): UseMutationResult<
+        Awaited<ReturnType<typeof convertResearchReportToAgenda>>,
+        TError,
+        ConvertResearchReportToAgendaMutationVariables,
+        TContext
+      > => {
+      return useMutation(getConvertResearchReportToAgendaMutationOptions(options));
+    }
+
+export const getGetSavedResearchLogoUrl = (id: string,) => {
+
+
+
+
+  return `/api/demo-research/saved/${id}/logo`
+}
+
+/**
+ * @summary Read a saved report's durable logo with signed-in shared access
+ */
+export const getSavedResearchLogo = async (id: string, options?: Parameters<typeof customFetch>[1]): Promise<Blob> => {
+
+  return customFetch<Blob>(getGetSavedResearchLogoUrl(id),
+  {
+    ...options,
+    method: 'GET'
+
+
+  }
+);}
+
+
+
+
+
+export const getGetSavedResearchLogoQueryKey = (id: string,) => {
+    return [
+    `/api/demo-research/saved/${id}/logo`
+    ] as const;
+    }
+
+
+export const getGetSavedResearchLogoQueryOptions = <TData = Awaited<ReturnType<typeof getSavedResearchLogo>>, TError = ErrorType<void>>(id: string, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getSavedResearchLogo>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getGetSavedResearchLogoQueryKey(id);
+
+
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof getSavedResearchLogo>>> = ({ signal }) => getSavedResearchLogo(id, { signal, ...requestOptions });
+
+
+
+
+
+   return  { queryKey, queryFn, enabled: id !== null && id !== undefined, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof getSavedResearchLogo>>, TError, TData> & { queryKey: QueryKey }
+}
+
+export type GetSavedResearchLogoQueryResult = NonNullable<Awaited<ReturnType<typeof getSavedResearchLogo>>>
+export type GetSavedResearchLogoQueryError = ErrorType<void>
+
+
+/**
+ * @summary Read a saved report's durable logo with signed-in shared access
+ */
+
+export function useGetSavedResearchLogo<TData = Awaited<ReturnType<typeof getSavedResearchLogo>>, TError = ErrorType<void>>(
+ id: string, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getSavedResearchLogo>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+
+ ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+
+  const queryOptions = getGetSavedResearchLogoQueryOptions(id,options)
+
+  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
+
+  return withQueryKey(query, queryOptions.queryKey);
+}
+
+
+
+
+
+
 
 export const getGetDemoVoicesUrl = () => {
 

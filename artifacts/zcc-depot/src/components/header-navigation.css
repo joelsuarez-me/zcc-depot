@@ -1,0 +1,44 @@
+/* Header navigation only. Space Grotesk, SIL OFL 1.1, see /fonts/SpaceGrotesk-OFL.txt */
+@font-face{font-family:"ZNav Grotesk";src:url("/fonts/SpaceGrotesk.ttf") format("truetype");font-weight:300 700;font-display:swap}
+
+.znav{--zn-forest:#203524;--zn-lime:#D1F470;--zn-ink:#11110D;--zn-paper:#F5F5F2;font-family:"ZNav Grotesk",var(--app-font-sans)}
+.znav-rail{display:flex;align-items:center;gap:2px;padding:4px;border-radius:999px;background:var(--zn-forest);box-shadow:inset 0 0 0 1px rgba(209,244,112,.14),0 8px 24px -14px rgba(32,53,36,.6)}
+.znav-item{position:relative}
+.znav-pill{position:relative;display:flex;align-items:center;border-radius:999px;color:rgba(245,245,242,.82);transition:background-color .2s ease,color .2s ease}
+.znav-pill:hover,.znav-item[data-open="true"] .znav-pill{background:rgba(209,244,112,.12);color:var(--zn-paper)}
+.znav-pill[data-active="true"]{background:var(--zn-lime);color:var(--zn-ink)}
+.znav-link{display:inline-flex;align-items:center;gap:8px;min-height:44px;padding:0 4px 0 16px;border-radius:999px;font-size:1rem;font-weight:600;letter-spacing:-.01em;color:inherit}
+.znav-dot{width:6px;height:6px;border-radius:999px;background:currentColor;opacity:0;transform:scale(.3);transition:opacity .2s,transform .2s}
+.znav-pill[data-active="true"] .znav-dot{opacity:1;transform:scale(1);background:var(--zn-forest)}
+.znav-toggle{display:grid;place-items:center;width:44px;height:44px;border-radius:999px;color:inherit}
+.znav-toggle svg{transition:transform .25s cubic-bezier(.2,.7,.2,1)}
+.znav-toggle[aria-expanded="true"] svg{transform:rotate(180deg)}
+.znav-toggle:hover{background:rgba(209,244,112,.16)}
+.znav-pill[data-active="true"] .znav-toggle:hover{background:rgba(32,53,36,.12)}
+.znav :focus-visible{outline:2px solid var(--zn-lime);outline-offset:2px;border-radius:999px}
+.znav-pill[data-active="true"] :focus-visible{outline-color:var(--zn-forest)}
+
+.znav-panel{position:absolute;left:0;top:100%;z-index:20;padding-top:10px;min-width:17.5rem}
+.znav-panel[hidden]{display:none}
+.znav-panel>ul{position:relative;overflow:hidden;border-radius:18px;background:var(--zn-paper);padding:6px;border:1px solid rgba(32,53,36,.16);box-shadow:0 22px 44px -18px rgba(32,53,36,.45);animation:znav-in .22s cubic-bezier(.2,.7,.2,1)}
+.znav-panel>ul::before{content:"";display:block;height:3px;margin:-6px -6px 6px;background:linear-gradient(90deg,var(--zn-forest) 0 38%,var(--zn-lime) 38%)}
+.znav-head{display:flex;justify-content:space-between;padding:6px 12px 8px;font-family:var(--app-font-mono);font-size:.66rem;letter-spacing:.14em;text-transform:uppercase;color:rgba(32,53,36,.6)}
+@keyframes znav-in{from{opacity:0;transform:translateY(-6px)}to{opacity:1;transform:none}}
+
+.znav-sub{display:flex;align-items:center;gap:12px;min-height:44px;padding:8px 12px;border-radius:12px;font-size:.95rem;font-weight:500;color:var(--zn-forest);transition:background-color .15s ease,color .15s ease}
+.znav-sub-idx{font-family:var(--app-font-mono);font-size:.68rem;color:rgba(32,53,36,.45);width:1.4em;transition:color .15s}
+.znav-sub-label{flex:1}
+.znav-sub-arrow{opacity:0;transform:translateX(-4px);transition:opacity .15s,transform .2s}
+.znav-sub:hover,.znav-sub:focus-visible{background:var(--zn-forest);color:var(--zn-paper);outline:none}
+.znav-sub:hover .znav-sub-idx,.znav-sub:focus-visible .znav-sub-idx{color:var(--zn-lime)}
+.znav-sub:hover .znav-sub-arrow,.znav-sub:focus-visible .znav-sub-arrow{opacity:1;transform:none;color:var(--zn-lime)}
+.znav-sub:focus-visible{box-shadow:0 0 0 2px var(--zn-lime) inset}
+
+/* Mobile */
+.znav-m-main{display:flex;align-items:center;justify-content:space-between;min-height:48px;padding:0 16px;border-radius:16px;font-size:1.2rem;font-weight:600;letter-spacing:-.015em;color:var(--zn-ink);transition:background-color .15s}
+.znav-m-main:hover{background:rgba(32,53,36,.08)}
+.znav-m-main[aria-current="page"]{background:var(--zn-forest);color:var(--zn-lime)}
+.znav-m-list{margin:2px 0 8px 18px;padding-left:6px;border-left:2px solid var(--zn-lime)}
+.znav-m-list .znav-sub{font-size:.95rem}
+
+@media (prefers-reduced-motion:reduce){.znav *,.znav *::before{animation:none!important;transition:none!important}}

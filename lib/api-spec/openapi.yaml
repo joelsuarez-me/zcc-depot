@@ -17,6 +17,95 @@ tags:
   - name: Storage
     description: Object storage upload and serving endpoints.
 paths:
+  /demo-research/saved:
+    get:
+      operationId: listResearchReports
+      summary: List shared saved research reports for signed-in portal users
+      responses:
+        "200":
+          description: Saved report summaries, newest first.
+          content:
+            application/json:
+              schema:
+                type: array
+                items: { $ref: "#/components/schemas/SavedResearchSummary" }
+        "401":
+          description: Sign-in required.
+    post:
+      operationId: saveResearchReport
+      summary: Save a complete research snapshot without rerunning research
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/SavedResearchInput" }
+      responses:
+        "201":
+          description: Saved snapshot, or the original snapshot when retrying its save key.
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/SavedResearchReport" }
+        "400":
+          description: Invalid or incomplete report.
+        "401":
+          description: Sign-in required.
+  /demo-research/saved/{id}:
+    get:
+      operationId: getSavedResearchReport
+      summary: Open a shared saved research report
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema: { type: string, format: uuid }
+      responses:
+        "200":
+          description: Complete saved report and original input context.
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/SavedResearchReport" }
+        "401":
+          description: Sign-in required.
+        "404":
+          description: Report not found.
+  /demo-research/saved/{id}/agenda:
+    post:
+      operationId: convertResearchReportToAgenda
+      summary: Create or reopen the editable agenda linked to a saved report
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema: { type: string, format: uuid }
+      responses:
+        "200":
+          description: Linked agenda, with saved research left unchanged.
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/Agenda" }
+        "401":
+          description: Sign-in required.
+        "404":
+          description: Report not found.
+  /demo-research/saved/{id}/logo:
+    get:
+      operationId: getSavedResearchLogo
+      summary: Read a saved report's durable logo with signed-in shared access
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema: { type: string, format: uuid }
+      responses:
+        "200":
+          description: Company logo.
+          content:
+            image/png:
+              schema: { type: string, format: binary }
+        "401":
+          description: Sign-in required.
+        "404":
+          description: Logo not available.
   /demo-nuggets/voices:
     get:
       operationId: getDemoVoices
@@ -832,7 +921,7 @@ components:
           maxLength: 120
         description:
           type: string
-          maxLength: 500
+          maxLength: 5000
         currentState:
           type: string
           maxLength: 5000
@@ -857,7 +946,7 @@ components:
           maxLength: 120
         description:
           type: string
-          maxLength: 500
+          maxLength: 5000
         currentState:
           type: string
           maxLength: 5000
@@ -917,6 +1006,37 @@ components:
       properties:
         error:
           type: string
+    SavedResearchInput:
+      type: object
+      required: [saveKey, fields, report]
+      properties:
+        saveKey: { type: string, format: uuid }
+        fields: { $ref: "#/components/schemas/ResearchReportInput" }
+        report: { $ref: "#/components/schemas/ResearchReport" }
+        logoUrl: { type: ["string", "null"], maxLength: 400 }
+    SavedResearchSummary:
+      type: object
+      required: [id, companyName, companyWebsite, region, audience, savedAt, researchedAt, agendaId]
+      properties:
+        id: { type: string, format: uuid }
+        companyName: { type: string }
+        companyWebsite: { type: string }
+        region: { type: string }
+        audience: { type: string }
+        savedAt: { type: string }
+        researchedAt: { type: string }
+        agendaId: { type: ["string", "null"], format: uuid }
+    SavedResearchReport:
+      type: object
+      required: [id, fields, report, company, savedAt, agendaId, logoNote]
+      properties:
+        id: { type: string, format: uuid }
+        fields: { $ref: "#/components/schemas/ResearchReportInput" }
+        report: { $ref: "#/components/schemas/ResearchReport" }
+        company: { $ref: "#/components/schemas/ResearchCompany" }
+        savedAt: { type: string }
+        agendaId: { type: ["string", "null"], format: uuid }
+        logoNote: { type: string }
     ResearchCompanyInput:
       type: object
       required: [companyName]

@@ -4,12 +4,14 @@ import {
   Loader2, Lock, LogIn, RefreshCw, RotateCcw, Search, Sparkles, Square, Users,
 } from "lucide-react";
 import { useAuth } from "@workspace/replit-auth-web";
-import { resolveResearchCompany, type ResearchCompany, type ResearchReport } from "@workspace/api-client-react";
+import { resolveResearchCompany, type ResearchCompany, type ResearchReport, type SavedResearchReport } from "@workspace/api-client-react";
 import { PageHero } from "@/components/kit";
 import { ResearchAgendaCards } from "@/components/research-agenda-cards";
 import { RESEARCH_AGENDA_HEADINGS } from "@/lib/research-agenda";
 import { BRIEF_FIELDS, EMPTY_BRIEF_FIELDS, validateBriefFields, type DemoBriefFields } from "@/data/demo-brief-prompt";
 import { streamResearchReport, ResearchStreamError } from "@/lib/research-stream";
+import { useResearchLibrary } from "@/lib/use-research-library";
+import { ResearchLibrary } from "@/components/research-library";
 
 const TITLE = "Demo Researcher | ZCC Depot";
 const DESC = "Research a company from current public sources before a Zendesk Contact Center demo: cited report in the Demo Agenda format (five sections plus sources), company logo and PDF export.";
@@ -102,6 +104,34 @@ export default function DemoBriefPage() {
     setPdf({ kind: "idle" });
     if (toIdle) setReport({ kind: "idle" });
   }, []);
+
+  const openSavedReport = useCallback((record: SavedResearchReport) => {
+    cancelReport(true);
+    lookupCtrl.current?.abort(); lookupSeq.current++; websiteEditSeq.current++;
+    const key = `${norm(record.fields.companyName)}|${norm(record.fields.companyWebsite)}`;
+    lastLookupKey.current = key;
+    setFields(record.fields); setErrors({}); setWebsiteSource("user"); setLogoFailed(false);
+    setLookup({ kind: "done", key, company: record.company });
+    setReport({ kind: "complete", ctx: { fields: record.fields, company: record.company }, report: record.report });
+    requestAnimationFrame(() => {
+      resultHeadRef.current?.focus({ preventScroll: true });
+      resultHeadRef.current?.scrollIntoView({ block: "start", behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth" });
+    });
+  }, [cancelReport]);
+  const library = useResearchLibrary({
+    userId: isAuthenticated ? user?.id ?? null : null,
+    current: report.kind === "complete" ? { ...report.ctx, report: report.report } : null,
+    onOpen: openSavedReport,
+  });
+  const reportOwner = useRef<string | null>(user?.id ?? null);
+  useEffect(() => {
+    const id = isAuthenticated ? user?.id ?? null : null;
+    if (id === reportOwner.current) return;
+    reportOwner.current = id;
+    cancelReport(true); lookupCtrl.current?.abort(); lookupSeq.current++;
+    lastLookupKey.current = ""; setLookup({ kind: "idle" });
+    setFields(EMPTY_BRIEF_FIELDS); setWebsiteSource("none");
+  }, [isAuthenticated, user?.id, cancelReport]);
 
   const runLookup = useCallback(async (force = false) => {
     if (!isAuthenticated) return;
@@ -220,9 +250,10 @@ export default function DemoBriefPage() {
     setPdf({ kind: "busy" });
     let logo: string | undefined;
     let warn: string | null = null;
-    if (ctx.company?.logoUrl) {
+    const logoUrl = library.saved?.company.logoUrl ?? ctx.company?.logoUrl;
+    if (logoUrl) {
       try {
-        const res = await fetch(ctx.company.logoUrl, { credentials: "include" });
+        const res = await fetch(logoUrl, { credentials: "include" });
         if (!res.ok) throw new Error(String(res.status));
         logo = await blobToDataUrl(await res.blob());
       } catch {
@@ -246,6 +277,9 @@ export default function DemoBriefPage() {
       <PageHero eyebrow="Demos · Live research" title="Demo Researcher"
         lede="Research a company from current public sources and get a cited prep report in the Demo Agenda format: five agenda sections plus sources for your Zendesk Contact Center demo." />
 
+      <div className="mx-auto max-w-7xl px-5 pt-6 md:px-8">
+        <ResearchLibrary library={library} signedIn={isAuthenticated} onLogin={login} />
+      </div>
       <div className="mx-auto grid max-w-7xl gap-6 px-5 pb-10 pt-6 md:px-8 md:pt-8 lg:grid-cols-12">
         <aside className="space-y-5 lg:col-span-4 lg:self-start lg:sticky lg:top-24">
           {authLoading ? (
@@ -309,7 +343,7 @@ export default function DemoBriefPage() {
                 </button>
               </div>
               <p className="mt-5 border-l-2 border-[#203524]/30 pl-3 text-[0.72rem] leading-relaxed text-[#11110D]/60" data-testid="text-privacy-note">
-                Uses public sources only. Your inputs are sent to Gemini through Replit's approved AI integration, and usage is billed to Replit credits. Reports aren't saved on the server; download the PDF to keep one.
+                Uses public sources only. Your inputs are sent to Gemini through Replit's approved AI integration, and usage is billed to Replit credits. Save completed reports to the shared library for signed-in portal users, or download a PDF.
                 {user?.email && <span className="mt-1 block mono text-[0.65rem] text-[#11110D]/45">Signed in as {user.email}</span>}
               </p>
             </form>

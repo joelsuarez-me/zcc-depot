@@ -568,7 +568,7 @@ export default function Agenda() {
                       <input value={fields.company} onChange={(event) => updateField("company", event.target.value)} placeholder="Customer company" maxLength={120} className={fieldClass} data-testid="input-agenda-company" />
                     </label>
                     <label className="block text-sm font-semibold text-[#304c38]">Objective
-                      <textarea value={fields.description} onChange={(event) => updateField("description", event.target.value)} placeholder="What should this customer demo explore or validate?" rows={4} maxLength={500} className={`${fieldClass} resize-y`} data-testid="input-agenda-description" />
+                      <textarea value={fields.description} onChange={(event) => updateField("description", event.target.value)} placeholder="What should this customer demo explore or validate?" rows={4} maxLength={5000} className={`${fieldClass} resize-y`} data-testid="input-agenda-description" />
                     </label>
                   </div>
                 </section>

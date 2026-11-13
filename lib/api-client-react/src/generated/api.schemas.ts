@@ -171,7 +171,7 @@ export interface AgendaInput {
      * @maxLength 120
      */
   company: string;
-  /** @maxLength 500 */
+  /** @maxLength 5000 */
   description?: string;
   /** @maxLength 5000 */
   currentState?: string;
@@ -191,7 +191,7 @@ export interface AgendaUpdate {
      * @maxLength 120
      */
   company?: string;
-  /** @maxLength 500 */
+  /** @maxLength 5000 */
   description?: string;
   /** @maxLength 5000 */
   currentState?: string;
@@ -248,26 +248,6 @@ export interface ErrorEnvelope {
   error: string;
 }
 
-export interface ResearchCompanyInput {
-  /**
-     * @minLength 2
-     * @maxLength 120
-     */
-  companyName: string;
-  /** @maxLength 300 */
-  companyWebsite?: string;
-}
-
-export interface ResearchCompany {
-  companyName: string;
-  companyWebsite: string;
-  /** @nullable */
-  logoUrl: string | null;
-  /** @nullable */
-  logoSourceUrl: string | null;
-  note: string;
-}
-
 export interface ResearchReportInput {
   /**
      * @minLength 2
@@ -307,6 +287,60 @@ export interface ResearchReport {
   markdown: string;
   sources: ResearchSource[];
   researchedAt: string;
+}
+
+export interface SavedResearchInput {
+  saveKey: string;
+  fields: ResearchReportInput;
+  report: ResearchReport;
+  /**
+     * @maxLength 400
+     * @nullable
+     */
+  logoUrl?: string | null;
+}
+
+export interface SavedResearchSummary {
+  id: string;
+  companyName: string;
+  companyWebsite: string;
+  region: string;
+  audience: string;
+  savedAt: string;
+  researchedAt: string;
+  /** @nullable */
+  agendaId: string | null;
+}
+
+export interface ResearchCompany {
+  companyName: string;
+  companyWebsite: string;
+  /** @nullable */
+  logoUrl: string | null;
+  /** @nullable */
+  logoSourceUrl: string | null;
+  note: string;
+}
+
+export interface SavedResearchReport {
+  id: string;
+  fields: ResearchReportInput;
+  report: ResearchReport;
+  company: ResearchCompany;
+  savedAt: string;
+  /** @nullable */
+  agendaId: string | null;
+  logoNote: string;
+}
+
+export interface ResearchCompanyInput {
+  /**
+     * @minLength 2
+     * @maxLength 120
+     */
+  companyName: string;
+  /** @maxLength 300 */
+  companyWebsite?: string;
 }
 
 export interface PitchSlide {

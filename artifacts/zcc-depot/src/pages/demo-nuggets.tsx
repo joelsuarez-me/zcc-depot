@@ -7,7 +7,8 @@ import { VoiceAiScene } from "@/components/demo-nuggets/voice-ai-scene";
 import { VoiceQaScene } from "@/components/demo-nuggets/voice-qa-scene";
 import { NuggetLibrary } from "@/components/demo-nuggets/nugget-library";
 import { VideoSharingScene } from "@/components/demo-nuggets/video-sharing-scene";
-import { NarrationControls, NarrationProvider } from "@/components/demo-nuggets/narration-provider";
+import { NarrationProvider } from "@/components/demo-nuggets/narration-provider";
+import { VoiceTalentControls as NarrationControls } from "@/components/demo-nuggets/voice-talent-controls";
 
 const TITLE = "Demo Nuggets | ZCC Depot";
 const DESC = "Explore animated Voice Copilot, Voice QA, Voice AI Agents, and video calling and screen sharing demos, with optional ElevenLabs narration.";

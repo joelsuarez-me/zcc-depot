@@ -42,3 +42,9 @@ The Sell Sheet, its source PDF, and the full Pricing guide require sign-in.
 **Why:** The PDF is marked Internal Only. The Pricing guide combines public prices with internal packaging guidance and an internal source link. The user explicitly selected signed-in access for both guides.
 
 **How to apply:** Protect content and document bytes on the server, not merely by hiding the page. Public search may link to the sign-in gate but must not include the confidential guide text.
+
+Saved demo research reports are shared with all signed-in portal users.
+
+**Why:** The user selected shared signed-in access for the saved-report library.
+
+**How to apply:** Keep report storage, loading and conversion into agendas behind server-side sign-in checks; do not make saved reports public or owner-only.

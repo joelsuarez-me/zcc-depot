@@ -151,18 +151,14 @@ export function Shell({ children }: { children: ReactNode }) {
       <header className="fixed inset-x-0 top-0 z-50 px-3 pt-3 md:px-6">
         <div className="pointer-events-none absolute inset-x-0 top-0 h-[4.75rem] bg-[#FDFDFB]" aria-hidden style={{ opacity: scrolled ? 0 : 1 }} />
         <div className={`relative z-10 mx-auto flex max-w-7xl items-center justify-between rounded-full border px-3 py-2 transition-all duration-300 md:px-4 ${scrolled || open ? "border-[#11110D]/10 bg-[#F5F5F2]/90 shadow-[0_10px_30px_-12px_rgba(32,53,36,.35)] backdrop-blur-md" : "border-transparent bg-[#FDFDFB]"}`}>
-          <Link href="/" className="flex items-center gap-3 rounded-full pl-2 pr-3" data-testid="link-home-logo">
-            <img src={logo} alt="Zendesk" className="h-10 w-14 rounded-lg bg-[#11110D] object-contain" />
+          <Link href="/" className="flex shrink-0 items-center rounded-xl pl-1 pr-2" data-testid="link-home-logo">
+            <img src={logo} alt="Zendesk" className="h-11 w-14 rounded-lg bg-[#11110D] object-contain" />
           </Link>
           <PrimaryNavigation />
           <div className="flex items-center gap-2">
             <SearchTrigger />
-            <a href={DEMO_URL} target="_blank" rel="noopener noreferrer" data-testid="button-header-demo"
-              className="hidden items-center gap-1.5 rounded-full bg-[#D1F470] px-4 py-2 text-sm font-semibold text-[#11110D] transition-transform hover:-translate-y-0.5 sm:inline-flex">
-              Guided demo <ArrowUpRight className="h-3.5 w-3.5" aria-hidden /><span className="sr-only">(opens in a new tab)</span>
-            </a>
             <button type="button" onClick={() => setOpen((o) => !o)} aria-expanded={open} aria-controls="mobile-nav" aria-label={open ? "Close menu" : "Open menu"}
-              data-testid="button-mobile-menu" className="grid h-10 w-10 place-items-center rounded-full bg-[#203524] text-[#D1F470] xl:hidden">
+              data-testid="button-mobile-menu" className="grid h-11 w-11 place-items-center rounded-full bg-[#203524] text-[#D1F470] ring-1 ring-[#D1F470]/20 transition-colors hover:bg-[#2b4630] xl:hidden">
               {open ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
             </button>
           </div>

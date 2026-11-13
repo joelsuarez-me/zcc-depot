@@ -9,6 +9,206 @@ import * as zod from 'zod';
 
 
 /**
+ * @summary List shared saved research reports for signed-in portal users
+ */
+export const ListResearchReportsResponseItem = zod.object({
+  "id": zod.string().uuid(),
+  "companyName": zod.string(),
+  "companyWebsite": zod.string(),
+  "region": zod.string(),
+  "audience": zod.string(),
+  "savedAt": zod.string(),
+  "researchedAt": zod.string(),
+  "agendaId": zod.string().uuid().nullable()
+})
+export const ListResearchReportsResponse = zod.array(ListResearchReportsResponseItem)
+
+
+/**
+ * @summary Save a complete research snapshot without rerunning research
+ */
+export const saveResearchReportBodyFieldsCompanyNameMin = 2;
+export const saveResearchReportBodyFieldsCompanyNameMax = 120;
+
+export const saveResearchReportBodyFieldsCompanyWebsiteMin = 3;
+export const saveResearchReportBodyFieldsCompanyWebsiteMax = 300;
+
+export const saveResearchReportBodyFieldsRegionMin = 2;
+export const saveResearchReportBodyFieldsRegionMax = 120;
+
+export const saveResearchReportBodyFieldsAudienceMin = 2;
+export const saveResearchReportBodyFieldsAudienceMax = 160;
+
+export const saveResearchReportBodyLogoUrlMax = 400;
+
+
+
+export const SaveResearchReportBody = zod.object({
+  "saveKey": zod.string().uuid(),
+  "fields": zod.object({
+  "companyName": zod.string().min(saveResearchReportBodyFieldsCompanyNameMin).max(saveResearchReportBodyFieldsCompanyNameMax),
+  "companyWebsite": zod.string().min(saveResearchReportBodyFieldsCompanyWebsiteMin).max(saveResearchReportBodyFieldsCompanyWebsiteMax),
+  "region": zod.string().min(saveResearchReportBodyFieldsRegionMin).max(saveResearchReportBodyFieldsRegionMax),
+  "audience": zod.string().min(saveResearchReportBodyFieldsAudienceMin).max(saveResearchReportBodyFieldsAudienceMax)
+}),
+  "report": zod.object({
+  "companyName": zod.string(),
+  "companyWebsite": zod.string(),
+  "region": zod.string(),
+  "audience": zod.string(),
+  "markdown": zod.string(),
+  "sources": zod.array(zod.object({
+  "id": zod.number().int(),
+  "title": zod.string(),
+  "url": zod.string(),
+  "publisher": zod.string(),
+  "accessedAt": zod.string()
+})),
+  "researchedAt": zod.string()
+}),
+  "logoUrl": zod.string().max(saveResearchReportBodyLogoUrlMax).nullish()
+})
+
+export const saveResearchReportResponseFieldsCompanyNameMin = 2;
+export const saveResearchReportResponseFieldsCompanyNameMax = 120;
+
+export const saveResearchReportResponseFieldsCompanyWebsiteMin = 3;
+export const saveResearchReportResponseFieldsCompanyWebsiteMax = 300;
+
+export const saveResearchReportResponseFieldsRegionMin = 2;
+export const saveResearchReportResponseFieldsRegionMax = 120;
+
+export const saveResearchReportResponseFieldsAudienceMin = 2;
+export const saveResearchReportResponseFieldsAudienceMax = 160;
+
+
+
+export const SaveResearchReportResponse = zod.object({
+  "id": zod.string().uuid(),
+  "fields": zod.object({
+  "companyName": zod.string().min(saveResearchReportResponseFieldsCompanyNameMin).max(saveResearchReportResponseFieldsCompanyNameMax),
+  "companyWebsite": zod.string().min(saveResearchReportResponseFieldsCompanyWebsiteMin).max(saveResearchReportResponseFieldsCompanyWebsiteMax),
+  "region": zod.string().min(saveResearchReportResponseFieldsRegionMin).max(saveResearchReportResponseFieldsRegionMax),
+  "audience": zod.string().min(saveResearchReportResponseFieldsAudienceMin).max(saveResearchReportResponseFieldsAudienceMax)
+}),
+  "report": zod.object({
+  "companyName": zod.string(),
+  "companyWebsite": zod.string(),
+  "region": zod.string(),
+  "audience": zod.string(),
+  "markdown": zod.string(),
+  "sources": zod.array(zod.object({
+  "id": zod.number().int(),
+  "title": zod.string(),
+  "url": zod.string(),
+  "publisher": zod.string(),
+  "accessedAt": zod.string()
+})),
+  "researchedAt": zod.string()
+}),
+  "company": zod.object({
+  "companyName": zod.string(),
+  "companyWebsite": zod.string(),
+  "logoUrl": zod.string().nullable(),
+  "logoSourceUrl": zod.string().nullable(),
+  "note": zod.string()
+}),
+  "savedAt": zod.string(),
+  "agendaId": zod.string().uuid().nullable(),
+  "logoNote": zod.string()
+})
+
+
+/**
+ * @summary Open a shared saved research report
+ */
+export const GetSavedResearchReportParams = zod.object({
+  "id": zod.coerce.string().uuid()
+})
+
+export const getSavedResearchReportResponseFieldsCompanyNameMin = 2;
+export const getSavedResearchReportResponseFieldsCompanyNameMax = 120;
+
+export const getSavedResearchReportResponseFieldsCompanyWebsiteMin = 3;
+export const getSavedResearchReportResponseFieldsCompanyWebsiteMax = 300;
+
+export const getSavedResearchReportResponseFieldsRegionMin = 2;
+export const getSavedResearchReportResponseFieldsRegionMax = 120;
+
+export const getSavedResearchReportResponseFieldsAudienceMin = 2;
+export const getSavedResearchReportResponseFieldsAudienceMax = 160;
+
+
+
+export const GetSavedResearchReportResponse = zod.object({
+  "id": zod.string().uuid(),
+  "fields": zod.object({
+  "companyName": zod.string().min(getSavedResearchReportResponseFieldsCompanyNameMin).max(getSavedResearchReportResponseFieldsCompanyNameMax),
+  "companyWebsite": zod.string().min(getSavedResearchReportResponseFieldsCompanyWebsiteMin).max(getSavedResearchReportResponseFieldsCompanyWebsiteMax),
+  "region": zod.string().min(getSavedResearchReportResponseFieldsRegionMin).max(getSavedResearchReportResponseFieldsRegionMax),
+  "audience": zod.string().min(getSavedResearchReportResponseFieldsAudienceMin).max(getSavedResearchReportResponseFieldsAudienceMax)
+}),
+  "report": zod.object({
+  "companyName": zod.string(),
+  "companyWebsite": zod.string(),
+  "region": zod.string(),
+  "audience": zod.string(),
+  "markdown": zod.string(),
+  "sources": zod.array(zod.object({
+  "id": zod.number().int(),
+  "title": zod.string(),
+  "url": zod.string(),
+  "publisher": zod.string(),
+  "accessedAt": zod.string()
+})),
+  "researchedAt": zod.string()
+}),
+  "company": zod.object({
+  "companyName": zod.string(),
+  "companyWebsite": zod.string(),
+  "logoUrl": zod.string().nullable(),
+  "logoSourceUrl": zod.string().nullable(),
+  "note": zod.string()
+}),
+  "savedAt": zod.string(),
+  "agendaId": zod.string().uuid().nullable(),
+  "logoNote": zod.string()
+})
+
+
+/**
+ * @summary Create or reopen the editable agenda linked to a saved report
+ */
+export const ConvertResearchReportToAgendaParams = zod.object({
+  "id": zod.coerce.string().uuid()
+})
+
+export const ConvertResearchReportToAgendaResponse = zod.object({
+  "id": zod.string().uuid(),
+  "company": zod.string(),
+  "description": zod.string(),
+  "logoPath": zod.string().nullable(),
+  "updatedAt": zod.coerce.date()
+}).and(zod.object({
+  "currentState": zod.string(),
+  "conversation": zod.string(),
+  "problems": zod.string(),
+  "outcomes": zod.string(),
+  "createdAt": zod.coerce.date()
+}))
+
+
+/**
+ * @summary Read a saved report's durable logo with signed-in shared access
+ */
+export const GetSavedResearchLogoParams = zod.object({
+  "id": zod.coerce.string().uuid()
+})
+
+export const GetSavedResearchLogoResponse = zod.unknown()
+
+
+/**
  * @summary Get available ElevenLabs voices and prepared demo scripts
  */
 export const GetDemoVoicesResponse = zod.object({
@@ -290,7 +490,7 @@ export const ListAgendasResponse = zod.array(ListAgendasResponseItem)
  */
 export const createAgendaBodyCompanyMax = 120;
 
-export const createAgendaBodyDescriptionMax = 500;
+export const createAgendaBodyDescriptionMax = 5000;
 
 export const createAgendaBodyCurrentStateMax = 5000;
 
@@ -358,7 +558,7 @@ export const UpdateAgendaParams = zod.object({
 
 export const updateAgendaBodyCompanyMax = 120;
 
-export const updateAgendaBodyDescriptionMax = 500;
+export const updateAgendaBodyDescriptionMax = 5000;
 
 export const updateAgendaBodyCurrentStateMax = 5000;
 
