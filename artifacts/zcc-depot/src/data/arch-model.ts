@@ -1,14 +1,14 @@
 export type ArchLayer = "channels" | "infra" | "aws" | "ai" | "zendesk" | "integration" | "analytics" | "security" | "conceptual";
 
 export const ARCH_LAYERS: { id: ArchLayer; label: string; color: string }[] = [
-  { id: "channels", label: "Customer channels", color: "#11110D" },
-  { id: "infra", label: "Contact center infra", color: "#5B7A1E" },
-  { id: "aws", label: "AWS services", color: "#B7791F" },
-  { id: "ai", label: "AI services", color: "#8FB828" },
-  { id: "zendesk", label: "Zendesk apps", color: "#2E2E26" },
-  { id: "integration", label: "Integrations", color: "#7A6A4F" },
-  { id: "analytics", label: "Reporting", color: "#A39E8C" },
-  { id: "security", label: "Security boundary", color: "#C9C7BC" },
+  { id: "channels", label: "Customer channels", color: "#1F73B7" },
+  { id: "infra", label: "Contact center infra", color: "#03363D" },
+  { id: "aws", label: "AWS services", color: "#E8890C" },
+  { id: "ai", label: "AI services", color: "#C2357A" },
+  { id: "zendesk", label: "Zendesk apps", color: "#17A07A" },
+  { id: "integration", label: "Integrations", color: "#6B4FBB" },
+  { id: "analytics", label: "Reporting", color: "#5E7A82" },
+  { id: "security", label: "Security boundary", color: "#9FB3B0" },
   { id: "conceptual", label: "Conceptual", color: "#D1F470" },
 ];
 

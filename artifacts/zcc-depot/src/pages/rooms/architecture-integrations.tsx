@@ -28,7 +28,7 @@ export default function ArchitectureIntegrations() {
   return (
     <RoomFrame id="architecture-integrations" lede="Clickable components, layers, a guided tour, and the security boundary between the customer's AWS account and Zendesk." actions={<Link href="/architecture/components" className="room-chip" data-testid="link-components-page">Component deep dive<ArrowRight className="h-3.5 w-3.5" aria-hidden /></Link>}>
       <RoomSection id="explorer" eyebrow="Architecture explorer" title="The system, one layer at a time" lede="Drag to pan, zoom with the controls, toggle layers, or run the guided tour. Dashed items are conceptual or configuration-dependent.">
-        <ArchExplorer />
+        <ArchExplorer brands />
       </RoomSection>
 
       <RoomSection id="call-to-ticket" eyebrow="Call to ticket" title="How call metadata becomes ticket data" tone="panel">
