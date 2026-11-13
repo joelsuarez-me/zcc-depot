@@ -4,6 +4,7 @@ import { ArrowRight } from "lucide-react";
 import { RoomFrame, RoomSection, SourceNote, StatusTag } from "@/components/room-kit";
 import { ArchExplorer } from "@/components/arch-explorer";
 import { SystemDataFlow } from "@/components/system-data-flow";
+import { ZendeskPodMap } from "@/components/zendesk-pod-map";
 import { Ext } from "@/components/kit";
 import { CORE_COMPONENTS, LAMBDAS, LINKS, RESOURCES } from "@/data/content";
 
@@ -26,9 +27,15 @@ export default function ArchitectureIntegrations() {
   const [fn, setFn] = useState<"runtime" | "deployment">("runtime");
   const doc = (id: string) => RESOURCES.find((r) => r.id === id);
   return (
-    <RoomFrame id="architecture-integrations" lede="Clickable components, layers, a guided tour, and the security boundary between the customer's AWS account and Zendesk." actions={<Link href="/architecture/components" className="room-chip" data-testid="link-components-page">Component deep dive<ArrowRight className="h-3.5 w-3.5" aria-hidden /></Link>}>
+    <RoomFrame id="architecture-integrations" lede="Clickable components, layers, a guided tour, and the security boundary between the customer's AWS account and Zendesk." actions={<><Link href="/architecture/system-overview" className="room-chip" data-testid="link-system-overview-page">Detailed system overview<ArrowRight className="h-3.5 w-3.5" aria-hidden /></Link><Link href="/architecture/components" className="room-chip" data-testid="link-components-page">Component deep dive<ArrowRight className="h-3.5 w-3.5" aria-hidden /></Link></>}>
+      <RoomSection id="zendesk-architecture-overview" eyebrow="Zendesk Architecture Overview" title="Global Pods on AWS, built to contain incidents" lede="Select a reference location, then simulate a local incident to see the Pod isolation idea. Illustrative, not live status.">
+        <ZendeskPodMap />
+        <Link href="/architecture/system-overview" className="mt-3 inline-flex items-center gap-2 text-sm font-bold text-[#111317] underline" data-testid="link-system-overview-from-pods">Continue to the Detailed System Overview<ArrowRight className="h-4 w-4" aria-hidden /></Link>
+      </RoomSection>
+
       <RoomSection id="explorer" eyebrow="Architecture explorer" title="The system, one layer at a time" lede="Drag to pan, zoom with the controls, toggle layers, or run the guided tour. Dashed items are conceptual or configuration-dependent.">
         <ArchExplorer brands variant="reference" />
+        <Link href="/architecture/system-overview" className="mt-4 flex flex-wrap items-center justify-between gap-3 rounded-2xl border border-[#D9DCE0] bg-[#FCFCFB] px-5 py-4 hover:border-[#111317]" data-testid="link-system-overview-banner"><span><span className="block text-xs font-bold uppercase tracking-wider text-[#E0352B]">New</span><span className="block text-lg font-extrabold text-[#111317]">Detailed System Overview & Data Flow</span><span className="block text-sm text-[#111317]/65">Zendesk environment, customer AWS boundary, identity chain, and post-call records in one diagram.</span></span><ArrowRight className="h-5 w-5" aria-hidden /></Link>
       </RoomSection>
 
       <RoomSection id="call-to-ticket" eyebrow="Call to ticket" title="How call metadata becomes ticket data" tone="panel">

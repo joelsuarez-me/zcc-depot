@@ -6,8 +6,8 @@ import { usePresenterContent } from "@/hooks/use-presenter-content";
 
 export function AgentKnowledgeSection() {
   return (
-    <Section tone="white">
-      <SectionHead id="ai-suggestions" num="05" eyebrow="Agent knowledge" title={<>Live transcript in. <span className="hl">Relevant knowledge out.</span></>}
+    <Section id="ai-suggestions" tone="white">
+      <SectionHead permalinkId="ai-suggestions" num="05" eyebrow="Agent knowledge" title={<>Live transcript in. <span className="hl">Relevant knowledge out.</span></>}
         lede="Give agents call-specific guidance from your Zendesk help center while a customer conversation is still in progress." />
       <div className="grid gap-6 lg:grid-cols-12">
         <Reveal className="rounded-[2rem] bg-[#203524] p-8 text-[#F5F5F2] lg:col-span-5">

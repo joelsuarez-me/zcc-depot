@@ -12,6 +12,7 @@ import { ROUTE_LABELS } from "@/data/depot-rooms";
 import { SectionNavigation } from "@/components/section-navigation";
 import { SectionLink } from "@/components/section-link";
 import { Sheet, SheetContent, SheetDescription, SheetTitle } from "@/components/ui/sheet";
+import { attachHashNavigation } from "@/lib/hash-navigation";
 
 const logo = `${import.meta.env.BASE_URL}brand/zendesk-monochrome-padded.png`;
 
@@ -50,12 +51,12 @@ export function Reveal({ children, delay = 0, className = "" }: { children: Reac
 }
 
 // Legacy num props are accepted but never rendered; section names are unnumbered.
-export function SectionHead({ id, eyebrow, title, lede, dark = false }: { id?: string; num?: string; eyebrow: string; title: ReactNode; lede?: ReactNode; dark?: boolean }) {
+export function SectionHead({ id, permalinkId, eyebrow, title, lede, dark = false }: { id?: string; permalinkId?: string; num?: string; eyebrow: string; title: ReactNode; lede?: ReactNode; dark?: boolean }) {
   return (
     <Reveal className="mb-10 grid gap-6 md:grid-cols-12 md:items-end">
       <div className="md:col-span-7" id={id} data-section-nav>
         <div className={`eyebrow mb-4 flex items-center gap-3 ${dark ? "text-[#D1F470]" : "text-[#203524]"}`}>
-          {eyebrow}<SectionGlyph label={eyebrow} dark={dark} />{id && <SectionLink id={id} label={eyebrow} dark={dark} />}
+          {eyebrow}<SectionGlyph label={eyebrow} dark={dark} />{(id || permalinkId) && <SectionLink id={(id || permalinkId)!} label={eyebrow} dark={dark} />}
         </div>
         <h2 className={`text-[2rem] leading-[1.05] font-semibold tracking-tight md:text-5xl ${dark ? "text-[#F5F5F2]" : "text-[#11110D]"}`}>{title}</h2>
       </div>
@@ -92,9 +93,9 @@ export function PageHero({ eyebrow, title, lede, children, motif }: { eyebrow: s
   );
 }
 
-export function Section({ children, className = "", tone = "paper" }: { children: ReactNode; className?: string; tone?: "paper" | "white" | "forest" | "ink" }) {
+export function Section({ id, children, className = "", tone = "paper" }: { id?: string; children: ReactNode; className?: string; tone?: "paper" | "white" | "forest" | "ink" }) {
   const bg = { paper: "bg-[#F5F5F2]", white: "bg-[#FBFBF8]", forest: "on-dark bg-[#203524] text-[#F5F5F2]", ink: "on-dark bg-[#11110D] text-[#F5F5F2]" }[tone];
-  return <section className={`${bg} ${className}`}><div className="section-body mx-auto max-w-7xl px-5 py-20 md:px-8 md:py-28">{children}</div></section>;
+  return <section id={id} data-section-nav={id ? true : undefined} className={`${bg} ${className}`}><div className="section-body mx-auto max-w-7xl px-5 py-20 md:px-8 md:py-28">{children}</div></section>;
 }
 
 export function Note({ children }: { children: ReactNode }) {
@@ -103,31 +104,7 @@ export function Note({ children }: { children: ReactNode }) {
 
 function useHashScroll() {
   const [loc] = useLocation();
-  useEffect(() => {
-    let observer: MutationObserver | undefined;
-    let timer: ReturnType<typeof setTimeout>;
-    const jump = () => {
-      observer?.disconnect();
-      clearTimeout(timer);
-      const raw = window.location.hash.slice(1);
-      if (!raw) { window.scrollTo({ top: 0 }); return; }
-      let hash = raw;
-      try { hash = decodeURIComponent(raw); } catch { /* A malformed fragment simply has no matching target. */ }
-      const scroll = () => {
-        const target = document.getElementById(hash);
-        if (!target) return;
-        target.scrollIntoView({ behavior: "instant", block: "start" });
-        observer?.disconnect();
-      };
-      observer = new MutationObserver(scroll);
-      const main = document.getElementById("main");
-      if (main) observer.observe(main, { childList: true, subtree: true, attributes: true, attributeFilter: ["id"] });
-      timer = setTimeout(scroll, 80);
-    };
-    jump();
-    window.addEventListener("hashchange", jump);
-    return () => { clearTimeout(timer); observer?.disconnect(); window.removeEventListener("hashchange", jump); };
-  }, [loc]);
+  useEffect(() => attachHashNavigation(), [loc]);
 }
 
 export function Shell({ children }: { children: ReactNode }) {

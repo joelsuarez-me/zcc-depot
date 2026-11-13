@@ -13,6 +13,7 @@ const Home = lazy(() => import('@/pages/home'));
 const Demos = lazy(() => import('@/pages/demos'));
 const Architecture = lazy(() => import('@/pages/architecture'));
 const ArchitectureComponents = lazy(() => import('@/pages/architecture-components'));
+const ArchitectureSystemOverview = lazy(() => import('@/pages/architecture-system-overview'));
 const Sales = lazy(() => import('@/pages/sales'));
 const SalesUseCases = lazy(() => import('@/pages/sales-use-cases'));
 const Resources = lazy(() => import('@/pages/resources'));
@@ -69,6 +70,7 @@ function Router() {
             <Route path="/demos/nuggets" component={DemoNuggets} />
             <Route path="/architecture" component={Architecture} />
             <Route path="/architecture/components" component={ArchitectureComponents} />
+            <Route path="/architecture/system-overview" component={ArchitectureSystemOverview} />
             <Route path="/sales" component={Sales} />
             <Route path="/sales/use-cases-by-vertical" component={SalesUseCases} />
             <Route path="/pricing" component={GatedPricing} />

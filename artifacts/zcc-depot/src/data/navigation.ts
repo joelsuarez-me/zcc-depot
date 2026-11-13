@@ -16,6 +16,7 @@ export const NAV: NavItem[] = [
     href: "/architecture#data-flow", label: "Architecture", children: [
       { label: "System + data flow", href: "/architecture#data-flow" },
       { label: "Components", href: "/architecture/components" },
+      { label: "Detailed system overview", href: "/architecture/system-overview" },
     ],
   },
   {

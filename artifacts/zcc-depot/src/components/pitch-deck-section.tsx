@@ -6,6 +6,7 @@ import { ChevronLeft, ChevronRight, Download, Expand, Lock, RotateCw, X, ImageOf
 import { Section, SectionHead } from "@/components/kit";
 import { useProtectedObjectUrl } from "@/lib/protected-asset";
 import { ProtectedDownload } from "@/components/protected-download";
+import { PresenterGate } from "@/components/presenter";
 
 function SlideImage({ slide, eager, className = "" }: { slide: PitchSlide; eager?: boolean; className?: string }) {
   const [broken, setBroken] = useState(false);
@@ -174,7 +175,7 @@ function Viewer({ slides, title, pdfUrl }: { slides: PitchSlide[]; title: string
   );
 }
 
-export function PitchDeckSection() {
+function PitchDeckContent() {
   const { isAuthenticated, isLoading: authLoading, login } = useAuth();
   const qc = useQueryClient();
   const q = useGetPitchDeck({ query: { queryKey: getGetPitchDeckQueryKey(), enabled: isAuthenticated, gcTime: 0, staleTime: 0, retry: false } });
@@ -216,11 +217,16 @@ export function PitchDeckSection() {
     </>
   );
 
+  return <>{body}</>;
+}
+
+export function PitchDeckSection() {
   return (
-    <Section>
-      <div id="pitch-deck" className="scroll-mt-28" />
-      <SectionHead num="07" eyebrow="Pitch deck" title="Pitch Deck" lede="Original product deep-dive slides for customer conversations. Sign-in required." />
-      {body}
+    <Section id="pitch-deck">
+      <SectionHead permalinkId="pitch-deck" eyebrow="Pitch deck" title="Pitch Deck" lede="Original product deep-dive slides for customer conversations. Sign-in and Presenter Mode required." />
+      <PresenterGate title="Pitch Deck" detail="Switch to Presenter Mode and sign in to view the internal product deep-dive slides.">
+        <PitchDeckContent />
+      </PresenterGate>
     </Section>
   );
 }

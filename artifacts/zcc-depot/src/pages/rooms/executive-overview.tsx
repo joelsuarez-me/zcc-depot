@@ -4,7 +4,8 @@ import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import { ArrowRight, Check, X } from "lucide-react";
 import { RoomFrame, RoomSection, SourceNote } from "@/components/room-kit";
 import { DemoButton, Ext } from "@/components/kit";
-import { LINKS, OUTCOMES, PILLARS, USE_CASES } from "@/data/content";
+import { LINKS, PILLARS, USE_CASES } from "@/data/content";
+import { CustomerProof } from "@/components/customer-proof";
 import { ROOMS } from "@/data/depot-rooms";
 
 const STORY = [
@@ -85,16 +86,8 @@ export default function ExecutiveOverview() {
       </RoomSection>
 
       <RoomSection id="customer-proof" eyebrow="Customer proof" title="Customer-reported results" lede="Figures are as reported in Zendesk customer materials for these specific customers. They are not predictions for a new deployment.">
-        <div className="grid gap-3 md:grid-cols-3">
-          {OUTCOMES.map((o) => (
-            <div key={o.co} className="depot-card" data-testid={`card-outcome-${o.co.replace(/\W+/g, "-").toLowerCase()}`}>
-              <div className="eyebrow text-[#11110D]/50">{o.theme}</div>
-              <h3 className="mt-2 text-lg font-semibold">{o.co}</h3>
-              <dl className="mt-4 grid grid-cols-2 gap-3">{o.stats.map(([v, l]) => <div key={l}><dt className="sr-only">{l}</dt><dd className="text-2xl font-semibold tracking-tight">{v}</dd><dd className="text-xs text-[#11110D]/55">{l}</dd></div>)}</dl>
-            </div>
-          ))}
-        </div>
-        <SourceNote>Confirm approved public-use wording before external distribution.</SourceNote>
+        <CustomerProof />
+        <SourceNote>Results are customer-reported from supplied Zendesk materials, not live independent verification, predictions, or guarantees for a new deployment. Confirm approved public-use wording before external distribution.</SourceNote>
       </RoomSection>
 
       <RoomSection id="next-steps" eyebrow="Next steps" title="Where to take the conversation">

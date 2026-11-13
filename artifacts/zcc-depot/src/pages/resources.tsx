@@ -37,8 +37,8 @@ export default function Resources() {
         <a href={LINKS.usingSection} target="_blank" rel="noopener noreferrer" className="rounded-full border border-[#F5F5F2]/25 px-5 py-3 text-sm font-semibold hover:border-[#D1F470] hover:text-[#D1F470]" data-testid="link-using-guides">Browse Contact Center guides<span className="sr-only"> (opens in a new tab)</span></a>
       </PageHero>
 
-      <Section>
-        <SectionHead id="library" num="01" eyebrow="Resource library" title="Find the guidance you need" />
+      <Section id="library">
+        <SectionHead permalinkId="library" num="01" eyebrow="Resource library" title="Find the guidance you need" />
         <div className="grid gap-8 lg:grid-cols-12">
           <aside className="lg:col-span-3">
             <div className="lg:sticky lg:top-28">

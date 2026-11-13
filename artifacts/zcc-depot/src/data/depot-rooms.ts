@@ -29,6 +29,7 @@ export const ROOMS: DepotRoom[] = [
     summary: "Explore the Amazon Connect foundation, Zendesk integration points, identity, data flow, and deployment boundaries.",
     audience: "Platform architects, IT, security",
     sections: [
+      { id: "zendesk-architecture-overview", label: "Zendesk Architecture Overview" },
       { id: "explorer", label: "Architecture explorer" },
       { id: "call-to-ticket", label: "Call to ticket" },
       { id: "identity", label: "Identity and access" },
@@ -97,6 +98,7 @@ export const ROUTE_LABELS: Record<string, { label: string; parent?: string }> = 
   "/demos/nuggets": { label: "Demo Nuggets", parent: "/demos" },
   "/architecture": { label: "Architecture" },
   "/architecture/components": { label: "Components", parent: "/architecture" },
+  "/architecture/system-overview": { label: "Detailed System Overview & Data Flow", parent: "/architecture" },
   "/sales": { label: "Sales" },
   "/pricing": { label: "Pricing", parent: "/sales" },
   "/sell-sheet": { label: "Sell Sheet", parent: "/sales" },
