@@ -12,6 +12,9 @@ import { BRIEF_FIELDS, EMPTY_BRIEF_FIELDS, validateBriefFields, type DemoBriefFi
 import { streamResearchReport, ResearchStreamError } from "@/lib/research-stream";
 import { useResearchLibrary } from "@/lib/use-research-library";
 import { ResearchLibrary } from "@/components/research-library";
+// Load the exporter with this route, not on click: a later publication can
+// remove the old hashed chunk while an already-open report is still on screen.
+import { createResearchPdf, researchPdfFilename } from "@/lib/research-pdf";
 
 const TITLE = "Demo Researcher | ZCC Depot";
 const DESC = "Research a company from current public sources before a Zendesk Contact Center demo: cited report in the Demo Agenda format (five sections plus sources), company logo and PDF export.";
@@ -261,9 +264,8 @@ export default function DemoBriefPage() {
       }
     }
     try {
-      const mod = await import("@/lib/research-pdf");
-      const doc = mod.createResearchPdf(r, logo);
-      doc.save(mod.researchPdfFilename(r));
+      const doc = createResearchPdf(r, logo);
+      doc.save(researchPdfFilename(r));
       setPdf(warn ? { kind: "warn", msg: warn } : { kind: "idle" });
     } catch (err) {
       setPdf({ kind: "error", msg: err instanceof Error ? `PDF export failed: ${err.message}` : "PDF export failed." });

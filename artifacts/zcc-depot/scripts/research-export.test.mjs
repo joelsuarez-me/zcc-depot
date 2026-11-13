@@ -1,5 +1,6 @@
 import assert from "node:assert/strict";
 import { test } from "node:test";
+import { readFileSync } from "node:fs";
 import { createResearchPdf, researchPdfFilename } from "../src/lib/research-pdf.ts";
 import { streamResearchReport } from "../src/lib/research-stream.ts";
 import { RESEARCH_AGENDA_HEADINGS } from "../src/lib/research-agenda.ts";
@@ -9,6 +10,13 @@ const report = {
   markdown: RESEARCH_AGENDA_HEADINGS.map(title => `## ${title}\n${"Evidence-based research with an explicit Unknown. [1](https://example.com/) ".repeat(20)}`).join("\n\n") + "\n\n## Sources\nThe structured sources are exported below.",
   sources: [{ id: 1, title: "Official example source", publisher: "example.com", url: "https://example.com/a/very/long/source/url", accessedAt: "2026-11-12" }],
 };
+test("PDF exporter loads with the research route, never through a later hashed import", () => {
+  const page = readFileSync(new URL("../src/pages/demo-brief.tsx", import.meta.url), "utf8");
+  assert.match(page, /import\s+\{\s*createResearchPdf,\s*researchPdfFilename\s*\}\s+from\s+["']@\/lib\/research-pdf["']/);
+  assert.doesNotMatch(page, /import\s*\(\s*["']@\/lib\/research-pdf["']/);
+  assert.match(page, /createResearchPdf\(r,\s*logo\)/);
+  assert.match(page, /doc\.save\(researchPdfFilename\(r\)\)/);
+});
 test("PDF export creates selectable multipage text, full source URLs and page numbers", () => {
   const pdf = createResearchPdf(report);
   const output = pdf.output();

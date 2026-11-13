@@ -14,8 +14,14 @@ The later request supersedes the earlier local-only scope, not the removal of Op
 **How to apply:** Use live search grounding for company reports. Distinguish drafts,
 verified evidence, hypotheses, and unknowns; never present model memory as current
 research. Generate only on explicit submission, not each field edit. A completed
-report can be downloaded as a PDF; no report history/database persistence was
-requested. Do not reintroduce OpenAI or a personal API-key requirement.
+report can be downloaded as a PDF. The user later requested saved-report history
+and conversion to Demo Agenda. Do not reintroduce OpenAI or a personal API-key requirement.
+
+Load the PDF exporter with the research route rather than deferring its module until the download click. Do not automatically reload a tab containing an unsaved report to recover from an asset error.
+
+**Why:** A published version replaced the hashed export asset while an older research tab was still open; clicking Download then fetched missing JavaScript and failed. Reloading can discard unsaved research.
+
+**How to apply:** Keep export dependencies available once the report page has loaded. If recovery requires a refresh, first let users save the report.
 
 Research reports are customer-conversation agendas, not general company dossiers:
 match Demo Agenda in both the on-screen report and its PDF.
