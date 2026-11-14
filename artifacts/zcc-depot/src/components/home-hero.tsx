@@ -31,7 +31,7 @@ export function RoomStrip() {
   return (
     <section aria-labelledby="rooms-title" className="rs" id="rooms" data-section-nav>
       <div className="flex items-end justify-between gap-4">
-        <div><div className="eyebrow text-[#11110D]/55">Six demo rooms</div><h2 id="rooms-title" className="mt-1 text-2xl font-semibold tracking-[-0.02em]">Pick the conversation</h2></div>
+        <div><h2 id="rooms-title" className="text-2xl font-semibold tracking-[-0.02em]">Pick the conversation</h2></div>
         <p className="hidden max-w-sm text-sm text-[#11110D]/60 md:block">Each room is self-contained, presentable, and backed by documentation. Presenter Mode adds notes for signed-in teams.</p>
       </div>
       <ol className="rs-grid mt-5">

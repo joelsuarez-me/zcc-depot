@@ -24,10 +24,10 @@ export function RoomFrame({ id, lede, children, actions }: { id: RoomId; lede: R
   return (
     <div className="room" data-room={id}>
       <motion.header className="room-hero on-dark" initial={reduce ? false : { opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.45, ease: [0.2, 0.7, 0.2, 1] }}>
-        <div className="room-hero-num" aria-hidden>{room.n}</div>
+        {id !== "executive-overview" && <div className="room-hero-num" aria-hidden>{room.n}</div>}
         <div className="relative grid gap-4 md:grid-cols-12 md:items-end">
           <div className="md:col-span-7">
-            <div className="eyebrow flex items-center gap-2 text-[#D1F470]"><span>Room {room.n}</span><span className="text-[#F5F5F2]/35">·</span><span className="text-[#F5F5F2]/55">{room.audience}</span></div>
+            <div className="eyebrow flex items-center gap-2 text-[#D1F470]">{id !== "executive-overview" && <><span>Room {room.n}</span><span className="text-[#F5F5F2]/35">·</span></>}<span className="text-[#F5F5F2]/55">{room.audience}</span></div>
             <h1 className="mt-2 text-[1.75rem] font-semibold leading-[1.05] tracking-[-0.025em] md:text-[2.4rem]">{room.title}</h1>
           </div>
           <div className="md:col-span-5">
