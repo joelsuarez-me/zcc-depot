@@ -1,17 +1,5 @@
-import { Video, MonitorUp, Layers } from "lucide-react";
-import { DemoButton, Ext, Note, PageHero, Reveal, Section, SectionHead } from "@/components/kit";
-import { LINKS } from "@/data/content";
+import { DemoButton, PageHero, Reveal, Section } from "@/components/kit";
 import { DemoBlueprint } from "@/components/demo-blueprint";
-
-const VIDEO_GA = [
-  ["Native video calls", "Launch from Agent Workspace."],
-  ["Pre-call preview", "Audio and video checks for both agents and customers."],
-  ["Call controls", "Hold, join, start, and end call lifecycle."],
-  ["Screen sharing", "Basic sharing with a choice of which window to show."],
-  ["Connection continuity", "Maintain audio and video while moving between the call and screen share."],
-  ["Context continuity", "Keep the customer conversation and agent workspace together through escalation."],
-];
-const VIDEO_LATER = ["Call recordings and video transcripts/playback", "Customer-initiated calls or screen sharing", "Voice-to-video handoff using invite codes", "Availability for non-PODS customers", "Advanced UI and brand customization"];
 
 export default function Demos() {
   return (
@@ -37,54 +25,6 @@ export default function Demos() {
             </div>
           </Reveal>
         </div>
-      </Section>
-
-      <Section>
-        <SectionHead id="spotlight" num="04" eyebrow="Pre-demo spotlight" title={<>Elevating experiences. <span className="serif italic">Making every interaction transformative.</span></>}
-          lede="Open with the journey: AI captures intent and context, routes the call, and prepares the agent for a more informed conversation." />
-        <div className="grid gap-4 md:grid-cols-3">
-          {[["Capture intent", "AI listens for why the customer is calling and gathers context before a human picks up."], ["Route with context", "The call reaches the right queue or expert with what has been learned so far."], ["Prepare the agent", "The agent opens a ticket and customer context together, ready for a more informed conversation."]].map(([t, d], i) => (
-            <Reveal key={t} delay={i * 0.07} className="rounded-3xl border border-[#11110D]/10 bg-[#FBFBF8] p-7">
-              <div className="mono text-sm text-[#203524]/50">Beat 0{i + 1}</div>
-              <h3 className="mt-6 text-xl font-semibold">{t}</h3><p className="mt-2 text-[#11110D]/65">{d}</p>
-            </Reveal>
-          ))}
-        </div>
-      </Section>
-
-      <Section tone="white">
-        <SectionHead id="video" num="05" eyebrow="Visual channels" title="Video calling & screen sharing" lede="Bring visual context into complex support conversations with agent-initiated video and screen sharing in the Zendesk agent workspace." />
-        <div className="grid gap-4 md:grid-cols-3">
-          {[[Video, "Escalate with one click", "Start a browser-based video call from the customer's ticket for complex diagnostics, device setup, or difficult digital navigation."], [Layers, "Keep the conversation together", "The customer receives an invitation and chooses whether to join. The agent and customer can switch channels while keeping the service context in one conversation."], [MonitorUp, "Share the customer's view", "Use basic screen sharing to guide a customer through a workflow. The video call remains visible while a shared screen is selected."]].map(([Icon, t, d], i) => {
-            const I = Icon as typeof Video;
-            return (
-              <Reveal key={t as string} delay={i * 0.07} className="rounded-3xl bg-[#203524] p-7 text-[#F5F5F2]">
-                <I className="h-6 w-6 text-[#D1F470]" aria-hidden />
-                <h3 className="mt-8 text-xl font-semibold">{t as string}</h3><p className="mt-2 text-[#F5F5F2]/70">{d as string}</p>
-              </Reveal>
-            );
-          })}
-        </div>
-        <div className="mt-6 rounded-3xl border-2 border-dashed border-[#203524]/25 p-7">
-          <div className="eyebrow text-[#203524]">Availability and scope · optional service</div>
-          <p className="mt-3 leading-relaxed text-[#11110D]/75">The current Help Center lists video calling as an optional SaaS service for embedding calls on web and mobile, and says to contact a Zendesk account representative to add optional AWS services. The interim launch deck describes its initial GA scope more narrowly: agent-initiated calls from the workspace, the standard Zendesk web chat widget, and customers with the Zendesk Contact Center add-on on PODS infrastructure. Scope may change; confirm current eligibility and rollout with Zendesk.</p>
-        </div>
-        <div className="mt-6 grid gap-6 lg:grid-cols-2">
-          <div className="rounded-3xl border border-[#11110D]/10 p-7">
-            <div className="flex items-center justify-between"><h3 className="text-lg font-semibold">What the interim deck lists for GA</h3><span className="eyebrow rounded-full bg-[#D1F470] px-2.5 py-1">Deck target: Q3</span></div>
-            <dl className="mt-5 divide-y divide-[#11110D]/8">{VIDEO_GA.map(([t, d]) => <div key={t} className="grid grid-cols-5 gap-3 py-3"><dt className="col-span-2 font-medium">{t}</dt><dd className="col-span-3 text-sm text-[#11110D]/65">{d}</dd></div>)}</dl>
-          </div>
-          <div className="rounded-3xl border border-[#11110D]/10 p-7">
-            <div className="flex items-center justify-between"><h3 className="text-lg font-semibold">Placed after GA in the deck</h3><span className="eyebrow rounded-full border border-[#11110D]/20 px-2.5 py-1">FY27 Q4 · historical target</span></div>
-            <ul className="mt-5 space-y-3">{VIDEO_LATER.map((t) => <li key={t} className="flex gap-3 text-[#11110D]/75"><span className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-[#203524]" />{t}</li>)}</ul>
-            <p className="mt-5 text-sm text-[#11110D]/55">These are historical roadmap targets in the supplied deck, not confirmed delivery dates.</p>
-          </div>
-        </div>
-        <div className="mt-6 grid gap-4 md:grid-cols-2 text-sm leading-relaxed text-[#11110D]/70">
-          <p><strong className="text-[#11110D]">Privacy and security:</strong> the launch deck calls out enterprise-grade controls but does not define them. Confirm consent, sharing permissions, data handling, recording behavior, and security coverage with Zendesk.</p>
-          <p><strong className="text-[#11110D]">Screen sharing is not screen recording.</strong> The Help Center lists Screen Recording separately as an optional service for capturing agent desktop activity alongside audio for QA and coaching.</p>
-        </div>
-        <Note>Sources: <Ext href={LINKS.awsServices} className="underline">About AWS services in Contact Center</Ext> and <Ext href={LINKS.resolution} className="underline">Advancing the Resolution Platform</Ext>. The launch deck is interim and notes that feature scope may change.</Note>
       </Section>
     </>
   );

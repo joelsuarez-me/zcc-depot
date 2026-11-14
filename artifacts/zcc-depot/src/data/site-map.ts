@@ -15,7 +15,7 @@ export const SITE_MAP_SECTIONS: Record<string, string[]> = {
   "/architecture": ["data-flow", "components"],
   "/architecture/components": ["map", "sign-in"],
   "/architecture/system-overview": ["system-diagram"],
-  "/demos": ["agenda", "guided-demo", "spotlight", "video"],
+  "/demos": ["agenda", "guided-demo"],
   "/demos/nuggets": ["library", "voice-copilot", "voice-qa", "voice-ai-agents", "video-screen-sharing"],
   "/sales": ["use-cases", "outcomes", "guidance"],
   "/sales/contact-center-vs-voice": ["summary", "capabilities", "fit", "discovery", "migration", "faq", "sources"],
