@@ -54,7 +54,10 @@ ok(sectionBriefFilename('Calls / Queues: "Test"',date)==="ZCC-Brief-Calls-Queues
 for(const sample of [content,long,captureSectionBrief(privateScope)]){
  const pdf=createSectionBriefPdf(sample,date),raw=pdf.output();
  ok(pdf.getNumberOfPages()<=4,"brief remains concise");
- ok(raw.includes("SECTION BRIEF")&&raw.includes("Continue exploring"),"executive report structure");
+ ok(raw.includes("SECTION BRIEF")&&raw.includes("SOURCE NOTES"),"executive report structure");
+ ok(!raw.includes("Continue exploring"),"exploration section removed");
+ ok(raw.includes("CONCEPT ILLUSTRATION"),"topic illustration included");
+ if(sample===content)ok(raw.includes("12 Tf"),"body and bullet text increased to twelve points");
  ok(raw.includes(sample.sourceUrl),"original section is linked");
  ok(!raw.includes("SECRET"),"PDF excludes private/hidden fixture data");
 }
