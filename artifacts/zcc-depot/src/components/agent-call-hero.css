@@ -34,6 +34,13 @@
 .ach-l1{left:46%;top:24%;width:21.5%;height:22%;border-left:none;border-top:none}
 .ach-l2{left:43%;top:72%;width:17%;border-width:1.5px 0 0}
 .ach-cap{margin-top:.6rem;display:flex;justify-content:space-between;align-items:center;gap:.5rem;font:500 10px var(--app-font-mono);letter-spacing:.12em;text-transform:uppercase;color:rgba(245,245,242,.45)}
+.ach.ach-morena{aspect-ratio:828/648;height:auto}
+.ach-morena .ach-reference{display:block;width:100%;height:auto;animation:ach-glow 5s ease-in-out infinite alternate}
+.ach-morena .ach-wave{left:59%;right:auto;top:16.8%;width:30%;height:8.4%;padding:1.4% 1.6%;box-shadow:none;border-radius:1.1rem}
+.ach-morena .ach-bars{height:100%}
+.ach-morena .ach-wave-top{display:none}
+.ach-morena .ach-powered{left:9%;bottom:1%;z-index:1}
+@keyframes ach-glow{from{filter:drop-shadow(0 0 3px rgba(209,244,112,.15));transform:translateY(0)}to{filter:drop-shadow(0 0 14px rgba(209,244,112,.45));transform:translateY(-3px)}}
 @keyframes ach-in{from{transform:translateY(10px)}to{transform:none}}
 @keyframes ach-breathe{from{transform:scale(1)}to{transform:scale(1.045)}}
 @keyframes ach-bar{from{transform:scaleY(.35)}to{transform:scaleY(1)}}
