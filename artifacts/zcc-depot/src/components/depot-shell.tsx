@@ -152,7 +152,7 @@ function Breadcrumbs() {
     trail.unshift({ href: cur, label: ROUTE_LABELS[cur].label });
     cur = ROUTE_LABELS[cur].parent;
   }
-  if (loc !== "/") trail.unshift({ href: "/", label: "Home" });
+  if (loc !== "/" && trail[0]?.href !== "/") trail.unshift({ href: "/", label: "Home" });
   if (!trail.length) trail.push({ href: loc, label: "Not found" });
   return (
     <nav aria-label="Breadcrumb" className="min-w-0">

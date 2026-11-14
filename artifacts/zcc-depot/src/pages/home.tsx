@@ -1,10 +1,13 @@
 import { useState } from "react";
+import { Link } from "wouter";
+import { ArrowUpRight } from "lucide-react";
 import { motion, useReducedMotion, AnimatePresence } from "framer-motion";
 import { Ext, Note, Reveal, Section, SectionHead } from "@/components/kit";
 import { PillarArt } from "@/components/art";
 import { HomeHero, RoomStrip } from "@/components/home-hero";
 import { CallJourney } from "@/components/call-journey";
 import { FEATURES, LINKS, PILLARS } from "@/data/content";
+import { HOW_IT_WORKS_GUIDE } from "@/data/navigation";
 
 export default function Home() {
   const reduce = useReducedMotion();
@@ -31,6 +34,11 @@ export default function Home() {
       <Section>
         <SectionHead id="how-it-works" num="02" eyebrow="How it works" title="From caller to Zendesk agent"
           lede="Select a stage to see what it does. Illustrative architecture." />
+        <div className="mb-5">
+          <Link href={HOW_IT_WORKS_GUIDE.href} className="inline-flex min-h-11 items-center gap-2 rounded-full border border-[#203524]/20 bg-white px-5 py-2 text-sm font-semibold text-[#203524] transition-colors hover:bg-[#D1F470] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#203524]" data-testid="link-how-it-works-detailed">
+            {HOW_IT_WORKS_GUIDE.label}<ArrowUpRight className="h-4 w-4" aria-hidden />
+          </Link>
+        </div>
         <CallJourney />
       </Section>
 

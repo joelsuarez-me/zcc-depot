@@ -1,4 +1,4 @@
-import { NAV } from "./navigation";
+import { NAV, NAV_RELATED_PAGES } from "./navigation";
 import { ROOMS, ROUTE_LABELS } from "./depot-rooms";
 import { SEARCH_INDEX } from "./search";
 import { SLIDES } from "./how-it-works";
@@ -132,7 +132,7 @@ export function buildSiteMap(): SiteMapGroup[] {
     pages: ROOMS.map(room => pageFor(room.href)),
   }];
   for (const nav of NAV) {
-    const paths = new Set([nav.href, ...(nav.children ?? []).filter(child => !child.external).map(child => child.href)].map(href => href.split("#")[0]));
+    const paths = new Set([nav.href, ...(nav.children ?? []).filter(child => !child.external).map(child => child.href), ...(NAV_RELATED_PAGES[nav.label] ?? []).map(child => child.href)].map(href => href.split("#")[0]));
     const pages = [...paths].filter(path => routePaths.has(path)).map(pageFor);
     for (const entry of nav.children ?? []) {
       if (entry.external) pages.push({ title: entry.label, href: entry.href, description: "External enablement resource. Its own access requirements may apply.", keywords: "", access: "public", external: true, sections: [] });

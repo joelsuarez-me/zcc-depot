@@ -94,7 +94,7 @@ export const ROUTE_LABELS: Record<string, { label: string; parent?: string }> = 
   "/sell-sheet": { label: "Sell Sheet", parent: "/sales" },
   "/sales/use-cases-by-vertical": { label: "Use Cases by Vertical", parent: "/sales" },
   "/resources": { label: "Resources" },
-  "/resources/how-it-works": { label: "How it works (Detailed)", parent: "/resources" },
+  "/resources/how-it-works": { label: "How it works (Detailed)", parent: "/" },
   "/resources/routing": { label: "Routing", parent: "/resources" },
   "/resources/callback": { label: "Callback", parent: "/resources" },
   "/resources/outbound-dialers": { label: "Outbound Dialers", parent: "/resources" },

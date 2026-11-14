@@ -13,6 +13,7 @@ import {readFileSync} from "node:fs";
 import {act,create} from "react-test-renderer";
 import SiteMap from "./src/pages/site-map";
 import {SITE_MAP,SITE_MAP_SECTIONS,ROUTING_MAP_METHODS,filterSiteMap,normalizeSiteQuery,siteMapCounts,siteAccess} from "./src/data/site-map";
+import {NAV,HOW_IT_WORKS_GUIDE,isNavItemActive} from "./src/data/navigation";
 globalThis.IS_REACT_ACT_ENVIRONMENT=true;
 globalThis.document={title:"Previous title",querySelector:()=>null};
 let checks=0;
@@ -22,6 +23,19 @@ const routes=[...app.matchAll(/<Route path="([^"]+)"/g)].map(m=>m[1]).sort();
 const paths=[...new Set(SITE_MAP.flatMap(g=>g.pages.filter(p=>!p.external).map(p=>p.href)))].sort();
 ok(JSON.stringify(routes)===JSON.stringify(paths),"every route represented exactly once in unique counts");
 ok(!paths.includes("/rooms/technical-resources"),"deleted route stays absent");
+const resources=NAV.find(n=>n.label==="Resources");
+const demoRooms=NAV.find(n=>n.label==="Demo Rooms");
+for(const href of ["/resources/routing","/resources/callback","/resources/outbound-dialers"]){
+ ok(!resources.children.some(c=>c.href===href),"removed from Resources menu: "+href);
+ ok(demoRooms.children.some(c=>c.href===href),"retained under Demo Rooms: "+href);
+}
+ok(!resources.children.some(c=>c.href===HOW_IT_WORKS_GUIDE.href),"detailed guide removed from Resources menu");
+ok(SITE_MAP.find(g=>g.title==="Overview").pages.some(p=>p.href===HOW_IT_WORKS_GUIDE.href),"detailed guide belongs to Overview in site map");
+ok(!SITE_MAP.find(g=>g.title==="Resources").pages.some(p=>p.href===HOW_IT_WORKS_GUIDE.href),"detailed guide no longer mapped under Resources");
+ok(isNavItemActive(NAV.find(n=>n.label==="Overview"),HOW_IT_WORKS_GUIDE.href),"Overview stays active on detailed guide");
+ok(!isNavItemActive(resources,HOW_IT_WORKS_GUIDE.href),"Resources no longer active on detailed guide");
+const homeSource=readFileSync("./src/pages/home.tsx","utf8");
+ok(homeSource.includes('href={HOW_IT_WORKS_GUIDE.href}')&&homeSource.includes('data-testid="link-how-it-works-detailed"'),"Overview content has direct guide link");
 ok(siteMapCounts().pages===routes.length,"unique page counts");
 ok(filterSiteMap("")===SITE_MAP,"empty query preserves full map");
 ok(filterSiteMap("qzxwnoresults999").length===0,"no results");

@@ -99,7 +99,7 @@ export default function ResourceHowItWorks() {
 
   return (
     <div className={`hiw ${paused ? "hiw-paused" : ""}`}>
-      <PageHero eyebrow="Resources · How it works" title="How Zendesk Contact Center works" lede="Amazon Connect telephony and routing, the Zendesk Resolution Platform on top: 22 sections converted from the November 2025 reference deck.">
+      <PageHero eyebrow="Overview · How it works (Detailed)" title="How Zendesk Contact Center works" lede="Amazon Connect telephony and routing, the Zendesk Resolution Platform on top: 22 sections converted from the November 2025 reference deck.">
         <a href="#contents" className="room-chip" data-testid="link-hero-contents">Guide contents<ArrowDown className="h-3.5 w-3.5" aria-hidden /></a>
         <a href="#source-review-register" className="room-chip" data-testid="link-hero-source-reviews">Current source reviews<ArrowDown className="h-3.5 w-3.5" aria-hidden /></a>
         <Link href="/architecture/system-overview" className="room-chip" data-testid="link-hero-system-overview">Detailed system overview<ArrowRight className="h-3.5 w-3.5" aria-hidden /></Link>
