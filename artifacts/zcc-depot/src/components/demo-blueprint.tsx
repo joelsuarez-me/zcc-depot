@@ -23,7 +23,7 @@ export function DemoBlueprint() {
     <Section className="demo-blueprint-section">
       <SectionHead id="agenda" eyebrow="DEMO METHODOLOGY" title="Demo Blueprint" lede={BLUEPRINT_DESCRIPTION} />
 
-      <div className="flex flex-wrap items-center justify-between gap-4">
+      <div className="bp-options flex flex-wrap items-center justify-between gap-2">
         <div role="group" aria-label="Session length" className="inline-flex rounded-full border border-[#11110D]/15 bg-[#FBFBF8] p-1">
           {SESSION_LENGTHS.map((l) => (
             <button key={l} type="button" onClick={() => setLength(l)} aria-pressed={l === length} data-testid={`session-${l}`}
@@ -38,25 +38,25 @@ export function DemoBlueprint() {
           Show presenter cues
         </label>
       </div>
-      <p className="mt-3 text-sm text-[#11110D]/60">{BLUEPRINT_TIMING_NOTE}</p>
+      <p className="mt-2 text-xs text-[#11110D]/60">{BLUEPRINT_TIMING_NOTE}</p>
       <p className="mt-1 text-xs text-[#11110D]/65">Manual stage selection—not a session timer. Presenter cues control visibility, not access.</p>
 
-      <div className="bp-bar mt-6" aria-hidden>
+      <div className="bp-bar mt-3" aria-hidden>
         {stages.map((x, i) => <span key={x.id} className={`bp-bar-seg ${i === index ? "is-on" : ""}`} style={{ flexGrow: x.durationSeconds / total, flexBasis: 0 }} />)}
       </div>
       <div className="mono mt-2 flex justify-between text-xs text-[#11110D]/55" aria-hidden><span>00:00</span><span>{formatBlueprintTime(total)}</span></div>
 
-      <div className="mt-6 grid gap-6 lg:grid-cols-12">
-        <ol className="grid gap-2 lg:col-span-5" aria-label="Demo stages">
+      <div className="bp-layout mt-3 grid items-start gap-4 lg:grid-cols-12">
+        <ol className="bp-stages grid gap-1.5 lg:col-span-5" aria-label="Demo stages">
           {stages.map((x, i) => (
             <li key={x.id}>
               <button type="button" onClick={() => setIndex(i)} aria-pressed={i === index} aria-current={i === index ? "step" : undefined} aria-controls="blueprint-stage-detail"
                 data-testid={`blueprint-stage-${x.id}`}
-                className={`bp-stage flex w-full items-start gap-3 rounded-2xl border px-4 py-3 text-left ${i === index ? "bg-[#203524]/8" : "border-[#11110D]/10 bg-[#FBFBF8] hover:bg-[#203524]/5"}`}>
-                <span className={`mono grid h-8 w-8 shrink-0 place-items-center rounded-full text-xs ${i === index ? "bg-[#203524] text-[#D1F470]" : "border border-[#11110D]/20"}`}>{x.number}</span>
+                className={`bp-stage flex min-h-11 w-full items-start gap-2.5 rounded-xl border px-3 py-2 text-left ${i === index ? "bg-[#203524]/8" : "border-[#11110D]/10 bg-[#FBFBF8] hover:bg-[#203524]/5"}`}>
+                <span className={`mono grid h-6 w-6 shrink-0 place-items-center rounded-full text-xs ${i === index ? "bg-[#203524] text-[#D1F470]" : "border border-[#11110D]/20"}`}>{x.number}</span>
                 <span className="min-w-0 flex-1">
-                  <span className="block font-semibold leading-snug">{x.title}</span>
-                  <span className="mono mt-1 flex flex-wrap gap-x-3 text-xs text-[#11110D]/65">
+                  <span className="block text-sm font-semibold leading-snug">{x.title}</span>
+                  <span className="mono mt-0.5 flex flex-wrap gap-x-2 text-[0.65rem] text-[#11110D]/65">
                     <span>{range(x.startSeconds, x.endSeconds)}</span><span>{mins(x.durationSeconds)}</span>
                   </span>
                 </span>
@@ -67,12 +67,12 @@ export function DemoBlueprint() {
         </ol>
 
         <div className="lg:col-span-7">
-          <article id="blueprint-stage-detail" className="rounded-[2rem] border border-[#11110D]/10 bg-[#FBFBF8] p-6 md:p-8" data-testid="blueprint-detail" aria-labelledby="blueprint-stage-title">
+          <article id="blueprint-stage-detail" tabIndex={0} className="bp-detail rounded-2xl border border-[#11110D]/10 bg-[#FBFBF8] p-4 md:p-5" data-testid="blueprint-detail" aria-labelledby="blueprint-stage-title">
             <div key={`${s.id}-${length}`} className="bp-detail-enter">
             <div className="eyebrow text-[#203524]">Stage {s.number} · {range(s.startSeconds, s.endSeconds)} · {mins(s.durationSeconds)}</div>
             <h3 id="blueprint-stage-title" className="mt-3 text-2xl font-semibold tracking-tight md:text-3xl" aria-live="polite" aria-atomic="true">{s.title}</h3>
 
-            <dl className="mt-6 grid gap-5">
+            <dl className="mt-3 grid gap-3">
               <div><dt className="eyebrow text-[#11110D]/60">Customer or business value</dt><dd className="mt-1.5 text-lg leading-relaxed">{s.value}</dd></div>
               {cues && <div className="rounded-2xl border-l-2 border-[#203524] bg-[#203524]/5 p-4"><dt className="eyebrow text-[#203524]">Presenter cue</dt><dd className="mt-1.5 leading-relaxed text-[#11110D]/80">{s.presenterCue}</dd></div>}
               <div className="rounded-2xl bg-[#D1F470] p-4"><dt className="eyebrow text-[#203524]">Proof to show</dt><dd className="mt-1.5 font-medium">{s.proof}</dd></div>
@@ -121,7 +121,7 @@ export function DemoBlueprint() {
             )}
             </div>
 
-            <div className="mt-8 flex flex-wrap justify-between gap-2 border-t border-[#11110D]/10 pt-5">
+            <div className="mt-4 flex flex-wrap justify-between gap-2 border-t border-[#11110D]/10 pt-3">
               <button type="button" onClick={() => setIndex((v) => Math.max(0, v - 1))} disabled={index === 0} data-testid="blueprint-prev"
                 className="inline-flex min-h-11 items-center gap-2 rounded-full border border-[#11110D]/15 px-4 py-2 text-sm font-semibold transition hover:bg-[#203524]/8 disabled:cursor-not-allowed disabled:opacity-40">
                 <ArrowLeft className="h-4 w-4" aria-hidden /> Previous

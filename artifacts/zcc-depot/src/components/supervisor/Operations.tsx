@@ -1,4 +1,5 @@
 import { useMemo, useState } from "react";
+import { SimulationCaption } from "@/components/simulation-caption";
 import { Link } from "wouter";
 import { AlertTriangle, Bell, CheckCircle2, ChevronLeft, ChevronRight, Pause, Play, RefreshCcw, RotateCcw, ShieldCheck } from "lucide-react";
 import { intervene, setAlertRules, acknowledgeAlert, resolveAlert } from "@/lib/supervisor-engine";
@@ -30,7 +31,8 @@ export function SimulationControls({ compact }: { compact?: boolean }) {
         <div className="depot-mode is-light" role="group" aria-label="Speed">{([0.5, 1, 2] as Speed[]).map((v) => <button key={v} type="button" className={s.speed === v ? "is-on" : ""} aria-pressed={s.speed === v} onClick={() => s.setSpeed(v)} data-testid={`button-speed-${v}`}>{v}x</button>)}</div>
         <label className="sc-toggle"><input type="checkbox" checked={s.animate} onChange={(e) => s.setAnimate(e.target.checked)} data-testid="toggle-animations" />Animations</label>
       </div>
-      <p className="sc-fine" aria-live="polite" data-testid="text-sim-status">{s.playing ? "Running" : s.started ? "Paused" : "Ready"} · step {s.index + 1} of {s.depth} in history · tick {s.snap.tick} · {clockLabel(s.snap.clock)} · each step = 10 simulated seconds · {s.label}</p>
+      <p className="sc-fine" data-testid="text-sim-status">{s.playing ? "Running" : s.started ? "Paused" : "Ready"} · step {s.index + 1} of {s.depth} in history · tick {s.snap.tick} · {clockLabel(s.snap.clock)} · each step = 10 simulated seconds · {s.label}</p>
+      <SimulationCaption title={s.label} status={s.playing ? "Running" : s.started ? "Paused" : "Ready"} step={`${clockLabel(s.snap.clock)} · Tick ${s.snap.tick}`}>{s.snap.log.at(-1)?.text ?? "Start the fictional contact center simulation to follow operational changes."}</SimulationCaption>
     </div>
   );
 }

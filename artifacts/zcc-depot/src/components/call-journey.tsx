@@ -3,6 +3,7 @@ import { motion, AnimatePresence, useReducedMotion } from "framer-motion";
 import { Phone, Workflow, FileText, Headset } from "lucide-react";
 import { Note } from "@/components/kit";
 import { JOURNEY } from "@/data/content";
+import { SimulationCaption } from "@/components/simulation-caption";
 
 const JICONS = [Phone, Workflow, FileText, Headset];
 
@@ -39,6 +40,7 @@ export function CallJourney() {
           );
         })}
       </div>
+      <div className="mt-4"><SimulationCaption title={s.d} step={`Stage ${i + 1} of ${JOURNEY.length}`}>{s.detail}</SimulationCaption></div>
       <AnimatePresence mode="wait">
         <motion.div key={i} id={`${id}-panel`} role="tabpanel" aria-labelledby={`${id}-stage-${i}`} tabIndex={0}
           initial={reduce ? false : { opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} exit={reduce ? undefined : { opacity: 0 }} transition={{ duration: 0.3 }}

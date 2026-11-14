@@ -1,4 +1,5 @@
 import { useEffect, useState, type ReactNode } from "react";
+import { SimulationCaption } from "@/components/simulation-caption";
 import { Maximize2, Minimize2, Pause, Play, RotateCcw, SkipBack, SkipForward } from "lucide-react";
 import type { AgentSnap, DialCounters, PlaybackAction, Tone } from "@/lib/outbound-dialer";
 import { DOCS, type DocKey } from "@/data/outbound-content";
@@ -77,7 +78,7 @@ export function ExecLog({ items, idx, onJump }: { items: { t: number; label: str
   );
 }
 export function WhatJustHappened({ title, children }: { title: string; children: ReactNode }) {
-  return <div className="ob-wjh" aria-live="polite" data-testid="text-what-just-happened"><strong>What just happened?</strong><span className="font-semibold">{title}</span><span className="opacity-80">{children}</span></div>;
+  return <div data-testid="text-what-just-happened"><SimulationCaption title={title}>{children}</SimulationCaption></div>;
 }
 export function FullscreenButton({ target, testid }: { target: string; testid: string }) {
   const [fs, setFs] = useState(false);

@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { SimulationCaption } from "@/components/simulation-caption";
 import { motion, useReducedMotion } from "framer-motion";
 import { User, Phone, Workflow, GitBranch, ListOrdered, Users, Headset, Cpu, Database, Timer, type LucideIcon } from "lucide-react";
 import type { RoutingConfig, RoutingResult } from "@/lib/routing-engine";
@@ -99,6 +100,7 @@ export function RoutingDiagram({ method, config, result, idx, running, still }: 
       </div>
       <div className="rt-rails" aria-label="Node categories">{Array.from(new Set(nodes.map(kindOf))).map((k) => <span key={k}><i style={{ background: KIND[k].tab }} />{KIND[k].tag}</span>)}</div>
       <p className="rt-swipe" data-testid="text-diagram-swipe-hint"><i />Swipe sideways inside the diagram to see every node</p>
+      <SimulationCaption title={ev?.label ?? "Ready to start"} status={running ? "Playing" : idx >= result.events.length - 1 ? "Completed" : "Ready / paused"} step={`Step ${idx + 1} of ${result.events.length}`}>{ev?.detail}</SimulationCaption>
       <div className="rt-diagram-scroll">
         <svg viewBox={`0 0 ${VW} ${VH}`} role="group" aria-label={`${method.title} routing diagram. Current step: ${ev?.label}`}>
           <defs>

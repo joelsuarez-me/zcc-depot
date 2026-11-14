@@ -62,7 +62,7 @@ export function RoomSection({ id, eyebrow, title, lede, children, tone }: { id: 
   const fav = isFavorite(href);
   return (
     <section id={id} data-section-nav className={`room-section ${tone === "panel" ? "is-panel" : ""}`} aria-labelledby={`${id}-title`}>
-      <Reveal className="mb-6 grid gap-3 md:grid-cols-12 md:items-end">
+      <Reveal className="mb-4 grid gap-3 md:grid-cols-12 md:items-end">
         <div className="md:col-span-7">
           <div className="eyebrow flex items-center gap-2 text-[#11110D]/55">
             {eyebrow}

@@ -49,6 +49,7 @@ for(const s of SCENARIOS){
  ok(text(find("panel-outcome")).includes("appears"),s.id+" no future outcome");
  ok(text(find("text-agent-name"))==="Unassigned",s.id+" no future assignment");
  ok(text(find("text-what-happened")).includes(r.events[0].label),s.id+" explanation synchronized");
+ ok(text(find("simulation-caption")).includes(r.events[0].detail),s.id+" caption synchronized with initial event");
  for(const key of s.controls){
   if(key==="date"||key==="slot")continue;
   const spec=CONTROLS[key];if(!spec)continue;

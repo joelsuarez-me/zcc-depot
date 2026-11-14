@@ -53,9 +53,9 @@ export function Reveal({ children, delay = 0, className = "" }: { children: Reac
 // Legacy num props are accepted but never rendered; section names are unnumbered.
 export function SectionHead({ id, permalinkId, eyebrow, title, lede, dark = false }: { id?: string; permalinkId?: string; num?: string; eyebrow: string; title: ReactNode; lede?: ReactNode; dark?: boolean }) {
   return (
-    <Reveal className="mb-10 grid gap-6 md:grid-cols-12 md:items-end">
+    <Reveal className="mb-5 grid gap-3 md:grid-cols-12 md:items-end">
       <div className="md:col-span-7" id={id} data-section-nav>
-        <div className={`eyebrow mb-4 flex items-center gap-3 ${dark ? "text-[#D1F470]" : "text-[#203524]"}`}>
+        <div className={`eyebrow mb-2 flex items-center gap-3 ${dark ? "text-[#D1F470]" : "text-[#203524]"}`}>
           {eyebrow}<SectionGlyph label={eyebrow} dark={dark} />{(id || permalinkId) && <SectionLink id={(id || permalinkId)!} label={eyebrow} dark={dark} />}
         </div>
         <h2 className={`text-[2rem] leading-[1.05] font-semibold tracking-tight md:text-5xl ${dark ? "text-[#F5F5F2]" : "text-[#11110D]"}`}>{title}</h2>
@@ -95,7 +95,7 @@ export function PageHero({ eyebrow, title, lede, children, motif }: { eyebrow: s
 
 export function Section({ id, children, className = "", tone = "paper" }: { id?: string; children: ReactNode; className?: string; tone?: "paper" | "white" | "forest" | "ink" }) {
   const bg = { paper: "bg-[#F5F5F2]", white: "bg-[#FBFBF8]", forest: "on-dark bg-[#203524] text-[#F5F5F2]", ink: "on-dark bg-[#11110D] text-[#F5F5F2]" }[tone];
-  return <section id={id} data-section-nav={id ? true : undefined} className={`${bg} ${className}`}><div className="section-body mx-auto max-w-7xl px-5 py-20 md:px-8 md:py-28">{children}</div></section>;
+  return <section id={id} data-section-nav={id ? true : undefined} className={`${bg} ${className}`}><div className="section-body mx-auto max-w-7xl px-5 py-8 md:px-8 md:py-10">{children}</div></section>;
 }
 
 export function Note({ children }: { children: ReactNode }) {

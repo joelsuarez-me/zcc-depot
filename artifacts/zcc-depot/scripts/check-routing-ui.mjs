@@ -49,7 +49,11 @@ for(const m of METHODS){
  ok(!tree.root.findAllByProps({"data-testid":"input-channel"}).length||m.id!=="queue","DTMF voice only");
  for(const key of m.controls)ok(exists("input-"+key),"applicable config "+m.id+" "+key);
  const initial=r.events.findIndex(e=>e.state==="Matching");
- for(let i=1;i<r.events.length;i++)click("button-next");
+ ok(text(find("simulation-caption")).includes(r.events[0].detail),"caption starts at current event "+m.id);
+ for(let i=1;i<r.events.length;i++){
+  click("button-next");
+  ok(text(find("simulation-caption")).includes(r.events[i].label)&&text(find("simulation-caption")).includes(r.events[i].detail),"caption follows step "+m.id+" "+i);
+ }
  ok(exists("panel-outcome"),"complete outcome "+m.id);
  ok(text(find("text-active-event")).includes("Completed"),"timeline completed "+m.id);
  ok(text(find("panel-outcome")).includes(r.destination),"outcome destination "+m.id);

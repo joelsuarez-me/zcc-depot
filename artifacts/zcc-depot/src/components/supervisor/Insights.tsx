@@ -1,4 +1,5 @@
 import { useMemo, useState } from "react";
+import { SimulationCaption } from "@/components/simulation-caption";
 import { Bar, BarChart, CartesianGrid, Cell, Legend, Line, LineChart, Pie, PieChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
 import { Download } from "lucide-react";
 import { intervene } from "@/lib/supervisor-engine";
@@ -159,6 +160,7 @@ export function ZendeskSupervisorExperience() {
           <button type="button" className="depot-btn depot-btn-ghost" disabled={step === 0} onClick={() => { setBlocked(null); apply((s) => intervene(s, "escalation-reset"), "Escalation walkthrough reset"); }} data-testid="button-escalation-reset">Restart</button>
         </div>
         {blocked && <p className="sc-err" role="status" data-testid="text-escalation-blocked">Step {step + 1} did not advance: {blocked} The shared clock still moved 10 simulated seconds.</p>}
+        <SimulationCaption title={step === 0 ? "Ready for escalation" : ESC[Math.min(step, ESC.length) - 1]} step={`Step ${step} of ${ESC.length}`}>{blocked ?? c?.timeline.at(-1)?.text ?? "Start escalation to follow the simulated agent workflow."}</SimulationCaption>
         <div className="sc-zd-ui">
           <div className="sc-zd-bar"><b>Support</b><span>Views</span><span>Contact center</span><span className="ml-auto mono text-xs">{clockLabel(snap.clock)}</span></div>
           {c ? (

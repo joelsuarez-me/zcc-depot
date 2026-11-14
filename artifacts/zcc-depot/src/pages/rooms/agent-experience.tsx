@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { SimulationCaption } from "@/components/simulation-caption";
 import { Link } from "wouter";
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import { ArrowRight, BookOpen, Mic, Pause, Phone, PhoneOff, Play, RotateCcw, Ticket, UserRound } from "lucide-react";
@@ -46,6 +47,7 @@ export default function AgentExperience() {
     <RoomFrame id="agent-experience" lede="A guided Agent Workspace simulation. Illustrative screens, real workflow; features depend on configuration." actions={<DemoButton label="Real click-through" testId="button-agent-demo" />}>
       <RoomSection id="workspace-sim" eyebrow="Workspace simulation" title="One workspace, across channels">
         <div className="ax-sim">
+          <SimulationCaption title={PHASES[p].t} status={auto ? "Playing" : "Ready / paused"} step={`Step ${p + 1} of ${PHASES.length}`}>{PHASES[p].d}</SimulationCaption>
           <div className="ax-steps" role="tablist" aria-label="Simulation phases">
             {PHASES.map((x, k) => <button key={x.t} type="button" role="tab" aria-selected={k === p} onClick={() => { setAuto(false); setP(k); }} className={`ax-step ${k === p ? "is-on" : ""} ${k < p ? "is-past" : ""}`} data-testid={`tab-phase-${k}`}><span className="mono text-[10px]">0{k + 1}</span>{x.t}</button>)}
             <div className="ml-auto flex gap-1">

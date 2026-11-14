@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { SimulationCaption } from "@/components/simulation-caption";
 import { motion, useReducedMotion } from "framer-motion";
 import { User, Globe, PhoneCall, Workflow, GitBranch, ListOrdered, Headset, Cpu, Database, Sparkles, CalendarClock, OctagonX, RotateCcw, LifeBuoy, type LucideIcon } from "lucide-react";
 import type { CbConfig, CbResult } from "@/lib/callback-engine";
@@ -68,6 +69,7 @@ export function CallbackDiagram({ sc, config, result, idx, running, still }: { s
       </div>
       <div className="rt-rails" aria-label="Node categories">{Array.from(new Set(sc.nodes.map((n) => n.kind))).map((k) => <span key={k}><i style={{ background: KIND[k].tab }} />{KIND[k].tag}</span>)}</div>
       <p className="rt-swipe"><i />Swipe sideways inside the diagram to see every node</p>
+      <SimulationCaption title={ev?.label ?? "Ready to start"} status={running ? "Playing" : done ? "Completed" : "Ready / paused"} step={`Step ${idx + 1} of ${result.events.length}`}>{ev?.detail}</SimulationCaption>
       <div className="rt-diagram-scroll">
         <svg viewBox={`0 0 ${VW} ${VH}`} role="group" aria-label={`${sc.title} diagram. Current step: ${ev?.label}`}>
           <defs>

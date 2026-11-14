@@ -7,6 +7,7 @@ import type { DemoNugget, NuggetId } from "@/data/demo-nuggets";
 import { useSceneText, SCENE_ROLE_LABELS } from "./scene-copy";
 import "./demo-nuggets.css";
 import { DemoAudioStatus } from "./demo-audio-status";
+import { SimulationCaption } from "@/components/simulation-caption";
 
 export type DemoPlayerControls = Pick<DemoPlayback, "play">;
 type Props = {
@@ -48,6 +49,7 @@ export function DemoPlayer({ nugget, activeId, onActiveChange, children, dark = 
             </button>
           )}
         </div>
+        <div className="mt-3"><SimulationCaption title={pb.stage.label} status={statusText} step={`Step ${pb.stepIndex + 1} of ${nugget.stages.length}`}>{pb.stage.description}</SimulationCaption></div>
         {caption && <div className={`mt-3 rounded-2xl border p-4 text-sm leading-relaxed ${dark ? "border-white/15 bg-white/5 text-[#F5F5F2]" : "border-[#203524]/15 bg-[#FBFBF8] text-[#11110D]"}`} data-testid={`caption-${id}`}>
           <span lang={locale} className={`mb-1 block text-xs font-semibold ${dark ? "text-[#D1F470]" : "text-[#203524]"}`}>{t(SCENE_ROLE_LABELS[caption.role])} · {t("AI-generated dialogue")}</span>
           <span lang={caption.locale}>{caption.text}</span>
