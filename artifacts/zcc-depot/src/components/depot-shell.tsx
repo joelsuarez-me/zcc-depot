@@ -63,7 +63,7 @@ export function DepotSidebar({ logo, mobile = false, onNavigate }: { logo: strin
                     <Link href={href} onClick={onNavigate} className={`depot-side-link is-quiet ${active ? "is-active" : ""}`} aria-current={active ? "page" : undefined} data-testid={`link-nav-${n.label.toLowerCase()}`}>
                       <span className="truncate">{n.label}</span>
                     </Link>
-                    {active && n.children && (
+                    {n.children && (
                       <ul className="mb-1 ml-4 border-l border-[#F5F5F2]/10 pl-2">
                         {n.children.filter((c) => isPresenter || !["/resources#roadmap", "/resources#collaboration", "/resources#pitch-deck"].includes(c.href)).map((c) => (
                           <li key={c.href}>{c.external
