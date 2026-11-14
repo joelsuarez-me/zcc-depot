@@ -14,14 +14,11 @@ export type DepotRoom = {
 export const ROOMS: DepotRoom[] = [
   {
     id: "executive-overview", n: "01", title: "Executive Overview", short: "Executive", href: "/rooms/executive-overview",
-    summary: "Why unified service matters, where Zendesk Contact Center fits, and how the value story unfolds.",
+    summary: "Explore connected service scenarios and customer-reported results.",
     audience: "CX leaders, executive sponsors",
     sections: [
-      { id: "value-story", label: "Value story" },
       { id: "before-after", label: "Before and after" },
-      { id: "pillars", label: "Platform pillars" },
       { id: "customer-proof", label: "Customer proof" },
-      { id: "next-steps", label: "Next steps" },
     ],
   },
   {
@@ -75,9 +72,9 @@ export const ROOMS: DepotRoom[] = [
 ];
 
 // Keep room registration separate from the shorter Intro navigation.
-// AI and Agent Experience remain reachable under the Demo Rooms menu.
+// Demo experiences and use cases remain reachable from their dedicated menus.
 export const INTRO_ROOMS = ROOMS.filter(
-  room => room.id !== "ai-automation" && room.id !== "agent-experience",
+  room => room.id === "executive-overview" || room.id === "architecture-integrations",
 );
 
 export const roomById = (id: RoomId) => ROOMS.find((r) => r.id === id)!;

@@ -26,7 +26,8 @@ ok(JSON.stringify(routes)===JSON.stringify(paths),"every route represented exact
 ok(!paths.includes("/rooms/technical-resources"),"deleted route stays absent");
 const resources=NAV.find(n=>n.label==="Resources");
 const demoRooms=NAV.find(n=>n.label==="Demo Rooms");
-ok(INTRO_ROOMS.map(r=>r.n).join(",")==="01,02,05","Intro excludes 03 and 04 without renumbering other rooms");
+ok(INTRO_ROOMS.map(r=>r.n).join(",")==="01,02","Intro contains only executive overview and architecture");
+ok(NAV.find(n=>n.label==="Resources")?.children.some(c=>c.href==="/rooms/use-cases"),"Top Five Use Cases is linked under Resources");
 const intro=SITE_MAP.find(g=>g.id==="intro");
 for(const id of ["ai-automation","agent-experience"]){
   const room=ROOMS.find(r=>r.id===id);

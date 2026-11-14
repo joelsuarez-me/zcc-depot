@@ -38,7 +38,7 @@ export function RoomStrip() {
         {ROOMS.map((r) => (
           <li key={r.id}>
             <Link href={r.href} className="rs-card" data-testid={`card-room-${r.id}`}>
-              <span className="rs-num">{r.n}</span>
+              {r.id !== "use-cases" && <span className="rs-num">{r.n}</span>}
               <span className="mt-6 block text-lg font-semibold leading-tight tracking-tight">{r.title}</span>
               <span className="mt-1.5 block text-sm leading-snug text-[#11110D]/62">{r.summary}</span>
               <span className="mt-4 inline-flex items-center gap-1 text-xs font-semibold">Enter room<ArrowRight className="rs-arrow h-3.5 w-3.5" aria-hidden /></span>
