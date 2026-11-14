@@ -1,0 +1,62 @@
+.ach{position:relative;width:100%;max-width:34rem;margin:0 auto;aspect-ratio:1024/769;font-family:var(--app-font-sans);color:#11110D}
+.ach-photo{position:absolute;left:13.2%;top:0;width:75.2%;height:91.6%;border-radius:1.4rem;overflow:hidden;background:#2a2a22;box-shadow:0 30px 60px -30px rgba(0,0,0,.6)}
+.ach-photo img{position:absolute;inset:0;width:100%;height:100%;max-width:none;object-fit:cover;object-position:58% center;transform-origin:55% 30%;animation:ach-breathe 14s ease-in-out infinite alternate}
+.ach-photo::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,transparent 55%,rgba(17,17,13,.35))}
+.ach-card{position:absolute;background:#FBFBF8;border-radius:.9rem;box-shadow:0 18px 40px -18px rgba(17,17,13,.55),0 0 0 1px rgba(17,17,13,.06);animation:ach-in .7s cubic-bezier(.2,.7,.2,1) both}
+.ach-wave{right:4.8%;top:7.5%;width:34%;padding:.45rem .6rem .5rem;animation-delay:.25s}
+.ach-wave-top{position:absolute;left:0;top:-1.35rem;display:inline-flex;align-items:center;gap:.3rem;background:#FBFBF8;border-radius:.4rem;padding:.12rem .4rem;font:500 .62rem var(--app-font-mono)}
+.ach-rec{width:.38rem;height:.38rem;border-radius:9px;background:#d13a32;animation:ach-blink 1.6s ease-in-out infinite}
+.ach-bars{display:flex;align-items:center;gap:1.5px;height:1.7rem}
+.ach-bars i{flex:1;background:#11110D;border-radius:2px;height:var(--h);transform-origin:center;animation:ach-bar 1.1s ease-in-out infinite alternate;animation-delay:var(--d)}
+.ach-bars i.g{background:#8FB828}
+.ach-convo{left:3.5%;top:43%;width:47%;padding:.6rem .7rem .7rem;animation-delay:.1s;outline:5px solid rgba(209,244,112,.35)}
+.ach-convo h3{font-size:.9rem;font-weight:600;letter-spacing:-.01em;display:flex;justify-content:space-between;align-items:center;margin:0 0 .35rem;padding-bottom:.35rem;border-bottom:1px solid rgba(17,17,13,.12)}
+.ach-mini{width:1.3rem;height:1.3rem;border-radius:99px;background:#D1F470;font-size:.55rem;display:grid;place-items:center;font-weight:700}
+.ach-row{display:flex;align-items:center;gap:.3rem;font-size:.68rem;color:rgba(17,17,13,.75)}
+.ach-row .num{flex:1}
+.ach-ic{width:1.35rem;height:1.35rem;border-radius:.3rem;border:1px solid rgba(17,17,13,.14);display:grid;place-items:center}
+.ach-ic.end{background:#d13a32;color:#fff;border-color:#d13a32}
+.ach-who{display:flex;gap:.5rem;margin-top:.5rem;font-size:.66rem}
+.ach-av{width:2.4rem;height:2.4rem;border-radius:99px;flex-shrink:0;background:#203524;color:#D1F470;display:grid;place-items:center;font-weight:600;font-size:.8rem}
+.ach-meta{margin-top:.3rem;background:#FCEFDC;border:1px solid #F1D3A8;border-radius:.6rem;padding:.3rem .45rem;line-height:1.45;font-size:.62rem}
+.ach-profile{right:5%;top:60%;width:34%;padding:.6rem .75rem;animation-delay:.45s}
+.ach-profile b{font-size:.85rem;font-weight:600}
+.ach-ver{display:inline-block;margin:.25rem 0 .35rem;background:#5d8a2a;color:#fff;font-size:.5rem;font-weight:700;letter-spacing:.06em;border-radius:.2rem;padding:.12rem .35rem}
+.ach-kv{display:grid;grid-template-columns:auto 1fr;gap:.12rem .6rem;font-size:.6rem}
+.ach-kv dd{color:rgba(17,17,13,.55);margin:0}
+.ach-sent{display:flex;align-items:center;gap:.35rem;font-size:.62rem;margin-top:.4rem}
+.ach-sent span{width:.55rem;height:.55rem;border-radius:9px;background:#9BD24A;animation:ach-blink 2.4s ease-in-out infinite}
+.ach-powered{left:8%;bottom:4%;display:flex;align-items:center;gap:.5rem;padding:.4rem .75rem .4rem .5rem;animation-delay:.6s;outline:4px solid rgba(209,244,112,.3)}
+.ach-powered .sep{width:1px;height:1rem;background:rgba(17,17,13,.2)}
+.ach-powered span{font-size:.72rem;font-weight:500;white-space:nowrap}
+.ach-logo{width:1.4rem;height:1.4rem;animation:ach-logo 4.8s cubic-bezier(.5,0,.2,1) infinite;transform-origin:50% 50%}
+.ach-line{position:absolute;border:1.5px solid #D1F470;opacity:.8;pointer-events:none}
+.ach-l1{left:46%;top:24%;width:21.5%;height:22%;border-left:none;border-top:none}
+.ach-l2{left:43%;top:72%;width:17%;border-width:1.5px 0 0}
+.ach-cap{margin-top:.6rem;display:flex;justify-content:space-between;align-items:center;gap:.5rem;font:500 10px var(--app-font-mono);letter-spacing:.12em;text-transform:uppercase;color:rgba(245,245,242,.45)}
+@keyframes ach-in{from{transform:translateY(10px)}to{transform:none}}
+@keyframes ach-breathe{from{transform:scale(1)}to{transform:scale(1.045)}}
+@keyframes ach-bar{from{transform:scaleY(.35)}to{transform:scaleY(1)}}
+@keyframes ach-blink{50%{opacity:.35}}
+@keyframes ach-logo{0%,70%,100%{transform:rotate(0) scale(1)}80%{transform:rotate(-8deg) scale(1.12)}90%{transform:rotate(4deg) scale(1)}}
+html[data-hero-motion="paused"] .ach *,.ach.is-static *{animation-play-state:paused!important}
+html[data-hero-motion="paused"] .ach .ach-card{opacity:1}
+@media (prefers-reduced-motion:reduce){.ach *{animation:none!important}.ach .ach-card{opacity:1}}
+@media (max-width:480px){
+  .ach{aspect-ratio:auto;height:27rem}
+  .ach-photo{left:8%;width:84%;height:66%}
+  .ach-convo{left:0;top:43%;width:73%;padding:.5rem}
+  .ach-convo h3{font-size:.75rem}
+  .ach-row{gap:.15rem;font-size:.52rem}
+  .ach-row .num{white-space:nowrap}
+  .ach-ic{width:1rem;height:1.1rem;flex-shrink:0}
+  .ach-who{font-size:.6rem;gap:.3rem}
+  .ach-av{width:1.6rem;height:1.6rem;font-size:.65rem}
+  .ach-profile{right:0;top:65%;width:49%;padding:.5rem}
+  .ach-profile b{font-size:.75rem}
+  .ach-wave{width:47%;right:0}
+  .ach-meta,.ach-kv{font-size:.55rem}
+  .ach-powered{left:0;bottom:0;padding:.4rem .5rem;gap:.3rem}
+  .ach-powered span{font-size:.65rem}
+  .ach-cap{font-size:8px;letter-spacing:.06em}
+}

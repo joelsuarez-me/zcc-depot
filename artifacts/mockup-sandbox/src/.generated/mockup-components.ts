@@ -4,8 +4,8 @@ export const modules: ModuleMap = {
   "./components/mockups/architecture-reference/Current.tsx": () => import("../components/mockups/architecture-reference/Current.tsx"),
   "./components/mockups/architecture-reference/united-brands.tsx": () => import("../components/mockups/architecture-reference/united-brands.tsx"),
   "./components/mockups/zcc-flow-upgrade/Current.tsx": () => import("../components/mockups/zcc-flow-upgrade/Current.tsx"),
-  "./components/mockups/zcc-system-flow/Current.tsx": () => import("../components/mockups/zcc-system-flow/Current.tsx"),
   "./components/mockups/zcc-navigation/Current.tsx": () => import("../components/mockups/zcc-navigation/Current.tsx"),
   "./components/mockups/zcc-navigation/Updated.tsx": () => import("../components/mockups/zcc-navigation/Updated.tsx"),
+  "./components/mockups/zcc-system-flow/Current.tsx": () => import("../components/mockups/zcc-system-flow/Current.tsx"),
   "./components/mockups/zcc-visual-refresh/Current.tsx": () => import("../components/mockups/zcc-visual-refresh/Current.tsx")
 };

@@ -1,66 +1,9 @@
-import { useEffect, useState } from "react";
 import { Link } from "wouter";
 import { motion, useReducedMotion } from "framer-motion";
 import { ArrowRight, Compass, Network, PlayCircle } from "lucide-react";
 import { DEMO_URL } from "@/data/content";
 import { ROOMS } from "@/data/depot-rooms";
-
-type HN = { id: string; t: string; sub: string; x: number; y: number; d: string; tone: "ch" | "ai" | "aws" | "zd" | "an" };
-const NODES: HN[] = [
-  { id: "cust", t: "Customer", sub: "Voice · digital", x: 70, y: 190, tone: "ch", d: "Customers call, message, or email. Voice enters through Amazon Connect; digital channels enter Zendesk." },
-  { id: "connect", t: "Amazon Connect", sub: "Telephony · flows", x: 250, y: 110, tone: "aws", d: "Telephony, contact flows, and routing in the customer's AWS account." },
-  { id: "digital", t: "Zendesk channels", sub: "Messaging · email", x: 250, y: 280, tone: "ch", d: "Digital conversations handled natively by Zendesk and stored on tickets." },
-  { id: "ai", t: "AI layer", sub: "Self-service · assist", x: 430, y: 190, tone: "ai", d: "AI agents, IVR self-service, and Copilot suggestions. Availability depends on plan and configuration." },
-  { id: "ws", t: "Agent Workspace", sub: "Calls + tickets", x: 600, y: 110, tone: "zd", d: "Agents handle calls, tickets, and customer context together." },
-  { id: "an", t: "Analytics", sub: "Dashboards · QA", x: 600, y: 280, tone: "an", d: "Dashboards from call records; optional Zendesk QA for transcript review." },
-];
-const EDGES: [string, string][] = [["cust", "connect"], ["cust", "digital"], ["connect", "ai"], ["digital", "ai"], ["ai", "ws"], ["connect", "ws"], ["digital", "ws"], ["ws", "an"], ["ai", "an"]];
-const pos = (id: string) => NODES.find((n) => n.id === id)!;
-
-function HeroDiagram() {
-  const [sel, setSel] = useState("ws");
-  const reduce = useReducedMotion();
-  const [tick, setTick] = useState(0);
-  useEffect(() => {
-    if (reduce) return;
-    const t = setInterval(() => setTick((v) => v + 1), 2600);
-    return () => clearInterval(t);
-  }, [reduce]);
-  const order = ["cust", "connect", "ai", "ws", "an"];
-  const pulse = order[tick % order.length];
-  const n = pos(sel);
-  return (
-    <div className="hh-diagram">
-      <svg viewBox="0 0 680 380" className="w-full" role="group" aria-label="Conceptual Zendesk Contact Center overview. Select a node to learn more.">
-        <defs>
-          <pattern id="hh-grid" width="22" height="22" patternUnits="userSpaceOnUse"><circle cx="1" cy="1" r="1" fill="#F5F5F2" opacity=".08" /></pattern>
-        </defs>
-        <rect width="680" height="380" fill="url(#hh-grid)" />
-        <rect x="190" y="60" width="140" height="290" rx="20" className="hh-zone" />
-        <text x="204" y="82" className="hh-zone-t">CUSTOMER AWS</text>
-        <rect x="370" y="60" width="300" height="290" rx="20" className="hh-zone is-z" />
-        <text x="384" y="82" className="hh-zone-t">ZENDESK</text>
-        {EDGES.map(([a, b]) => {
-          const A = pos(a), B = pos(b);
-          const on = a === sel || b === sel;
-          const d = `M${A.x} ${A.y} C${(A.x + B.x) / 2} ${A.y}, ${(A.x + B.x) / 2} ${B.y}, ${B.x} ${B.y}`;
-          return <g key={a + b} className={`hh-edge ${on ? "on" : ""}`}><path d={d} /><path d={d} className="hh-flow" /></g>;
-        })}
-        {NODES.map((x) => (
-          <g key={x.id} className={`hh-node t-${x.tone} ${sel === x.id ? "sel" : ""}`} tabIndex={0} role="button" aria-pressed={sel === x.id} aria-label={`${x.t}: ${x.d}`}
-            onClick={() => setSel(x.id)} onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); setSel(x.id); } }} data-testid={`node-hero-${x.id}`}>
-            {pulse === x.id && !reduce && <circle cx={x.x} cy={x.y} r="30" className="hh-pulse" />}
-            <rect x={x.x - 70} y={x.y - 26} width="140" height="52" rx="12" />
-            <text x={x.x} y={x.y - 3} textAnchor="middle" className="hh-t">{x.t}</text>
-            <text x={x.x} y={x.y + 13} textAnchor="middle" className="hh-s">{x.sub}</text>
-          </g>
-        ))}
-      </svg>
-      <div className="hh-caption" aria-live="polite" data-testid="text-hero-node"><strong>{n.t}.</strong> {n.d}</div>
-      <p className="mono mt-1 text-[10px] uppercase tracking-[0.14em] text-[#F5F5F2]/40">Conceptual overview · see Room 02 for the detailed architecture</p>
-    </div>
-  );
-}
+import { AgentCallHero } from "./agent-call-hero";
 
 export function HomeHero() {
   const reduce = useReducedMotion();
@@ -78,7 +21,7 @@ export function HomeHero() {
             <Link href="/rooms/use-cases" className="depot-btn depot-btn-outline" data-testid="button-cta-use-cases"><Compass className="h-4 w-4" aria-hidden />Discover Use Cases</Link>
           </div>
         </motion.div>
-        <div><HeroDiagram /></div>
+        <div><AgentCallHero /></div>
       </div>
     </section>
   );
