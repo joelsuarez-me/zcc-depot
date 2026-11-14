@@ -36,6 +36,17 @@ export const NAV: NavItem[] = [
       { label: "Demo Nuggets", href: "/demos/nuggets" },
     ],
   },
+  {
+    href: "/rooms/ai-automation", label: "Demo Rooms", children: [
+      { label: "AI & Automation", href: "/rooms/ai-automation" },
+      { label: "Agent Experience", href: "/rooms/agent-experience" },
+      { label: "Supervisor Experience", href: "/resources/supervisor-command-center" },
+      { label: "Routing", href: "/resources/routing" },
+      { label: "Callbacks", href: "/resources/callback" },
+      { label: "Dialers", href: "/resources/outbound-dialers" },
+      { label: "Video Calling", href: "/demos/nuggets#video-screen-sharing" },
+    ],
+  },
   { href: "/resources", label: "Resources", children: [
     { label: "Resource library", href: "/resources#library" },
     { label: "How it works (Detailed)", href: "/resources/how-it-works" },
