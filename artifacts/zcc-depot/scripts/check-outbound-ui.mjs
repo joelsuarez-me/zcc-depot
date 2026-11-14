@@ -46,7 +46,7 @@ const click=id=>act(()=>find(id).props.onClick());
 const change=(id,value)=>act(()=>find(id).props.onChange({target:{value}}));
 const check=(id,checked)=>act(()=>find(id).props.onChange({target:{checked}}));
 const res=NAV.find(x=>x.label==="Resources").children;
-ok(res.at(-1).href==="/resources/outbound-dialers"&&res.at(-2).href==="/resources/callback","Outbound last after Callback");
+ok(res.findIndex(x=>x.href==="/resources/outbound-dialers")===res.findIndex(x=>x.href==="/resources/callback")+1,"Outbound directly after Callback");
 ok(document.title.includes("Outbound Dialers"),"Unique title");
 for(const id of ["dialing-modes","compare","campaign-builder","segmentation","suppression","compliance","time-zones","command-center","multichannel","answer-detection","reporting","zendesk","industries"])ok(tree.root.findAllByProps({id}).length>0,id+" section has direct fragment");
 ok(!exists("presenter-notes-outbound-predictive"),"Customer mode no private notes");

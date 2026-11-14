@@ -1,6 +1,7 @@
 // Presenter guidance is intentionally server-only, not a public JavaScript import.
 import { callbackPresenterRooms } from "./callback-presenter";
 import { outboundPresenterRooms } from "./outbound-presenter";
+import { supervisorPresenterRooms } from "./supervisor-presenter";
 const entry = (
   id: string, title: string, speakerNotes: string[], technicalPoints: string[],
   discoveryQuestions: string[], objections: { question: string; answer: string }[],
@@ -10,6 +11,7 @@ const entry = (
 export const presenterRooms = [
   ...callbackPresenterRooms,
   ...outboundPresenterRooms,
+  ...supervisorPresenterRooms,
   entry("executive-overview", "Executive Overview",
     ["Start with the customer's service priorities, not a product feature checklist.", "Agree on evaluation criteria before claiming an outcome. Simulations are illustrative, not proof of deployment readiness."],
     ["A unified agent experience does not establish one routing engine across every channel.", "Separate platform fit, configured demonstration scope, and future roadmap discussion."],

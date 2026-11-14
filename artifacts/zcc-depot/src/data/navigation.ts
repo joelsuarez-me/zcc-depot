@@ -48,6 +48,7 @@ export const NAV: NavItem[] = [
     { label: "Routing", href: "/resources/routing" },
     { label: "Callback", href: "/resources/callback" },
     { label: "Outbound Dialers", href: "/resources/outbound-dialers" },
+    { label: "Supervisor Command Center", href: "/resources/supervisor-command-center" },
   ] },
 ];
 

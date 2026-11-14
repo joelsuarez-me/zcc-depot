@@ -108,6 +108,7 @@ export const ROUTE_LABELS: Record<string, { label: string; parent?: string }> = 
   "/resources/routing": { label: "Routing", parent: "/resources" },
   "/resources/callback": { label: "Callback", parent: "/resources" },
   "/resources/outbound-dialers": { label: "Outbound Dialers", parent: "/resources" },
+  "/resources/supervisor-command-center": { label: "Supervisor Command Center", parent: "/resources" },
   "/agenda": { label: "Demo Agenda", parent: "/demos" },
   ...Object.fromEntries(ROOMS.map((r) => [r.href, { label: r.title, parent: "/rooms" }])),
   "/rooms": { label: "Rooms" },

@@ -1,0 +1,111 @@
+import { build } from "esbuild";
+import { mkdtemp, rm } from "node:fs/promises";
+import { tmpdir } from "node:os";
+import { resolve, join } from "node:path";
+import { spawnSync } from "node:child_process";
+const dir = await mkdtemp(join(tmpdir(), "supervisor-engine-"));
+try {
+  const outfile = join(dir, "check.cjs");
+  await build({ stdin: { resolveDir: resolve("artifacts/zcc-depot"), loader: "ts", contents: `
+import assert from "node:assert/strict";
+import * as E from "./src/lib/supervisor-engine";
+import * as M from "./src/lib/supervisor-metrics";
+import {QUEUES,SCENARIOS,STATES} from "./src/lib/supervisor-types";
+let checks=0; const fail=[];
+const ok=(v,m)=>{checks++;if(!v)fail.push(m)};
+const eq=(a,b,m)=>{checks++;try{assert.deepEqual(a,b)}catch{fail.push(m+" actual "+JSON.stringify(a)+" expected "+JSON.stringify(b))}};
+const advance=(s,n)=>{for(let i=0;i<n;i++)s=E.stepSupervisor(s);return s};
+const init=E.createSupervisor();eq(init,E.createSupervisor(),"Deterministic baseline");
+ok(init.agents.length>=20,"At least20 agents");eq(new Set(init.agents.flatMap(a=>a.queues)).size,6,"All6 queues staffed");
+const baseline=M.metrics(init);console.log("Baseline",baseline);
+const sample=["Answered","Abandoned","Callback","Answered","Overflow"].map((reason,i)=>({id:"x"+i,contactId:"c"+i,queue:"General Support",channel:"Voice",enqueue:0,exit:reason==="Answered"&&i===3?40:10,disconnect:100,wait:i===3?40:10,reason,talk:0,hold:0,acw:0}));
+eq(M.serviceLevel(sample,20),{numerator:3,denominator:5,percentage:60},"Native SL includes short abandon/callback");
+eq(M.serviceLevel(sample,20,true),{numerator:1,denominator:5,percentage:20},"Answered-only is separate custom metric");
+eq(M.serviceLevel([],20).percentage,null,"No data is not fabricated100%");
+eq(M.metrics(init,{from:init.clock+10,to:init.clock+20}).serviceLevel,null,"Empty future cohort");
+eq(M.metrics(init,{from:init.clock+10,to:init.clock+20}).offered,0,"Empty arrivals cohort");
+const original=JSON.stringify(init);E.stepSupervisor(init);eq(JSON.stringify(init),original,"Engine does not mutate previous snapshot");
+eq(M.metrics(E.configureSupervisor(init,{concurrency:5})).occupancy,baseline.occupancy,"Concurrency does not multiply occupied time");
+let scenarios={};
+for(const scenario of SCENARIOS){
+ let s=E.createSupervisor(scenario.id);let peak=0;
+ for(let i=0;i<80;i++){
+  s=E.stepSupervisor(s);const m=M.metrics(s,{from:s.clock-900,to:s.clock});peak=Math.max(peak,m.waiting);
+  ok(Object.values(m).every(v=>v===null||Number.isFinite(v)),"Finite KPIs "+scenario.id+" "+i);
+  ok(m.serviceLevel===null||m.serviceLevel>=0&&m.serviceLevel<=100,"SL bounds");
+  ok(m.occupancy===null||m.occupancy>=0&&m.occupancy<=100,"Occupancy bounds");
+  eq(m.waiting,s.contacts.filter(c=>c.status==="Waiting").length,"Live waiting reconciles");
+  eq(m.busy,s.agents.filter(a=>a.state==="On Contact").length,"Busy agent count reconciles");
+  eq(new Set(s.contacts.map(c=>c.id)).size,s.contacts.length,"Unique fictional IDs");
+  eq(QUEUES.reduce((v,q)=>v+M.queueMetrics(s,q).waiting,0),m.waiting,"Six queue waiting totals reconcile");
+  ok(s.agents.every(a=>STATES.includes(a.state)),"Valid agent states");
+  ok(s.agents.every(a=>a.contacts.length<= (a.channel==="Chat"?s.config.concurrency:1)),"Channel slot bounds");
+  ok(s.agents.every(a=>a.contacts.every(id=>s.contacts.some(c=>c.id===id&&c.agent===a.id&&["Connected","After Contact Work"].includes(c.status)))),"Agent references agree with contacts");
+  ok(s.contacts.filter(c=>["Connected","After Contact Work"].includes(c.status)).every(c=>s.agents.some(a=>a.id===c.agent&&a.contacts.includes(c.id))),"Active contacts agree with agents");
+  ok(s.contacts.every(c=>c.legs.every(l=>l.exit===undefined||l.exit>=l.enqueue)),"Queue timing ordered");
+  ok(M.reportRows(s).every(r=>r.disconnect<=s.clock&&r.wait>=0&&r.talk>=0&&r.acw>=0),"Closed reporting records valid");
+  ok(M.reportRows(s).filter(r=>r.reason==="Answered").every(r=>r.agent&&r.profile),"Answered records preserve profile");
+ }
+ scenarios[scenario.id]={s,peak};
+}
+console.log("Scenario peak waiting",Object.fromEntries(Object.entries(scenarios).map(([k,v])=>[k,v.peak])));
+const norm=advance(E.createSupervisor("normal"),30),spike=advance(E.createSupervisor("spike"),30);
+const count=s=>s.contacts.filter(c=>c.arrived>init.clock).length;
+eq(count(spike),count(norm)*4,"300% increase means four times baseline arrivals");
+ok(scenarios.spike.peak>scenarios.normal.peak,"Volume spike increases backlog");
+const shortage=E.stepSupervisor(E.createSupervisor("shortage"));eq(shortage.agents.filter(a=>a.enabled).length,18,"Shortage removes six agents");
+ok(scenarios.shortage.peak>=scenarios.normal.peak,"Shortage impacts capacity");
+const vip=advance(E.createSupervisor("vip"),20);ok(M.queueMetrics(vip,"VIP Support").waiting>M.queueMetrics(norm,"VIP Support").waiting,"VIP surge targets VIP");
+const incident=advance(E.createSupervisor("incident"),20);ok(incident.incident&&M.queueMetrics(incident,"Technical Support").waiting>0,"Technical incident activates load");
+const acw=advance(E.createSupervisor("acw"),20);ok(acw.contacts.some(c=>c.acw===init.config.acw*4),"Extended ACW applied");
+let overflow=advance(E.createSupervisor("overflow"),20);eq(overflow.contacts.filter(c=>c.legs.some(l=>l.reason==="Overflow")).length,0,"No implicit overflow");
+const beforeOverflow=M.metrics(overflow).waiting;overflow=E.intervene(overflow,"overflow",{queue:"General Support",targetQueue:"Sales"});
+ok(overflow.overflow,"Configured overflow activated");ok(overflow.contacts.some(c=>c.legs.some(l=>l.reason==="Overflow")),"Contacts traversed configured path");
+eq(M.metrics(overflow).waiting,beforeOverflow,"Overflow conserves total waiting; destination is not completion");
+let staffed=E.intervene(overflow,"staffing",{queue:"General Support"});eq(staffed.agents.length,overflow.agents.length+3,"Relief staff added");
+eq(staffed.impacts.at(-1).after.available,M.metrics(staffed).available,"Impact values reconcile");ok(staffed.impacts.at(-1).label!=="staffing","Readable action label");
+let cb=E.intervene(E.createSupervisor("spike"),"callback",{queue:"Billing"});cb=advance(cb,30);ok(cb.contacts.some(c=>c.status==="Callback"),"Opt-in callbacks leave selected queue's on-hold population");
+ok(cb.contacts.filter(c=>c.status==="Callback").every(c=>c.queue==="Billing"),"Callback offer does not affect other queues");
+const voiceOnly=init.agents.filter(a=>a.channel==="Voice"),chatOnly=init.agents.filter(a=>a.channel==="Chat");
+eq(M.capacityModel({...init.config,concurrency:2},voiceOnly).capacityPerMinute,M.capacityModel({...init.config,concurrency:4},voiceOnly).capacityPerMinute,"Voice capacity never multiplied by digital concurrency");
+ok(M.capacityModel({...init.config,concurrency:4},chatOnly).capacityPerMinute>M.capacityModel({...init.config,concurrency:2},chatOnly).capacityPerMinute,"Chat concurrency affects digital capacity");
+const priorityAgent={...init.agents[0],enabled:true,retiring:false,state:"Available",contacts:[],channel:"Voice",queues:["General Support","VIP Support"],skills:["General Support","VIP Support"]};
+const fixture=(id,queue,enqueue)=>({...init.contacts[0],id,queue,channel:"Voice",status:"Waiting",since:init.clock-10,arrived:enqueue-20,agent:undefined,answer:undefined,disconnect:undefined,completed:undefined,handlingSeconds:0,acwSeconds:0,patience:900,legs:[{id:id+"-leg",queue,enqueue}],timeline:[]});
+const ranked=E.stepSupervisor({...init,agents:[priorityAgent,...init.agents.slice(1).map(a=>({...a,enabled:false,state:"Offline",contacts:[]}))],contacts:[fixture("PRIORITY-GENERAL","General Support",init.clock-100),fixture("PRIORITY-VIP","VIP Support",init.clock-10)]});
+eq(ranked.contacts.find(c=>c.id==="PRIORITY-VIP").status,"Connected","Configured VIP priority takes shared eligible agent before ordinary FIFO");
+eq(ranked.contacts.find(c=>c.id==="PRIORITY-GENERAL").status,"Waiting","Priority does not fabricate an extra agent slot");
+ok(M.reportRows(cb).filter(r=>r.reason==="Callback").every(r=>!M.reportRows(cb).some(a=>a.id===r.id&&a.reason==="Abandoned")),"Callback is not abandonment");
+const idle=init.agents.find(a=>a.state==="Available");ok(!!idle,"Idle agent available for UI exercise");
+let status=E.intervene(init,"agent-state",{agentId:idle.id,value:"Lunch"});eq(status.agents.find(a=>a.id===idle.id).state,"Lunch","Idle status change");
+status=E.intervene(status,"available",{agentId:idle.id});eq(status.agents.find(a=>a.id===idle.id).state,"Available","Return-to-work action");
+const busy=init.agents.find(a=>a.state==="On Contact");status=E.intervene(init,"agent-state",{agentId:busy.id,value:"Offline"});eq(status.agents.find(a=>a.id===busy.id).state,"On Contact","Cannot overwrite an active call");
+const flex=init.agents.find(a=>a.state==="Available"&&a.skills.some(q=>!a.queues.includes(q)));const destination=flex.skills.find(q=>!flex.queues.includes(q));
+status=E.intervene(init,"reassign",{agentId:flex.id,targetQueue:destination});eq(status.agents.find(a=>a.id===flex.id).queues,[destination],"Eligible routing-profile reassignment");
+const invalid=E.intervene(init,"reassign",{agentId:flex.id,targetQueue:"Spanish Support"});eq(invalid.agents.find(a=>a.id===flex.id).queues,flex.queues,"Unqualified reassignment rejected");
+let alert=E.setAlertRules(init,[{...E.DEFAULT_RULES[0],threshold:0,severity:"Critical",interval:10}]);
+alert=E.configureSupervisor(alert,{arrivalRate:60});alert=advance(alert,12);
+let firing=alert.alerts.find(a=>a.ruleId==="rule-waiting"&&a.state==="Critical");ok(!!firing,"Persistent breach escalates Warning to Critical");
+alert=E.acknowledgeAlert(alert,firing.id);eq(alert.alerts.find(a=>a.id===firing.id).state,"Acknowledged","Acknowledge action");
+alert=E.resolveAlert(alert,firing.id);eq(alert.alerts.find(a=>a.id===firing.id).state,"Acknowledged","Cannot resolve an active breach");
+alert=E.setAlertRules(alert,alert.rules.map(r=>({...r,threshold:10000})));alert=E.stepSupervisor(alert);eq(alert.alerts.find(a=>a.id===firing.id).state,"Resolved","Cleared condition resolves");
+let outage=E.intervene(init,"integration-failure");outage=advance(outage,2);ok(outage.alerts.some(a=>a.metric==="integration"),"Integration failure reaches alert engine");
+const editedRules=E.setAlertRules(outage,outage.rules.map(r=>r.metric==="integration"?{...r,destination:"Alternate simulated destination"}:r));
+ok(editedRules.alerts.filter(a=>a.metric==="integration").every(a=>a.state==="Resolved"),"Changed rule closes old episode before re-evaluation");
+const renewed=E.configureSupervisor(editedRules,{talk:editedRules.config.talk});
+eq(new Set(renewed.alerts.map(a=>a.id)).size,renewed.alerts.length,"Alert re-evaluation at same clock retains unique episode IDs");
+outage=E.intervene(outage,"integration-recover");outage=advance(outage,2);ok(outage.integrationHealthy,"Integration recovery");
+const filters=[{queue:"Billing"},{channel:"Chat"},{agent:init.agents[0].id},{team:init.agents[0].team},{profile:init.agents[0].profile},{from:500,to:700}];
+for(const f of filters){const rows=M.reportRows(spike,f);ok(rows.every(r=>(!f.queue||r.queue===f.queue)&&(!f.channel||r.channel===f.channel)&&(!f.agent||r.agent===f.agent)&&(!f.team||r.team===f.team)&&(!f.profile||r.profile===f.profile)&&(!f.from||r.disconnect>=f.from)&&(!f.to||r.disconnect<=f.to)),"Reporting filter "+JSON.stringify(f));eq(M.reportCsv(spike,f).split("\\r\\n").length,rows.length+1,"CSV uses exact same cohort");}
+const c=M.capacityModel({...init.config,arrivalRate:60,agents:2});eq(c.waitSeconds,null,"Overloaded planning model does not promise finite recovery");ok(c.requiredAgents>2,"Staffing model responds to workload");
+let story=E.createSupervisor();
+for(let i=0;i<9;i++){const old=story.escalation.step;story=E.intervene(story,"escalation-step");if(story.escalation.step===old){story=E.intervene(story,"staffing",{queue:i<6?"Technical Support":"VIP Support"});story=E.intervene(story,"escalation-step");}ok(story.escalation.step>old,"Escalation step "+(i+1)+" progressed");}
+eq(story.escalation.step,9,"Nine-step Zendesk walkthrough");const contact=story.contacts.find(c=>c.id===story.escalation.contactId);eq(contact.status,"Completed","Escalation reaches completed lifecycle");
+ok(contact.legs.filter(l=>l.reason==="Answered").length>=2,"Specialist handoff preserves separate answered legs");
+ok(M.reportRows(story).filter(r=>r.contactId===contact.id).every(r=>r.profile&&r.disconnect!==undefined),"Escalation records retain per-leg profile and cohort");
+if(fail.length){console.error(fail.slice(0,70).join("\\n"));throw Error(fail.length+" failures / "+checks+" checks");}
+console.log(checks+" independent supervisor engine checks passed");
+` }, bundle: true, platform: "node", format: "cjs", outfile, logLevel: "silent" });
+  const result = spawnSync(process.execPath, [outfile], { encoding: "utf8", timeout: 180000 });
+  process.stdout.write(result.stdout || ""); process.stderr.write(result.stderr || "");
+  if (result.status !== 0) process.exitCode = 1;
+} finally { await rm(dir, { recursive: true, force: true }); }
