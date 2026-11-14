@@ -1,6 +1,7 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { PageHero } from "@/components/kit";
-import { COMPARISON_TITLE } from "@/data/voice-comparison";
+import { COMPARISON_TITLE, type FitSignalId } from "@/data/voice-comparison";
+import { ComparisonBriefActions } from "@/components/voice-compare/brief-actions";
 import { VcHead, VcSection } from "@/components/voice-compare/section-head";
 import { Matrix } from "@/components/voice-compare/matrix";
 import { FitSelector } from "@/components/voice-compare/fit";
@@ -37,6 +38,7 @@ const jump = [["summary", "Summary"], ["capabilities", "Capabilities"], ["fit", 
 
 export default function VoiceComparison() {
   useMeta();
+  const [selected, setSelected] = useState<FitSignalId[]>([]);
   return (
     <div className="vc">
       <PageHero motif="brief" eyebrow="Technical selling · Platform Architects" title={COMPARISON_TITLE}
@@ -44,6 +46,7 @@ export default function VoiceComparison() {
         <nav aria-label="On this page" className="flex flex-wrap gap-2">
           {jump.map(([id, l]) => <a key={id} href={`#${id}`} className="room-chip" data-testid={`link-jump-${id}`}>{l}</a>)}
         </nav>
+        <ComparisonBriefActions selected={selected} />
       </PageHero>
 
       <VcSection id="summary">
@@ -56,7 +59,7 @@ export default function VoiceComparison() {
       </VcSection>
       <VcSection id="fit">
         <VcHead id="fit" art="fit" eyebrow="Fit selector" title="Which conversation fits?" lede="Select the customer needs you have heard. Guidance updates as you go." />
-        <FitSelector />
+        <FitSelector selected={selected} onChange={setSelected} />
       </VcSection>
       <VcSection id="discovery" tone="soft">
         <VcHead id="discovery" art="discover" eyebrow="Practical discovery" title="Questions worth asking first" lede="Four areas that surface real complexity before a recommendation." />

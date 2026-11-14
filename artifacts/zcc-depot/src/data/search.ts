@@ -12,7 +12,7 @@ const sec = (id: string, title: string, href: string, description: string, keywo
 
 const PAGES: SearchEntry[] = [
   page("site-map", "Site Map", "/site-map", "Search a visual directory of every page, demo room and detailed guide section.", "navigation sitemap map find browse directory all pages content"),
-  page("contact-center-vs-voice", COMPARISON_TITLE, COMPARISON_PATH, "Compare solution fit, routing, AI, operations, costs and migration considerations. Includes an interactive discovery guide.", "Zendesk Talk Voice versus vs CCaaS comparison qualification migration"),
+  page("contact-center-vs-voice", COMPARISON_TITLE, COMPARISON_PATH, "Compare solution fit, routing, AI, operations, costs and migration considerations. Includes an interactive discovery guide and a printable executive PDF brief.", "Zendesk Talk Voice versus vs CCaaS comparison qualification migration print brief PDF download summary"),
   page("home", "Overview", "/", "Zendesk Contact Center platform story, how it works, and features.", "home start platform"),
   page("demos", "Demos", "/demos", "Demo Blueprint, click-through, video highlights, and pre-demo spotlight.", "demo approach storyline stages"),
   page("demo-nuggets", "Demo Nuggets", "/demos/nuggets", "Play Voice Copilot, Voice QA, Voice AI Agents, and video calling and screen sharing simulations with optional ElevenLabs narration.", "animated capabilities play pause replay nuggets voice copilot quality assurance agents video screen share narration"),

@@ -1,4 +1,3 @@
-import { useState } from "react";
 import { Check, RotateCcw } from "lucide-react";
 import { FIT_SIGNALS, getFitGuidance, type FitSignalId } from "@/data/voice-comparison";
 
@@ -8,10 +7,9 @@ const groups = [
   { kind: "readiness", label: "Delivery readiness" },
 ] as const;
 
-export function FitSelector() {
-  const [sel, setSel] = useState<FitSignalId[]>([]);
+export function FitSelector({ selected: sel, onChange: setSel }: { selected: FitSignalId[]; onChange: (selected: FitSignalId[]) => void }) {
   const g = getFitGuidance(sel);
-  const toggle = (id: FitSignalId) => setSel(s => s.includes(id) ? s.filter(x => x !== id) : [...s, id]);
+  const toggle = (id: FitSignalId) => setSel(sel.includes(id) ? sel.filter(x => x !== id) : [...sel, id]);
   const count = (k: string) => FIT_SIGNALS.filter(s => s.kind === k && sel.includes(s.id)).length;
   const v = count("voice"), c = count("contact-center"), total = Math.max(v + c, 1);
   return (
