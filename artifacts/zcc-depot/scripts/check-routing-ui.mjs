@@ -28,7 +28,7 @@ let tree;act(()=>tree=create(<Page/>));
 const find=id=>tree.root.findByProps({"data-testid":id});
 const click=id=>act(()=>find(id).props.onClick());
 const exists=id=>tree.root.findAllByProps({"data-testid":id}).length>0;
-ok(NAV.find(x=>x.label==="Resources").children.at(-1).href==="/resources/routing","Routing last under Resources");
+ok(NAV.find(x=>x.label==="Resources").children.some(x=>x.href==="/resources/routing"),"Routing remains under Resources");
 ok(METHODS.length===12&&new Set(METHODS.map(m=>m.id)).size===12,"twelve unique methods");
 ok(!exists("panel-presenter-notes"),"Customer default excludes explanations");
 click("button-presenter-toggle");ok(exists("panel-presenter-notes"),"presenter on");

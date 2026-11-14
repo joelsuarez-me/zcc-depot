@@ -46,6 +46,7 @@ export const NAV: NavItem[] = [
     { label: "FAQ", href: "/resources#faq" },
     { label: "Roadmap · confidential", href: "/resources#roadmap" },
     { label: "Routing", href: "/resources/routing" },
+    { label: "Callback", href: "/resources/callback" },
   ] },
 ];
 
