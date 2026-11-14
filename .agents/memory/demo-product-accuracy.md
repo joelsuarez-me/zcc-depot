@@ -20,3 +20,9 @@ Describe AI, transcription, evaluation, analytics and operational capabilities c
 **Why:** The user required accurate, configuration-dependent demonstrations rather than claims that every Contact Center environment includes these features.
 
 **How to apply:** Clearly label prepared examples and simulations; do not depend on immediate post-call processing. Avoid guaranteed savings, compliance outcomes or roadmap promises. Keep internal roadmap content and internal source links out of new public demo material.
+
+The How It Works guide deliberately reflects the November 2025 deck. Keep historical comparison marks intact and put current-documentation differences in a separate, dated review layer.
+
+**Why:** The user explicitly requested source-era content and reviewed updates remain distinguishable, rather than silently modernizing the deck.
+
+**How to apply:** A newly discovered feature or documentation conflict belongs in the source-review register first. Source retrieval is not human approval; never invent a reviewer or a human-reviewed date.

@@ -1,7 +1,7 @@
 export type Chapter = { id: string; label: string; slides: string[] };
 export type Slide = { n: number; id: string; title: string; short: string };
 
-export const SLIDES: Slide[] = [
+export const SLIDES = [
   { n: 1, id: "overview", title: "How Zendesk Contact Center works", short: "Overview" },
   { n: 2, id: "contents", title: "Guide contents", short: "Contents" },
   { n: 3, id: "technology-evolution", title: "Contact center technology has evolved into the CX stack", short: "Technology evolution" },
@@ -24,7 +24,9 @@ export const SLIDES: Slide[] = [
   { n: 20, id: "zendesk-ticketing", title: "Zendesk Ticketing", short: "Ticketing" },
   { n: 21, id: "voice-qa", title: "Voice QA", short: "Voice QA" },
   { n: 22, id: "app-builder", title: "App Builder", short: "App Builder" },
-];
+] as const satisfies readonly Slide[];
+
+export type SlideId = (typeof SLIDES)[number]["id"];
 
 export const CHAPTERS: Chapter[] = [
   { id: "c1", label: "How it works", slides: ["overview", "contents", "technology-evolution", "platform-and-aws", "anatomy-of-a-call", "system-data-flow", "basic-voice-call"] },

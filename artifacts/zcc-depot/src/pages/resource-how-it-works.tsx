@@ -3,10 +3,11 @@ import { Link } from "wouter";
 import { ArrowDown, ArrowRight, ArrowUp, Check, Pause, Play, Minus } from "lucide-react";
 import { PageHero, Ext } from "@/components/kit";
 import { RoomSection, SourceNote, StatusTag } from "@/components/room-kit";
+import { SectionSourceReview, SourceReviewRegister } from "@/components/how-it-works-review";
 import { LINKS } from "@/data/content";
 import {
   SLIDES, CHAPTERS, EVOLUTION, LAYERS, AWS_SERVICES, ANATOMY, SYSFLOW, ROUTE_STEPS,
-  ROUTING_CMP, QUEUE_CMP, PLATFORM_TILES, APPS, type Mark,
+  ROUTING_CMP, QUEUE_CMP, PLATFORM_TILES, APPS, type Mark, type SlideId,
 } from "@/data/how-it-works";
 import "@/components/how-it-works.css";
 
@@ -34,17 +35,18 @@ function SectionArrows({ id }: { id: string }) {
     </div>
   );
 }
-function Slide({ id, lede, children, tone }: { id: string; lede?: ReactNode; children: ReactNode; tone?: "panel" }) {
+function Slide({ id, lede, children, tone }: { id: SlideId; lede?: ReactNode; children: ReactNode; tone?: "panel" }) {
   return (
     <div className="hiw-sec" data-slide={byId(id).n}>
       <RoomSection id={id} eyebrow={eb(id)} title={byId(id).title} lede={lede} tone={tone}>
         {children}
+        <SectionSourceReview id={id} />
         <SectionArrows id={id} />
       </RoomSection>
     </div>
   );
 }
-function ChapterTransition({ id, chapter, lede }: { id: string; chapter: number; lede: string }) {
+function ChapterTransition({ id, chapter, lede }: { id: SlideId; chapter: number; lede: string }) {
   return (
     <Slide id={id} lede={lede}>
       <div className="hiw-stage is-forest">
@@ -79,7 +81,7 @@ export default function ResourceHowItWorks() {
     const meta = document.querySelector('meta[name="description"]');
     const prevD = meta?.getAttribute("content") ?? null;
     document.title = "How Zendesk Contact Center Works | ZCC Depot";
-    meta?.setAttribute("content", "A 22-section technical guide to how Zendesk Contact Center combines Amazon Connect and the Zendesk Resolution Platform. November 2025 reference.");
+    meta?.setAttribute("content", "A 22-section November 2025 historical guide to Zendesk Contact Center, with dated official Zendesk/AWS source checks and separate capability review notes.");
     return () => { document.title = prevT; if (meta && prevD !== null) meta.setAttribute("content", prevD); };
   }, []);
 
@@ -99,10 +101,12 @@ export default function ResourceHowItWorks() {
     <div className={`hiw ${paused ? "hiw-paused" : ""}`}>
       <PageHero eyebrow="Resources · How it works" title="How Zendesk Contact Center works" lede="Amazon Connect telephony and routing, the Zendesk Resolution Platform on top: 22 sections converted from the November 2025 reference deck.">
         <a href="#contents" className="room-chip" data-testid="link-hero-contents">Guide contents<ArrowDown className="h-3.5 w-3.5" aria-hidden /></a>
+        <a href="#source-review-register" className="room-chip" data-testid="link-hero-source-reviews">Current source reviews<ArrowDown className="h-3.5 w-3.5" aria-hidden /></a>
         <Link href="/architecture/system-overview" className="room-chip" data-testid="link-hero-system-overview">Detailed system overview<ArrowRight className="h-3.5 w-3.5" aria-hidden /></Link>
       </PageHero>
 
       <div className="mx-auto max-w-7xl px-5 pb-16 md:px-8">
+        <SourceReviewRegister />
         <div className="hiw-bar" role="region" aria-label="Guide controls">
           <div className="flex min-w-0 items-center gap-2 text-sm">
             <span className="hiw-src" data-testid="text-current-slide">Slide {activeSlide.n} / 22</span>

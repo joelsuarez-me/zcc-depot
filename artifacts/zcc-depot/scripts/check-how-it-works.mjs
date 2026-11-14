@@ -15,6 +15,7 @@ import React from "react";
 import {create,act} from "react-test-renderer";
 import Guide from "./src/pages/resource-how-it-works";
 import {SLIDES,CHAPTERS,ROUTING_CMP,QUEUE_CMP} from "./src/data/how-it-works";
+import {REVIEW_SOURCES,SECTION_REVIEWS,SOURCE_CHECKED_ON} from "./src/data/how-it-works-reviews";
 globalThis.IS_REACT_ACT_ENVIRONMENT=true;
 let scrollId="", historyId="";
 globalThis.document={title:"Original",querySelector:()=>null,getElementById:(id)=>({id,scrollIntoView:()=>scrollId=id})};
@@ -28,10 +29,38 @@ const find=id=>tree.root.findByProps({"data-testid":id});
 ok(SLIDES.length===22,"all 22 slides indexed");
 ok(new Set(SLIDES.map(s=>s.id)).size===22,"unique stable IDs");
 ok(CHAPTERS.flatMap(c=>c.slides).join()===SLIDES.map(s=>s.id).join(),"every slide in chapter navigation in source order");
+ok(Object.keys(SECTION_REVIEWS).sort().join()===SLIDES.map(s=>s.id).sort().join(),"source register covers exactly the 22 stable section IDs");
+const usedSources=new Set();
 for(const slide of SLIDES){
  ok(tree.root.findAllByType("section").some(s=>s.props.id===slide.id),"rendered section "+slide.id);
  ok(find("link-toc-"+slide.id).props.href==="#"+slide.id,"topic permalink "+slide.id);
+ const review=SECTION_REVIEWS[slide.id];
+ ok(review.sourcesCheckedOn===SOURCE_CHECKED_ON,"source-check date "+slide.id);
+ ok(review.difference.length>30&&review.capabilities.length>0,"substantive review notes "+slide.id);
+ ok(review.humanReview.status==="pending"
+  ? review.humanReview.reviewedOn===null&&review.humanReview.reviewer===null
+  : /^\\d{4}-\\d{2}-\\d{2}$/.test(review.humanReview.reviewedOn)&&review.humanReview.reviewer.trim().length>0,"human approval has separate provenance "+slide.id);
+ ok(text(find("source-review-"+slide.id)).includes(review.difference),"visible difference note "+slide.id);
+ ok(text(find("source-review-"+slide.id)).includes(review.humanReview.status==="pending"?"Human review pending":"Human reviewed by"),"visible approval state "+slide.id);
+ ok(find("review-details-"+slide.id).props.open!==true,"evidence starts collapsed "+slide.id);
+ ok(tree.root.findAllByType("a").some(a=>a.props.href==="#review-"+slide.id),"review-register permalink "+slide.id);
+ for(const c of review.capabilities){
+  ok(c.capability.length>0&&c.note.length>30&&c.sources.length>0,"capability-level evidence "+slide.id);
+  for(const key of c.sources){
+   const source=REVIEW_SOURCES[key];usedSources.add(key);
+   ok(Boolean(source),"source exists "+key);
+   const url=new URL(source.url);
+   ok(url.protocol==="https:"&&["support.zendesk.com","docs.aws.amazon.com"].includes(url.hostname),"official HTTPS source "+key);
+   ok(source.checkedOn===SOURCE_CHECKED_ON,"dated source "+key);
+   ok(find("source-review-"+slide.id).findAllByType("a").some(a=>a.props.href===source.url),"rendered citation "+key);
+  }
+ }
 }
+ok(usedSources.size===Object.keys(REVIEW_SOURCES).length,"no uncited source records");
+ok(text(find("source-review-register")).includes("not a current feature inventory"),"historical guide labeled clearly");
+ok(text(find("text-human-review-status")).includes(Object.values(SECTION_REVIEWS).filter(r=>r.humanReview.status==="approved").length+" of 22"),"source checks do not count as human approvals");
+ok(text(find("source-review-basic-voice-call")).includes("not confirmed as available"),"Voice AI conflict is visible");
+ok(text(find("source-review-zendesk-knowledge")).includes("specifically names help-center"),"knowledge source scope correction visible");
 ok(tree.root.findAll(n=>n.props["data-slide"]).length===22,"22 source-slide wrappers");
 act(()=>find("button-toggle-motion").props.onClick());
 ok(find("button-toggle-motion").props["aria-pressed"],"pause control reflects state");

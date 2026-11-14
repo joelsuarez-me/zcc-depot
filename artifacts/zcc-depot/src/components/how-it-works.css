@@ -1,4 +1,6 @@
 .hiw{--ink:#11110D;--forest:#203524;--lime:#D1F470;--red:#E0352B;--line:#D9DCE0}
+.hiw-review{border:1px solid #B8C9BC;border-left:4px solid #386344;border-radius:1rem;background:#F1F7F2;color:#172B1C;padding:1rem;scroll-margin-top:9rem;overflow-wrap:anywhere}
+.hiw-review summary:focus-visible,.hiw-review a:focus-visible{outline:2px solid var(--red);outline-offset:3px}
 .hiw-bar{position:sticky;top:3.75rem;z-index:20;display:flex;flex-wrap:wrap;gap:.5rem;align-items:center;justify-content:space-between;margin:1rem 0 0;padding:.6rem .75rem;border:1px solid var(--line);border-radius:1rem;background:rgba(251,251,248,.94);backdrop-filter:blur(8px)}
 .hiw-bar>div{max-width:100%;min-width:0}.hiw-bar select{max-width:100%;min-width:0}
 .hiw [data-section-nav]{scroll-margin-top:132px}
