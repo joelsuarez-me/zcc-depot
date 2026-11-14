@@ -36,22 +36,36 @@ export default function Home() {
 
       <Section tone="white">
         <SectionHead id="features" num="03" eyebrow="Features" title="Features for connected customer service" lede="Select a capability to brief it. Each description is qualified the way the source documentation qualifies it." />
-        <div className="grid gap-6 lg:grid-cols-12">
+        <div className="grid items-start gap-6 lg:grid-cols-12">
           <div role="tablist" aria-label="Features" aria-orientation="vertical" className="flex flex-col gap-1 lg:col-span-5">
             {FEATURES.map((x, i) => (
-              <button key={x.t} role="tab" aria-selected={i === feat} aria-controls="feature-panel" onClick={() => setFeat(i)} data-testid={`tab-feature-${i}`}
+              <button key={x.t} id={`feature-tab-${i}`} type="button" role="tab" tabIndex={i === feat ? 0 : -1} aria-selected={i === feat} aria-controls="feature-panel" onClick={() => setFeat(i)}
+                onKeyDown={(event) => {
+                  const next = event.key === "ArrowDown" ? (i + 1) % FEATURES.length
+                    : event.key === "ArrowUp" ? (i + FEATURES.length - 1) % FEATURES.length
+                    : event.key === "Home" ? 0 : event.key === "End" ? FEATURES.length - 1 : null;
+                  if (next === null) return;
+                  event.preventDefault();
+                  setFeat(next);
+                  event.currentTarget.parentElement?.querySelectorAll<HTMLButtonElement>('[role="tab"]')[next]?.focus();
+                }} data-testid={`tab-feature-${i}`}
                 className={`group flex items-center justify-between rounded-2xl px-5 py-4 text-left transition-all ${i === feat ? "bg-[#203524] text-[#F5F5F2]" : "hover:bg-[#203524]/6"}`}>
                 <span className="font-medium">{x.t}</span>
                 <span className={`mono text-xs ${i === feat ? "text-[#D1F470]" : "text-[#11110D]/35"}`}>{String(i + 1).padStart(2, "0")}</span>
               </button>
             ))}
           </div>
-          <div id="feature-panel" role="tabpanel" className="relative min-h-[340px] overflow-hidden rounded-[2rem] bg-[#D1F470] p-8 md:p-12 lg:col-span-7" aria-live="polite">
+          <div id="feature-panel" role="tabpanel" aria-labelledby={`feature-tab-${feat}`} tabIndex={0} className="relative min-h-[340px] overflow-hidden rounded-[2rem] bg-[#D1F470] p-8 md:p-12 lg:sticky lg:top-24 lg:col-span-7" aria-live="polite">
             <AnimatePresence mode="wait">
               <motion.div key={feat} initial={reduce ? false : { opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} exit={reduce ? undefined : { opacity: 0, y: -12 }} transition={{ duration: 0.35 }}>
                 <div className="eyebrow mb-8 text-[#203524]">{f.tag}</div>
                 <h3 className="text-3xl font-semibold leading-tight tracking-tight text-[#11110D] md:text-5xl">{f.t}</h3>
                 <p className="mt-6 max-w-xl text-lg leading-relaxed text-[#11110D]/80">{f.d}</p>
+                <p className="relative z-10 mt-6 border-l-2 border-[#203524]/30 pl-3 text-xs leading-relaxed text-[#11110D]/70" data-testid="feature-sources">
+                  Source{(f.sources?.length ?? 1) > 1 ? "s" : ""}: {(f.sources ?? [{ label: "Zendesk Contact Center", href: LINKS.product }]).map((source, i) => (
+                    <span key={source.href}>{i > 0 && " · "}<Ext href={source.href} className="underline underline-offset-2">{source.label}</Ext></span>
+                  ))}
+                </p>
               </motion.div>
             </AnimatePresence>
             <div className="serif pointer-events-none absolute -bottom-10 -right-2 select-none text-[12rem] leading-none text-[#203524]/10" aria-hidden>{String(feat + 1).padStart(2, "0")}</div>

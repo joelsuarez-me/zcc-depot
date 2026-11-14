@@ -69,7 +69,8 @@ export const PILLARS = [
   { t: "Improve service with every call", d: "Use insights from customer calls to improve AI performance, service quality, and operational efficiency." },
 ];
 
-export const FEATURES = [
+export type Feature = { tag: string; t: string; d: string; sources?: { label: string; href: string }[] };
+export const FEATURES: Feature[] = [
   { tag: "Voice AI agents", t: "Voice AI agents", d: "Automate up to 80% of interactions with AI that delivers outcomes, not just basic responses. Voice AI agents use shared knowledge, data, and workflows to resolve issues or route customers to the best agent with full context." },
   { tag: "Agent assist", t: "Voice copilots", d: "Listen to live calls, fill out complex forms, and suggest responses in one place. Connect third-party tools for workflows such as booking deliveries and processing returns." },
   { tag: "Global service", t: "Real-time voice translation", d: "Enable instant translation between customers and agents, helping teams serve more customers across regions with one workforce." },
@@ -79,6 +80,46 @@ export const FEATURES = [
   { tag: "Follow-up automation", t: "Proactive outbound calling", d: "Manage follow-ups automatically with proactive outbound calling." },
   { tag: "Call quality", t: "Real-time call monitoring", d: "Monitor calls in real time to gauge customer mood and call quality." },
   { tag: "Connected channels", t: "Connected digital, voice, and visual channels", d: "Switch seamlessly between digital, voice, and visual channels." },
+  {
+    tag: "Work distribution", t: "Omnichannel routing",
+    d: "Route voice, messaging, and email work to eligible agents using availability, capacity, skills, priority, and queue rules where supported. Contact Center voice uses Amazon Connect routing; Zendesk digital routing is configured separately. Rules and channel coverage depend on your plan and setup.",
+    sources: [
+      { label: "Zendesk omnichannel routing", href: HC + "articles/4409149119514" },
+      { label: "Zendesk Contact Center", href: LINKS.product },
+    ],
+  },
+  {
+    tag: "Caller self-service", t: "IVR and intelligent call routing",
+    d: "Guide callers through phone menus to the right team, play recorded answers, or offer a switch to text through a configured flow or integration. Available options depend on your plan, enabled channels, and Amazon Connect contact-flow configuration; they are not enabled by default.",
+    sources: [
+      { label: "Zendesk Contact Center", href: LINKS.product },
+      { label: "Intelligent call routing", href: "https://www.zendesk.com/blog/customer-service/support/intelligent-call-routing/" },
+    ],
+  },
+  {
+    tag: "Less time on hold", t: "Customer callbacks",
+    d: "When queued callbacks are configured in Amazon Connect, callers can leave the hold line, retain their queue priority, and receive a call when an eligible agent is available. Queue rules, callback settings, and agent capacity affect when they are called; this is not a guaranteed callback time.",
+    sources: [
+      { label: "Contact Center callback reporting", href: HC + "articles/9696127106330-Contact-Center-performance-dashboards" },
+      { label: "Zendesk Contact Center", href: LINKS.product },
+    ],
+  },
+  {
+    tag: "Agent productivity", t: "AI-powered after-call work",
+    d: "Use AI-generated call summaries to help document the conversation and reduce repetitive wrap-up work. Agents should review the summary before relying on it. Availability depends on the applicable AI entitlement, supported transcription, and enabled summary settings; not every field or follow-up is automated.",
+    sources: [
+      { label: "Custom summaries for tickets and calls", href: HC + "articles/11401036085914-Creating-custom-summaries-for-tickets-and-calls" },
+      { label: "Zendesk Contact Center", href: LINKS.product },
+    ],
+  },
+  {
+    tag: "Conversation insights", t: "Real-time sentiment analysis",
+    d: "Surface customer-sentiment signals during a call to help agents decide how to respond. These are AI estimates, not a definitive reading of emotion. Live signals depend on enabled conversation analytics, supported languages, licensing, and workspace configuration; post-call analysis is a separate experience.",
+    sources: [
+      { label: "Zendesk Contact Center", href: LINKS.product },
+      { label: "Contact Center app and sentiment insights", href: "https://www.zendesk.com/marketplace/apps/support/1162894/zendesk-for-contact-center/" },
+    ],
+  },
 ];
 
 export const JOURNEY = [
