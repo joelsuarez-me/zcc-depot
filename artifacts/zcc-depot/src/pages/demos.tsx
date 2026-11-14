@@ -1,7 +1,6 @@
 import { Video, MonitorUp, Layers } from "lucide-react";
 import { DemoButton, Ext, Note, PageHero, Reveal, Section, SectionHead } from "@/components/kit";
 import { LINKS } from "@/data/content";
-import { VideoHighlights } from "@/components/video-highlights";
 import { DemoBlueprint } from "@/components/demo-blueprint";
 
 const VIDEO_GA = [
@@ -21,7 +20,6 @@ export default function Demos() {
         lede="Guide your audience from the customer's first interaction through the agent experience, the architecture behind it, and the business impact. Then hand them the walkthrough.">
         <DemoButton />
         <a href="#agenda" className="inline-flex items-center gap-2 rounded-full border border-[#F5F5F2]/25 px-5 py-3 text-sm font-semibold hover:border-[#D1F470] hover:text-[#D1F470]" data-testid="link-agenda">Demo Blueprint</a>
-        <a href="#video-highlights" className="inline-flex items-center gap-2 rounded-full border border-[#F5F5F2]/25 px-5 py-3 text-sm font-semibold hover:border-[#D1F470] hover:text-[#D1F470]" data-testid="link-video-highlights">Video highlights</a>
       </PageHero>
 
       <DemoBlueprint />
@@ -40,8 +38,6 @@ export default function Demos() {
           </Reveal>
         </div>
       </Section>
-
-      <VideoHighlights />
 
       <Section>
         <SectionHead id="spotlight" num="04" eyebrow="Pre-demo spotlight" title={<>Elevating experiences. <span className="serif italic">Making every interaction transformative.</span></>}

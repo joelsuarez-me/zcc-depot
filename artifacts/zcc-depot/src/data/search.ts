@@ -43,7 +43,6 @@ const SECTIONS: SearchEntry[] = [
   sec("nugget-voice-qa", "Voice QA simulation", "/demos/nuggets#voice-qa", "Illustrate a quality review with churn-risk, product-issue and exceptional-service spotlights.", "demo nuggets quality assurance spotlight call recording review"),
   sec("nugget-voice-ai", "Voice AI Agents simulation", "/demos/nuggets#voice-ai-agents", "Simulate a replacement conversation with staged pickup and notification actions.", "demo nuggets customer confirmation automation animated voice agent"),
   sec("nugget-video", "Video calling & screen sharing simulation", "/demos/nuggets#video-screen-sharing", "Invite a customer to video, preview audio and camera, and share a prepared setup window while retaining ticket context.", "demo nuggets video call window sharing customer agent ElevenLabs narration"),
-  sec("video-highlights", "Video highlights", "/demos#video-highlights", "Timestamped walkthrough chapters.", "youtube walkthrough"),
   sec("video", "Video calling & screen sharing", "/demos#video", "Visual channels for complex support conversations.", "video call screen sharing"),
   sec("spotlight", "Pre-demo spotlight", "/demos#spotlight", "What to prepare before the demo.", "prep"),
   sec("journey", "Call journey", "/#how-it-works", "From Amazon Connect to the Zendesk agent experience.", "flow"),
