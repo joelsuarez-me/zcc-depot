@@ -19,7 +19,7 @@ export const SITE_MAP_SECTIONS: Record<string, string[]> = {
   "/demos/nuggets": ["library", "voice-copilot", "voice-qa", "voice-ai-agents", "video-screen-sharing"],
   "/sales": ["use-cases", "outcomes", "guidance"],
   "/sales/contact-center-vs-voice": ["summary", "capabilities", "fit", "discovery", "migration", "faq", "sources"],
-  "/pricing": ["bundle", "byoa", "team"],
+  "/pricing": ["bundle", "byoa", "team", "costs", "commercial-notes", "pricing-sources"],
   "/resources": ["library", "ai-suggestions", "collaboration", "pitch-deck", "faq", "roadmap"],
   "/resources/how-it-works": SLIDES.map(slide => slide.id),
   "/resources/routing": ["methods", "simulator", "configure", "accuracy"],
@@ -52,6 +52,7 @@ const SECTION_NAMES: Record<string, string> = {
   "video-screen-sharing": "Video calling & screen sharing", "voice-qa": "Voice QA",
   "voice-ai-agents": "Voice AI Agents", "voice-copilot": "Voice Copilot",
   "system-diagram": "Detailed system overview and data flow", "data-flow": "System + data flow",
+  costs: "Cost components", "commercial-notes": "Terms to confirm", "pricing-sources": "Pricing source references",
   "contact-lens": "Amazon Connect Contact Lens", "amazon-lex": "Amazon Lex", "platform-and-aws": "Zendesk platform and AWS",
 };
 const GROUP_DESCRIPTIONS: Record<string, string> = {

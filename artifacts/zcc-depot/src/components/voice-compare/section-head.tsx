@@ -1,3 +1,4 @@
+import { SectionBriefActions } from "@/components/section-brief-actions";
 import type { ReactNode } from "react";
 import { SectionLink } from "@/components/section-link";
 
@@ -24,13 +25,14 @@ export function VcHead({ id, eyebrow, title, lede, art }: { id: string; eyebrow:
         <h2 id={`${id}-title`}>{title}</h2>
       </div>
       {lede && <p className="vc-lede">{lede}</p>}
+      <div className="col-span-full"><SectionBriefActions sectionId={id} dark /></div>
     </header>
   );
 }
 
 export function VcSection({ id, children, tone = "paper" }: { id: string; children: ReactNode; tone?: "paper" | "soft" }) {
   return (
-    <section id={id} data-section-nav aria-labelledby={`${id}-title`} className={`vc-sec ${tone === "soft" ? "bg-[#ECECE6]" : ""}`}>
+    <section id={id} data-brief-scope data-section-nav aria-labelledby={`${id}-title`} className={`vc-sec ${tone === "soft" ? "bg-[#ECECE6]" : ""}`}>
       <div className="vc-wrap">{children}</div>
     </section>
   );

@@ -1,0 +1,16 @@
+.section-brief-controls{margin-top:.8rem;font-family:var(--app-font-sans,system-ui,sans-serif);text-transform:none;letter-spacing:normal}
+.section-brief-buttons{display:flex;flex-wrap:wrap;gap:.5rem}
+.section-brief-buttons button{display:inline-flex;align-items:center;justify-content:center;gap:.4rem;min-height:40px;padding:.45rem .9rem;border:1px solid #b6c5b7;border-radius:999px;background:#fffefa;color:#203524;font-size:.78rem;line-height:1.25;font-weight:650;transition:background .15s}
+.section-brief-buttons button:first-child{background:#d1f470;border-color:#bbd65f;color:#11110d}
+.section-brief-buttons button:hover{background:#e7f2d8}
+.section-brief-buttons button:focus-visible{outline:2px solid #203524;outline-offset:3px}
+.section-brief-buttons button:disabled{opacity:.55;cursor:wait}
+.section-brief-status{max-width:42rem;margin-top:.5rem;font-size:.78rem;line-height:1.5;color:#203524;overflow-wrap:anywhere}
+.section-brief-status[role=alert]{color:#a72c18}
+.section-brief-controls.is-dark .section-brief-status{color:#d1f470}
+.section-brief-controls.is-dark .section-brief-status[role=alert]{color:#ffdbcb}
+.section-brief-controls.is-dark button:focus-visible{outline-color:#d1f470}
+[data-brief-exclude] .section-brief-controls{display:none}
+form .section-brief-controls,[role=dialog] .section-brief-controls,dialog .section-brief-controls{display:none}
+@media(prefers-reduced-motion:reduce){.section-brief-controls *{transition:none!important;animation:none!important}}
+@media print{.section-brief-controls{display:none!important}}

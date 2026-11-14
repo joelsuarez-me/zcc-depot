@@ -74,7 +74,7 @@ export function DemoBlueprint() {
 
             <dl className="mt-3 grid gap-3">
               <div><dt className="eyebrow text-[#11110D]/60">Customer or business value</dt><dd className="mt-1.5 text-lg leading-relaxed">{s.value}</dd></div>
-              {cues && <div className="rounded-2xl border-l-2 border-[#203524] bg-[#203524]/5 p-4"><dt className="eyebrow text-[#203524]">Presenter cue</dt><dd className="mt-1.5 leading-relaxed text-[#11110D]/80">{s.presenterCue}</dd></div>}
+              {cues && <div data-brief-exclude className="rounded-2xl border-l-2 border-[#203524] bg-[#203524]/5 p-4"><dt className="eyebrow text-[#203524]">Presenter cue</dt><dd className="mt-1.5 leading-relaxed text-[#11110D]/80">{s.presenterCue}</dd></div>}
               <div className="rounded-2xl bg-[#D1F470] p-4"><dt className="eyebrow text-[#203524]">Proof to show</dt><dd className="mt-1.5 font-medium">{s.proof}</dd></div>
             </dl>
 

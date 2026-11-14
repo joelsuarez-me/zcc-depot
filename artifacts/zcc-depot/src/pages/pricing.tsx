@@ -5,6 +5,7 @@ import { AlertTriangle, ArrowRight, ArrowUpRight, Cloud, Layers, Lock, RotateCw,
 import { PageHero, Reveal } from "@/components/kit";
 import { LaneArt, StateArt } from "@/components/art";
 import { SectionLink } from "@/components/section-link";
+import { SectionBriefActions } from "@/components/section-brief-actions";
 import "./pricing.css";
 
 const title = "Pricing | ZCC Depot";
@@ -134,7 +135,7 @@ export default function Pricing() {
               const Icon = v.icon;
               return (
                 <Reveal key={m.id} delay={i * 0.06} className="h-full">
-                  <section id={m.id} aria-labelledby={`${m.id}-title`} data-testid={`section-pricing-${m.id}`}
+                  <section id={m.id} data-brief-scope data-brief-internal aria-labelledby={`${m.id}-title`} data-testid={`section-pricing-${m.id}`}
                     className="zart-host pz-card group relative flex h-full scroll-mt-24 flex-col rounded-[1.25rem] border border-[#11110D]/10 bg-[#FFFFFF] p-3 text-[#11110D]">
                     <div className="pz-art relative grid h-40 place-items-center overflow-hidden rounded-[0.9rem] border border-[#11110D]/[0.06] bg-[#F5F5F2]" aria-hidden>
                       <div className="pz-glow absolute inset-x-8 bottom-0 h-24 rounded-full bg-[#D1F470]/50 blur-2xl" />
@@ -149,6 +150,7 @@ export default function Pricing() {
                         <SectionLink id={m.id} label={m.name} />
                       </div>
                       <span className="mono mt-2 inline-flex w-fit rounded-full bg-[#F5F5F2] px-3 py-1 text-[0.68rem] uppercase tracking-wider text-[#203524]" data-testid={`text-pricing-fit-${m.id}`}>{m.fit}</span>
+                      <SectionBriefActions sectionId={m.id} />
                       <div className="mt-5 border-t border-[#11110D]/10 pt-5">
                         <p className="min-h-[2.1em] break-words text-3xl font-semibold leading-[1.05] tracking-tight" data-testid={`text-pricing-price-${m.id}`}>{m.price}</p>
                         <p className="mono mt-2 min-h-[2.7em] text-xs text-[#11110D]/65" data-testid={`text-pricing-unit-${m.id}`}>{m.unit}</p>
@@ -174,9 +176,10 @@ export default function Pricing() {
             })}
           </div>
 
-          <section aria-labelledby="costs-title">
+          <section id="costs" data-brief-scope data-brief-internal aria-labelledby="costs-title">
             <div className="eyebrow mb-2 text-[#203524]">Cost components</div>
             <h2 id="costs-title" className="mb-5 text-2xl font-semibold tracking-tight text-[#11110D]">What the quote is made of</h2>
+            <div className="mb-4"><SectionBriefActions sectionId="costs" /></div>
             <div className="overflow-x-auto rounded-2xl border border-[#11110D]/10 bg-[#FBFBF8]">
               <table className="w-full min-w-[36rem] text-left text-sm">
                 <thead className="eyebrow text-[#11110D]/55"><tr><th scope="col" className="px-5 py-3">Item</th><th scope="col" className="px-5 py-3">Price</th><th scope="col" className="px-5 py-3">Covers</th></tr></thead>
@@ -193,9 +196,10 @@ export default function Pricing() {
             </div>
           </section>
 
-          <section aria-labelledby="notes-title">
+          <section id="commercial-notes" data-brief-scope data-brief-internal aria-labelledby="notes-title">
             <div className="eyebrow mb-2 text-[#203524]">Billing notes</div>
             <h2 id="notes-title" className="mb-5 text-2xl font-semibold tracking-tight text-[#11110D]">Terms to confirm</h2>
+            <div className="mb-4"><SectionBriefActions sectionId="commercial-notes" /></div>
             <div className="grid gap-4 md:grid-cols-2">
               {data.notes.map((n, i) => (
                 <div key={i} className="rounded-2xl border border-[#11110D]/10 bg-[#FBFBF8] p-5" data-testid={`card-pricing-note-${i}`}>
@@ -206,9 +210,10 @@ export default function Pricing() {
             </div>
           </section>
 
-          <section aria-labelledby="sources-title">
+          <section id="pricing-sources" data-brief-scope data-brief-internal aria-labelledby="sources-title">
             <div className="eyebrow mb-2 text-[#203524]">Sources</div>
             <h2 id="sources-title" className="mb-5 text-2xl font-semibold tracking-tight text-[#11110D]">Where this comes from</h2>
+            <div className="mb-4"><SectionBriefActions sectionId="pricing-sources" /></div>
             <ol className="space-y-3">
               {data.sources.map((s, i) => (
                 <li key={i} className="flex gap-3 rounded-2xl border border-[#11110D]/10 bg-[#FBFBF8] p-4" data-testid={`item-pricing-source-${i}`}>

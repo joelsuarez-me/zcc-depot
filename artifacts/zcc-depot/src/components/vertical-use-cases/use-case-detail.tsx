@@ -1,3 +1,4 @@
+import { SectionBriefActions } from "@/components/section-brief-actions";
 import { useState, type ReactNode } from "react";
 import { motion, AnimatePresence, useReducedMotion } from "framer-motion";
 import { ArrowRight, CheckCircle2, Maximize2, Minimize2, MessageCircleQuestion } from "lucide-react";
@@ -10,7 +11,7 @@ const KIND_CLASS: Record<CapabilityKind, string> = {
   "Zendesk capability": "k-zendesk", "AWS configuration": "k-aws", "External integration": "k-external", "Conceptual workflow": "k-concept",
 };
 export function KindBadge({ kind }: { kind: CapabilityKind }) {
-  return <span className={`vuc-kind ${KIND_CLASS[kind]}`}>{kind}</span>;
+  return <span data-brief-text className={`vuc-kind ${KIND_CLASS[kind]}`}>{kind}</span>;
 }
 
 function Sec({ letter, title, id, children }: { letter: string; title: string; id: string; children: ReactNode }) {
@@ -65,13 +66,14 @@ export function UseCaseDetail({ useCase, industry, sources, present = false }: {
   const p = present ? "p" : "d";
   const caseSources = sources.filter(s => useCase.sourceIds.includes(s.id));
   return (
-    <article data-testid={`detail-${useCase.id}`}>
+    <article data-brief-scope data-brief-case={useCase.id} data-brief-industry={industry?.id} data-testid={`detail-${useCase.id}`}>
       <div className="flex flex-wrap items-center gap-2 text-xs">
         {industry && <span className="room-tag"><IndustryIcon name={industry.icon} className="h-3.5 w-3.5" />{industry.name}</span>}
         <span className="room-tag">{useCase.category}</span>
-        <span className="vuc-kind k-concept">Curated hypothetical example</span>
+        <span data-brief-text className="vuc-kind k-concept">Curated hypothetical example</span>
       </div>
       <h2 className="vuc-title mt-3 text-[1.75rem] font-semibold leading-[1.08] tracking-tight md:text-[2.4rem]" data-testid="text-usecase-title">{useCase.title}</h2>
+      <SectionBriefActions />
       <ScenarioReviewStatus useCase={useCase} />
 
       <Sec letter="A" title="Customer challenge" id={`${p}-challenge`}>

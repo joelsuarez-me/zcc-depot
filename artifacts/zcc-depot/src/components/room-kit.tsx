@@ -6,10 +6,11 @@ import { ROOMS, roomById, type RoomId } from "@/data/depot-rooms";
 import { useDepot } from "@/lib/depot-mode";
 import { PresenterDock } from "@/components/presenter";
 import { Reveal } from "@/components/kit";
+import { SectionBriefActions } from "@/components/section-brief-actions";
 
 export type Status = "Documented" | "Config-dependent" | "Plan-dependent" | "Early access" | "Optional" | "Conceptual";
 export function StatusTag({ s }: { s: Status }) {
-  return <span className={`depot-status s-${s.toLowerCase().replace(/\s+/g, "-")}`} data-testid={`status-${s.toLowerCase().replace(/\s+/g, "-")}`}>{s}</span>;
+  return <span data-brief-text className={`depot-status s-${s.toLowerCase().replace(/\s+/g, "-")}`} data-testid={`status-${s.toLowerCase().replace(/\s+/g, "-")}`}>{s}</span>;
 }
 
 export function RoomFrame({ id, lede, children, actions }: { id: RoomId; lede: ReactNode; children: ReactNode; actions?: ReactNode }) {
@@ -61,7 +62,7 @@ export function RoomSection({ id, eyebrow, title, lede, children, tone }: { id: 
   const href = `${loc}#${id}`;
   const fav = isFavorite(href);
   return (
-    <section id={id} data-section-nav className={`room-section ${tone === "panel" ? "is-panel" : ""}`} aria-labelledby={`${id}-title`}>
+    <section id={id} data-brief-scope data-section-nav className={`room-section ${tone === "panel" ? "is-panel" : ""}`} aria-labelledby={`${id}-title`}>
       <Reveal className="mb-4 grid gap-3 md:grid-cols-12 md:items-end">
         <div className="md:col-span-7">
           <div className="eyebrow flex items-center gap-2 text-[#11110D]/55">
@@ -75,6 +76,7 @@ export function RoomSection({ id, eyebrow, title, lede, children, tone }: { id: 
         </div>
         {lede && <p className="text-[15px] leading-relaxed text-[#11110D]/65 md:col-span-5">{lede}</p>}
       </Reveal>
+      <div className="mb-4"><SectionBriefActions sectionId={id} /></div>
       {children}
     </section>
   );

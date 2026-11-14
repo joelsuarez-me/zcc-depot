@@ -4,6 +4,7 @@ import { useAuth } from "@workspace/replit-auth-web";
 import { useGetSellSheet, getGetSellSheetQueryKey } from "@workspace/api-client-react";
 import { ArrowRight, Download, Lock, RotateCw, ShieldCheck, AlertTriangle } from "lucide-react";
 import { PageHero } from "@/components/kit";
+import { SectionBriefActions } from "@/components/section-brief-actions";
 
 const TITLE = "Sell Sheet | ZCC Depot";
 const DESC = "Signed-in internal sales guide for Zendesk Contact Center conversations. Internal use only.";
@@ -74,6 +75,7 @@ function Num({ n, label, title, id }: { n: number; label: string; title: string;
         <span className="rounded-full bg-[#203524] px-2 py-0.5 text-[#D1F470]">{String(n).padStart(2, "0")}</span>{label}
       </div>
       <h2 className="text-2xl font-semibold tracking-tight text-[#11110D] md:text-3xl">{title}</h2>
+      <SectionBriefActions sectionId={id} />
     </div>
   );
 }

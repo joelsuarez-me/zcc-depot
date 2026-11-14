@@ -9,6 +9,7 @@ import { SearchTrigger } from "@/components/global-search";
 import { DepotSidebar, DepotTopbar } from "@/components/depot-shell";
 import { useDepot } from "@/lib/depot-mode";
 import { ROUTE_LABELS } from "@/data/depot-rooms";
+import { SectionBriefActions } from "@/components/section-brief-actions";
 import { SectionNavigation } from "@/components/section-navigation";
 import { SectionLink } from "@/components/section-link";
 import { Sheet, SheetContent, SheetDescription, SheetTitle } from "@/components/ui/sheet";
@@ -61,6 +62,7 @@ export function SectionHead({ id, permalinkId, eyebrow, title, lede, dark = fals
         <h2 className={`text-[2rem] leading-[1.05] font-semibold tracking-tight md:text-5xl ${dark ? "text-[#F5F5F2]" : "text-[#11110D]"}`}>{title}</h2>
       </div>
       {lede && <p className={`md:col-span-5 text-base leading-relaxed ${dark ? "text-[#F5F5F2]/70" : "text-[#11110D]/65"}`}>{lede}</p>}
+      {(id || permalinkId) && <div className="md:col-span-12"><SectionBriefActions sectionId={id || permalinkId} dark={dark} /></div>}
     </Reveal>
   );
 }
@@ -95,7 +97,7 @@ export function PageHero({ eyebrow, title, lede, children, motif }: { eyebrow: s
 
 export function Section({ id, children, className = "", tone = "paper" }: { id?: string; children: ReactNode; className?: string; tone?: "paper" | "white" | "forest" | "ink" }) {
   const bg = { paper: "bg-[#F5F5F2]", white: "bg-[#FBFBF8]", forest: "on-dark bg-[#203524] text-[#F5F5F2]", ink: "on-dark bg-[#11110D] text-[#F5F5F2]" }[tone];
-  return <section id={id} data-section-nav={id ? true : undefined} className={`${bg} ${className}`}><div className="section-body mx-auto max-w-7xl px-5 py-8 md:px-8 md:py-10">{children}</div></section>;
+  return <section id={id} data-brief-scope data-section-nav={id ? true : undefined} className={`${bg} ${className}`}><div className="section-body mx-auto max-w-7xl px-5 py-8 md:px-8 md:py-10">{children}</div></section>;
 }
 
 export function Note({ children }: { children: ReactNode }) {

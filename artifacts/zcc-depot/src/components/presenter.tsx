@@ -37,7 +37,7 @@ export function PresenterGate({ children, title = "Presenter material", detail }
 export function PresenterOnly({ children, title }: { children: ReactNode; title?: string }) {
   const { isPresenter } = useDepot();
   if (!isPresenter) return null;
-  return <PresenterGate title={title}>{children}</PresenterGate>;
+  return <div className="contents" data-brief-exclude><PresenterGate title={title}>{children}</PresenterGate></div>;
 }
 
 type Tab = "notes" | "technical" | "discovery" | "objections" | "progression";
@@ -118,7 +118,7 @@ export function PresenterDock({ roomId, onPrevRoom, onNextRoom }: { roomId: Room
     : <p className="text-sm text-[#F5F5F2]/50">No entries for this room yet.</p>;
 
   return (
-    <aside className={`depot-dock on-dark ${open ? "is-open" : ""}`} aria-label="Presenter console" data-testid="presenter-dock">
+    <aside data-brief-exclude className={`depot-dock on-dark ${open ? "is-open" : ""}`} aria-label="Presenter console" data-testid="presenter-dock">
       <div className="depot-dock-bar">
         <button type="button" onClick={() => setOpen((o) => !o)} className="flex items-center gap-2 text-sm font-semibold" aria-expanded={open} data-testid="button-dock-toggle">
           <MessagesSquare className="h-4 w-4 text-[#D1F470]" aria-hidden />Presenter console
