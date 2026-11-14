@@ -5,21 +5,16 @@ import { AlertTriangle, ArrowRight, ArrowUpRight, Cloud, Layers, Lock, RotateCw,
 import { PageHero, Reveal } from "@/components/kit";
 import { LaneArt, StateArt } from "@/components/art";
 import { SectionLink } from "@/components/section-link";
+import "./pricing.css";
 
 const title = "Pricing | ZCC Depot";
 const description = "Signed-in internal pricing guide for Zendesk Contact Center conversations. Internal use only.";
 
 const visuals = {
-  bundle: { num: "01", icon: Layers, tone: "forest" },
-  byoa: { num: "02", icon: Cloud, tone: "paper" },
-  team: { num: "03", icon: Sprout, tone: "lime" },
+  bundle: { num: "01", icon: Layers },
+  byoa: { num: "02", icon: Cloud },
+  team: { num: "03", icon: Sprout },
 } as const;
-
-const tones = {
-  forest: { bg: "on-dark bg-[#203524] text-[#F5F5F2]", sub: "text-[#F5F5F2]/75", badge: "bg-[#D1F470] text-[#11110D]", num: "text-[#D1F470]/20", chip: "border-[#D1F470]/40 text-[#D1F470]", icon: "bg-[#D1F470] text-[#203524]", rule: "border-[#F5F5F2]/15", dot: "bg-[#D1F470]" },
-  paper: { bg: "bg-[#FBFBF8] text-[#11110D]", sub: "text-[#11110D]/70", badge: "bg-[#203524] text-[#D1F470]", num: "text-[#203524]/10", chip: "border-[#203524]/30 text-[#203524]", icon: "bg-[#203524] text-[#D1F470]", rule: "border-[#11110D]/10", dot: "bg-[#203524]" },
-  lime: { bg: "bg-[#D1F470] text-[#11110D]", sub: "text-[#11110D]/75", badge: "bg-[#11110D] text-[#D1F470]", num: "text-[#203524]/15", chip: "border-[#203524]/40 text-[#203524]", icon: "bg-[#203524] text-[#D1F470]", rule: "border-[#11110D]/15", dot: "bg-[#203524]" },
-};
 
 function useMeta() {
   useEffect(() => {
@@ -133,39 +128,45 @@ export default function Pricing() {
             </p>
           </div>
 
-          <div className="grid gap-5 lg:grid-cols-3 lg:items-stretch">
+          <div className="grid gap-5 md:grid-cols-2 lg:grid-cols-3 lg:items-stretch">
             {data.methods.map((m, i) => {
-              const v = visuals[m.id] ?? { num: String(i + 1).padStart(2, "0"), icon: Layers, tone: "paper" as const };
-              const t = tones[v.tone];
+              const v = visuals[m.id] ?? { num: String(i + 1).padStart(2, "0"), icon: Layers };
               const Icon = v.icon;
               return (
                 <Reveal key={m.id} delay={i * 0.06} className="h-full">
                   <section id={m.id} aria-labelledby={`${m.id}-title`} data-testid={`section-pricing-${m.id}`}
-                    className={`zart-host relative flex h-full scroll-mt-24 flex-col overflow-hidden rounded-3xl border border-[#11110D]/10 p-6 transition-shadow duration-300 hover:shadow-[0_24px_50px_-28px_rgba(32,53,36,.55)] ${t.bg}`}>
-                    {v.tone === "forest" && <div className="grid-lines absolute inset-0" aria-hidden />}
-                    <div className="relative flex h-full flex-col">
-                      <div className="pointer-events-none -mt-1 mb-2" aria-hidden><LaneArt id={m.id} dark={v.tone === "forest"} /></div>
-                      <div className="eyebrow">{m.tag}</div>
-                      <div className="mt-4 flex items-start justify-between gap-3">
-                        <h2 id={`${m.id}-title`} className="min-w-0 min-h-[2.5em] text-2xl font-semibold leading-[1.1] tracking-tight" data-testid={`text-pricing-name-${m.id}`}>{m.name}</h2>
-                        <SectionLink id={m.id} label={m.name} dark={v.tone === "forest"} />
+                    className="zart-host pz-card group relative flex h-full scroll-mt-24 flex-col rounded-[1.25rem] border border-[#11110D]/10 bg-[#FFFFFF] p-3 text-[#11110D]">
+                    <div className="pz-art relative grid h-40 place-items-center overflow-hidden rounded-[0.9rem] border border-[#11110D]/[0.06] bg-[#F5F5F2]" aria-hidden>
+                      <div className="pz-glow absolute inset-x-8 bottom-0 h-24 rounded-full bg-[#D1F470]/50 blur-2xl" />
+                      <span className="mono absolute left-3 top-3 text-[0.68rem] font-semibold text-[#203524]/55">{v.num}</span>
+                      <span className="absolute right-3 top-3 grid h-8 w-8 place-items-center rounded-full bg-[#203524] text-[#D1F470]"><Icon className="h-4 w-4" /></span>
+                      <div className="pointer-events-none relative"><LaneArt id={m.id} /></div>
+                    </div>
+                    <div className="flex flex-1 flex-col px-3 pb-3 pt-5">
+                      <div className="eyebrow text-[#203524]/75">{m.tag}</div>
+                      <div className="mt-2 flex items-start justify-between gap-3">
+                        <h2 id={`${m.id}-title`} className="min-w-0 min-h-[2.4em] text-[1.35rem] font-semibold leading-[1.15] tracking-tight" data-testid={`text-pricing-name-${m.id}`}>{m.name}</h2>
+                        <SectionLink id={m.id} label={m.name} />
                       </div>
-                      <div className="mt-3 flex flex-wrap items-center gap-2">
-                        <span className={`grid h-8 w-8 place-items-center rounded-full ${t.icon}`}><Icon className="h-4 w-4" aria-hidden /></span>
-                        <span className={`mono rounded-full border px-3 py-1 text-[0.68rem] uppercase tracking-wider ${t.chip}`} data-testid={`text-pricing-fit-${m.id}`}>{m.fit}</span>
-                      </div>
-                      <div className={`mt-5 border-t pt-5 ${t.rule}`}>
+                      <span className="mono mt-2 inline-flex w-fit rounded-full bg-[#F5F5F2] px-3 py-1 text-[0.68rem] uppercase tracking-wider text-[#203524]" data-testid={`text-pricing-fit-${m.id}`}>{m.fit}</span>
+                      <div className="mt-5 border-t border-[#11110D]/10 pt-5">
                         <p className="min-h-[2.1em] break-words text-3xl font-semibold leading-[1.05] tracking-tight" data-testid={`text-pricing-price-${m.id}`}>{m.price}</p>
-                        <p className={`mono mt-2 min-h-[2.7em] text-xs ${t.sub}`} data-testid={`text-pricing-unit-${m.id}`}>{m.unit}</p>
+                        <p className="mono mt-2 min-h-[2.7em] text-xs text-[#11110D]/65" data-testid={`text-pricing-unit-${m.id}`}>{m.unit}</p>
                       </div>
-                      <p className={`mt-5 text-[0.95rem] leading-relaxed ${t.sub}`} data-testid={`text-pricing-summary-${m.id}`}>{m.summary}</p>
-                      <ul className={`mt-5 space-y-2 border-t pt-5 ${t.rule}`}>
+                      <p className="mt-4 text-[0.95rem] leading-relaxed text-[#11110D]/72" data-testid={`text-pricing-summary-${m.id}`}>{m.summary}</p>
+                      <ul className="mt-5 space-y-2 border-t border-[#11110D]/10 pt-5">
                         {m.details.map((d, j) => (
-                          <li key={j} className="flex gap-2.5 text-sm leading-snug" data-testid={`text-pricing-detail-${m.id}-${j}`}>
-                            <span className={`mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full ${t.dot}`} aria-hidden /><span>{d}</span>
+                          <li key={j} className="flex gap-2.5 text-sm leading-snug text-[#11110D]/85" data-testid={`text-pricing-detail-${m.id}-${j}`}>
+                            <span className="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-[#203524]" aria-hidden /><span>{d}</span>
                           </li>
                         ))}
                       </ul>
+                      <div className="mt-auto pt-6">
+                        <a href="https://www.zendesk.com/pricing/contact-center/" target="_blank" rel="noopener noreferrer" data-testid={`link-pricing-cta-${m.id}`}
+                          className="pz-cta inline-flex min-h-11 items-center gap-2 rounded-full bg-[#D1F470] px-5 py-2.5 text-sm font-semibold text-[#11110D]">
+                          View Zendesk pricing<ArrowUpRight className="pz-cta-icon h-4 w-4" aria-hidden /><span className="sr-only">(opens in a new tab)</span>
+                        </a>
+                      </div>
                     </div>
                   </section>
                 </Reveal>

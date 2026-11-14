@@ -30,9 +30,9 @@ test("section links preserve route and query by using native fragments", () => {
 test("each pricing column has a visible named permalink beside its heading", () => {
   const source = readFileSync(new URL("../src/pages/pricing.tsx", import.meta.url), "utf8");
   assert.match(source, /import \{ SectionLink \} from "@\/components\/section-link"/);
-  assert.match(source, /<div className="mt-4 flex items-start justify-between gap-3">\s*<h2[^>]*min-w-0[^>]*>[\s\S]*?<\/h2>\s*<SectionLink id=\{m.id\} label=\{m.name\} dark=\{v.tone === "forest"\} \/>/);
+  assert.match(source, /<div className="mt-2 flex items-start justify-between gap-3">\s*<h2[^>]*min-w-0[^>]*>[\s\S]*?<\/h2>\s*<SectionLink id=\{m.id\} label=\{m.name\} \/>/);
   assert.match(source, /<section id=\{m.id\}[\s\S]*?scroll-mt-24/);
-  assert.match(source, /grid gap-5 lg:grid-cols-3/);
+  assert.match(source, /grid gap-5 md:grid-cols-2 lg:grid-cols-3/);
   const guide = readFileSync(new URL("../../api-server/src/lib/pricingGuide.ts", import.meta.url), "utf8");
   for (const id of ["bundle", "byoa", "team"]) {
     assert.match(guide, new RegExp(`id: "${id}"`));
