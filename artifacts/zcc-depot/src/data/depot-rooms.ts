@@ -80,6 +80,7 @@ export const roomByPath = (path: string) => ROOMS.find((r) => r.href === path);
 /** Non-room routes, labeled for breadcrumbs and recents. */
 export const ROUTE_LABELS: Record<string, { label: string; parent?: string }> = {
   "/": { label: "Home" },
+  "/site-map": { label: "Site Map" },
   "/demos": { label: "Demos" },
   "/demos/instance-details": { label: "Instance details", parent: "/demos" },
   "/demos/brief": { label: "Demo Researcher", parent: "/demos" },

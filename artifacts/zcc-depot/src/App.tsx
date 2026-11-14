@@ -10,6 +10,7 @@ import { DepotProvider } from '@/lib/depot-mode';
 import { PresenterGate } from '@/components/presenter';
 
 const Home = lazy(() => import('@/pages/home'));
+const SiteMap = lazy(() => import('@/pages/site-map'));
 const Demos = lazy(() => import('@/pages/demos'));
 const Architecture = lazy(() => import('@/pages/architecture'));
 const ArchitectureComponents = lazy(() => import('@/pages/architecture-components'));
@@ -63,6 +64,7 @@ function Router() {
         <Suspense fallback={<PageSkeleton />}>
           <Switch>
             <Route path="/" component={Home} />
+            <Route path="/site-map" component={SiteMap} />
             <Route path="/rooms/executive-overview" component={RoomExecutive} />
             <Route path="/rooms/architecture-integrations" component={RoomArchitecture} />
             <Route path="/rooms/ai-automation" component={RoomAi} />

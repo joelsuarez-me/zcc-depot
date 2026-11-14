@@ -11,6 +11,7 @@ const page = (id: string, title: string, href: string, description: string, keyw
 const sec = (id: string, title: string, href: string, description: string, keywords = ""): SearchEntry => ({ id: `section-${id}`, group: "Sections", title, href, description, keywords });
 
 const PAGES: SearchEntry[] = [
+  page("site-map", "Site Map", "/site-map", "Search a visual directory of every page, demo room and detailed guide section.", "navigation sitemap map find browse directory all pages content"),
   page("contact-center-vs-voice", COMPARISON_TITLE, COMPARISON_PATH, "Compare solution fit, routing, AI, operations, costs and migration considerations. Includes an interactive discovery guide.", "Zendesk Talk Voice versus vs CCaaS comparison qualification migration"),
   page("home", "Overview", "/", "Zendesk Contact Center platform story, how it works, and features.", "home start platform"),
   page("demos", "Demos", "/demos", "Demo Blueprint, click-through, video highlights, and pre-demo spotlight.", "demo approach storyline stages"),
