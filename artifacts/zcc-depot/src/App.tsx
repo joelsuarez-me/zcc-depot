@@ -20,6 +20,7 @@ const Resources = lazy(() => import('@/pages/resources'));
 const ResourceHowItWorks = lazy(() => import('@/pages/resource-how-it-works'));
 const ResourceRouting = lazy(() => import('@/pages/resource-routing'));
 const ResourceCallback = lazy(() => import('@/pages/resource-callback'));
+const ResourceOutboundDialers = lazy(() => import('@/pages/resource-outbound-dialers'));
 const Agenda = lazy(() => import('@/pages/agenda'));
 const DemoInstanceDetails = lazy(() => import('@/pages/demo-instance-details'));
 const Pricing = lazy(() => import('@/pages/pricing'));
@@ -81,6 +82,7 @@ function Router() {
             <Route path="/resources/how-it-works" component={ResourceHowItWorks} />
             <Route path="/resources/routing" component={ResourceRouting} />
             <Route path="/resources/callback" component={ResourceCallback} />
+            <Route path="/resources/outbound-dialers" component={ResourceOutboundDialers} />
             <Route path="/resources" component={Resources} />
             <Route path="/agenda" component={GatedAgenda} />
             <Route component={NotFound} />
