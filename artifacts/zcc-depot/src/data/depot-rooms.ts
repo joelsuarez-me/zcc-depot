@@ -1,4 +1,4 @@
-export type RoomId = "executive-overview" | "architecture-integrations" | "ai-automation" | "agent-experience" | "use-cases" | "technical-resources";
+export type RoomId = "executive-overview" | "architecture-integrations" | "ai-automation" | "agent-experience" | "use-cases";
 
 export type DepotRoom = {
   id: RoomId;
@@ -70,18 +70,6 @@ export const ROOMS: DepotRoom[] = [
       { id: "scenario-continuity", label: "Voice-to-digital" },
       { id: "scenario-productivity", label: "Agent productivity" },
       { id: "scenario-modernization", label: "Modernization" },
-    ],
-  },
-  {
-    id: "technical-resources", n: "06", title: "Technical Resources", short: "Resources", href: "/rooms/technical-resources",
-    summary: "Searchable documentation, architecture references, implementation guides, demo assets, and FAQs.",
-    audience: "Everyone on the deal team",
-    sections: [
-      { id: "resource-search", label: "Resource search" },
-      { id: "architecture-references", label: "Architecture references" },
-      { id: "demo-assets-library", label: "Demo assets" },
-      { id: "technical-faq", label: "Technical FAQ" },
-      { id: "enablement", label: "Enablement" },
     ],
   },
 ];

@@ -33,7 +33,6 @@ const RoomArchitecture = lazy(() => import('@/pages/rooms/architecture-integrati
 const RoomAi = lazy(() => import('@/pages/rooms/ai-automation'));
 const RoomAgent = lazy(() => import('@/pages/rooms/agent-experience'));
 const RoomUseCases = lazy(() => import('@/pages/rooms/use-cases'));
-const RoomResources = lazy(() => import('@/pages/rooms/technical-resources'));
 
 const queryClient = new QueryClient();
 
@@ -68,7 +67,6 @@ function Router() {
             <Route path="/rooms/ai-automation" component={RoomAi} />
             <Route path="/rooms/agent-experience" component={RoomAgent} />
             <Route path="/rooms/use-cases" component={RoomUseCases} />
-            <Route path="/rooms/technical-resources" component={RoomResources} />
             <Route path="/demos" component={Demos} />
             <Route path="/demos/instance-details" component={DemoInstanceDetails} />
             <Route path="/demos/brief" component={GatedBrief} />

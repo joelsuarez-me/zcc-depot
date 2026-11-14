@@ -36,7 +36,7 @@ export function DepotSidebar({ logo, mobile = false, onNavigate }: { logo: strin
       </div>
 
       <div className="depot-sidebar-scroll">
-        <div className="depot-side-label">{collapsed ? "Rooms" : "Demo rooms"}</div>
+        <div className="depot-side-label">Intro</div>
         <ul className="space-y-0.5">
           {ROOMS.map((r) => {
             const active = loc === r.href;
