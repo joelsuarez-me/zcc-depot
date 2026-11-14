@@ -21,8 +21,8 @@ export const CONTACT_COMPONENTS = [
     id: "connect" as const,
     title: "Amazon Connect",
     category: "Telephony & routing",
-    summary: "The contact-routing engine inside the customer's AWS environment.",
-    description: "Amazon Connect handles telephony, calls, chat conversations, queues and contact flows. Each Contact Center environment is paired with exactly one Connect instance in the customer's AWS account.",
+    summary: "The contact-routing engine in the deployment's AWS environment.",
+    description: "Amazon Connect handles telephony, calls, chat conversations, queues and contact flows. Each Contact Center environment is paired with one Connect instance. AWS account ownership depends on whether the deployment is Zendesk-managed or customer-managed (BYOA).",
     points: [
       "Receive customer calls and chat conversations.",
       "Use queues and contact flows to route interactions.",
@@ -41,7 +41,7 @@ export const CONTACT_COMPONENTS = [
       "Use AI tools and dashboards alongside agent workflows.",
       "Use supporting AWS services deployed through CloudFormation.",
     ],
-    boundary: "The app and its supporting components are deployed in the customer's AWS environment.",
+    boundary: "Supporting AWS components run in the deployment's AWS account. Do not assume every customer uses BYOA; Zendesk-managed deployments are also documented.",
   },
 ] as const;
 

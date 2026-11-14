@@ -26,9 +26,9 @@ export const sellSheet = {
   pitch: [
     "Zendesk Contact Center is an enterprise-grade voice solution that brings scalable contact center capabilities into the Zendesk experience, helping teams unify voice and digital support.",
     "Designed for organizations where voice is a major channel: reliability, flexibility, and smarter call handling without forcing agents to jump across disconnected systems.",
-    "One vendor to streamline and save: a unified platform with less middleware complexity.",
-    "AI-powered interaction orchestration: AI built in, not bolted on.",
-    "Quick time to value and faster ROI: a path to modern agentic CX.",
+    "A consolidation opportunity: evaluate the integration effort, remaining AWS services and total cost for the actual deployment.",
+    "Configured AI assistance: verify the named feature, licensing and release rather than promising a complete native AI suite.",
+    "Potential time-to-value and ROI improvements: agree customer baselines and a scoped implementation plan.",
     "High-quality customer service: optimize for resolutions with precision.",
   ],
   plays: [
@@ -41,8 +41,8 @@ export const sellSheet = {
         "Native Contact Center management with low/no-code tools supports shared context, reporting, and ongoing improvement.",
       ],
       metrics: [
-        "Source reports 50%+ reduction in after-work time compared with traditional voice channels by moving to a unified platform.",
-        "Source reports less than 5 minutes of after-call work (ACW).",
+        "TELUS reports 50%+ lower after-work time for asynchronous messaging compared with voice, not a measured improvement to voice telephony.",
+        "SupportZebra reports less than 5 minutes of after-call work (ACW). This is a customer-reported result, not a universal target.",
       ],
       stories: ["TELUS", "SupportZebra"],
     },
@@ -50,9 +50,9 @@ export const sellSheet = {
       title: "Deploying AI and automation thoughtfully",
       help: "AI is not just about replacing people: it also helps humans handle complex calls, resolve them more consistently, and reduce administrative work after a call.",
       capabilities: [
-        "Real-time Voice Copilot: transcription captures what is said, knowledge suggestions surface relevant help, and summaries support faster, more consistent wrap-up.",
-        "AI-powered Auto Assist helps complete after-call work for every interaction.",
-        "Voice AI Agents understand intent and act autonomously using customer context and knowledge.",
+        "With live transcripts enabled and the Copilot add-on, agents can request real-time knowledge suggestions. Summary and after-call processing depend on the enabled workflow.",
+        "Confirm separately supported after-call instructions and automation. Do not promise that Auto Assist completes every interaction or is included by default.",
+        "Illustrative Voice AI workflows use customer context and knowledge. Zendesk's Voice AI GA announcement still lists Contact Center support as planned; verify the current release before positioning native availability.",
       ],
       metrics: [
         "Source cites SupportZebra combining AI automation and human support for a specific client: 29% reduction in average handle time (AHT) and 18% increase in average order value.",
@@ -63,13 +63,13 @@ export const sellSheet = {
       title: "Balancing cost and scale",
       help: "Combine native AWS reliability with a Zendesk platform focused on quality resolutions, consolidating technology, optimizing staffing, and improving operational efficiency.",
       capabilities: [
-        "Unified AI-native analytics with generative AI helps uncover root causes and report on natural-language questions, supporting real-time intervention and historical trends.",
+        "Configured real-time and historical reporting supports operational analysis. Confirm the specific release and entitlement before positioning generative analytics, natural-language querying or Analyst Copilot.",
         "Cloud-native architecture supports fluctuating demand.",
         "AWS security and scale provide a global cloud-native system with built-in resilience.",
       ],
       metrics: [
-        "Source reports 30–50% AHT reduction and improved BPO scalability.",
-        "Source reports a five-week implementation.",
+        "SupportZebra reports 30–50% AHT reduction and improved BPO scalability; results are specific to its deployment.",
+        "The Good Meal Co reports a five-week implementation; this is not a standard delivery promise.",
       ],
       stories: ["SupportZebra", "The Good Meal Co"],
     },

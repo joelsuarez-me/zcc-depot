@@ -1,5 +1,5 @@
 import { NAV, NAV_RELATED_PAGES } from "./navigation";
-import { ROOMS, ROUTE_LABELS } from "./depot-rooms";
+import { INTRO_ROOMS, ROOMS, ROUTE_LABELS } from "./depot-rooms";
 import { SEARCH_INDEX } from "./search";
 import { SLIDES } from "./how-it-works";
 
@@ -130,7 +130,7 @@ function pageFor(path: string): SiteMapPage {
 export function buildSiteMap(): SiteMapGroup[] {
   const groups: SiteMapGroup[] = [{
     id: "intro", title: "Intro", description: GROUP_DESCRIPTIONS.Intro,
-    pages: ROOMS.map(room => pageFor(room.href)),
+    pages: INTRO_ROOMS.map(room => pageFor(room.href)),
   }];
   for (const nav of NAV) {
     const paths = new Set([nav.href, ...(nav.children ?? []).filter(child => !child.external).map(child => child.href), ...(NAV_RELATED_PAGES[nav.label] ?? []).map(child => child.href)].map(href => href.split("#")[0]));

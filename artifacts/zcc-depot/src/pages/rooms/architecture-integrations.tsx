@@ -6,7 +6,7 @@ import { ArchExplorer } from "@/components/arch-explorer";
 import { SystemDataFlow } from "@/components/system-data-flow";
 import { ZendeskPodMap } from "@/components/zendesk-pod-map";
 import { Ext } from "@/components/kit";
-import { CORE_COMPONENTS, LAMBDAS, LINKS, RESOURCES } from "@/data/content";
+import { ACCURACY_NOTES, CORE_COMPONENTS, LAMBDAS, LINKS, RESOURCES } from "@/data/content";
 
 const CALL_TO_TICKET = [
   { t: "Contact flow sets attributes", d: "IVR selections, account identifiers, and intent results are stored as Amazon Connect contact attributes.", ref: "attributes-call-info" },
@@ -27,7 +27,8 @@ export default function ArchitectureIntegrations() {
   const [fn, setFn] = useState<"runtime" | "deployment">("runtime");
   const doc = (id: string) => RESOURCES.find((r) => r.id === id);
   return (
-    <RoomFrame id="architecture-integrations" lede="Clickable components, layers, a guided tour, and the security boundary between the customer's AWS account and Zendesk." actions={<><Link href="/architecture/system-overview" className="room-chip" data-testid="link-system-overview-page">Detailed system overview<ArrowRight className="h-3.5 w-3.5" aria-hidden /></Link><Link href="/architecture/components" className="room-chip" data-testid="link-components-page">Component deep dive<ArrowRight className="h-3.5 w-3.5" aria-hidden /></Link></>}>
+    <RoomFrame id="architecture-integrations" lede="Explore the Amazon Connect foundation, Zendesk integration points and deployment-specific identity and data boundaries." actions={<><Link href="/architecture/system-overview" className="room-chip" data-testid="link-system-overview-page">Detailed system overview<ArrowRight className="h-3.5 w-3.5" aria-hidden /></Link><Link href="/architecture/components" className="room-chip" data-testid="link-components-page">Component deep dive<ArrowRight className="h-3.5 w-3.5" aria-hidden /></Link></>}>
+      <SourceNote>{ACCURACY_NOTES.awsOwnership} <Ext href={LINKS.managedAws} className="underline">Zendesk-managed AWS</Ext>{" · "}<Ext href={LINKS.customerAws} className="underline">Customer-managed AWS</Ext></SourceNote>
       <RoomSection id="zendesk-architecture-overview" eyebrow="Zendesk Architecture Overview" title="Global Pods on AWS, built to contain incidents" lede="Select a reference location, then simulate a local incident to see the Pod isolation idea. Illustrative, not live status.">
         <ZendeskPodMap />
         <Link href="/architecture/system-overview" className="mt-3 inline-flex items-center gap-2 text-sm font-bold text-[#111317] underline" data-testid="link-system-overview-from-pods">Continue to the Detailed System Overview<ArrowRight className="h-4 w-4" aria-hidden /></Link>

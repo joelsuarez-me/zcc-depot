@@ -2,7 +2,7 @@ import { useEffect, useState, type ReactNode, type Ref } from "react";
 import { Link, useLocation } from "wouter";
 import { ChevronRight, Clock3, Expand, LogOut, Menu, Minimize, PanelLeftClose, PanelLeftOpen, Presentation, Star, Users } from "lucide-react";
 import { NAV, isNavItemActive } from "@/data/navigation";
-import { ROOMS, ROUTE_LABELS } from "@/data/depot-rooms";
+import { INTRO_ROOMS, ROOMS, ROUTE_LABELS } from "@/data/depot-rooms";
 import { useDepot } from "@/lib/depot-mode";
 import { HeroMotionControl } from "@/components/hero-motion-control";
 
@@ -38,7 +38,7 @@ export function DepotSidebar({ logo, mobile = false, onNavigate }: { logo: strin
       <div className="depot-sidebar-scroll">
         <div className="depot-side-label">Intro</div>
         <ul className="space-y-0.5">
-          {ROOMS.map((r) => {
+          {INTRO_ROOMS.map((r) => {
             const active = loc === r.href;
             return (
               <li key={r.id}>

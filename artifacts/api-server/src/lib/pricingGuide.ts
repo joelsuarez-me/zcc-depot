@@ -2,7 +2,7 @@
 // Never import into the web application or public search index.
 export const pricingGuide = {
   intro: "The standard bundle is $83 per agent per month, billed yearly, plus a Zendesk Suite plan and the required Premier support plan. Suite and Premier are additional costs.",
-  billing: "Current U.S. list prices shown below are billed yearly. Usage-based telephony and AWS charges are additional; $83 is not the full cost of service. Confirm the final quote and agreement.",
+  billing: "The public U.S. Contact Center bundle price is billed yearly. Alternate offers explicitly marked internal guidance are not independently verified public list prices or availability commitments. Telephony and AWS usage, Suite and Premier are additional; confirm the final quote and agreement.",
   methods: [
     {
       id: "bundle",
@@ -40,7 +40,7 @@ export const pricingGuide = {
       fit: "Greenfield / net-new",
       price: "Request a quote",
       unit: "Confirm packaging and commercial terms",
-      summary: "A lighter-weight path for greenfield and net-new customers who do not want the full Suite.",
+      summary: "Internal guidance describes a lighter-weight path for greenfield and net-new customers. This is not independently verified as a currently available Suite-free offer; confirm the product, eligibility and prerequisites with Zendesk.",
       details: [
         "No Team list price was provided in this pricing guidance.",
         "Confirm current pricing, availability, and requirements with Zendesk.",

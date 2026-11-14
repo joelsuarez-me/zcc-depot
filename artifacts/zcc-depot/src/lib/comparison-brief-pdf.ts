@@ -25,7 +25,7 @@ export function createComparisonBriefPdf(selected: readonly FitSignalId[] = [], 
       { kind: "table", headers: ["Consideration", "Zendesk Voice", "Contact Center"], rows: [
         ["Routing", "Standard phone menus and call handling.", "Configurable Connect flows and orchestration."],
         ["Integrations", "Zendesk workspace and supported integrations.", "Business-data lookups and scoped custom actions."],
-        ["AI and quality", "AI features depend on plan and configuration.", "Configured AI services; verify add-ons and licensing."],
+        ["AI and quality", "Eligible Voice (Talk) customers can use native voice AI agents. Copilot and QA have separate requirements.", "Copilot needs live transcripts. The Voice AI GA announcement lists Contact Center support as planned; verify the current release."],
         ["Delivery and cost", "Confirm plan, usage and selected add-ons.", "Scope licenses, usage, AWS services and delivery."],
       ], align: [] },
       { kind: "heading", text: "Fit guide snapshot" },
@@ -39,7 +39,7 @@ export function createComparisonBriefPdf(selected: readonly FitSignalId[] = [], 
       { kind: "paragraph", text: "Both products can support growing teams. Zendesk digital routing and Amazon Connect voice routing are not interchangeable. Contact Lens and Zendesk QA are distinct; verify licensing and integration. Capabilities are not enabled by default on every plan." },
     ],
     qualifications: [],
-    sources: ["voice", "contact-center", "pricing", "setup"].map(id => {
+    sources: ["voice", "contact-center", "voice-ai-availability", "pricing", "setup"].map(id => {
       const source = COMPARISON_SOURCES.find(item => item.id === id)!;
       return { title: source.title, url: source.url };
     }),

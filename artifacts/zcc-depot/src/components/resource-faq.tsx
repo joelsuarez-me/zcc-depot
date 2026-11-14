@@ -15,7 +15,7 @@ export function ResourceFaq() {
             <p className="pb-6 pr-12 leading-relaxed text-[#11110D]/70">{answer}</p>
           </details>
         ))}
-        <Note>Answers summarize <Ext href={LINKS.product} className="underline">Zendesk's Contact Center page</Ext>. Confirm product, compliance and performance claims against the current plan and agreement.</Note>
+        <Note>Sources: <Ext href={LINKS.product} className="underline">Contact Center product overview</Ext>{" · "}<Ext href={LINKS.voiceAiAvailability} className="underline">Voice AI availability</Ext>{" · "}<Ext href={LINKS.compliance} className="underline">Advanced Compliance</Ext>{" · "}<Ext href={LINKS.trust} className="underline">Trust Center</Ext>{" · "}<Ext href={LINKS.residency} className="underline">Regional Data Hosting Policy</Ext>. Product marketing is not a plan entitlement, compliance determination or performance guarantee. Confirm the current configuration and agreement.</Note>
       </div>
     </Section>
   );

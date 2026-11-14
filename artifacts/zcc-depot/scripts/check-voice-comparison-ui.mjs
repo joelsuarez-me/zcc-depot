@@ -11,6 +11,7 @@ import React from "react";
 import assert from "node:assert/strict";
 import {act,create} from "react-test-renderer";
 import VoiceComparison from "./src/pages/voice-comparison";
+import * as comparisonData from "./src/data/voice-comparison";
 import {COMPARISON_ROWS,COMPARISON_CATEGORIES,FIT_SIGNALS,DISCOVERY_TOPICS,getFitGuidance} from "./src/data/voice-comparison";
 async function run(){
 globalThis.IS_REACT_ACT_ENVIRONMENT=true;
@@ -69,7 +70,7 @@ for(let i=0;i<DISCOVERY_TOPICS.length;i++){
 }
 ok(tree.root.findAllByType("details").length===6,"six usable native FAQs");
 ok(tree.root.findAll(n=>n.type==="li"&&String(n.props["data-testid"]).startsWith("step-migration-")).length===5,"five migration steps");
-ok(tree.root.findAll(n=>n.type==="li"&&String(n.props["data-testid"]).startsWith("item-source-")).length===8,"eight official sources");
+ok(tree.root.findAll(n=>n.type==="li"&&String(n.props["data-testid"]).startsWith("item-source-")).length===comparisonData.COMPARISON_SOURCES.length,"all official sources are rendered");
 act(()=>find("toggle-fit-data-integration").props.onClick());
 await act(async()=>{find("button-print-brief").props.onClick();});
 ok(printed===1&&viewer.location.href==="blob:test-comparison-brief","print opens generated PDF");

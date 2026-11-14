@@ -4,12 +4,12 @@ import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import { ArrowRight, Bot, BookOpen, ClipboardCheck, FileText, Languages, PhoneForwarded, UserRound } from "lucide-react";
 import { RoomFrame, RoomSection, SourceNote, StatusTag, type Status } from "@/components/room-kit";
 import { Ext } from "@/components/kit";
-import { LINKS, RESOURCES } from "@/data/content";
+import { ACCURACY_NOTES, LINKS, RESOURCES } from "@/data/content";
 
 const url = (id: string) => RESOURCES.find((r) => r.id === id)?.url ?? LINKS.usingSection;
 
 const WALK: { t: string; who: string; icon: typeof Bot; status: Status; d: string; say: string; transcript: [string, string][] }[] = [
-  { t: "Self-service at the front door", who: "AI agent or IVR", icon: Bot, status: "Plan-dependent", d: "A voice AI agent or Lex-based IVR captures intent and resolves simple requests such as order status. Voice AI agents vary by plan, region, and release stage.", say: "Automation handles the routine so people handle the hard calls.", transcript: [["Caller", "I need to check where my replacement order is."], ["AI agent", "I can help with that. Can you confirm the order number?"]] },
+  { t: "Self-service at the front door", who: "Configured IVR / conceptual AI", icon: Bot, status: "Conceptual", d: `A configured Amazon Lex V2 flow can illustrate intent capture and approved integrations. ${ACCURACY_NOTES.voiceAi}`, say: "A prepared example of automation and human handoff, not a release commitment.", transcript: [["Caller", "I need to check where my replacement order is."], ["AI agent", "I can help with that. Can you confirm the order number?"]] },
   { t: "Escalation with context", who: "Handoff to a human", icon: PhoneForwarded, status: "Config-dependent", d: "When the request needs a person, the contact flow transfers to a queue. Captured intent and attributes travel with the call so the customer does not repeat themselves.", say: "The handoff carries the story, not just the call.", transcript: [["AI agent", "Let me connect you with a specialist who can update the address."], ["System", "Intent: address change · Order verified"]] },
   { t: "Agent assist during the call", who: "Copilot knowledge suggestions", icon: BookOpen, status: "Config-dependent", d: "With live transcripts and Copilot enabled, generative AI identifies the reason for calling and surfaces help center guidance in the Knowledge panel. Agents can regenerate as the topic changes.", say: "Guidance arrives while the customer is still talking.", transcript: [["Agent", "I can see the order. Let me check the address policy."], ["Suggestion", "Address changes after dispatch: carrier redirect steps"]] },
   { t: "Real-time translation", who: "Early access program", icon: Languages, status: "Early access", d: "Real-time voice translation between customer and agent is documented as an EAP. Confirm eligibility and supported languages before showing it.", say: "One workforce, more languages, where available.", transcript: [["Caller (es)", "Necesito cambiar la dirección."], ["Agent hears", "I need to change the address."]] },
@@ -23,7 +23,7 @@ const CAPS: { t: string; s: Status; d: string; doc: string }[] = [
   { t: "Real-time voice translation", s: "Early access", d: "Documented as an early access program.", doc: url("translation") },
   { t: "Zendesk QA for call transcriptions", s: "Optional", d: "Separate product and licensing; transcript redaction with ADPP add-on does not redact audio.", doc: url("qa-transcriptions") },
   { t: "Contact Lens analytics and redaction", s: "Config-dependent", d: "Amazon Connect capability configured in the customer AWS account.", doc: url("aws-services") },
-  { t: "Voice AI agents", s: "Plan-dependent", d: "Availability varies by plan, region, and release stage. Confirm before committing.", doc: LINKS.product },
+  { t: "Voice AI agents", s: "Conceptual", d: ACCURACY_NOTES.voiceAi, doc: LINKS.voiceAiAvailability },
   { t: "Agent-to-agent AI collaboration", s: "Conceptual", d: "Discussed as an architecture pattern only. Not a current or promised Zendesk Contact Center integration.", doc: "" },
 ];
 

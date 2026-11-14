@@ -9,6 +9,7 @@ try {
   await build({
     stdin: { resolveDir: root, loader: "tsx", contents: `
 import React from "react";
+import {Router} from "wouter";
 import assert from "node:assert/strict";
 import {act,create} from "react-test-renderer";
 import Home from "./src/pages/home";
@@ -17,7 +18,7 @@ globalThis.IS_REACT_ACT_ENVIRONMENT=true;
 let checks=0;
 const ok=(value,message)=>{assert.ok(value,message);checks++};
 const text=node=>typeof node==="string"?node:typeof node==="number"?String(node):(node?.children??[]).map(text).join("");
-let tree;act(()=>{tree=create(<Home/>);});
+let tree;act(()=>{tree=create(<Router hook={()=>["/",()=>{}]}><Home/></Router>);});
 const tab=i=>tree.root.findByProps({"data-testid":"tab-feature-"+i});
 const panel=()=>tree.root.findByProps({id:"feature-panel"});
 ok(FEATURES.length===14,"nine original features plus five additions");
@@ -33,7 +34,7 @@ for(let i=0;i<FEATURES.length;i++){
   ok(tab(i).props.tabIndex===0,"active tab keyboard stop "+i);
   for(const source of FEATURES[i].sources??[]){
     ok(panel().findAllByType("a").some(a=>a.props.href===source.href),"source visible "+source.label);
-    ok(new URL(source.href).hostname.endsWith("zendesk.com"),"official Zendesk source");
+    ok(["zendesk.com","aws.amazon.com"].some(host=>new URL(source.href).hostname===host||new URL(source.href).hostname.endsWith("."+host)),"official Zendesk or AWS source");
   }
 }
 let focused=-1,prevented=false;

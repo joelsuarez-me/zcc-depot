@@ -13,7 +13,7 @@ export type SysFlow = { id: string; t: string; kind: EdgeKind; d: string; stages
 export const VIEW = { w: 1200, h: 760 };
 export const CLOUDS = [
   { id: "zendesk" as Cloud, t: "Zendesk AWS Cloud", note: "Zendesk-operated", x: 16, y: 16, w: 1168, h: 196 },
-  { id: "customer" as Cloud, t: "Customer AWS Cloud", note: "Customer-managed account", x: 16, y: 244, w: 1168, h: 500 },
+  { id: "customer" as Cloud, t: "Customer AWS Cloud", note: "BYOA example · other account models exist", x: 16, y: 244, w: 1168, h: 500 },
 ];
 
 export const KIND_META: Record<EdgeKind, { t: string; d: string }> = {
@@ -28,7 +28,7 @@ export const SYS_NODES: SysNode[] = [
   { id: "ticket", cloud: "zendesk", tier: "secondary", x: 780, y: 56, w: 180, h: 56, t: "Ticket search", sub: "Caller lookup", d: "Matches the caller to a Zendesk ticket or contact using data returned by the search helper during a live call.", chips: ["Live call"] },
   { id: "status", cloud: "zendesk", tier: "secondary", x: 980, y: 56, w: 180, h: 56, t: "Agent status sync", sub: "Synced state", d: "Keeps the agent's availability aligned between Agent Workspace and Amazon Connect through the controls path.", chips: ["Availability"] },
   { id: "analysis", cloud: "zendesk", tier: "secondary", x: 780, y: 128, w: 180, h: 56, t: "Call analysis", sub: "Insight events", d: "Where configured, receives conversation-analysis events (for example Contact Lens, when enabled) forwarded by Lambda event processing.", chips: ["Contact Lens, when enabled"] },
-  { id: "reporting", cloud: "zendesk", tier: "secondary", x: 980, y: 128, w: 180, h: 56, t: "Reporting + usage", sub: "Usage metering", d: "Where configured, logs, transcript metadata and Contact Trace Records are sent to Zendesk via Lambda for reporting and usage monitoring.", chips: ["Dashboards", "Usage metering"] },
+  { id: "reporting", cloud: "zendesk", tier: "secondary", x: 980, y: 128, w: 180, h: 56, t: "Reporting", sub: "Configured analytics", d: "CTRIngestLambda forwards contact analytics. Recording/transcript writeback and usage billing are separate concerns; this conceptual view does not define billing payloads.", chips: ["Dashboards", "Verify enabled paths"] },
   { id: "lambda", cloud: "customer", tier: "primary", x: 360, y: 300, w: 240, h: 70, t: "API Gateway + Lambda", tl: ["API Gateway", "+ Lambda"], sub: "Integration helpers", d: "API Gateway and Lambda proxy agent UI requests to Connect and Customer Profiles, run caller search, and manage Cognito sessions.", chips: ["API proxy", "Caller search", "Session handling"] },
   { id: "cognito", cloud: "customer", tier: "secondary", x: 640, y: 300, w: 160, h: 70, t: "AWS Cognito", sub: "User pool", d: "Template user pool for Contact Center agent, supervisor and admin accounts, deployed by the CloudFormation template. SAML 2.0 sign-in is supported; the exact identity setup depends on the deployment.", chips: ["User pool", "SAML 2.0 capable", "Configuration-dependent"] },
   { id: "connect", cloud: "customer", tier: "primary", x: 80, y: 430, w: 220, h: 90, t: "Amazon Connect", sub: "Voice + contact flows", d: "Hosts the voice experience, contact flows and routing. One Contact Center environment links to one Connect instance.", chips: ["Voice", "Contact flows", "Routing"] },
@@ -70,7 +70,7 @@ export const SYS_FLOWS: SysFlow[] = [
   { id: "controls", t: "Agent controls", kind: "controls", d: "Agent actions in Workspace are proxied through API Gateway and Lambda to Amazon Connect, and status stays in sync.", stages: [["zcc-lambda"], ["lambda-connect"], ["zcc-status"]] },
   { id: "context", t: "Customer context", kind: "context", d: "During the live call, the contact flow triggers caller search; Lambda may consult internal systems, then mapped attributes reach the agent.", stages: [["connect-lambda"], ["lambda-internal"], ["lambda-zcc"], ["zcc-ticket"]] },
   { id: "profiles", t: "Customer Profiles", kind: "context", d: "Profiles and custom attributes are read through the Lambda proxy using the logged-in agent's permissions.", stages: [["connect-profiles"], ["zcc-lambda"], ["lambda-profiles"], ["profiles-lambda"], ["lambda-zcc"]] },
-  { id: "records", t: "Post-call records", kind: "records", d: "After the call, logs, transcripts and CTRs land in the customer account; Lambda event processing can forward them to Zendesk where configured.", stages: [["connect-logs", "connect-transcripts", "connect-ctr"], ["logs-events", "transcripts-events", "ctr-events"], ["events-reporting", "events-analysis"]] },
+  { id: "records", t: "Post-call records", kind: "records", d: "Conceptually groups configured post-call paths. Current stacks use separate recording/transcript ingest functions and CTR analytics. Flow logs are not automatically the same as Zendesk reporting or usage-billing data.", stages: [["connect-logs", "connect-transcripts", "connect-ctr"], ["logs-events", "transcripts-events", "ctr-events"], ["events-reporting", "events-analysis"]] },
   { id: "direct", t: "Direct AWS services", kind: "context", optional: true, d: "Contact flows can call AWS services the customer configures directly in Amazon Connect. Not a Zendesk integration.", stages: [["connect-direct"]] },
 ];
 

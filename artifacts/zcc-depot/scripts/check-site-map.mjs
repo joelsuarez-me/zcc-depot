@@ -14,6 +14,7 @@ import {act,create} from "react-test-renderer";
 import SiteMap from "./src/pages/site-map";
 import {SITE_MAP,SITE_MAP_SECTIONS,ROUTING_MAP_METHODS,filterSiteMap,normalizeSiteQuery,siteMapCounts,siteAccess} from "./src/data/site-map";
 import {NAV,HOW_IT_WORKS_GUIDE,isNavItemActive} from "./src/data/navigation";
+import {INTRO_ROOMS,ROOMS} from "./src/data/depot-rooms";
 globalThis.IS_REACT_ACT_ENVIRONMENT=true;
 globalThis.document={title:"Previous title",querySelector:()=>null};
 let checks=0;
@@ -25,6 +26,15 @@ ok(JSON.stringify(routes)===JSON.stringify(paths),"every route represented exact
 ok(!paths.includes("/rooms/technical-resources"),"deleted route stays absent");
 const resources=NAV.find(n=>n.label==="Resources");
 const demoRooms=NAV.find(n=>n.label==="Demo Rooms");
+ok(INTRO_ROOMS.map(r=>r.n).join(",")==="01,02,05","Intro excludes 03 and 04 without renumbering other rooms");
+const intro=SITE_MAP.find(g=>g.id==="intro");
+for(const id of ["ai-automation","agent-experience"]){
+  const room=ROOMS.find(r=>r.id===id);
+  ok(!!room,"room remains registered: "+id);
+  ok(!intro.pages.some(p=>p.href===room.href),"not listed under Intro: "+id);
+  ok(demoRooms.children.some(p=>p.href===room.href),"still reachable under Demo Rooms: "+id);
+}
+ok(readFileSync("./src/components/depot-shell.tsx","utf8").includes("INTRO_ROOMS.map"),"desktop and mobile sidebar use the Intro-specific list");
 for(const href of ["/resources/routing","/resources/callback","/resources/outbound-dialers"]){
  ok(!resources.children.some(c=>c.href===href),"removed from Resources menu: "+href);
  ok(demoRooms.children.some(c=>c.href===href),"retained under Demo Rooms: "+href);

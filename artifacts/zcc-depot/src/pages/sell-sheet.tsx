@@ -3,7 +3,8 @@ import { ProtectedDownload } from "@/components/protected-download";
 import { useAuth } from "@workspace/replit-auth-web";
 import { useGetSellSheet, getGetSellSheetQueryKey } from "@workspace/api-client-react";
 import { ArrowRight, Download, Lock, RotateCw, ShieldCheck, AlertTriangle } from "lucide-react";
-import { PageHero } from "@/components/kit";
+import { Ext, PageHero } from "@/components/kit";
+import { LINKS } from "@/data/content";
 import { SectionBriefActions } from "@/components/section-brief-actions";
 
 const TITLE = "Sell Sheet | ZCC Depot";
@@ -205,7 +206,7 @@ export default function SellSheetPage() {
           ))}
 
           <p className="border-l-2 border-[#203524]/30 pl-4 text-xs leading-relaxed text-[#11110D]/60" data-testid="text-validation-disclaimer">
-            Internal only. ROI figures are attributed to the supplied internal cheat sheet and reflect specific customer contexts; they are not universal guarantees. Validate every figure, capability, and availability detail against current Zendesk documentation and the customer's own data before sharing.
+            Internal only. Figures reflect specific customer contexts, not universal ROI guarantees. Current sources: <Ext href={LINKS.aiSuggestions} className="underline">Copilot requirements</Ext>{" · "}<Ext href={LINKS.voiceAiAvailability} className="underline">Voice AI availability</Ext>{" · "}<Ext href="https://www.zendesk.com/customer/the-good-meal-co/" className="underline">The Good Meal Co</Ext>{" · "}<Ext href="https://www.zendesk.com/customer/support-zebra/" className="underline">SupportZebra</Ext>{" · "}<Ext href="https://www.zendesk.com/customer/telus/" className="underline">TELUS</Ext>. The supplied source PDF remains historical material; confirm current capability, release and commercial details before sharing.
           </p>
         </article>
       )}

@@ -131,7 +131,7 @@ export function ZendeskPodMap() {
           </div>
         ))}
       </div>
-      <p className="zpm-trust">Validate figures, hosting locations, and resilience commitments with the official <a href="https://www.zendesk.com/trust/" target="_blank" rel="noreferrer" className="underline" data-testid="link-zendesk-trust">Zendesk Trust Center<ExternalLink className="ml-1 inline h-3 w-3" aria-hidden /></a> and your contract. This page does not independently verify them.</p>
+      <p className="zpm-trust">Validate figures, hosting locations, and resilience commitments with the official <a href="https://www.zendesk.com/trust-center/" target="_blank" rel="noreferrer" className="underline" data-testid="link-zendesk-trust">Zendesk Trust Center<ExternalLink className="ml-1 inline h-3 w-3" aria-hidden /></a>, the <a href="https://support.zendesk.com/hc/en-us/articles/4408883599130" target="_blank" rel="noreferrer" className="underline">Regional Data Hosting Policy</a> and your contract. The supplied-slide scale figures and marker locations are historical reference material, not verified current infrastructure counts.</p>
     </div>
   );
 }

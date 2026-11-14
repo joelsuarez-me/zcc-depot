@@ -87,7 +87,7 @@ export default function ExecutiveOverview() {
 
       <RoomSection id="customer-proof" eyebrow="Customer proof" title="Customer-reported results" lede="Figures are as reported in Zendesk customer materials for these specific customers. They are not predictions for a new deployment.">
         <CustomerProof />
-        <SourceNote>Results are customer-reported from supplied Zendesk materials, not live independent verification, predictions, or guarantees for a new deployment. Confirm approved public-use wording before external distribution.</SourceNote>
+        <SourceNote>Customer-reported results, not independent measurements or guarantees for a new deployment. Read the public stories: <Ext href="https://www.zendesk.com/customer/the-good-meal-co/" className="underline">The Good Meal Co</Ext>{" · "}<Ext href="https://www.zendesk.com/customer/support-zebra/" className="underline">SupportZebra</Ext>{" · "}<Ext href="https://www.zendesk.com/customer/telus/" className="underline">TELUS</Ext>. Good Meal's percentages describe channel mix; TELUS compares asynchronous messaging with voice, not improvements to voice telephony.</SourceNote>
       </RoomSection>
 
       <RoomSection id="next-steps" eyebrow="Next steps" title="Where to take the conversation">

@@ -4,6 +4,7 @@ import { Ext } from "@/components/kit";
 import { SystemOverviewDiagram } from "@/components/system-overview-diagram";
 import "@/components/system-overview-diagram.css";
 import { SO_DOCS, SO_DOC_LABEL, SO_SECTIONS } from "@/data/system-overview";
+import { ACCURACY_NOTES, LINKS } from "@/data/content";
 
 export default function ArchitectureSystemOverview() {
   return (
@@ -14,7 +15,8 @@ export default function ArchitectureSystemOverview() {
         <div className="relative">
           <Link href="/rooms/architecture-integrations" className="inline-flex items-center gap-1.5 text-xs font-bold text-[#111317]/65 hover:text-[#111317]" data-testid="link-back-architecture-room"><ArrowLeft className="h-3.5 w-3.5" aria-hidden />Architecture & Integrations</Link>
           <h1 className="mt-3 max-w-3xl text-3xl font-extrabold leading-[1.05] tracking-tight text-[#111317] md:text-5xl">Detailed System Overview & Data Flow</h1>
-          <p className="mt-3 max-w-2xl text-sm leading-relaxed text-[#111317]/75 md:text-base">Zendesk runs the agent experience. The customer runs the AWS foundation. Every path between them is authorized, scoped, and configurable.</p>
+          <p className="mt-3 max-w-2xl text-sm leading-relaxed text-[#111317]/75 md:text-base">Zendesk brings the agent experience together with a configured AWS foundation. This diagram illustrates a customer-managed (BYOA) example, not every deployment model.</p>
+          <p className="mt-3 max-w-3xl text-xs leading-relaxed text-[#111317]/75">{ACCURACY_NOTES.awsOwnership} <Ext href={LINKS.managedAws} className="font-bold underline">Zendesk-managed setup</Ext>{" · "}<Ext href={LINKS.customerAws} className="font-bold underline">Customer-managed setup</Ext></p>
           <div className="mt-4 flex flex-wrap gap-2 text-xs font-bold">
             {SO_SECTIONS.map((s) => <a key={s.id} href={`#${s.id}`} className="rounded-full border border-[#C9CDD3] bg-white px-3 py-1.5 hover:bg-[#F1F3F5]" data-testid={`link-jump-${s.id}`}>{s.t}</a>)}
           </div>

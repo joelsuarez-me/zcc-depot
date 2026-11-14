@@ -74,6 +74,12 @@ export const ROOMS: DepotRoom[] = [
   },
 ];
 
+// Keep room registration separate from the shorter Intro navigation.
+// AI and Agent Experience remain reachable under the Demo Rooms menu.
+export const INTRO_ROOMS = ROOMS.filter(
+  room => room.id !== "ai-automation" && room.id !== "agent-experience",
+);
+
 export const roomById = (id: RoomId) => ROOMS.find((r) => r.id === id)!;
 export const roomByPath = (path: string) => ROOMS.find((r) => r.href === path);
 

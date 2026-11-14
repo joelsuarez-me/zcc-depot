@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
-import { PageHero, Section, SectionHead, Note } from "@/components/kit";
+import { PageHero, Section, SectionHead, Note, Ext } from "@/components/kit";
+import { ACCURACY_NOTES, LINKS } from "@/data/content";
 import { getDemoNuggets, type NuggetId } from "@/data/demo-nuggets";
 import { DemoPlayer, type DemoPlayerControls } from "@/components/demo-nuggets/demo-player";
 import { CopilotScene } from "@/components/demo-nuggets/copilot-scene";
@@ -71,18 +72,18 @@ function DemoNuggetsContent({ activeId, setActiveId }: { activeId: NuggetId | nu
       <Section tone="paper" className="[&>.section-body]:!pt-10">
         <SectionHead id="voice-copilot" eyebrow="Voice Copilot" title={<>Knowledge, <span className="hl">mid-call</span>.</>} lede={copilot.description} />
         <DemoPlayer nugget={copilot} {...playerProps(copilot.id)}>{pb => <CopilotScene pb={pb} />}</DemoPlayer>
-        <Note>Illustrative only. Sample customer Terry Silva and number +1 (415) 555-0143 are fictional. Guidance and the source article are sample content; availability depends on your Zendesk plan and configuration.</Note>
+        <Note>Illustrative only. Sample customer Terry Silva and number +1 (415) 555-0143 are fictional. Guidance and the displayed article are sample content. {ACCURACY_NOTES.copilot} <Ext href={LINKS.aiSuggestions} className="underline">Requirements and documented workflow</Ext></Note>
       </Section>
       <Section tone="white">
         <SectionHead id="voice-qa" eyebrow="Voice QA" title={<>Every conversation, <span className="hl">a quality insight.</span></>}
           lede={qa.description} />
         <DemoPlayer nugget={qa} {...playerProps(qa.id)}>{pb => <VoiceQaScene pb={pb} />}</DemoPlayer>
-        <Note>Illustrative sample only, based on the supplied Voice QA reference. No call is recorded or analyzed, no quality score is calculated, and no customer or agent action is taken.</Note>
+        <Note>Illustrative sample only, based on the supplied Voice QA reference. No call is recorded or analyzed, no quality score is calculated, and no customer or agent action is taken. Zendesk QA and Contact Lens are distinct; this scene does not confirm licensing or integration. <Ext href={LINKS.qa} className="underline">QA, transcription and redaction boundaries</Ext></Note>
       </Section>
       <Section tone="ink">
         <SectionHead dark id="voice-ai-agents" eyebrow="Voice AI Agents" title={<>From request to <span className="serif italic text-[#D1F470]">resolution</span>.</>} lede={voice.description} />
         <DemoPlayer dark nugget={voice} {...playerProps(voice.id)}>{pb => <VoiceAiScene pb={pb} />}</DemoPlayer>
-        <p className="mt-8 border-l-2 border-[#D1F470]/40 pl-4 text-xs leading-relaxed text-[#F5F5F2]/55">Simulated activity. No replacement, pickup or notification is created or sent. Real actions require integrations configured for your environment.</p>
+        <p className="mt-8 border-l-2 border-[#D1F470]/40 pl-4 text-xs leading-relaxed text-[#F5F5F2]/75">Simulated activity. No replacement, pickup or notification is created or sent. Real actions require approved integrations. {ACCURACY_NOTES.voiceAi} <Ext href={LINKS.voiceAiAvailability} className="font-semibold underline">Voice AI availability and exclusions</Ext></p>
       </Section>
       <Section tone="paper">
         <SectionHead id="video-screen-sharing" eyebrow="Video calling & screen sharing" title={<>See it together. <span className="hl">Solve it in context.</span></>} lede={video.description} />

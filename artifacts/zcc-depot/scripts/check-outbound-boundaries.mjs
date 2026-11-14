@@ -9,10 +9,11 @@ const read = path => readFile(join(root, path), "utf8");
 const nav = await read("src/data/navigation.ts");
 const app = await read("src/App.tsx");
 const crumbs = await read("src/data/depot-rooms.ts");
-ok(nav.includes('label: "Routing"') && nav.includes('label: "Callback"'), "Existing labs preserved in navigation");
-ok(nav.indexOf('label: "Outbound Dialers"') > nav.indexOf('label: "Callback"'), "Outbound follows Callback");
+ok(nav.includes('label: "Routing"') && nav.includes('label: "Callbacks"'), "Existing labs preserved in navigation");
+ok(nav.indexOf('label: "Dialers"') > nav.indexOf('label: "Callbacks"'), "Dialers follows Callbacks");
+const demoRoomsBlock = nav.slice(nav.indexOf('label: "Demo Rooms"'), nav.indexOf('label: "Resources"'));
 const resourceBlock = nav.slice(nav.indexOf('label: "Resources"'), nav.indexOf("export function"));
-ok(/Outbound Dialers[^]*\/resources\/outbound-dialers[^]*\}\s*,?\s*\]\s*\}/.test(resourceBlock), "Outbound is last Resources navigation item");
+ok(demoRoomsBlock.includes("/resources/outbound-dialers") && !resourceBlock.includes("/resources/outbound-dialers"), "Dialers is under Demo Rooms, not Resources");
 for (const path of ["/resources/routing", "/resources/callback", "/resources/outbound-dialers"]) {
   ok(app.includes(`path="${path}"`), `${path} route remains registered`);
   ok(crumbs.includes(`"${path}"`), `${path} has breadcrumbs`);
