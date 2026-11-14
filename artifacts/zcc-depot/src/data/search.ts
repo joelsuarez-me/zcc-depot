@@ -2,6 +2,7 @@ import { DEMO_URL, FAQ, FEATURES, RESOURCES, USE_CASES } from "@/data/content";
 import { VIDEO_HIGHLIGHTS, WALKTHROUGH_URL } from "@/data/video-highlights";
 import { BLUEPRINT_DESCRIPTION } from "@/data/demo-blueprint";
 import { ROOMS } from "@/data/depot-rooms";
+import { COMPARISON_PATH, COMPARISON_TITLE } from "@/data/voice-comparison";
 
 export type SearchGroup = "Pages" | "Sections" | "Features" | "Use cases" | "FAQ" | "Video highlights" | "Resources";
 export type SearchEntry = { id: string; group: SearchGroup; title: string; description: string; keywords?: string; href: string; external?: boolean };
@@ -10,6 +11,7 @@ const page = (id: string, title: string, href: string, description: string, keyw
 const sec = (id: string, title: string, href: string, description: string, keywords = ""): SearchEntry => ({ id: `section-${id}`, group: "Sections", title, href, description, keywords });
 
 const PAGES: SearchEntry[] = [
+  page("contact-center-vs-voice", COMPARISON_TITLE, COMPARISON_PATH, "Compare solution fit, routing, AI, operations, costs and migration considerations. Includes an interactive discovery guide.", "Zendesk Talk Voice versus vs CCaaS comparison qualification migration"),
   page("home", "Overview", "/", "Zendesk Contact Center platform story, how it works, and features.", "home start platform"),
   page("demos", "Demos", "/demos", "Demo Blueprint, click-through, video highlights, and pre-demo spotlight.", "demo approach storyline stages"),
   page("demo-nuggets", "Demo Nuggets", "/demos/nuggets", "Play Voice Copilot, Voice QA, Voice AI Agents, and video calling and screen sharing simulations with optional ElevenLabs narration.", "animated capabilities play pause replay nuggets voice copilot quality assurance agents video screen share narration"),

@@ -15,6 +15,7 @@ const Architecture = lazy(() => import('@/pages/architecture'));
 const ArchitectureComponents = lazy(() => import('@/pages/architecture-components'));
 const ArchitectureSystemOverview = lazy(() => import('@/pages/architecture-system-overview'));
 const Sales = lazy(() => import('@/pages/sales'));
+const VoiceComparison = lazy(() => import('@/pages/voice-comparison'));
 const SalesUseCases = lazy(() => import('@/pages/sales-use-cases'));
 const Resources = lazy(() => import('@/pages/resources'));
 const ResourceHowItWorks = lazy(() => import('@/pages/resource-how-it-works'));
@@ -75,6 +76,7 @@ function Router() {
             <Route path="/architecture/components" component={ArchitectureComponents} />
             <Route path="/architecture/system-overview" component={ArchitectureSystemOverview} />
             <Route path="/sales" component={Sales} />
+            <Route path="/sales/contact-center-vs-voice" component={VoiceComparison} />
             <Route path="/sales/use-cases-by-vertical" component={SalesUseCases} />
             <Route path="/pricing" component={GatedPricing} />
             <Route path="/sell-sheet" component={GatedSellSheet} />

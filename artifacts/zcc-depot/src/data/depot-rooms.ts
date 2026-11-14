@@ -88,6 +88,7 @@ export const ROUTE_LABELS: Record<string, { label: string; parent?: string }> = 
   "/architecture/components": { label: "Components", parent: "/architecture" },
   "/architecture/system-overview": { label: "Detailed System Overview & Data Flow", parent: "/architecture" },
   "/sales": { label: "Sales" },
+  "/sales/contact-center-vs-voice": { label: "Contact Center vs. Voice", parent: "/sales" },
   "/pricing": { label: "Pricing", parent: "/sales" },
   "/sell-sheet": { label: "Sell Sheet", parent: "/sales" },
   "/sales/use-cases-by-vertical": { label: "Use Cases by Vertical", parent: "/sales" },
