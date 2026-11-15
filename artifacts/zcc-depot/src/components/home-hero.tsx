@@ -1,7 +1,6 @@
 import { Link } from "wouter";
 import { motion, useReducedMotion } from "framer-motion";
-import { ArrowRight, Compass, Network, PlayCircle } from "lucide-react";
-import { DEMO_URL } from "@/data/content";
+import { ArrowRight } from "lucide-react";
 import { ROOMS } from "@/data/depot-rooms";
 import { AgentCallHero } from "./agent-call-hero";
 
@@ -15,11 +14,6 @@ export function HomeHero() {
           <h1 className="hh-title mt-3 text-[2.1rem] font-semibold leading-[1.02] tracking-[-0.035em] md:text-[3.1rem]">Platform Architect Depot</h1>
           <p className="hh-tag mt-3 text-lg font-medium text-[#D1F470] md:text-xl">Architect the solution. Demonstrate the value. Accelerate the win.</p>
           <p className="hh-lede mt-3 max-w-xl text-[15px] leading-relaxed text-[#F5F5F2]/72">An interactive solution engineering hub built by Zendesk Contact Center Platform Architects. Explore technical architectures, demonstrate real-world use cases, and connect product capabilities to measurable customer outcomes.</p>
-          <div className="hh-ctas mt-6 flex flex-wrap gap-2">
-            <Link href="/rooms/architecture-integrations" className="depot-btn depot-btn-lime" data-testid="button-cta-architecture"><Network className="h-4 w-4" aria-hidden />Explore Architecture</Link>
-            <a href={DEMO_URL} target="_blank" rel="noopener noreferrer" className="depot-btn depot-btn-outline" data-testid="button-cta-demo"><PlayCircle className="h-4 w-4" aria-hidden />Launch Demo Experience<span className="sr-only">(opens in a new tab)</span></a>
-            <Link href="/rooms/use-cases" className="depot-btn depot-btn-outline" data-testid="button-cta-use-cases"><Compass className="h-4 w-4" aria-hidden />Discover Use Cases</Link>
-          </div>
         </motion.div>
         <div className="hh-art"><AgentCallHero /></div>
       </div>
