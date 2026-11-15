@@ -21,6 +21,12 @@ On iPhone, use smaller, denser heroes, illustrations, cards and spacing so usefu
 
 **How to apply:** Use responsive layout rules rather than scaling the whole page. Preserve readable text, normal pinch zoom, usable touch controls and reserved space for the mobile section arrows.
 
+Show the landing illustration before long optional background copy on phones; keep that copy available on demand rather than expanded above the image.
+
+**Why:** The user again asked to move the main image higher because the introductory paragraph delayed it.
+
+**How to apply:** Preserve the full paragraph in an accessible disclosure, without replacing the existing hero image or animation.
+
 Organize navigation by the visitor's task rather than keeping separate introductory rooms and a generic library. Distinguish demo preparation tools from playable demo experiences.
 
 **Why:** The user approved consolidating Intro and Library into a single Explore the Depot structure to reduce ambiguous categories and duplicate entries.

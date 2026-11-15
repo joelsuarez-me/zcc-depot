@@ -1,0 +1,29 @@
+/* Keep the illustration ahead of optional background text in reading order. */
+.depot-shell .depot-main .hh-grid{
+  grid-template-areas:"copy" "art" "about";
+  align-items:start;
+  row-gap:.75rem;
+}
+.hh-copy{grid-area:copy;min-width:0}
+.hh-art{grid-area:art;min-width:0;align-self:start}
+.hh-about{grid-area:about;min-width:0}
+.hh-about summary{
+  display:inline-flex;align-items:center;gap:.6rem;min-height:44px;
+  padding:.45rem .85rem;border:1px solid rgba(209,244,112,.3);
+  border-radius:999px;color:#D1F470;font-size:.82rem;font-weight:600;
+  cursor:pointer;list-style:none;
+}
+.hh-about summary::-webkit-details-marker{display:none}
+.hh-about summary:hover{background:rgba(209,244,112,.08)}
+.hh-about summary svg{transition:transform .2s}
+.hh-about[open] summary svg{transform:rotate(180deg)}
+.hh-about .hh-lede{padding-bottom:.25rem}
+
+@media(min-width:1024px){
+  .depot-shell .depot-main .hh{padding-top:1.5rem;padding-bottom:1.5rem}
+  .depot-shell .depot-main .hh-grid{grid-template-areas:"copy art" "about art";grid-template-rows:auto 1fr}
+}
+@media(max-width:1023px) and (max-height:500px) and (orientation:landscape){
+  .depot-shell .depot-main .hh-grid{grid-template-areas:"copy art" "about art";grid-template-rows:auto 1fr;align-items:start;row-gap:.5rem}
+}
+@media(prefers-reduced-motion:reduce){.hh-about summary svg{transition:none}}
