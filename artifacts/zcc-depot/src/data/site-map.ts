@@ -1,5 +1,5 @@
-import { NAV, NAV_RELATED_PAGES } from "./navigation";
-import { INTRO_ROOMS, ROOMS, ROUTE_LABELS } from "./depot-rooms";
+import { NAV, NAV_RELATED_PAGES, isNavItemActive, navigationLabel } from "./navigation";
+import { ROOMS, ROUTE_LABELS } from "./depot-rooms";
 import { SEARCH_INDEX } from "./search";
 import { SLIDES } from "./how-it-works";
 
@@ -57,12 +57,11 @@ const SECTION_NAMES: Record<string, string> = {
   "contact-lens": "Amazon Connect Contact Lens", "amazon-lex": "Amazon Lex", "platform-and-aws": "Zendesk platform and AWS",
 };
 const GROUP_DESCRIPTIONS: Record<string, string> = {
-  Intro: "Start with a guided room for your audience.",
   Overview: "Understand the platform story and connected-service capabilities.",
   Architecture: "Explore components, identity, integrations and data flow.",
-  Sales: "Find product fit, business value and commercial guidance.",
-  Demos: "Prepare, research and present a customer conversation.",
-  "Demo Rooms": "Open hands-on feature and operational simulations.",
+  "Sales Enablement": "Find product fit, business value and commercial guidance.",
+  "Demo Preparation": "Prepare, research and present a customer conversation.",
+  "Interactive Demos": "Open hands-on feature and operational simulations.",
   Resources: "Find detailed guides, reference material and enablement.",
 };
 const PRIVATE_PATHS = new Set(["/pricing", "/sell-sheet", "/agenda", "/demos/brief", "/resources/compete", "/resources/compete/five9"]);
@@ -87,7 +86,7 @@ function pageFor(path: string): SiteMapPage {
   const indexed = SEARCH_INDEX.find(entry => entry.group === "Pages" && entry.href === path);
   const room = ROOMS.find(entry => entry.href === path);
   const access = siteAccess(path);
-  const title = path === "/" ? "Landing page" : room?.title ?? indexed?.title ?? ROUTE_LABELS[path]?.label ?? path;
+  const title = path === "/" ? "Welcome" : navigationLabel(path) ?? room?.title ?? indexed?.title ?? ROUTE_LABELS[path]?.label ?? path;
   const sections = new Map<string, SiteDestination>();
   const add = (entry: SiteDestination) => {
     const previous = sections.get(entry.href);
@@ -129,13 +128,18 @@ function pageFor(path: string): SiteMapPage {
 }
 
 export function buildSiteMap(): SiteMapGroup[] {
-  const groups: SiteMapGroup[] = [{
-    id: "intro", title: "Intro", description: GROUP_DESCRIPTIONS.Intro,
-    pages: INTRO_ROOMS.map(room => pageFor(room.href)),
-  }];
+  const groups: SiteMapGroup[] = [];
   for (const nav of NAV) {
     const paths = new Set([nav.href, ...(nav.children ?? []).filter(child => !child.external).map(child => child.href), ...(NAV_RELATED_PAGES[nav.label] ?? []).map(child => child.href)].map(href => href.split("#")[0]));
-    const pages = [...paths].filter(path => routePaths.has(path)).map(pageFor);
+    const pages = [...paths].filter(path => routePaths.has(path) && isNavItemActive(nav, path)).map(pageFor);
+    // A cross-category fragment shortcut (e.g. Sales Presentation) belongs in
+    // this group's overview, not a duplicate copy of the entire Resources page.
+    for (const entry of nav.children ?? []) {
+      const [path, hash] = entry.href.split("#");
+      if (entry.external || !hash || !validDestination(entry.href) || isNavItemActive(nav, path)) continue;
+      const overview = pages.find(page => page.href === nav.href.split("#")[0]) ?? pages[0];
+      overview?.sections.push({ title: entry.label, href: entry.href, description: "Open this section.", keywords: "", access: siteAccess(entry.href) });
+    }
     for (const entry of nav.children ?? []) {
       if (entry.external) pages.push({ title: entry.label, href: entry.href, description: "External enablement resource. Its own access requirements may apply.", keywords: "", access: "public", external: true, sections: [] });
     }

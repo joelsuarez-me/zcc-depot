@@ -28,7 +28,7 @@ let tree;act(()=>tree=create(<Page/>));
 const find=id=>tree.root.findByProps({"data-testid":id});
 const click=id=>act(()=>find(id).props.onClick());
 const exists=id=>tree.root.findAllByProps({"data-testid":id}).length>0;
-ok(NAV.find(x=>x.label==="Demo Rooms").children.some(x=>x.href==="/resources/routing"),"Routing remains reachable under Demo Rooms");
+ok(NAV.find(x=>x.label==="Interactive Demos").children.some(x=>x.href==="/resources/routing"),"Routing remains reachable under Interactive Demos");
 ok(!NAV.find(x=>x.label==="Resources").children.some(x=>x.href==="/resources/routing"),"Routing is not duplicated under Resources");
 ok(METHODS.length===12&&new Set(METHODS.map(m=>m.id)).size===12,"twelve unique methods");
 ok(!exists("panel-presenter-notes"),"Customer default excludes explanations");

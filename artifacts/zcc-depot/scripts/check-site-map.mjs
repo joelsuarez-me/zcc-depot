@@ -14,7 +14,7 @@ import {act,create} from "react-test-renderer";
 import SiteMap from "./src/pages/site-map";
 import {SITE_MAP,SITE_MAP_SECTIONS,ROUTING_MAP_METHODS,filterSiteMap,normalizeSiteQuery,siteMapCounts,siteAccess} from "./src/data/site-map";
 import {NAV,HOW_IT_WORKS_GUIDE,isNavItemActive} from "./src/data/navigation";
-import {INTRO_ROOMS,ROOMS} from "./src/data/depot-rooms";
+import {ROOMS} from "./src/data/depot-rooms";
 globalThis.IS_REACT_ACT_ENVIRONMENT=true;
 globalThis.document={title:"Previous title",querySelector:()=>null};
 let checks=0;
@@ -25,17 +25,34 @@ const paths=[...new Set(SITE_MAP.flatMap(g=>g.pages.filter(p=>!p.external).map(p
 ok(JSON.stringify(routes)===JSON.stringify(paths),"every route represented exactly once in unique counts");
 ok(!paths.includes("/rooms/technical-resources"),"deleted route stays absent");
 const resources=NAV.find(n=>n.label==="Resources");
-const demoRooms=NAV.find(n=>n.label==="Demo Rooms");
-ok(INTRO_ROOMS.map(r=>r.n).join(",")==="01,02","Intro contains only executive overview and architecture");
-ok(NAV.find(n=>n.label==="Resources")?.children.some(c=>c.href==="/rooms/use-cases"),"Top Five Use Cases is linked under Resources");
-const intro=SITE_MAP.find(g=>g.id==="intro");
+const demoRooms=NAV.find(n=>n.label==="Interactive Demos");
+const overview=NAV.find(n=>n.label==="Overview");
+const architecture=NAV.find(n=>n.label==="Architecture");
+const sales=NAV.find(n=>n.label==="Sales Enablement");
+ok(NAV.map(n=>n.label).join("|")==="Overview|Architecture|Sales Enablement|Demo Preparation|Interactive Demos|Resources","approved six categories");
+ok(!SITE_MAP.some(g=>g.title==="Intro"||g.title==="Library"),"old navigation sections consolidated");
+ok(overview.children.some(c=>c.href==="/rooms/executive-overview"),"executive room under Overview");
+ok(architecture.children.some(c=>c.href==="/rooms/architecture-integrations"),"architecture room under Architecture");
+ok(sales.children.some(c=>c.href==="/rooms/use-cases"),"Top Five Use Cases moved to Sales Enablement");
+ok(sales.children.some(c=>c.href==="/resources#pitch-deck"),"presentation moved to Sales Enablement");
+ok(sales.children.some(c=>c.href==="/resources/compete"&&c.children?.length),"competitor logos under Sales Enablement");
+ok(!resources.children.some(c=>["/rooms/use-cases","/resources/compete","/resources#pitch-deck","/resources/supervisor-command-center"].includes(c.href)),"moved entries not duplicated under Resources");
+ok(demoRooms.children.some(c=>c.label==="Feature Demos"&&c.href==="/demos/nuggets"),"Feature Demos moved to Interactive Demos");
 for(const id of ["ai-automation","agent-experience"]){
   const room=ROOMS.find(r=>r.id===id);
   ok(!!room,"room remains registered: "+id);
-  ok(!intro.pages.some(p=>p.href===room.href),"not listed under Intro: "+id);
-  ok(demoRooms.children.some(p=>p.href===room.href),"still reachable under Demo Rooms: "+id);
+  ok(demoRooms.children.some(p=>p.href===room.href),"still reachable under Interactive Demos: "+id);
 }
-ok(readFileSync("./src/components/depot-shell.tsx","utf8").includes("INTRO_ROOMS.map"),"desktop and mobile sidebar use the Intro-specific list");
+const sidebar=readFileSync("./src/components/depot-shell.tsx","utf8");
+ok(sidebar.includes("Explore the Depot")&&!sidebar.includes("INTRO_ROOMS"),"one shared desktop/mobile navigation");
+for(const path of routes.filter(path=>path!=="/site-map")){
+ const owners=NAV.filter(group=>isNavItemActive(group,path));
+ ok(owners.length===1,"one active category for "+path);
+}
+for(const [path,owner] of [["/demos/nuggets","Interactive Demos"],["/resources/supervisor-command-center","Interactive Demos"],["/resources/compete/five9","Sales Enablement"],["/rooms/use-cases","Sales Enablement"]]){
+ ok(NAV.find(group=>isNavItemActive(group,path))?.label===owner,"moved page category: "+path);
+ ok(SITE_MAP.find(group=>group.title===owner).pages.some(page=>page.href===path),"moved page site-map placement: "+path);
+}
 for(const href of ["/resources/routing","/resources/callback","/resources/outbound-dialers"]){
  ok(!resources.children.some(c=>c.href===href),"removed from Resources menu: "+href);
  ok(demoRooms.children.some(c=>c.href===href),"retained under Demo Rooms: "+href);

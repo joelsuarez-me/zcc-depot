@@ -1,12 +1,14 @@
 import { useEffect, useState, type ReactNode, type Ref } from "react";
 import { Link, useLocation } from "wouter";
 import { ChevronRight, Clock3, Expand, LogOut, Menu, Minimize, PanelLeftClose, PanelLeftOpen, Presentation, Star, Users } from "lucide-react";
-import { NAV, isNavItemActive } from "@/data/navigation";
-import { INTRO_ROOMS, ROOMS, ROUTE_LABELS } from "@/data/depot-rooms";
+import { NAV, isNavItemActive, navigationLabel } from "@/data/navigation";
+import { ROOMS, ROUTE_LABELS } from "@/data/depot-rooms";
 import { useDepot } from "@/lib/depot-mode";
 import { HeroMotionControl } from "@/components/hero-motion-control";
 
 function labelFor(href: string) {
+  const label = navigationLabel(href);
+  if (label) return label;
   const [path, hash] = href.split("#");
   const base = ROUTE_LABELS[path]?.label ?? path;
   if (!hash) return base;
@@ -36,34 +38,17 @@ export function DepotSidebar({ logo, mobile = false, onNavigate }: { logo: strin
       </div>
 
       <div className="depot-sidebar-scroll">
-        <div className="depot-side-label">Intro</div>
-        <ul className="space-y-0.5">
-          {INTRO_ROOMS.map((r) => {
-            const active = loc === r.href;
-            return (
-              <li key={r.id}>
-                <Link href={r.href} onClick={onNavigate} className={`depot-side-link ${active ? "is-active" : ""}`} aria-current={active ? "page" : undefined} title={collapsed ? r.title : undefined} data-testid={`link-room-${r.id}`}>
-                  <span className="depot-room-num">{r.n}</span>
-                  {!collapsed && <span className="truncate">{r.title}</span>}
-                </Link>
-              </li>
-            );
-          })}
-        </ul>
-
-        {!collapsed && (
-          <>
-            <div className="depot-side-label mt-5">Library</div>
+            {!collapsed && <div className="depot-side-label">Explore the Depot</div>}
             <ul className="space-y-0.5">
               {NAV.map((n) => {
-                const href = n.href.split("#")[0];
+                const href = n.href;
                 const active = isNavItemActive(n, loc);
                 return (
                   <li key={n.href}>
-                    <Link href={href} onClick={onNavigate} className={`depot-side-link is-quiet ${active ? "is-active" : ""}`} aria-current={active ? "page" : undefined} data-testid={`link-nav-${n.label.toLowerCase()}`}>
-                      <span className="truncate">{n.label}</span>
+                    <Link href={href} onClick={onNavigate} className={`depot-side-link is-quiet ${active ? "is-active" : ""}`} title={collapsed ? n.label : undefined} aria-label={n.label} aria-current={active ? "page" : undefined} data-testid={`link-nav-${n.label.toLowerCase()}`}>
+                      {collapsed ? <span className="depot-room-num" aria-hidden>{n.label.split(" ").map(word => word[0]).join("").slice(0, 2).toUpperCase()}</span> : <span className="truncate">{n.label}</span>}
                     </Link>
-                    {n.children && (
+                    {!collapsed && n.children && (
                       <ul className="mb-1 ml-4 border-l border-[#F5F5F2]/10 pl-2">
                         {n.children.filter((c) => isPresenter || !["/resources#roadmap", "/resources#collaboration", "/resources#pitch-deck"].includes(c.href)).map((c) => (
                           <li key={c.href}>{c.external
@@ -84,6 +69,8 @@ export function DepotSidebar({ logo, mobile = false, onNavigate }: { logo: strin
                 );
               })}
             </ul>
+        {!collapsed && (
+          <>
 
             {favorites.length > 0 && (
               <>
@@ -154,14 +141,17 @@ export function ModeSwitch() {
 
 function Breadcrumbs() {
   const [loc] = useLocation();
-  const trail: { href: string; label: string }[] = [];
-  let cur: string | undefined = loc;
-  while (cur && ROUTE_LABELS[cur]) {
-    trail.unshift({ href: cur, label: ROUTE_LABELS[cur].label });
-    cur = ROUTE_LABELS[cur].parent;
+  const trail: { href: string; label: string }[] = [{ href: "/", label: "Home" }];
+  if (loc !== "/") {
+    const owner = NAV.find(group => isNavItemActive(group, loc));
+    if (owner && owner.href.split("#")[0] !== "/" && owner.href.split("#")[0] !== loc) {
+      trail.push({ href: owner.href, label: owner.label });
+    }
+    const nestedParent = owner?.children?.find(child =>
+      child.children?.some(nested => nested.href.split("#")[0] === loc));
+    if (nestedParent && nestedParent.href !== loc) trail.push({ href: nestedParent.href, label: nestedParent.label });
+    trail.push({ href: loc, label: navigationLabel(loc) ?? ROUTE_LABELS[loc]?.label ?? "Not found" });
   }
-  if (loc !== "/" && trail[0]?.href !== "/") trail.unshift({ href: "/", label: "Home" });
-  if (!trail.length) trail.push({ href: loc, label: "Not found" });
   return (
     <nav aria-label="Breadcrumb" className="min-w-0">
       <ol className="flex min-w-0 items-center gap-1 text-sm">

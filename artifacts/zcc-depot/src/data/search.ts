@@ -3,6 +3,7 @@ import { VIDEO_HIGHLIGHTS, WALKTHROUGH_URL } from "@/data/video-highlights";
 import { BLUEPRINT_DESCRIPTION } from "@/data/demo-blueprint";
 import { ROOMS } from "@/data/depot-rooms";
 import { COMPARISON_PATH, COMPARISON_TITLE } from "@/data/voice-comparison";
+import { navigationLabel } from "./navigation";
 
 export type SearchGroup = "Pages" | "Sections" | "Features" | "Use cases" | "FAQ" | "Video highlights" | "Resources";
 export type SearchEntry = { id: string; group: SearchGroup; title: string; description: string; keywords?: string; href: string; external?: boolean };
@@ -59,7 +60,7 @@ const SECTIONS: SearchEntry[] = [
   sec("library", "Resource library", "/resources#library", "Browse and filter the official documentation collection.", "documentation articles"),
 ];
 
-export const SEARCH_INDEX: SearchEntry[] = [
+const SEARCH_ENTRIES: SearchEntry[] = [
   ...ROOMS.map((r) => page(`room-${r.id}`, `Room ${r.n} · ${r.title}`, r.href, r.summary, `room ${r.audience}`)),
   ...ROOMS.flatMap((r) => r.sections.map((x) => sec(`room-${r.id}-${x.id}`, `${x.label} · ${r.title}`, `${r.href}#${x.id}`, r.summary, "room"))),
   ...PAGES,
@@ -71,5 +72,11 @@ export const SEARCH_INDEX: SearchEntry[] = [
   { id: "guided-demo", group: "Resources", title: "Launch guided demo", description: "Interactive Storylane click-through of Zendesk Contact Center.", keywords: "storylane", href: DEMO_URL, external: true },
   ...RESOURCES.filter((r) => r.url !== DEMO_URL).map((r) => ({ id: `res-${r.id}`, group: "Resources" as const, title: r.title, description: `${r.category} · ${r.kind}`, href: r.url, external: true })),
 ];
+
+// Keep former names searchable while showing the approved navigation labels.
+export const SEARCH_INDEX: SearchEntry[] = SEARCH_ENTRIES.map(entry => {
+  const label = navigationLabel(entry.href);
+  return label ? { ...entry, title: label, keywords: `${entry.keywords ?? ""} ${entry.title}` } : entry;
+});
 
 export const SEARCH_GROUPS: SearchGroup[] = ["Pages", "Sections", "Features", "Use cases", "FAQ", "Video highlights", "Resources"];

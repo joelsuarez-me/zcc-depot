@@ -30,7 +30,7 @@ const find=id=>tree.root.findByProps({"data-testid":id});
 const exists=id=>tree.root.findAllByProps({"data-testid":id}).length>0;
 const click=id=>act(()=>find(id).props.onClick());
 const change=(id,value)=>act(()=>find(id).props.onChange({target:{value}}));
-const res=NAV.find(x=>x.label==="Demo Rooms").children;
+const res=NAV.find(x=>x.label==="Interactive Demos").children;
 ok(res.findIndex(x=>x.href==="/resources/callback")===res.findIndex(x=>x.href==="/resources/routing")+1,"Callbacks immediately follows Routing under Demo Rooms");
 ok(!exists("presenter-notes"),"Customer mode excludes private notes");
 click("button-presenter");ok(globalThis.__mode==="presenter","Presenter control uses global mode");

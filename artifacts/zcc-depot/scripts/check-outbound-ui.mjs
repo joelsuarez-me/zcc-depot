@@ -45,7 +45,7 @@ const exists=id=>tree.root.findAllByProps({"data-testid":id}).length>0;
 const click=id=>act(()=>find(id).props.onClick());
 const change=(id,value)=>act(()=>find(id).props.onChange({target:{value}}));
 const check=(id,checked)=>act(()=>find(id).props.onChange({target:{checked}}));
-const res=NAV.find(x=>x.label==="Demo Rooms").children;
+const res=NAV.find(x=>x.label==="Interactive Demos").children;
 ok(res.findIndex(x=>x.href==="/resources/outbound-dialers")===res.findIndex(x=>x.href==="/resources/callback")+1,"Dialers follows Callbacks under Demo Rooms");
 ok(document.title.includes("Outbound Dialers"),"Unique title");
 for(const id of ["dialing-modes","compare","campaign-builder","segmentation","suppression","compliance","time-zones","command-center","multichannel","answer-detection","reporting","zendesk","industries"])ok(tree.root.findAllByProps({id}).length>0,id+" section has direct fragment");

@@ -64,8 +64,8 @@ test("copied summaries retain the whole story, qualifications and official refer
   }
 });
 test("Sales menu and routing preserve existing entries and highlight the new page", () => {
-  const sales = NAV.find(item => item.label === "Sales");
-  assert.deepEqual(sales.children.map(item => item.label), ["Sell Sheet", "Pricing", "Use Cases by Vertical"]);
+  const sales = NAV.find(item => item.label === "Sales Enablement");
+  assert.deepEqual(sales.children.map(item => item.label), ["Contact Center vs. Voice", "Solution Brief", "Pricing & Packaging", "Industry Use Cases", "Top Five Use Cases", "Competitive Intelligence", "Sales Presentation"]);
   assert.ok(isNavItemActive(sales, "/sales/use-cases-by-vertical"));
   const app = readFileSync(new URL("../src/App.tsx", import.meta.url), "utf8");
   assert.match(app, /path="\/sales\/use-cases-by-vertical" component=\{SalesUseCases\}/);

@@ -21,6 +21,12 @@ On iPhone, use smaller, denser heroes, illustrations, cards and spacing so usefu
 
 **How to apply:** Use responsive layout rules rather than scaling the whole page. Preserve readable text, normal pinch zoom, usable touch controls and reserved space for the mobile section arrows.
 
+Organize navigation by the visitor's task rather than keeping separate introductory rooms and a generic library. Distinguish demo preparation tools from playable demo experiences.
+
+**Why:** The user approved consolidating Intro and Library into a single Explore the Depot structure to reduce ambiguous categories and duplicate entries.
+
+**How to apply:** Give new pages a clear category in the shared navigation, keep desktop and mobile in sync, and preserve existing URLs when changing labels or placement.
+
 Do not display numerical prefixes before section names, including navigation labels.
 
 **Why:** The user explicitly requested unnumbered section names after earlier numbering passes.

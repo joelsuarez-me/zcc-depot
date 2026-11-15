@@ -71,12 +71,6 @@ export const ROOMS: DepotRoom[] = [
   },
 ];
 
-// Keep room registration separate from the shorter Intro navigation.
-// Demo experiences and use cases remain reachable from their dedicated menus.
-export const INTRO_ROOMS = ROOMS.filter(
-  room => room.id === "executive-overview" || room.id === "architecture-integrations",
-);
-
 export const roomById = (id: RoomId) => ROOMS.find((r) => r.id === id)!;
 export const roomByPath = (path: string) => ROOMS.find((r) => r.href === path);
 

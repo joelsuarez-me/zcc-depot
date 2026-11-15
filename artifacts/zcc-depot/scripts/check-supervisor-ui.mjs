@@ -51,8 +51,8 @@ const next=()=>click("button-sim-next");
 const reset=()=>click("button-sim-reset");
 ok(document.title.includes("Supervisor Command Center"),"Dedicated page metadata");
 const res=NAV.find(x=>x.label==="Resources").children;
-ok(res.at(-1).href==="/resources/supervisor-command-center","Last resource item");
-ok(NAV.find(x=>x.label==="Demo Rooms").children.some(x=>x.href==="/resources/supervisor-command-center"),"Supervisor Experience remains reachable under Demo Rooms");
+ok(!res.some(x=>x.href==="/resources/supervisor-command-center"),"duplicate supervisor entry removed from Resources");
+ok(NAV.find(x=>x.label==="Interactive Demos").children.some(x=>x.href==="/resources/supervisor-command-center"),"Supervisor Experience remains reachable under Interactive Demos");
 ok(!res.some(x=>["/resources/routing","/resources/callback","/resources/outbound-dialers"].includes(x.href)),"operational labs are not duplicated under Resources");
 for(const id of ["command-center","queues","agents","simulator","interventions","capabilities","contact-flow","service-level","occupancy","alerts","analytics","architecture","zendesk","playbooks","documentation"])
  ok(tree.root.findAll(n=>typeof n.type==="string"&&n.props.id===id).length===1,id+" unique direct section");

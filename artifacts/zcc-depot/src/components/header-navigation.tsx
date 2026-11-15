@@ -27,7 +27,7 @@ function DesktopNavItem({ item, active }: { item: NavItem; active: boolean }) {
   const [open, setOpen] = useState(false);
   const root = useRef<HTMLDivElement>(null);
   const toggle = useRef<HTMLButtonElement>(null);
-  const id = `submenu-${item.label.toLowerCase()}`;
+  const id = `submenu-${item.label.toLowerCase().replace(/\s+/g, "-")}`;
   const label = (
     <><span className="znav-dot" aria-hidden />{item.label}</>
   );

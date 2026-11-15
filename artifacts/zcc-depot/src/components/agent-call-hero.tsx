@@ -21,7 +21,6 @@ export function AgentCallHero() {
           <span className="sep" aria-hidden /><span>Powered by Amazon Connect</span>
         </div>
       </div>
-      <figcaption className="ach-cap"><span>Illustrative agent experience</span><span>Fictional data</span></figcaption>
     </figure>
   );
 }
