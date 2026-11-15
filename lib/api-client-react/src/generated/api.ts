@@ -26,6 +26,7 @@ import type {
   AgendaUpdate,
   AuthUserEnvelope,
   BeginBrowserLoginParams,
+  CompeteBattlecard,
   DemoNarrationPreferences,
   DemoSpeechInput,
   DemoVoiceCatalog,
@@ -50,7 +51,8 @@ import type {
   UseCaseShortlist,
   UseCaseShortlistInput,
   UseCaseShortlistRemoval,
-  UseCaseShortlistUpdate
+  UseCaseShortlistUpdate,
+  VoiceComparisonGuide
 } from './api.schemas';
 
 import { customFetch } from '../custom-fetch';
@@ -79,6 +81,83 @@ const withQueryKey = <T extends object, K>(query: T, queryKey: K): T & { queryKe
   }
   return result;
 };
+
+export const getGetVoiceComparisonUrl = () => {
+
+
+
+
+  return `/api/voice-comparison`
+}
+
+/**
+ * @summary Internal Zendesk Contact Center versus Voice enablement guide
+ */
+export const getVoiceComparison = async ( options?: Parameters<typeof customFetch>[1]): Promise<VoiceComparisonGuide> => {
+
+  return customFetch<VoiceComparisonGuide>(getGetVoiceComparisonUrl(),
+  {
+    ...options,
+    method: 'GET'
+
+
+  }
+);}
+
+
+
+
+
+export const getGetVoiceComparisonQueryKey = () => {
+    return [
+    `/api/voice-comparison`
+    ] as const;
+    }
+
+
+export const getGetVoiceComparisonQueryOptions = <TData = Awaited<ReturnType<typeof getVoiceComparison>>, TError = ErrorType<void>>( options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getVoiceComparison>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getGetVoiceComparisonQueryKey();
+
+
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof getVoiceComparison>>> = ({ signal }) => getVoiceComparison({ signal, ...requestOptions });
+
+
+
+
+
+   return  { queryKey, queryFn, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof getVoiceComparison>>, TError, TData> & { queryKey: QueryKey }
+}
+
+export type GetVoiceComparisonQueryResult = NonNullable<Awaited<ReturnType<typeof getVoiceComparison>>>
+export type GetVoiceComparisonQueryError = ErrorType<void>
+
+
+/**
+ * @summary Internal Zendesk Contact Center versus Voice enablement guide
+ */
+
+export function useGetVoiceComparison<TData = Awaited<ReturnType<typeof getVoiceComparison>>, TError = ErrorType<void>>(
+  options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getVoiceComparison>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+
+ ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+
+  const queryOptions = getGetVoiceComparisonQueryOptions(options)
+
+  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
+
+  return withQueryKey(query, queryOptions.queryKey);
+}
+
+
+
+
+
+
 
 export const getListUseCaseShortlistsUrl = () => {
 
@@ -1887,6 +1966,83 @@ export function useGetPricingGuide<TData = Awaited<ReturnType<typeof getPricingG
  ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
 
   const queryOptions = getGetPricingGuideQueryOptions(options)
+
+  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
+
+  return withQueryKey(query, queryOptions.queryKey);
+}
+
+
+
+
+
+
+
+export const getGetCompeteBattlecardUrl = (competitor: 'five9',) => {
+
+
+
+
+  return `/api/compete/${competitor}`
+}
+
+/**
+ * @summary Read an internal competitor battle card in Presenter mode
+ */
+export const getCompeteBattlecard = async (competitor: 'five9', options?: Parameters<typeof customFetch>[1]): Promise<CompeteBattlecard> => {
+
+  return customFetch<CompeteBattlecard>(getGetCompeteBattlecardUrl(competitor),
+  {
+    ...options,
+    method: 'GET'
+
+
+  }
+);}
+
+
+
+
+
+export const getGetCompeteBattlecardQueryKey = (competitor: 'five9',) => {
+    return [
+    `/api/compete/${competitor}`
+    ] as const;
+    }
+
+
+export const getGetCompeteBattlecardQueryOptions = <TData = Awaited<ReturnType<typeof getCompeteBattlecard>>, TError = ErrorType<void>>(competitor: 'five9', options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getCompeteBattlecard>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getGetCompeteBattlecardQueryKey(competitor);
+
+
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof getCompeteBattlecard>>> = ({ signal }) => getCompeteBattlecard(competitor, { signal, ...requestOptions });
+
+
+
+
+
+   return  { queryKey, queryFn, enabled: competitor !== null && competitor !== undefined, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof getCompeteBattlecard>>, TError, TData> & { queryKey: QueryKey }
+}
+
+export type GetCompeteBattlecardQueryResult = NonNullable<Awaited<ReturnType<typeof getCompeteBattlecard>>>
+export type GetCompeteBattlecardQueryError = ErrorType<void>
+
+
+/**
+ * @summary Read an internal competitor battle card in Presenter mode
+ */
+
+export function useGetCompeteBattlecard<TData = Awaited<ReturnType<typeof getCompeteBattlecard>>, TError = ErrorType<void>>(
+ competitor: 'five9', options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getCompeteBattlecard>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+
+ ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+
+  const queryOptions = getGetCompeteBattlecardQueryOptions(competitor,options)
 
   const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
 

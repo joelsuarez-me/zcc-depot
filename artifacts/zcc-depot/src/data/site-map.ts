@@ -16,6 +16,7 @@ export const SITE_MAP_SECTIONS: Record<string, string[]> = {
   "/architecture/components": ["map", "sign-in"],
   "/architecture/system-overview": ["system-diagram"],
   "/demos": ["agenda", "guided-demo"],
+  "/resources/compete/five9": ["overview", "differentiators", "objections", "discovery", "sources"],
   "/demos/nuggets": ["library", "voice-copilot", "voice-qa", "voice-ai-agents", "video-screen-sharing"],
   "/sales": ["use-cases", "outcomes", "guidance"],
   "/sales/contact-center-vs-voice": ["summary", "capabilities", "fit", "discovery", "migration", "faq", "sources"],
@@ -64,7 +65,7 @@ const GROUP_DESCRIPTIONS: Record<string, string> = {
   "Demo Rooms": "Open hands-on feature and operational simulations.",
   Resources: "Find detailed guides, reference material and enablement.",
 };
-const PRIVATE_PATHS = new Set(["/pricing", "/sell-sheet", "/agenda", "/demos/brief"]);
+const PRIVATE_PATHS = new Set(["/pricing", "/sell-sheet", "/agenda", "/demos/brief", "/resources/compete", "/resources/compete/five9"]);
 const PRIVATE_SECTIONS = new Set(["/resources#roadmap", "/resources#collaboration", "/resources#pitch-deck", "/sales#guidance"]);
 export function siteAccess(href: string): SiteAccess {
   return PRIVATE_PATHS.has(href.split("#")[0]) || PRIVATE_SECTIONS.has(href) ? "presenter" : "public";

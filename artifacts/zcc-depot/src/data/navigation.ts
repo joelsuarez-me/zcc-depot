@@ -1,11 +1,12 @@
 import { LINKS } from "./content";
+import { COMPETITORS } from "./competitors";
 
-export type SubNavItem = { label: string; href: string; external?: boolean };
+export type SubNavItem = { label: string; href: string; external?: boolean; logo?: string; children?: readonly SubNavItem[] };
 export type NavItem = { href: string; label: string; children?: SubNavItem[] };
 
 export const HOW_IT_WORKS_GUIDE: SubNavItem = { label: "How it works (Detailed)", href: "/resources/how-it-works" };
 // Pages linked from within a menu's content rather than listed as submenu items.
-export const NAV_RELATED_PAGES: Record<string, SubNavItem[]> = { Overview: [HOW_IT_WORKS_GUIDE] };
+export const NAV_RELATED_PAGES: Record<string, SubNavItem[]> = { Overview: [HOW_IT_WORKS_GUIDE], Resources: [...COMPETITORS] };
 
 export const NAV: NavItem[] = [
   {
@@ -54,6 +55,7 @@ export const NAV: NavItem[] = [
   },
   { href: "/resources", label: "Resources", children: [
     { label: "Site Map", href: "/site-map" },
+    { label: "Compete", href: "/resources/compete", children: COMPETITORS },
     { label: "Top Five Use Cases", href: "/rooms/use-cases" },
     { label: "Resource library", href: "/resources#library" },
     { label: "Zendesk Contact Center Hub", href: LINKS.contactCenterHub, external: true },

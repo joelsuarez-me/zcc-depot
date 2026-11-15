@@ -26,6 +26,8 @@ const PAGES: SearchEntry[] = [
   page("sell-sheet", "Sell Sheet", "/sell-sheet", "Signed-in access to the internal Zendesk Contact Center sales guide.", "sales guide enablement internal"),
   page("pricing", "Pricing", "/pricing", "Signed-in pricing and packaging guidance for the three Contact Center buying paths.", "commercial contract Amazon AWS sign in"),
   page("resources", "Resources", "/resources", "Official documentation, agent knowledge, news, pitch deck, FAQ and the confidential roadmap.", "docs documentation help center"),
+  page("compete", "Compete", "/resources/compete", "Signed-in competitor enablement library for presenters.", "competition competitors battle cards sales"),
+  page("compete-five9", "Five9 battle card", "/resources/compete/five9", "Signed-in Five9 competitive guidance and source notes.", "compete competitor battlecard Five9"),
   page("agenda", "Demo Agenda", "/agenda", "Signed-in area for preparing and presenting customer agendas.", "today’s agenda sign in presentation meeting"),
 ];
 

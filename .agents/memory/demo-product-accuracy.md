@@ -26,3 +26,9 @@ The How It Works guide deliberately reflects the November 2025 deck. Keep histor
 **Why:** The user explicitly requested source-era content and reviewed updates remain distinguishable, rather than silently modernizing the deck.
 
 **How to apply:** A newly discovered feature or documentation conflict belongs in the source-review register first. Source retrieval is not human approval; never invent a reviewer or a human-reviewed date.
+
+Competitive enablement should lead with demonstrable Zendesk advantages, without turning dated battle-card assertions into universal product facts. Preserve the dates within the source, not just its upload date.
+
+**Why:** The first competitor guide mixed content from different years and included absence claims contradicted by the competitor's public product documentation.
+
+**How to apply:** Check strong absence, pricing and availability claims before repeating them. Reframe unverified weaknesses as discovery questions, distinguish vendor positioning from independent evidence, and show feature-specific release limitations when broader marketing differs.

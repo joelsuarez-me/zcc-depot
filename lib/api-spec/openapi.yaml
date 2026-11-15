@@ -455,6 +455,25 @@ paths:
                 $ref: "#/components/schemas/PricingGuide"
         "401":
           description: Sign-in required.
+  /compete/{competitor}:
+    get:
+      operationId: getCompeteBattlecard
+      summary: Read an internal competitor battle card in Presenter mode
+      parameters:
+        - in: path
+          name: competitor
+          required: true
+          schema: { type: string, enum: [five9] }
+      responses:
+        "200":
+          description: Internal competitive guidance for signed-in presenters.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CompeteBattlecard"
+        "401": { description: Sign-in required. }
+        "403": { description: Presenter mode required. }
+        "404": { description: Competitor not found. }
   /sell-sheet:
     get:
       operationId: getSellSheet
@@ -1197,6 +1216,64 @@ components:
           type: string
         internal:
           type: boolean
+    CompeteBattlecard:
+      type: object
+      required: [id, name, headline, summary, pitch, sourceTitle, sourceDates, preparedOn, strengths, themes, objections, guardrails, sources]
+      properties:
+        id: { type: string }
+        name: { type: string }
+        headline: { type: string }
+        summary: { type: string }
+        pitch: { type: string }
+        sourceTitle: { type: string }
+        sourceDates: { type: string }
+        preparedOn: { type: string }
+        strengths:
+          type: array
+          items: { type: string }
+        themes:
+          type: array
+          items: { $ref: "#/components/schemas/CompeteTheme" }
+        objections:
+          type: array
+          items: { $ref: "#/components/schemas/CompeteObjection" }
+        guardrails:
+          type: array
+          items: { type: string }
+        sources:
+          type: array
+          items: { $ref: "#/components/schemas/CompeteSource" }
+    CompeteTheme:
+      type: object
+      required: [id, title, zendesk, five9, question, proof, sourcePages, sourceIds]
+      properties:
+        id: { type: string }
+        title: { type: string }
+        zendesk: { type: string }
+        five9: { type: string }
+        question: { type: string }
+        proof: { type: string }
+        sourcePages: { type: string }
+        sourceIds:
+          type: array
+          items: { type: string }
+    CompeteObjection:
+      type: object
+      required: [id, question, response, proof, sourcePages]
+      properties:
+        id: { type: string }
+        question: { type: string }
+        response: { type: string }
+        proof: { type: string }
+        sourcePages: { type: string }
+    CompeteSource:
+      type: object
+      required: [id, title, url, note]
+      properties:
+        id: { type: string }
+        title: { type: string }
+        url: { type: string }
+        note: { type: string }
     SellSheet:
       type: object
       required: [title, businessChallenge, pains, pitch, plays, preparation, pdfUrl]

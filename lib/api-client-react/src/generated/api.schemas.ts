@@ -5,6 +5,42 @@
  * API specification
  * OpenAPI spec version: 0.1.0
  */
+export interface VoiceComparisonCard {
+  title: string;
+  body: string;
+  points: string[];
+}
+
+export interface VoiceComparisonRow {
+  topic: string;
+  voice: string;
+  contactCenter: string;
+}
+
+export interface VoiceComparisonSection {
+  id: string;
+  eyebrow: string;
+  title: string;
+  intro: string;
+  cards: VoiceComparisonCard[];
+  rows: VoiceComparisonRow[];
+  questions: string[];
+  references: string[];
+}
+
+export interface VoiceComparisonSource {
+  id: string;
+  title: string;
+  note: string;
+}
+
+export interface VoiceComparisonGuide {
+  title: string;
+  notice: string;
+  sections: VoiceComparisonSection[];
+  sources: VoiceComparisonSource[];
+}
+
 export type PublicScenarioId = typeof PublicScenarioId[keyof typeof PublicScenarioId];
 
 
@@ -304,6 +340,48 @@ export interface PricingGuide {
   costs: PricingCost[];
   notes: PricingNote[];
   sources: PricingSource[];
+}
+
+export interface CompeteTheme {
+  id: string;
+  title: string;
+  zendesk: string;
+  five9: string;
+  question: string;
+  proof: string;
+  sourcePages: string;
+  sourceIds: string[];
+}
+
+export interface CompeteObjection {
+  id: string;
+  question: string;
+  response: string;
+  proof: string;
+  sourcePages: string;
+}
+
+export interface CompeteSource {
+  id: string;
+  title: string;
+  url: string;
+  note: string;
+}
+
+export interface CompeteBattlecard {
+  id: string;
+  name: string;
+  headline: string;
+  summary: string;
+  pitch: string;
+  sourceTitle: string;
+  sourceDates: string;
+  preparedOn: string;
+  strengths: string[];
+  themes: CompeteTheme[];
+  objections: CompeteObjection[];
+  guardrails: string[];
+  sources: CompeteSource[];
 }
 
 export interface SellSheetPlay {

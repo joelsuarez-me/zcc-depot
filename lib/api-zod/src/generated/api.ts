@@ -9,6 +9,42 @@ import * as zod from 'zod';
 
 
 /**
+ * @summary Internal Zendesk Contact Center versus Voice enablement guide
+ */
+export const GetVoiceComparisonHeader = zod.object({
+  "X-Depot-Mode": zod.enum(['presenter'])
+})
+
+export const GetVoiceComparisonResponse = zod.object({
+  "title": zod.string(),
+  "notice": zod.string(),
+  "sections": zod.array(zod.object({
+  "id": zod.string(),
+  "eyebrow": zod.string(),
+  "title": zod.string(),
+  "intro": zod.string(),
+  "cards": zod.array(zod.object({
+  "title": zod.string(),
+  "body": zod.string(),
+  "points": zod.array(zod.string())
+})),
+  "rows": zod.array(zod.object({
+  "topic": zod.string(),
+  "voice": zod.string(),
+  "contactCenter": zod.string()
+})),
+  "questions": zod.array(zod.string()),
+  "references": zod.array(zod.string())
+})),
+  "sources": zod.array(zod.object({
+  "id": zod.string(),
+  "title": zod.string(),
+  "note": zod.string()
+}))
+})
+
+
+/**
  * @summary List customer shortlists shared by signed-in Presenters
  */
 export const ListUseCaseShortlistsHeader = zod.object({
@@ -763,6 +799,50 @@ export const GetPricingGuideResponse = zod.object({
   "url": zod.string(),
   "note": zod.string(),
   "internal": zod.boolean()
+}))
+})
+
+
+/**
+ * @summary Read an internal competitor battle card in Presenter mode
+ */
+export const GetCompeteBattlecardParams = zod.object({
+  "competitor": zod.enum(['five9'])
+})
+
+export const GetCompeteBattlecardResponse = zod.object({
+  "id": zod.string(),
+  "name": zod.string(),
+  "headline": zod.string(),
+  "summary": zod.string(),
+  "pitch": zod.string(),
+  "sourceTitle": zod.string(),
+  "sourceDates": zod.string(),
+  "preparedOn": zod.string(),
+  "strengths": zod.array(zod.string()),
+  "themes": zod.array(zod.object({
+  "id": zod.string(),
+  "title": zod.string(),
+  "zendesk": zod.string(),
+  "five9": zod.string(),
+  "question": zod.string(),
+  "proof": zod.string(),
+  "sourcePages": zod.string(),
+  "sourceIds": zod.array(zod.string())
+})),
+  "objections": zod.array(zod.object({
+  "id": zod.string(),
+  "question": zod.string(),
+  "response": zod.string(),
+  "proof": zod.string(),
+  "sourcePages": zod.string()
+})),
+  "guardrails": zod.array(zod.string()),
+  "sources": zod.array(zod.object({
+  "id": zod.string(),
+  "title": zod.string(),
+  "url": zod.string(),
+  "note": zod.string()
 }))
 })
 
