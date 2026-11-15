@@ -54,7 +54,7 @@ export function Reveal({ children, delay = 0, className = "" }: { children: Reac
 // Legacy num props are accepted but never rendered; section names are unnumbered.
 export function SectionHead({ id, permalinkId, eyebrow, title, lede, dark = false }: { id?: string; permalinkId?: string; num?: string; eyebrow: string; title: ReactNode; lede?: ReactNode; dark?: boolean }) {
   return (
-    <Reveal className="mb-5 grid gap-3 md:grid-cols-12 md:items-end">
+    <Reveal className="section-heading mb-5 grid gap-3 md:grid-cols-12 md:items-end">
       <div className="md:col-span-7" id={id} data-section-nav>
         <div className={`eyebrow mb-2 flex items-center gap-3 ${dark ? "text-[#D1F470]" : "text-[#203524]"}`}>
           {eyebrow}<SectionGlyph label={eyebrow} dark={dark} />{(id || permalinkId) && <SectionLink id={(id || permalinkId)!} label={eyebrow} dark={dark} />}
@@ -77,7 +77,7 @@ export function PageHero({ eyebrow, title, lede, children, motif }: { eyebrow: s
     <div className="zhero-wrap">
     <section className="zhero on-dark">
       <div className="grid-lines absolute inset-0" aria-hidden />
-      <div className="relative w-full px-6 py-6 md:px-12">
+      <div className="page-hero-inner relative w-full px-6 py-6 md:px-12">
         <motion.div initial={reduce ? false : { opacity: 0, y: 24 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.7, ease: [0.2, 0.7, 0.2, 1] }}>
           <div className="grid gap-2 md:grid-cols-12 md:items-end md:gap-6">
             <div className="md:col-span-7 lg:col-span-6">

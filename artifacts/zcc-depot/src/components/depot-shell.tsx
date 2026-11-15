@@ -71,8 +71,8 @@ export function DepotSidebar({ logo, mobile = false, onNavigate }: { logo: strin
                             : <Link href={c.href} onClick={onNavigate} className={`depot-side-sublink ${loc === c.href ? "is-active" : ""}`} data-testid={`link-subnav-${c.label.toLowerCase().replace(/\W+/g, "-")}`}>{c.label}</Link>}
                             {c.children && <ul className="ml-2 border-l border-white/15 pl-2" aria-label={`${c.label} competitors`}>
                               {c.children.map(competitor => <li key={competitor.href}>
-                                <Link href={competitor.href} onClick={onNavigate} className={`depot-side-sublink flex items-center gap-2 ${loc === competitor.href ? "is-active" : ""}`} aria-current={loc === competitor.href ? "page" : undefined} data-testid={`link-competitor-${competitor.label.toLowerCase()}`}>
-                                  {competitor.logo && <span className="inline-flex h-7 w-10 shrink-0 items-center justify-center rounded-md bg-white px-1"><img src={`${import.meta.env.BASE_URL}${competitor.logo}`} alt="" className="h-5 w-full object-contain" /></span>}{competitor.label}
+                                <Link href={competitor.href} onClick={onNavigate} className={`depot-side-sublink flex min-h-11 items-center gap-2 ${loc === competitor.href ? "is-active" : ""}`} aria-label={competitor.label} title={competitor.label} aria-current={loc === competitor.href ? "page" : undefined} data-testid={`link-competitor-${competitor.label.toLowerCase()}`}>
+                                  {competitor.logo ? <span className="inline-flex h-7 w-10 shrink-0 items-center justify-center rounded-md bg-white px-1"><img src={`${import.meta.env.BASE_URL}${competitor.logo}`} alt="" className="h-5 w-full object-contain" /></span> : competitor.label}
                                 </Link>
                               </li>)}
                             </ul>}

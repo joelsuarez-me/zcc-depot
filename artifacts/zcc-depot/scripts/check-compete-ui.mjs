@@ -35,6 +35,8 @@ act(()=>tree.unmount());
 act(()=>{tree=create(<Detail/>)});
 ok(find(tree,"text-headline").children.includes(competeFive9.headline),"server headline rendered");
 ok(globalThis.__competeQueryEnabled===true,"signed-in presenter enables query");
+ok(text(find(tree,"button-compete-print")).includes("Print to PDF"),"visible print control");
+ok(text(find(tree,"button-compete-download")).includes("Download PDF"),"visible download control");
 for(const theme of competeFive9.themes){
   act(()=>find(tree,"tab-theme-"+theme.id).props.onClick());
   ok(text(find(tree,"text-theme-title"))===theme.title,"theme selection: "+theme.id);

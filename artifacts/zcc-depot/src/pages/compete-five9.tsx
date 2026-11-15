@@ -6,6 +6,7 @@ import { useGetCompeteBattlecard, getGetCompeteBattlecardQueryKey } from "@works
 import type { CompeteBattlecard } from "@workspace/api-client-react";
 import { useDepot } from "@/lib/depot-mode";
 import { CompeteArt, FIVE9_LOGO, useCompeteMeta } from "@/components/compete/compete-kit";
+import { CompeteBriefActions } from "@/components/compete/compete-brief-actions";
 import "@/styles/compete.css";
 
 const TITLE = "Zendesk vs Five9 | ZCC Depot Compete";
@@ -279,6 +280,7 @@ export default function CompeteFive9Page() {
             </div>
             <h1 className="cmp-title" data-testid="text-headline">{data?.headline ?? "Five9 battlecard"}</h1>
             {data && <p className="mt-3 text-xs text-[#F5F5F2]/55 mono">Sources {data.sourceDates} · Prepared {data.preparedOn}</p>}
+            {data && <CompeteBriefActions data={data} />}
           </div>
           <CompeteArt />
         </motion.header>

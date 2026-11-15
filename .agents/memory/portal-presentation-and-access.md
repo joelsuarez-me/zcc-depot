@@ -15,6 +15,12 @@ Keep the gap between each main hero and its first content section compact too; d
 
 **How to apply:** Preserve compact headers when adding pages; do not reintroduce forced full-screen hero heights.
 
+On iPhone, use smaller, denser heroes, illustrations, cards and spacing so useful content appears sooner. Landscape should use the wider screen rather than retaining the portrait stack.
+
+**Why:** The user repeated the density request specifically for iPhone, citing the oversized Platform Architect Depot hero and asking to rotate horizontally for a wider view.
+
+**How to apply:** Use responsive layout rules rather than scaling the whole page. Preserve readable text, normal pinch zoom, usable touch controls and reserved space for the mobile section arrows.
+
 Do not display numerical prefixes before section names, including navigation labels.
 
 **Why:** The user explicitly requested unnumbered section names after earlier numbering passes.
