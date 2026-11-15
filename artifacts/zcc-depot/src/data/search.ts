@@ -1,4 +1,5 @@
-import { DEMO_URL, FAQ, FEATURES, RESOURCES, USE_CASES } from "@/data/content";
+import { DEMO_URL, FAQ, RESOURCES, USE_CASES } from "@/data/content";
+import { FEATURE_REGISTRY } from "@/data/feature-registry";
 import { VIDEO_HIGHLIGHTS, WALKTHROUGH_URL } from "@/data/video-highlights";
 import { BLUEPRINT_DESCRIPTION } from "@/data/demo-blueprint";
 import { ROOMS } from "@/data/depot-rooms";
@@ -38,7 +39,7 @@ const SECTIONS: SearchEntry[] = [
   sec("pricing-team", "Contact Center Team — the lighter-weight path", "/pricing#team", "For greenfield and net-new customers who do not want the full Suite.", "pricing team new customer"),
   sec("platform", "One solution", "/#platform", "Pillars of the unified contact center platform.", "pillars overview"),
   sec("how-it-works", "How it works", "/#how-it-works", "Call journey from customer to Agent Workspace.", "journey voice"),
-  sec("features", "Features", "/#features", "Voice AI agents, copilots, translation, WEM, compliance.", "capabilities"),
+  sec("features", "Explore the power of Zendesk Contact Center", "/#features", "Search voice, AI, agent experience, operations, architecture and security capabilities.", "features capabilities explorer"),
   sec("demo-agenda", "Demo Blueprint", "/demos#agenda", BLUEPRINT_DESCRIPTION, "demo approach stages storyline methodology blueprint 30 45 60 minutes copilot QA"),
   sec("demo-click-through", "Demo Click-Through", "/demos#guided-demo", "Play the embedded Zendesk Contact Center walkthrough.", "storylane interactive guided demo"),
   sec("nugget-copilot", "Voice Copilot simulation", "/demos/nuggets#voice-copilot", "Simulate a returns call, recognized intent and in-call knowledge guidance.", "demo nuggets refund transcript returns neutral sentiment quick answer"),
@@ -65,7 +66,7 @@ const SEARCH_ENTRIES: SearchEntry[] = [
   ...ROOMS.flatMap((r) => r.sections.map((x) => sec(`room-${r.id}-${x.id}`, `${x.label} · ${r.title}`, `${r.href}#${x.id}`, r.summary, "room"))),
   ...PAGES,
   ...SECTIONS,
-  ...FEATURES.map((f, i) => ({ id: `feature-${i}`, group: "Features" as const, title: f.t, description: f.d, keywords: f.tag, href: "/#features" })),
+  ...FEATURE_REGISTRY.map((f) => ({ id: `feature-${f.id}`, group: "Features" as const, title: f.title, description: f.description, keywords: [...f.aliases, ...f.keywords, f.outcome, f.customerProblem, ...f.industries].join(" "), href: `/?feature=${encodeURIComponent(f.id)}#features` })),
   ...USE_CASES.map((u, i) => ({ id: `usecase-${i}`, group: "Use cases" as const, title: u.t, description: u.scenario, keywords: [...u.outcome, ...u.enables].join(" "), href: "/sales#use-cases" })),
   ...FAQ.map(([q, a], i) => ({ id: `faq-${i}`, group: "FAQ" as const, title: q, description: a, href: "/resources#faq" })),
   ...VIDEO_HIGHLIGHTS.map((v, i) => ({ id: `video-${i}`, group: "Video highlights" as const, title: v.title, description: `${v.time} · ${v.highlight}`, keywords: v.transcript, href: `${WALKTHROUGH_URL}&t=${v.start}s`, external: true })),

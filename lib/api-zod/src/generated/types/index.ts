@@ -29,6 +29,7 @@ export * from './demoVoiceCatalog';
 export * from './demoVoiceLanguageAccent';
 export * from './demoVoiceRole';
 export * from './errorEnvelope';
+export * from './featurePresenterGuidance';
 export * from './healthStatus';
 export * from './logoutBrowserSessionParams';
 export * from './objectAuthorizationInput';

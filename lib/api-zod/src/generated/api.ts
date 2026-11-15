@@ -231,6 +231,14 @@ export const GetPresenterContentHeader = zod.object({
 })
 
 export const GetPresenterContentResponse = zod.object({
+  "features": zod.array(zod.object({
+  "featureId": zod.string(),
+  "technical": zod.array(zod.string()),
+  "discovery": zod.array(zod.string()),
+  "demonstration": zod.array(zod.string()),
+  "objections": zod.array(zod.string()),
+  "implementation": zod.array(zod.string())
+})).optional(),
   "legacy": zod.object({
   "roadmap": zod.object({
   "executive": zod.array(zod.object({

@@ -1053,6 +1053,9 @@ components:
       type: object
       required: [legacy, rooms]
       properties:
+        features:
+          type: array
+          items: { $ref: "#/components/schemas/FeaturePresenterGuidance" }
         legacy:
           type: object
           required: [roadmap, gtm, briefing, resources]
@@ -1068,6 +1071,16 @@ components:
             briefing: { type: array, items: { type: string } }
             resources: { type: array, items: { $ref: "#/components/schemas/PresenterResource" } }
         rooms: { type: array, items: { $ref: "#/components/schemas/PresenterRoom" } }
+    FeaturePresenterGuidance:
+      type: object
+      required: [featureId, technical, discovery, demonstration, objections, implementation]
+      properties:
+        featureId: { type: string }
+        technical: { type: array, items: { type: string } }
+        discovery: { type: array, items: { type: string } }
+        demonstration: { type: array, items: { type: string } }
+        objections: { type: array, items: { type: string } }
+        implementation: { type: array, items: { type: string } }
     DemoNarrationPreferences:
       type: object
       additionalProperties: false

@@ -5,10 +5,12 @@
  * API specification
  * OpenAPI spec version: 0.1.0
  */
+import type { FeaturePresenterGuidance } from './featurePresenterGuidance';
 import type { PresenterContentLegacy } from './presenterContentLegacy';
 import type { PresenterRoom } from './presenterRoom';
 
 export interface PresenterContent {
+  features?: FeaturePresenterGuidance[];
   legacy: PresenterContentLegacy;
   rooms: PresenterRoom[];
 }

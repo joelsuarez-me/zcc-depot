@@ -179,7 +179,17 @@ export type PresenterContentLegacy = {
   resources: PresenterResource[];
 };
 
+export interface FeaturePresenterGuidance {
+  featureId: string;
+  technical: string[];
+  discovery: string[];
+  demonstration: string[];
+  objections: string[];
+  implementation: string[];
+}
+
 export interface PresenterContent {
+  features?: FeaturePresenterGuidance[];
   legacy: PresenterContentLegacy;
   rooms: PresenterRoom[];
 }
