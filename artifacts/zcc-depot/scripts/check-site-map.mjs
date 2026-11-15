@@ -15,6 +15,7 @@ import SiteMap from "./src/pages/site-map";
 import {SITE_MAP,SITE_MAP_SECTIONS,ROUTING_MAP_METHODS,filterSiteMap,normalizeSiteQuery,siteMapCounts,siteAccess} from "./src/data/site-map";
 import {NAV,HOW_IT_WORKS_GUIDE,isNavItemActive} from "./src/data/navigation";
 import {ROOMS} from "./src/data/depot-rooms";
+import {FEATURE_REGISTRY} from "./src/data/feature-registry";
 globalThis.IS_REACT_ACT_ENVIRONMENT=true;
 globalThis.document={title:"Previous title",querySelector:()=>null};
 let checks=0;
@@ -73,6 +74,13 @@ for(const query of ["routing","skills proficiency","callback","predictive","SAML
 }
 ok(JSON.stringify(filterSiteMap("  ROUTING "))===JSON.stringify(filterSiteMap("routing")),"case-insensitive results");
 ok(filterSiteMap("skills proficiency").some(g=>g.pages.some(p=>p.href==="/resources/routing")),"deep routing method discoverable");
+const featureLinks=SITE_MAP.flatMap(g=>g.pages).filter(p=>p.href==="/").flatMap(p=>p.sections).filter(s=>s.href.includes("?feature="));
+ok(featureLinks.length===33,"all 33 capabilities listed individually");
+for(const feature of FEATURE_REGISTRY){
+ const href="/?feature="+encodeURIComponent(feature.id)+"#features";
+ ok(featureLinks.some(s=>s.href===href&&s.title===feature.title),"capability direct link: "+feature.id);
+ ok(filterSiteMap(feature.title).some(g=>g.pages.some(p=>p.sections.some(s=>s.href===href))),"capability searchable: "+feature.id);
+}
 ok(ROUTING_MAP_METHODS.length===12,"all routing methods");
 const methodSource=readFileSync("./src/data/routing-scenarios.ts","utf8");
 for(const [id,label] of ROUTING_MAP_METHODS)ok(methodSource.includes('id: "'+id+'"')&&methodSource.includes(label),"routing link matches source "+id);
@@ -82,7 +90,7 @@ for(const group of SITE_MAP)for(const page of group.pages){
  if(page.external)ok(new URL(page.href).protocol==="https:","safe external page");
  for(const section of page.sections){
   if(section.external)ok(new URL(section.href).protocol==="https:","safe external reference");
-  else ok(routes.includes(section.href.split("#")[0]),"section route exists");
+  else ok(routes.includes(new URL(section.href,"https://depot.invalid").pathname),"section route exists");
  }
 }
 for(const path of ["/pricing","/agenda","/sell-sheet","/demos/brief"]){
@@ -117,6 +125,8 @@ act(()=>find("button-suggest-callback").props.onClick());
 ok(find("input-site-map-search").props.value==="callback","suggested search works");
 act(()=>find("button-clear-search").props.onClick());
 ok(find("input-site-map-search").props.value==="","clear search restores map");
+act(()=>find("input-site-map-search").props.onChange({target:{value:"Customer Authentication & Verification"}}));
+ok(tree.root.findAll(n=>n.type==="a"&&n.props.href==="/?feature=customer-verification#features").length===1,"inline capability search renders direct link");
 act(()=>find("input-site-map-search").props.onChange({target:{value:"routing"}}));
 let prevented=false;
 act(()=>find("input-site-map-search").props.onKeyDown({key:"Escape",preventDefault(){prevented=true}}));

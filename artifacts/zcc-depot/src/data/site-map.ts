@@ -2,6 +2,7 @@ import { NAV, NAV_RELATED_PAGES, isNavItemActive, navigationLabel } from "./navi
 import { ROOMS, ROUTE_LABELS } from "./depot-rooms";
 import { SEARCH_INDEX } from "./search";
 import { SLIDES } from "./how-it-works";
+import { getFeatureById } from "./feature-registry";
 
 export type SiteAccess = "public" | "presenter";
 export type SiteDestination = { title: string; href: string; description: string; keywords: string; access: SiteAccess; external?: boolean };
@@ -79,8 +80,13 @@ const anchorsFor = (path: string) => new Set([
   ...(path === "/resources/routing" ? ROUTING_MAP_METHODS.map(([id]) => `method-${id}`) : []),
 ]);
 function validDestination(href: string) {
-  const [path, hash] = href.split("#");
-  return routePaths.has(path) && (!hash || anchorsFor(path).has(hash));
+  const url = new URL(href, "https://depot.invalid");
+  if (url.search) {
+    const feature = url.searchParams.get("feature");
+    return url.pathname === "/" && url.hash === "#features"
+      && [...url.searchParams.keys()].length === 1 && !!feature && !!getFeatureById(feature);
+  }
+  return routePaths.has(url.pathname) && (!url.hash || anchorsFor(url.pathname).has(url.hash.slice(1)));
 }
 function pageFor(path: string): SiteMapPage {
   const indexed = SEARCH_INDEX.find(entry => entry.group === "Pages" && entry.href === path);
@@ -104,7 +110,7 @@ function pageFor(path: string): SiteMapPage {
     add({ title, href, description: siteAccess(href) === "presenter" ? "Presenter Mode and sign-in required." : `Explore ${title.toLowerCase()}.`, keywords: "", access: siteAccess(href) });
   }
   for (const entry of SEARCH_INDEX) {
-    if (entry.external || entry.href === path || entry.href.split("#")[0] !== path || !validDestination(entry.href)) continue;
+    if (entry.external || entry.href === path || new URL(entry.href, "https://depot.invalid").pathname !== path || !validDestination(entry.href)) continue;
     const existing = sections.get(entry.href);
     const restricted = siteAccess(entry.href) === "presenter";
     if (existing && !restricted) existing.description = entry.description;

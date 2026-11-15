@@ -42,3 +42,17 @@ mtime_ms = 1794684574730
 storage_uri = "gcs://replit-rams-assets-spock/rams/assets/repl:a5317541-3b36-4634-98e4-c41c651ba0cc/78d49acc-e7d6-4481-96ce-26149eaa8c6d/7b4494fb-ce12-4968-b779-07dffa5d5245"
 storage_version_token = "1794684591770075"
 content_type = "application/pdf"
+
+[[outputs]]
+id = "UkDPSI3tWCQ-tZCJvi8Z7"
+uri = "file://generated-artifacts/site-review/ZCC-Depot-Source-Review-2026-11-15.zip"
+type = "unspecified"
+title = "ZCC Depot — Source Review ZIP"
+description = "638 source and asset files, review instructions, file checksums, and phone screenshot. Excludes credentials, customer records, dependencies and build output. Contains internal guidance; use an approved AI workspace."
+logical_id = "561943bc-342d-44e4-9c6f-9e82415da8b0"
+content_hash = "sha256:561643ef2ac54d2603bcfa5077838a9d3245daea3ca2748b33839b58d632eca5"
+size = 3491189
+mtime_ms = 1794759063767
+storage_uri = "gcs://replit-rams-assets-spock/rams/assets/repl:a5317541-3b36-4634-98e4-c41c651ba0cc/561943bc-342d-44e4-9c6f-9e82415da8b0/db64b6aa-5ce3-4f57-85b6-2c7c460c991e"
+storage_version_token = "1794759074200026"
+content_type = "application/octet-stream"
