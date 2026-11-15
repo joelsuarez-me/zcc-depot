@@ -11,4 +11,4 @@
 - [Voice catalog interpretation](voice-catalog-interpretation.md) — provider labels describe catalog metadata, not script translation or exhaustive speech-language support.
 - [Stable scenario references](scenario-reference-stability.md) — preserve public scenario IDs during content refreshes so saved customer discussions and older links keep working.
 - [Operational demo intent](outbound-demo-intent.md) — architect-led labs stay simulation-only; distinguish native/custom capabilities and avoid correlated fictional customer choices.
-- [Responsive CSS priority](responsive-css-priority.md) — unlayered component display rules can override Tailwind visibility utilities and crowd phone layouts.
+- [Responsive overlay behavior](responsive-css-priority.md) — check cascade priority, transformed containing blocks and explicit focus containment in native and fallback fullscreen.

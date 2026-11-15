@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, type MouseEvent } from "react";
 import { Link } from "wouter";
 import * as Dialog from "@radix-ui/react-dialog";
 import * as Tabs from "@radix-ui/react-tabs";
@@ -11,6 +11,15 @@ import { FeatureSimulation } from "./feature-simulation";
 import { FeatureArchitectureView } from "./feature-architecture";
 import { FeaturePresenterNotes } from "./feature-presenter-notes";
 import { ClassChips, VerifiedDate } from "./feature-bits";
+import { FEATURE_REGISTRY, featureHref } from "@/data/feature-registry";
+import { evidenceIssues, relatedFeatures } from "@/data/feature-evidence";
+import "@/components/demo-readiness.css";
+
+const EV_LABEL = { "documentation-reviewed": "Documentation reviewed", "requires-verification": "Requires verification", "missing-evidence": "Missing evidence" } as const;
+export function EvidenceChip({ status }: { status: EnterpriseFeature["evidence"]["status"] }) {
+  return <span className={`ev-chip ev-${status}`} data-testid={`status-evidence-${status}`}>{EV_LABEL[status]}</span>;
+}
+function plainClick(e: MouseEvent) { return e.button === 0 && !e.metaKey && !e.ctrlKey && !e.shiftKey && !e.altKey; }
 
 const TABS = [["overview", "Overview"], ["value", "Business Value"], ["demo", "Interactive Demo"], ["architecture", "Architecture"], ["configuration", "Configuration"], ["docs", "Documentation"]] as const;
 export type Tab = typeof TABS[number][0];
@@ -26,7 +35,7 @@ function DemoFallback({ resetError }: ErrorFallbackProps) {
   );
 }
 
-export function FeatureDetail({ feature, onClose, onPrev, onNext, position, tab, setTab, onReturnFocus }: { tab: Tab; setTab: (t: Tab) => void; feature: EnterpriseFeature | null; onClose: () => void; onPrev?: () => void; onNext?: () => void; position: string; onReturnFocus: () => void }) {
+export function FeatureDetail({ feature, onClose, onPrev, onNext, position, tab, setTab, onReturnFocus, onOpenRelated }: { onOpenRelated?: (id: string) => void; tab: Tab; setTab: (t: Tab) => void; feature: EnterpriseFeature | null; onClose: () => void; onPrev?: () => void; onNext?: () => void; position: string; onReturnFocus: () => void }) {
   const [full, setFull] = useState(false);
   return (
     <Dialog.Root open={!!feature} onOpenChange={(o) => { if (!o) onClose(); }}>
@@ -69,20 +78,39 @@ export function FeatureDetail({ feature, onClose, onPrev, onNext, position, tab,
                         <p className="mt-2 text-xs">{feature.legacy.sources.map((s, i) => <span key={s.href}>{i > 0 && " · "}<Ext href={s.href} className="underline">{s.label}</Ext></span>)}</p></div>
                     )}
                     <FeaturePresenterNotes featureId={feature.id} />
+                    {(() => { const rel = relatedFeatures(feature, FEATURE_REGISTRY); return rel.length > 0 && (
+                      <nav aria-label="Related features"><div className="fx-h">Related features</div>
+                        <div className="fx-related">{rel.map((r) => (
+                          <a key={r.id} href={featureHref(r.id)} onClick={(e) => { if (onOpenRelated && plainClick(e)) { e.preventDefault(); onOpenRelated(r.id); } }} data-testid={`link-related-feature-${r.id}`}>
+                            <span className="block text-sm font-semibold">{r.title}</span><span className="mt-1 block"><EvidenceChip status={r.evidence.status} /></span>
+                          </a>))}</div>
+                      </nav>); })()}
                   </Tabs.Content>
                   <Tabs.Content value="value" className="space-y-3 focus:outline-none">
                     <div className="fx-panel"><div className="fx-h">Benefits</div><ul className="grid gap-1.5 text-sm md:grid-cols-2">{feature.benefits.map((b) => <li key={b} className="flex gap-2"><span className="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-[#203524]" />{b}</li>)}</ul></div>
                     <div className="grid gap-3 md:grid-cols-2">{feature.useCases.map((u) => <div key={u.title} className="fx-panel"><p className="font-semibold">{u.title}</p><p className="mt-1 text-sm text-[#11110D]/72">{u.description}</p></div>)}</div>
                     {feature.industries.length > 0 && <div className="flex flex-wrap gap-1.5"><span className="fx-h !mb-0 mr-1 self-center">Industries</span>{feature.industries.map((i) => <span key={i} className="room-tag">{i}</span>)}</div>}
                   </Tabs.Content>
-                  <Tabs.Content value="demo" className="focus:outline-none"><FeatureSimulation feature={feature} /></Tabs.Content>
-                  <Tabs.Content value="architecture" className="focus:outline-none"><FeatureArchitectureView arch={feature.architecture} featureId={feature.id} /></Tabs.Content>
+                  <Tabs.Content value="demo" className="focus:outline-none"><FeatureSimulation key={feature.id} feature={feature} /></Tabs.Content>
+                  <Tabs.Content value="architecture" className="focus:outline-none"><FeatureArchitectureView key={feature.id} arch={feature.architecture} featureId={feature.id} /></Tabs.Content>
                   <Tabs.Content value="configuration" className="space-y-2 focus:outline-none">
                     {feature.configuration.length === 0 ? <div className="fx-empty text-sm">Configuration steps have not been published for this feature.</div>
                       : <ol className="space-y-2">{feature.configuration.map((c, i) => <li key={c.title} className="fx-panel flex gap-3"><span className="room-index">{i + 1}</span><div><p className="font-semibold">{c.title}</p><p className="mt-0.5 text-sm text-[#11110D]/72">{c.detail}</p></div></li>)}</ol>}
                     <p className="text-xs text-[#11110D]/55">Configuration is indicative. Confirm prerequisites, entitlements and regional support for each deployment.</p>
                   </Tabs.Content>
                   <Tabs.Content value="docs" className="space-y-3 focus:outline-none">
+                    {(() => { const ev = feature.evidence; const issues = evidenceIssues(feature); return (
+                      <div className="fx-panel" data-testid="panel-feature-evidence"><div className="mb-2 flex flex-wrap items-center gap-2"><div className="fx-h !mb-0">Evidence status</div><EvidenceChip status={ev.status} /></div>
+                        <dl className="ev-dl">
+                          <div><dt>Owner</dt><dd>{ev.owner ?? <span className="text-[#a2361f]">Unassigned</span>}</dd></div>
+                          <div><dt>Documentation review</dt><dd>{ev.reviewedAt ? <VerifiedDate date={ev.reviewedAt} /> : <span className="text-[#a2361f]">No review date recorded</span>}</dd></div>
+                          <div><dt>Product boundary</dt><dd>{ev.productBoundary.length ? ev.productBoundary.join(" · ") : "Not recorded"}</dd></div>
+                          <div><dt>Dependencies</dt><dd>{ev.dependencies.length ? ev.dependencies.join(" · ") : "None recorded"}</dd></div>
+                          <div><dt>Availability</dt><dd>{ev.availabilityQualification || feature.availability}</dd></div>
+                          <div><dt>Human approval</dt><dd>{ev.humanApproval ?? "Not recorded. No approval is implied."}</dd></div>
+                        </dl>
+                        {issues.length > 0 && <p className="mt-2 text-xs"><span className="font-semibold">Needs attention: </span>{issues.map((i) => <span key={i} className="ev-reason">{i}</span>)}</p>}
+                      </div>); })()}
                     <div className="fx-panel"><div className="fx-h">Classifications</div>
                       <ul className="space-y-1.5 text-sm">{feature.classifications.map((c) => <li key={c}><span className="font-semibold">{c}.</span> <span className="text-[#11110D]/70">{FEATURE_CLASSIFICATIONS.find((x) => x.value === c)?.description}</span></li>)}</ul></div>
                     <div className="fx-panel"><div className="fx-h">Sources</div>

@@ -3,6 +3,7 @@ import { ROOMS, ROUTE_LABELS } from "./depot-rooms";
 import { SEARCH_INDEX } from "./search";
 import { SLIDES } from "./how-it-works";
 import { getFeatureById } from "./feature-registry";
+import { destinationAccess } from "./access-policy";
 
 export type SiteAccess = "public" | "presenter";
 export type SiteDestination = { title: string; href: string; description: string; keywords: string; access: SiteAccess; external?: boolean };
@@ -65,10 +66,8 @@ const GROUP_DESCRIPTIONS: Record<string, string> = {
   "Interactive Demos": "Open hands-on feature and operational simulations.",
   Resources: "Find detailed guides, reference material and enablement.",
 };
-const PRIVATE_PATHS = new Set(["/pricing", "/sell-sheet", "/agenda", "/demos/brief", "/resources/compete", "/resources/compete/five9"]);
-const PRIVATE_SECTIONS = new Set(["/resources#roadmap", "/resources#collaboration", "/resources#pitch-deck", "/sales#guidance"]);
 export function siteAccess(href: string): SiteAccess {
-  return PRIVATE_PATHS.has(href.split("#")[0]) || PRIVATE_SECTIONS.has(href) ? "presenter" : "public";
+  return destinationAccess(href);
 }
 function labelForId(id: string) {
   return SECTION_NAMES[id] ?? id.split("-").map(word => word === "aws" ? "AWS" : word === "qa" ? "QA" : word.charAt(0).toUpperCase() + word.slice(1)).join(" ");
@@ -119,7 +118,7 @@ function pageFor(path: string): SiteMapPage {
   // Keep detailed official references searchable without duplicating them as top-level pages.
   if (path === "/resources") {
     for (const entry of SEARCH_INDEX.filter(entry => entry.external && entry.group === "Resources")) {
-      add({ title: entry.title, href: entry.href, description: entry.description, keywords: entry.keywords ?? "", access: "public", external: true });
+      add({ title: entry.title, href: entry.href, description: entry.description, keywords: entry.keywords ?? "", access: entry.access ?? "public", external: true });
     }
   }
   const navLinks = NAV.flatMap(group => group.children ?? []).filter(entry => entry.href.startsWith(`${path}#`));

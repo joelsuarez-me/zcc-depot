@@ -5,6 +5,16 @@ import { NAV, isNavItemActive, navigationLabel } from "@/data/navigation";
 import { ROOMS, ROUTE_LABELS } from "@/data/depot-rooms";
 import { useDepot } from "@/lib/depot-mode";
 import { HeroMotionControl } from "@/components/hero-motion-control";
+import "@/components/demo-readiness.css";
+import { requestEvidenceQueue } from "@/components/evidence-signal";
+
+/** Workflow shortcuts onto existing routes; the six navigation groups and breadcrumbs stay unchanged. */
+const WORKFLOW = [
+  { label: "Explore", href: "/#features", hint: "Feature explorer" },
+  { label: "Prepare", href: "/agenda", hint: "Demo agenda and storyboard" },
+  { label: "Present", href: "/demos/nuggets", hint: "Feature demos" },
+  { label: "Validate", href: "/#evidence-review", hint: "Evidence review queue under Features" },
+] as const;
 
 function labelFor(href: string) {
   const label = navigationLabel(href);
@@ -38,6 +48,14 @@ export function DepotSidebar({ logo, mobile = false, onNavigate }: { logo: strin
       </div>
 
       <div className="depot-sidebar-scroll">
+            {!collapsed && <div className="depot-side-label">Workflow</div>}
+            <ul className="wf-strip" aria-label="Workflow shortcuts">
+              {WORKFLOW.map((w) => (
+                <li key={w.label} className="contents"><Link href={w.href} onClick={() => { onNavigate?.(); if (w.label === "Validate") requestEvidenceQueue(); }} title={w.hint} aria-label={`${w.label}: ${w.hint}`} data-testid={`link-workflow-${w.label.toLowerCase()}`}>
+                  {collapsed ? w.label.slice(0, 1) : w.label}
+                </Link></li>
+              ))}
+            </ul>
             {!collapsed && <div className="depot-side-label">Explore the Depot</div>}
             <ul className="space-y-0.5">
               {NAV.map((n) => {

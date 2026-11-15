@@ -1,0 +1,103 @@
+/* Demo readiness: presentation stage, diagram view controls, evidence queue, storyboard. Plain scoped CSS (unlayered). */
+.pz{position:relative}
+.pz-launch{display:flex;justify-content:flex-end;margin-bottom:.5rem}
+.pz-launch-btn{display:inline-flex;align-items:center;gap:.4rem;min-height:2.25rem;border-radius:999px;border:1px solid rgba(17,17,13,.18);background:#FBFBF8;padding:.35rem .85rem;font-size:.78rem;font-weight:600;color:#11110D}
+.pz-launch-btn:hover{background:#D1F470;border-color:#11110D}
+.pz.is-active{background:#F5F5F2;overflow:auto;padding:0 1rem 1.5rem}
+.pz.pz-dark.is-active{background:#203524;color:#F5F5F2}
+.pz.is-active:fullscreen{padding:0 2rem 2rem}
+.pz.is-fallback{position:fixed;inset:0;z-index:150}
+.fx-dialog:has(.pz.is-fallback){transform:none!important;translate:none!important;inset:0!important;width:100vw!important;height:100dvh!important;max-width:none!important;max-height:none!important;border:0;border-radius:0}
+html.pz-lock{overflow:hidden}
+.pz-bar{position:sticky;top:0;z-index:5;display:flex;flex-wrap:wrap;align-items:center;gap:.5rem .75rem;margin:0 -1rem 1rem;padding:.6rem 1rem;background:#11110D;color:#F5F5F2}
+.pz-title{display:flex;flex-direction:column;min-width:0;flex:1 1 12rem;font-weight:600;font-size:.9rem}
+.pz-title .eyebrow{font-size:.6rem}
+.pz-step{font-size:.75rem;color:#D1F470}
+.pz-actions{display:flex;gap:.35rem;flex-wrap:wrap}
+.pz-btn{display:inline-flex;align-items:center;gap:.3rem;min-height:2.75rem;min-width:2.75rem;justify-content:center;border-radius:.7rem;border:1px solid rgba(245,245,242,.2);padding:.3rem .7rem;font-size:.8rem;font-weight:600;color:#F5F5F2}
+.pz-btn:hover:not(:disabled){border-color:#D1F470;color:#D1F470}
+.pz-btn:disabled{opacity:.35}
+.pz-btn.is-exit{background:#D1F470;color:#11110D;border-color:#D1F470}
+.pz-note{flex-basis:100%;display:flex;gap:.4rem;align-items:center;border-radius:.6rem;background:#F6EFDD;color:#5a4410;padding:.35rem .6rem;font-size:.75rem}
+.pz-keys{flex-basis:100%;font-size:.68rem;color:rgba(245,245,242,.55)}
+@media(max-width:640px){.pz-btn span{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}}
+
+/* Diagram view controls */
+.dv-bar{display:flex;flex-wrap:wrap;align-items:center;gap:.4rem}
+.dv-seg{display:inline-flex;padding:2px;border-radius:999px;background:rgba(17,17,13,.07)}
+.dv-seg button,.dv-tog{min-height:2.25rem;border-radius:999px;padding:.3rem .75rem;font-size:.75rem;font-weight:600;color:rgba(17,17,13,.65)}
+.dv-seg button[aria-pressed=true]{background:#11110D;color:#D1F470}
+.dv-tog{border:1px solid rgba(17,17,13,.18);background:#FBFBF8}
+.dv-tog[aria-pressed=true]{background:#D1F470;border-color:#11110D;color:#11110D}
+.dv-exec .fx-edge-label{display:none}
+.dv-exec .fx-node .mono{display:none}
+.dv-still .fx-edge,.dv-still *{animation:none!important;transition:none!important}
+.dv-text{border-radius:1rem;border:1px solid rgba(17,17,13,.1);background:#FBFBF8;padding:1rem;font-size:.85rem}
+.dv-text ol{display:grid;gap:.35rem;list-style:decimal;padding-left:1.2rem}
+
+/* Evidence */
+.ev-chip{display:inline-flex;align-items:center;gap:.3rem;border-radius:999px;border:1px solid;padding:.12rem .55rem;font-size:.68rem;font-weight:700}
+.ev-documentation-reviewed{background:#E7F2C9;border-color:#203524;color:#203524}
+.ev-requires-verification{background:#F6EFDD;border-color:#c9a65a;color:#5a4410}
+.ev-missing-evidence{background:#F7E0DA;border-color:#a2361f;color:#7a2a18}
+.ev-queue{margin-top:1.25rem;border-radius:1.1rem;border:1px solid rgba(17,17,13,.12);background:#F5F5F2}
+.ev-queue>summary{display:flex;flex-wrap:wrap;align-items:center;gap:.6rem;min-height:3rem;padding:.75rem 1rem;cursor:pointer;font-weight:600;list-style:none}
+.ev-queue>summary::-webkit-details-marker{display:none}
+.ev-queue[open]>summary{border-bottom:1px solid rgba(17,17,13,.1)}
+.ev-row{display:grid;gap:.35rem .9rem;padding:.7rem 1rem;border-top:1px solid rgba(17,17,13,.06);align-items:center}
+@media(min-width:768px){.ev-row{grid-template-columns:minmax(12rem,1.2fr) 2fr auto}}
+.ev-row:first-child{border-top:0}
+.ev-reason{display:inline-block;border-radius:.4rem;background:rgba(17,17,13,.06);padding:.1rem .45rem;font-size:.7rem;margin:.1rem .2rem .1rem 0}
+.ev-dl{display:grid;gap:.35rem}
+.ev-dl>div{display:grid;grid-template-columns:9.5rem 1fr;gap:.5rem;font-size:.85rem}
+@media(max-width:520px){.ev-dl>div{grid-template-columns:1fr}}
+.ev-dl dt{color:rgba(17,17,13,.75);font-size:.75rem}
+.fx-related{display:grid;gap:.5rem}
+@media(min-width:768px){.fx-related{grid-template-columns:repeat(3,minmax(0,1fr))}}
+.fx-related a{display:block;border-radius:.9rem;border:1px solid rgba(17,17,13,.12);background:#FBFBF8;padding:.7rem .85rem;min-height:2.75rem}
+.fx-related a:hover{border-color:#11110D;background:#ECF7C8}
+
+/* Workflow shortcuts in sidebar */
+.ev-queue{scroll-margin-top:7rem}
+.wf-strip{display:grid;grid-template-columns:repeat(4,1fr);gap:.25rem;margin:0 0 .5rem}
+.wf-strip a{display:flex;flex-direction:column;align-items:center;gap:.15rem;border-radius:.6rem;border:1px solid rgba(245,245,242,.1);padding:.4rem .1rem;font-size:.66rem;color:rgba(245,245,242,.7);min-height:2.75rem;justify-content:center}
+.wf-strip a:hover{border-color:#D1F470;color:#D1F470}
+.is-collapsed .wf-strip{grid-template-columns:1fr}
+
+/* Storyboard */
+.sb{border-radius:1.6rem;border:1px solid #cbd5bd;background:#eef1e6;padding:1.25rem}
+@media(min-width:768px){.sb{padding:1.75rem}}
+.sb-grid{display:grid;gap:1rem}
+@media(min-width:1024px){.sb-grid{grid-template-columns:minmax(0,1fr) minmax(0,1fr)}}
+.sb-step{display:grid;gap:.5rem;border-radius:1rem;border:1px solid #d9ddd2;background:#fffefa;padding:.8rem}
+.sb-step-head{display:flex;align-items:center;gap:.5rem}
+.sb-kind{font-family:var(--app-font-mono);font-size:.6rem;letter-spacing:.1em;text-transform:uppercase;border-radius:.35rem;background:#e2ebc8;color:#203d2e;padding:.1rem .4rem}
+.sb-ibtn{display:grid;place-items:center;min-width:2.5rem;min-height:2.5rem;border-radius:.6rem;color:#294735}
+.sb-ibtn:hover:not(:disabled){background:#e2ebc8}
+.sb-ibtn:disabled{opacity:.3}
+.sb-preview{white-space:pre-wrap;border-radius:1rem;border:1px solid #d9ddd2;background:#fffefa;padding:1rem;font-size:.85rem;line-height:1.55;max-height:28rem;overflow:auto}
+.sb-input{display:block;width:100%;border-radius:.75rem;border:1px solid #d5d8cd;background:#fffefa;padding:.55rem .75rem;font-size:.88rem;min-height:2.75rem}
+.sb-input:focus{outline:none;border-color:#315a47;box-shadow:0 0 0 3px rgba(49,90,71,.12)}
+
+/* Diagram frame: audience density over existing diagram art */
+.dv-frame-bar{display:flex;flex-wrap:wrap;align-items:center;gap:.5rem .75rem;margin-bottom:.75rem}
+.dv-hint{font-size:.72rem;color:rgba(17,17,13,.75)}
+.dv-hidden{display:none}
+.dv-frame.is-dark .dv-hint{color:rgba(245,245,242,.6)}
+.dv-frame.is-dark .dv-seg{background:rgba(245,245,242,.1)}
+.dv-frame.is-dark .dv-seg button{color:rgba(245,245,242,.75)}
+.dv-frame.is-dark .dv-seg button[aria-pressed=true]{background:#D1F470;color:#11110D}
+.dv-frame.is-dark .dv-tog{background:transparent;border-color:rgba(245,245,242,.25);color:#F5F5F2}
+.dv-frame.is-dark .dv-tog[aria-pressed=true]{background:#D1F470;color:#11110D}
+.dv-frame.is-dark .dv-text{color:#11110D}
+.dv-text h4{font-weight:700;font-size:.8rem;margin:.6rem 0 .3rem}
+.dv-text h4:first-child{margin-top:0}
+/* Executive simplification per diagram family (Technical shows everything as authored) */
+.dv-executive .sdf-s,.dv-executive .sdf-cloud-note,.dv-executive .sdf-badge,.dv-executive .sdf-legend{display:none}
+.dv-executive .sov-s,.dv-executive .sov-bn,.dv-executive .sov-tab{display:none}
+.dv-executive .arx-s,.dv-executive .arx-tab{display:none}
+.dv-executive .ob-stage svg text.sub,.dv-executive .ob-stage svg text[font-size="9"]{display:none}
+.dv-executive .sc-svg-s,.dv-executive .sc-flow-legend{display:none}
+.dv-executive .rt-s,.dv-executive .rt-tag{display:none}
+.dv-still .ob-pulse,.dv-still .ob-spin,.dv-still .ob-wave,.dv-still .sc-path{animation:none!important}
+@media(max-width:640px){.sb-input{font-size:1rem}.pz-launch-btn,.dv-seg button,.dv-tog{min-height:2.75rem}}

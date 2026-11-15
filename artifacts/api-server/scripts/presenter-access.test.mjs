@@ -4,6 +4,7 @@ import express from "express";
 import { once } from "node:events";
 import presenterRouter from "../src/routes/presenter.ts";
 import { presenterAccess } from "../src/middlewares/presenterAccess.ts";
+import { presenterRooms } from "../src/lib/presenter-rooms.ts";
 
 test("Presenter authorization requires identity and explicit presentation intent", async t => {
   const app = express();
@@ -37,14 +38,15 @@ test("Presenter authorization requires identity and explicit presentation intent
       assert.equal((await call(path, { "x-test-authenticated": "yes", "X-Depot-Mode": "customer" })).status, 403, path);
     }
   });
-  await t.test("authenticated Presenters receive the six-room guidance and preserved materials", async () => {
+  await t.test("authenticated Presenters receive all registered guidance and preserved materials", async () => {
     const res = await call("/presenter/content", { "x-test-authenticated": "yes", "X-Depot-Mode": "presenter" });
     assert.equal(res.status, 200);
     assert.match(res.headers.get("vary"), /Cookie.*Authorization.*X-Depot-Mode/);
     assert.match(res.headers.get("x-robots-tag"), /noindex/);
     const body = await res.json();
-    assert.equal(body.rooms.length, 6);
-    assert.equal(new Set(body.rooms.map(r => r.id)).size, 6);
+    assert.equal(body.rooms.length, presenterRooms.length);
+    assert.equal(new Set(body.rooms.map(r => r.id)).size, presenterRooms.length);
+    assert.deepEqual(body.rooms.map(r => r.id), presenterRooms.map(r => r.id));
     assert.ok(body.legacy.roadmap.internal.length);
     assert.ok(body.legacy.gtm.length);
     assert.ok(body.legacy.briefing.length);

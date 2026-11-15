@@ -1,6 +1,8 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { ArrowDown, PhoneIncoming } from "lucide-react";
 import { PageHero } from "@/components/kit";
+import { PresentStage } from "@/components/presentation-stage";
+import { DiagramViewControls, EventPathText, type DiagramView } from "@/components/diagram-view-controls";
 import { RoomSection, SourceNote } from "@/components/room-kit";
 import { DEFAULT_CONFIG, simulateCallback, advancePlayback, type CbConfig, type Playback, type PlaybackAction, type ScenarioId } from "@/lib/callback-engine";
 import { SCENARIOS, scenarioById, DOCS } from "@/data/callback-scenarios";
@@ -26,6 +28,7 @@ export default function ResourceCallback() {
   const [pb, setPb] = useState<Playback>({ index: 0, running: false });
   const [speed, setSpeed] = useState(1);
   const [still, setStill] = useState(false);
+  const [dv, setDv] = useState<Omit<DiagramView, "motion">>({ audience: "technical", text: false });
   const sc = scenarioById(id)!;
   const result = useMemo(() => simulateCallback(id, config), [id, config]);
   const len = result.events.length;
@@ -79,8 +82,11 @@ export default function ResourceCallback() {
 
         <span id={`experience-${id}`} className="rt-method-anchor" aria-hidden="true" />
         <RoomSection id="simulator" eyebrow={`Simulator · experience ${sc.n} of 12 · ${sc.nature}`} title={sc.title} lede={sc.tagline} tone="panel">
+          <PresentStage testId="callback" label={sc.title} step={`Step ${idx + 1}/${len}`} onPrev={idx > 0 ? () => act("previous") : undefined} onNext={idx < len - 1 ? () => act("next") : undefined} onReset={() => act("reset")}>
           <CallbackControls idx={idx} len={len} running={pb.running} speed={speed} still={still} scenario={id} onAction={act} onSpeed={setSpeed} onStill={() => setStill((s) => !s)} onScenario={(x) => pick(x, false)} />
-          <div className={`mt-4 ${still ? "rt-still" : ""}`}>
+          <div className="mt-3"><DiagramViewControls testId="callback" view={{ ...dv, motion: !still }} set={(p) => { if (p.motion !== undefined) setStill(!p.motion); setDv((v) => ({ audience: p.audience ?? v.audience, text: p.text ?? v.text })); }} /></div>
+          {dv.text && <div className="mt-3"><EventPathText events={result.events} idx={idx} audience={dv.audience} testId="callback" /></div>}
+          <div className={`mt-4 ${dv.audience === "executive" ? "dv-executive" : ""} ${still ? "rt-still" : ""} ${dv.text ? "hidden" : ""}`}>
             <CallbackDiagram key={id} sc={sc} config={config} result={result} idx={idx} running={pb.running} still={still} />
           </div>
           <div className="mt-3"><WhatJustHappened result={result} idx={idx} /></div>
@@ -100,6 +106,7 @@ export default function ResourceCallback() {
           </div>
           <div className="mt-4"><CallbackPresenterNotes sc={sc} /></div>
           <div className="mt-4"><CallbackConfigGuide key={sc.id} sc={sc} ns="selected-" /></div>
+          </PresentStage>
         </RoomSection>
 
         <RoomSection id="architecture" eyebrow="Architecture explorer" title="From Request to Reconnection" lede="Customer channels, Amazon Connect, flows, orchestration, AWS services, external systems, the agent and Zendesk Agent Workspace. Switch views to see how each pattern wires together.">

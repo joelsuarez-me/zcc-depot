@@ -433,6 +433,7 @@ export const LEGACY_FEATURE_IDS = [
 export const FEATURE_REGISTRY: EnterpriseFeature[] = seeds.map((seed) => {
   const legacy = seed.legacyIndex === undefined ? undefined : FEATURES[seed.legacyIndex];
   const sources = seed.docs.map((id) => FEATURE_SOURCES[id]);
+  const architecture = buildFeatureArchitecture(seed.path, [seed.availability]);
   return {
     id: seed.id, title: seed.title,
     aliases: [...(seed.aliases ?? []), ...(legacy ? [legacy.t, legacy.tag] : [])],
@@ -445,8 +446,17 @@ export const FEATURE_REGISTRY: EnterpriseFeature[] = seeds.map((seed) => {
     keywords: seed.keywords, classifications: seed.classes, availability: seed.availability,
     lastVerified: sources.every((item) => item.lastVerified) ? "2026-11-15" : null,
     sources,
+    evidence: {
+      owner: null,
+      status: sources.length === 0 ? "missing-evidence" : seed.classes.includes(V) ? "requires-verification" : "documentation-reviewed",
+      reviewedAt: sources.every((item) => item.lastVerified) ? "2026-11-15" : null,
+      productBoundary: [...seed.classes],
+      dependencies: architecture.nodes.filter(node => !["customer", "workspace"].includes(node.id)).map(node => `${node.label} — ${node.boundary} responsibility; confirm configuration and entitlement`),
+      availabilityQualification: seed.availability,
+      humanApproval: null,
+    },
     configuration: seed.setup.map((detail, i) => ({ title: ["Plan & eligibility", "Configure & connect", "Validate before rollout"][i], detail })),
-    architecture: buildFeatureArchitecture(seed.path, [seed.availability]),
+    architecture,
     demo: { kind: seed.demo, href: seed.href, label: seed.href ? "Open existing demo" : "Play illustrative demo", reused: !!seed.href },
     ...(legacy ? { legacy: { index: seed.legacyIndex!, title: legacy.t, description: legacy.d, sources: legacy.sources ?? [] } } : {}),
   };

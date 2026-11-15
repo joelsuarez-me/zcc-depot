@@ -1,3 +1,4 @@
+import { DiagramFrame, EdgeList } from "@/components/diagram-view-controls";
 import { useCallback, useEffect, useMemo, useRef, useState, type PointerEvent as RPointerEvent, type WheelEvent as RWheelEvent } from "react";
 import { BarChart3, Boxes, ChevronLeft, ChevronRight, ClipboardCheck, Cloud, Database, Expand, FileStack, GitBranch, Headset, KeyRound, LayoutDashboard, Mail, Minus, Network, Pause, Phone, Play, Plus, RotateCcw, Scan, Server, Sparkles, Ticket, Users, Waves, X, type LucideIcon } from "lucide-react";
 import { UnitedBrands } from "@/components/united-brands";
@@ -32,7 +33,23 @@ function splitTitle(t: string, max: number): string[] {
   return best;
 }
 
-export function ArchExplorer({ compact = false, brands = false, variant = "default" }: { compact?: boolean; brands?: boolean; variant?: "default" | "reference" }) {
+type ArchProps = { compact?: boolean; brands?: boolean; variant?: "default" | "reference" };
+export function ArchExplorer(props: ArchProps) {
+  const name = (id: string) => ARCH_NODES.find((n) => n.id === id)?.t ?? id;
+  return (
+    <DiagramFrame testId="arch-explorer" showMotion={false}
+      text={(a) => (<>
+        <h4>Components</h4>
+        <ul className="grid gap-1">{ARCH_NODES.map((n) => <li key={n.id}><strong>{n.t}</strong>{a === "technical" ? ` · ${n.sub}${n.tech.length ? ` (${n.tech.join(", ")})` : ""}` : ""}</li>)}</ul>
+        <h4>Connections</h4>
+        <EdgeList audience={a} items={ARCH_EDGES.map((e) => ({ from: name(e.from), to: name(e.to), note: e.conceptual ? "conceptual" : undefined }))} />
+      </>)}>
+      <ArchExplorerArt {...props} />
+    </DiagramFrame>
+  );
+}
+
+function ArchExplorerArt({ compact = false, brands = false, variant = "default" }: ArchProps) {
   const isRef = variant === "reference";
   const NODES = useMemo(() => (isRef ? ARCH_NODES.map((n) => ({ ...n, h: REF_H, y: n.y - 6 })) : ARCH_NODES), [isRef]);
   const [paused, setPaused] = useState(false);

@@ -8,19 +8,19 @@ export function mayLeavePrivateContext() {
 }
 
 /** Keep same-page search/scenario links usable; guard changes that discard the editor. */
-export function useUnsavedShortlist(dirty: boolean, busy: boolean) {
-  const current = useRef({ dirty, busy });
-  current.current = { dirty, busy };
+export function useUnsavedShortlist(dirty: boolean, busy: boolean, message = "This shortlist has unsaved changes. Discard them and continue?") {
+  const current = useRef({ dirty, busy, message });
+  current.current = { dirty, busy, message };
   useEffect(() => {
     let url = window.location.href;
     let state = window.history.state;
     let leaving = false;
     const mayLeave = () => {
       if (current.current.busy) {
-        window.alert("Please wait for the shortlist request to finish before leaving.");
+        window.alert("Please wait for the current save request to finish before leaving.");
         return false;
       }
-      return !current.current.dirty || window.confirm("This shortlist has unsaved changes. Discard them and continue?");
+      return !current.current.dirty || window.confirm(current.current.message);
     };
     const beforeContext = (event: Event) => {
       if (!mayLeave()) event.preventDefault();

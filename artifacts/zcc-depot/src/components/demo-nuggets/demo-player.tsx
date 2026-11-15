@@ -8,6 +8,7 @@ import { useSceneText, SCENE_ROLE_LABELS } from "./scene-copy";
 import "./demo-nuggets.css";
 import { DemoAudioStatus } from "./demo-audio-status";
 import { SimulationCaption } from "@/components/simulation-caption";
+import { PresentStage } from "@/components/presentation-stage";
 
 export type DemoPlayerControls = Pick<DemoPlayback, "play">;
 type Props = {
@@ -34,6 +35,10 @@ export function DemoPlayer({ nugget, activeId, onActiveChange, children, dark = 
   const ink = dark ? "text-[#F5F5F2]" : "text-[#11110D]";
 
   return (
+    <PresentStage testId={`nugget-${id}`} dark={dark} label={nugget.title} step={`Step ${pb.stepIndex + 1}/${nugget.stages.length}`}
+      onPrev={pb.stepIndex > 0 ? () => pb.seekStep(pb.stepIndex - 1) : undefined}
+      onNext={pb.stepIndex < nugget.stages.length - 1 ? () => pb.seekStep(pb.stepIndex + 1) : undefined}
+      onReset={pb.reset}>
     <div className={`grid gap-6 lg:grid-cols-12 ${pb.playing ? "" : "dn-paused"} ${pb.status === "idle" ? "dn-idle" : ""}`} data-testid={`demo-${id}`}>
       <div className="relative min-w-0 lg:col-span-8">
         <div className={`dn-stage ${dark ? "is-dark" : ""}`} data-testid={`stage-${id}`} data-step={pb.stage.id}>
@@ -108,5 +113,6 @@ export function DemoPlayer({ nugget, activeId, onActiveChange, children, dark = 
         </ol>
       </div>
     </div>
+    </PresentStage>
   );
 }

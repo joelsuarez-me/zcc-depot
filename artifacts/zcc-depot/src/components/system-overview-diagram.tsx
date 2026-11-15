@@ -1,3 +1,4 @@
+import { DiagramFrame, EdgeList } from "@/components/diagram-view-controls";
 import { useMemo, useState, type KeyboardEvent } from "react";
 import { BarChart3, Building2, Database, FileStack, Headset, IdCard, KeyRound, LayoutDashboard, Pause, Phone, Play, RotateCcw, Search, Server, Sparkles, UserCheck, Volume2, Waves, Webhook, type LucideIcon } from "lucide-react";
 import { Ext } from "@/components/kit";
@@ -56,6 +57,16 @@ function Node({ n, state, onPick }: { n: SoNode; state: string; onPick: (id: str
 }
 
 export function SystemOverviewDiagram() {
+  const name = (id: string) => SO_NODES.find((n) => n.id === id)?.t ?? id;
+  return (
+    <DiagramFrame testId="system-overview" showMotion={false}
+      text={(a) => <EdgeList audience={a} items={SO_EDGES.map((e) => ({ from: name(e.from), to: name(e.to), label: e.label, note: e.optional ? "optional" : undefined }))} />}>
+      <SystemOverviewDiagramArt />
+    </DiagramFrame>
+  );
+}
+
+function SystemOverviewDiagramArt() {
   const [sel, setSel] = useState<string | null>(null);
   const [journey, setJourney] = useState<string | null>(null);
   const [paused, setPaused] = useState(false);

@@ -22,7 +22,7 @@ try {
         contents: a.path === "framer-motion"
           ? 'import React from "react";export const useReducedMotion=()=>true;export const AnimatePresence=({children})=>children;export const motion={div:({children,initial,animate,exit,transition,layout,...p})=>React.createElement("div",p,children)};'
           : a.path === "./feature-detail"
-          ? 'import React from "react";export const FeatureDetail=(p)=>React.createElement("aside",{"data-testid":"detail-stub",...p},p.feature?.title??"");'
+          ? 'import React from "react";export const EvidenceChip=()=>null;export const FeatureDetail=(p)=>React.createElement("aside",{"data-testid":"detail-stub",...p},p.feature?.title??"");'
           : a.path.includes("depot-mode")
           ? 'export const useDepot=()=>globalThis.__featureTestDepot;'
           : 'export const usePresenterContent=()=>{globalThis.__featureQueryCalls++;return globalThis.__featureNotesQuery;};',

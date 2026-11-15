@@ -1,4 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
+import { PresentStage } from "@/components/presentation-stage";
+import { DiagramFrame } from "@/components/diagram-view-controls";
 import { Phone, PhoneOff, Eye, Trash2, ChevronRight, CheckCircle2, Timer } from "lucide-react";
 import { DEFAULT_DIALER, MODE_DEFAULTS, simulateDialer, initialPreview, previewReduce, previewNode, type DialMode, type DialerConfig, type DialCounters, type PreviewState, type PreviewAction } from "@/lib/outbound-dialer";
 import { generateProfiles, suppressedInList } from "@/lib/outbound-segment";
@@ -62,6 +64,8 @@ function AutoLab({ mode }: { mode: Exclude<DialMode, "preview"> }) {
   });
   const D = mode === "predictive" ? PredictiveDiagram : mode === "progressive" ? ProgressiveDiagram : AgentlessDiagram;
   return (
+    <PresentStage testId={`outbound-${mode}`} label={`${info.company} · ${mode} dialing`} step={`Event ${idx + 1}/${res.events.length}`}
+      onPrev={idx > 0 ? () => act("prev") : undefined} onNext={idx < res.events.length - 1 ? () => act("next") : undefined} onReset={() => act("reset")}>
     <div className="grid gap-4">
       <div className="grid gap-3 lg:grid-cols-[1fr_20rem]">
         <div className="ob-card is-kale"><span className="ob-h">{info.company} · scenario</span><p className="text-lg font-semibold leading-snug">{info.scenario}</p><p className="mt-2 text-sm opacity-80">{info.tech}</p></div>
@@ -72,7 +76,9 @@ function AutoLab({ mode }: { mode: Exclude<DialMode, "preview"> }) {
         </div>
       </div>
       <PlayBar idx={idx} len={res.events.length} running={pb.running} speed={speed} onAction={act} onSpeed={setSpeed} label={info.name} testid={mode} />
+      <DiagramFrame testId={`outbound-${mode}`} text={(a) => <ol>{res.events.map((e, i) => <li key={i} aria-current={i === idx ? "step" : undefined} className={i === idx ? "font-semibold" : i > idx ? "opacity-60" : ""}>{e.label}{a === "technical" && <span className="block text-xs font-normal opacity-70">{e.detail}{e.custom ? " (custom pattern)" : ""}</span>}</li>)}</ol>}>
       <div className={`ob-stage ${paused ? "ob-still" : ""}`} tabIndex={0} aria-label={`${mode} diagram; use horizontal arrow keys to pan on narrow screens`} data-testid={`diagram-${mode}`}><D ev={ev} visited={visited} /></div>
+      </DiagramFrame>
       <WhatJustHappened title={ev.label}>{ev.detail}</WhatJustHappened>
       <div className="grid gap-4 xl:grid-cols-[19rem_1fr]">
         <div className="ob-card grid content-start gap-3" aria-label="Configuration">
@@ -113,6 +119,7 @@ function AutoLab({ mode }: { mode: Exclude<DialMode, "preview"> }) {
       </div>
       <OutboundPresenterNotes roomId={info.room} title={`${info.name} dialing presenter notes`} />
     </div>
+    </PresentStage>
   );
 }
 

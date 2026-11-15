@@ -17,6 +17,7 @@ const validId = (id: unknown): id is string => typeof id === "string" && /^[0-9a
 
 router.use("/demo-research/saved", (req, res, next) => {
   res.setHeader("Cache-Control", "private, no-store");
+  res.setHeader("Vary", "Cookie, Authorization");
   if (!req.isAuthenticated() || !req.user) {
     res.status(401).json({ error: "Sign in to access the shared research library." }); return;
   }

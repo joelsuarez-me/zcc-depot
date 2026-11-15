@@ -102,7 +102,8 @@ export class ObjectStorageService {
     const headers: Record<string, string> = {
       'Content-Type':
         (metadata.contentType as string) || 'application/octet-stream',
-      'Cache-Control': `${isPublic ? 'public' : 'private'}, max-age=${cacheTtlSec}`,
+      'Cache-Control': isPublic ? `public, max-age=${cacheTtlSec}` : 'private, no-store',
+      ...(!isPublic ? { Vary: 'Cookie, Authorization', 'X-Robots-Tag': 'noindex, nofollow, noarchive' } : {}),
     };
     if (metadata.size) {
       headers['Content-Length'] = String(metadata.size);

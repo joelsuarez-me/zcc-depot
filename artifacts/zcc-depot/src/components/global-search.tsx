@@ -3,7 +3,8 @@ import { useLocation } from "wouter";
 import { Command as CommandPrimitive } from "cmdk";
 import { Dialog, DialogContent, DialogDescription, DialogTitle } from "@/components/ui/dialog";
 import { ArrowUpRight, CornerDownLeft, FileText, Hash, Search, SearchX, X } from "lucide-react";
-import { SEARCH_GROUPS, SEARCH_INDEX, type SearchEntry } from "@/data/search";
+import { SEARCH_GROUPS, accessibleSearchEntries, type SearchScope, type SearchEntry } from "@/data/search";
+import { useDepot } from "@/lib/depot-mode";
 
 function go(entry: SearchEntry, navigate: (to: string) => void) {
   if (entry.external) { window.open(entry.href, "_blank", "noopener,noreferrer"); return; }
@@ -22,6 +23,10 @@ function go(entry: SearchEntry, navigate: (to: string) => void) {
 }
 
 export function SearchTrigger() {
+  const { auth, isPresenter } = useDepot();
+  const [scope, setScope] = useState<SearchScope>("accessible");
+  const effectiveScope = auth.isAuthenticated && isPresenter ? scope : "public";
+  const entries = accessibleSearchEntries(auth.isAuthenticated, isPresenter, effectiveScope);
   const [open, setOpen] = useState(false);
   const [query, setQuery] = useState("");
   const trigger = useRef<HTMLButtonElement>(null);
@@ -30,6 +35,8 @@ export function SearchTrigger() {
 
   useEffect(() => {
     const k = (e: KeyboardEvent) => {
+      const target = e.target as HTMLElement | null;
+      if (target?.isContentEditable || /^(INPUT|TEXTAREA|SELECT)$/.test(target?.tagName ?? "")) return;
       if (e.key.toLowerCase() === "k" && (e.metaKey || e.ctrlKey)) { e.preventDefault(); setOpen((o) => !o); }
     };
     window.addEventListener("keydown", k);
@@ -38,7 +45,10 @@ export function SearchTrigger() {
 
   const onOpenChange = (o: boolean) => { setOpen(o); if (!o) setQuery(""); };
   useEffect(() => { if (!open) setQuery(""); }, [open]);
-  const pick = (e: SearchEntry) => { onOpenChange(false); setTimeout(() => go(e, navigate), 0); };
+  const pick = (e: SearchEntry) => {
+    if (!entries.some(entry => entry.id === e.id)) return;
+    onOpenChange(false); setTimeout(() => go(e, navigate), 0);
+  };
 
   return (
     <>
@@ -59,14 +69,22 @@ export function SearchTrigger() {
               <kbd className="mono hidden rounded border border-[#11110D]/15 px-1.5 py-0.5 text-[10px] text-[#11110D]/50 sm:inline">ESC</kbd>
               <button type="button" onClick={() => onOpenChange(false)} aria-label="Close search" className="grid h-9 w-9 shrink-0 place-items-center rounded-full hover:bg-[#203524]/10"><X className="h-4 w-4" aria-hidden /></button>
             </div>
-            <CommandPrimitive.List className="max-h-[min(60vh,460px)] overflow-y-auto overscroll-contain p-2">
+            <div className="flex flex-wrap items-center gap-2 border-b border-[#11110D]/10 px-5 py-2 text-sm">
+              <label htmlFor="search-scope">Search scope</label>
+              <select id="search-scope" value={effectiveScope} onChange={e => setScope(e.target.value as SearchScope)} className="min-h-11 rounded-lg border border-[#11110D]/20 bg-white px-2 text-base" data-testid="select-search-scope">
+                <option value="public">Public content</option>
+                {auth.isAuthenticated && isPresenter && <><option value="accessible">All accessible content</option><option value="presenter">Presenter destinations</option></>}
+              </select>
+              <span className="text-xs">Internal documents are never indexed here.</span>
+            </div>
+            <CommandPrimitive.List className="max-h-[min(50vh,400px)] overflow-y-auto overscroll-contain p-2">
               <CommandPrimitive.Empty className="flex flex-col items-center gap-3 px-6 py-12 text-center" data-testid="status-search-empty">
                 <span className="grid h-12 w-12 place-items-center rounded-full bg-[#203524] text-[#D1F470]"><SearchX className="h-5 w-5" aria-hidden /></span>
                 <p className="text-sm font-semibold text-[#11110D]">Nothing matches “{query}”</p>
                 <p className="max-w-xs text-xs text-[#11110D]/55">Try a product term like “routing”, “Lambda”, “translation”, or “dashboards”.</p>
               </CommandPrimitive.Empty>
               {SEARCH_GROUPS.map((g) => {
-                const items = SEARCH_INDEX.filter((e) => e.group === g);
+                const items = entries.filter((e) => e.group === g);
                 const shown = query || g === "Pages" ? items : items.slice(0, g === "Sections" ? 6 : 0);
                 if (!shown.length) return null;
                 return (
@@ -92,7 +110,7 @@ export function SearchTrigger() {
             </CommandPrimitive.List>
             <div className="mono flex items-center justify-between border-t border-[#11110D]/10 px-5 py-2.5 text-[10px] tracking-wider text-[#11110D]/45">
               <span>↑↓ NAVIGATE · ENTER OPEN · ESC CLOSE</span>
-              <span className="hidden sm:inline">{SEARCH_INDEX.length} ENTRIES</span>
+              <span className="hidden sm:inline">{entries.length} ENTRIES</span>
             </div>
           </CommandPrimitive>
         </DialogContent>

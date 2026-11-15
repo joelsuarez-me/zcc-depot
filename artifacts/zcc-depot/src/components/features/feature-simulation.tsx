@@ -1,9 +1,10 @@
-import { useMemo, useRef, useState } from "react";
+import { useMemo, useState } from "react";
 import { Link } from "wouter";
-import { ArrowUpRight, ChevronLeft, ChevronRight, Expand, Info, Pause, Play, RotateCcw } from "lucide-react";
+import { ArrowUpRight, ChevronLeft, ChevronRight, Info, Pause, Play, RotateCcw } from "lucide-react";
 import type { EnterpriseFeature } from "@/data/feature-types";
 import { simFor } from "./sims";
 import { usePlayback } from "./use-playback";
+import { PresentStage } from "@/components/presentation-stage";
 
 export function FeatureSimulation({ feature }: { feature: EnterpriseFeature }) {
   const def = useMemo(() => simFor(feature), [feature]);
@@ -13,7 +14,6 @@ export function FeatureSimulation({ feature }: { feature: EnterpriseFeature }) {
 }
 
 function SimRun({ feature, def, sc, scIdx, setScIdx }: { feature: EnterpriseFeature; def: ReturnType<typeof simFor>; sc: ReturnType<typeof simFor>["scenarios"][number]; scIdx: number; setScIdx: (n: number) => void }) {
-  const box = useRef<HTMLDivElement>(null);
   const pb = usePlayback(sc.steps.length);
   const step = sc.steps[pb.index];
   const past = sc.steps.slice(0, pb.index + 1);
@@ -21,11 +21,12 @@ function SimRun({ feature, def, sc, scIdx, setScIdx }: { feature: EnterpriseFeat
   const says = past.filter((s) => s.say).map((s) => s.say!);
   const status = [...past].reverse().find((s) => s.status)?.status;
   const href = feature.demo.href;
-  const full = () => { const el = box.current; if (!el) return; if (document.fullscreenElement) void document.exitFullscreen(); else void el.requestFullscreen?.().catch(() => undefined); };
 
   if (sc.steps.length === 0) return <div className="fx-empty text-sm">This walkthrough has no architecture steps yet.</div>;
   return (
-    <div ref={box} className="fx-sim space-y-3" data-testid={`sim-${feature.id}`}>
+    <PresentStage label={`${feature.title} · ${sc.label}`} testId="feature-sim" step={`Step ${pb.index + 1}/${sc.steps.length}`}
+      onPrev={pb.index > 0 ? pb.prev : undefined} onNext={pb.index < sc.steps.length - 1 ? pb.next : undefined} onReset={() => { pb.reset(); setScIdx(0); }}>
+    <div className="fx-sim space-y-3" data-testid={`sim-${feature.id}`}>
       <p className="flex items-start gap-2 rounded-xl border border-[#c9a65a]/50 bg-[#F6EFDD] px-3 py-2 text-xs text-[#5a4410]" data-testid="text-sim-disclosure">
         <Info className="mt-0.5 h-3.5 w-3.5 shrink-0" aria-hidden />Simulation only. All names, numbers, requests and results are fictional and illustrative; they are not promised outcomes and no real systems are contacted.
       </p>
@@ -48,7 +49,6 @@ function SimRun({ feature, def, sc, scIdx, setScIdx }: { feature: EnterpriseFeat
             : <button type="button" className="fx-btn fx-btn-ink" onClick={pb.play} data-testid="button-sim-play"><Play className="h-4 w-4" aria-hidden />{pb.index === 0 ? "Play" : pb.index >= sc.steps.length - 1 ? "Replay" : "Resume"}</button>}
           <button type="button" className="fx-btn fx-btn-ghost" onClick={pb.next} disabled={pb.index >= sc.steps.length - 1} aria-label="Next step" data-testid="button-sim-next"><ChevronRight className="h-4 w-4" aria-hidden /></button>
           <button type="button" className="fx-btn fx-btn-ghost" onClick={() => { pb.reset(); setScIdx(0); }} data-testid="button-sim-reset"><RotateCcw className="h-4 w-4" aria-hidden />Reset</button>
-          <button type="button" className="fx-btn fx-btn-ghost fx-desktop-only" onClick={full} aria-label="Toggle simulation fullscreen" data-testid="button-sim-fullscreen"><Expand className="h-4 w-4" aria-hidden /></button>
         </div>
       </div>
       <p className="text-xs text-[#11110D]/60">{sc.summary}</p>
@@ -88,5 +88,6 @@ function SimRun({ feature, def, sc, scIdx, setScIdx }: { feature: EnterpriseFeat
         <Link href={href} className="fx-btn fx-btn-ghost w-fit" data-testid="link-sim-full-lab">{feature.demo.label}<ArrowUpRight className="h-4 w-4" aria-hidden /></Link>
       )}
     </div>
+    </PresentStage>
   );
 }

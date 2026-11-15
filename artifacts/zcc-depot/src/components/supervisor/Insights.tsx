@@ -1,3 +1,4 @@
+import { DiagramFrame, EdgeList } from "@/components/diagram-view-controls";
 import { useMemo, useState } from "react";
 import { SimulationCaption } from "@/components/simulation-caption";
 import { Bar, BarChart, CartesianGrid, Cell, Legend, Line, LineChart, Pie, PieChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
@@ -109,7 +110,16 @@ const ARCH: Record<"native" | "realtime" | "custom" | "bi", AArch> = {
     edges: [["connect", "lake"], ["connect", "cw"], ["lake", "ql"], ["ql", "bi"], ["cw", "ops"]] },
 };
 export type ArchKey = keyof typeof ARCH;
-export function ReportingArchitectureExplorer({ Sources }: { Sources: (p: { keys: string[] }) => React.ReactElement }) {
+export function ReportingArchitectureExplorer(props: { Sources: (p: { keys: string[] }) => React.ReactElement }) {
+  return (
+    <DiagramFrame testId="supervisor-reporting" text={(a) => (Object.keys(ARCH) as ArchKey[]).map((k) => { const x = ARCH[k]; const nm = (id: string) => x.nodes.find((n) => n.id === id)?.label.join(" ") ?? id; return (
+      <div key={k}><h4>{x.name}</h4>{a === "technical" && <p className="mb-1 text-xs">{x.text}</p>}
+        <EdgeList audience={a} items={x.edges.map(([f, t]) => ({ from: nm(f), to: nm(t), note: a === "technical" ? (x.nodes.find((n) => n.id === t)?.kind === "c" ? "custom" : "native") : undefined }))} /></div>); })}>
+      <ReportingArchitectureArt {...props} />
+    </DiagramFrame>
+  );
+}
+function ReportingArchitectureArt({ Sources }: { Sources: (p: { keys: string[] }) => React.ReactElement }) {
   const [k, setK] = useState<ArchKey>("native");
   const [node, setNode] = useState("connect");
   const a = ARCH[k];

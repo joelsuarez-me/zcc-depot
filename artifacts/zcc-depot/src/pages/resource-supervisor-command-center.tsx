@@ -12,6 +12,7 @@ import { AgentOccupancyLab, ContactFlowVisualizer, ServiceLevelExplorer } from "
 import { HistoricalAnalytics, ReportingArchitectureExplorer, ZendeskSupervisorExperience } from "@/components/supervisor/Insights";
 import { LiveWallboard, SupervisorPlaybooks } from "@/components/supervisor/Playbooks";
 import "@/components/supervisor/supervisor.css";
+import { PresentStage } from "@/components/presentation-stage";
 
 const TITLE = "Amazon Connect Supervisor Command Center Experience Lab | ZCC Depot";
 const DESC = "A deterministic, fictional supervisor command center: live KPIs, six queues, 24 agents, six crisis scenarios, interventions, service-level and occupancy labs, alerts, wallboard and historical analytics, with verified Amazon Connect documentation.";
@@ -53,7 +54,7 @@ function Body() {
         <Sources keys={["agents", "status", "status-change", "agent-status"]} />
       </RoomSection>
       <RoomSection id="simulator" eyebrow="Crisis simulator" title="Contact Center Operations Simulator" lede="Seven reproducible scenarios on a shared clock. Step backward through every tick, action and configuration change." tone="panel">
-        <OperationsSimulator />
+        <PresentedOperations />
       </RoomSection>
       <RoomSection id="interventions" eyebrow="Intervention center" title="Take Action. Restore Performance." lede="Eight simulated interventions with eligibility checks and before/after impact. Real equivalents require configuration and permissions.">
         <SupervisorInterventionCenter />
@@ -114,4 +115,10 @@ export default function ResourceSupervisorCommandCenter() {
       <div className="sc-page"><Hero /><Body /></div>
     </SupervisorProvider>
   );
+}
+
+/** Operations simulator in presentation mode: uses the shared engine's own step/back/reset semantics. */
+function PresentedOperations() {
+  const { next, prev, reset, index, depth, label, snap } = useSupervisor();
+  return <PresentStage testId="supervisor" label="Contact Center Operations Simulator" step={`Recorded step ${index + 1} of ${depth} · t+${snap.clock}s · ${label}`} onNext={next} onPrev={index > 0 ? prev : undefined} onReset={reset}><OperationsSimulator /></PresentStage>;
 }

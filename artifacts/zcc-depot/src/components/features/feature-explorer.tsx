@@ -1,10 +1,13 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
-import { RotateCcw, Search, SlidersHorizontal } from "lucide-react";
+import { ClipboardCheck, RotateCcw, Search, SlidersHorizontal } from "lucide-react";
 import { FEATURE_REGISTRY, filterFeatures, getCategoryCounts } from "@/data/feature-registry";
 import { FEATURE_CATEGORIES, FEATURE_CLASSIFICATIONS, type FeatureCategoryId, type FeatureClassification } from "@/data/feature-types";
 import { FeatureCard } from "./feature-card";
-import { FeatureDetail, type Tab } from "./feature-detail";
+import { EvidenceChip, FeatureDetail, type Tab } from "./feature-detail";
+import { evidenceReviewQueue } from "@/data/feature-evidence";
+import { featureHref } from "@/data/feature-registry";
+import { consumeEvidenceRequest, onEvidenceRequest } from "@/components/evidence-signal";
 import { FeatureIcon } from "./feature-icon";
 import "./features.css";
 
@@ -125,7 +128,9 @@ export function FeatureExplorer() {
         </motion.div>
       )}
 
-      <FeatureDetail feature={feature} tab={tab} setTab={setTab} onClose={close}
+      <EvidenceQueue onOpen={(id) => { open(id); setTab("docs"); }} />
+
+      <FeatureDetail feature={feature} tab={tab} setTab={setTab} onClose={close} onOpenRelated={(id) => { setTab("overview"); swap(id); }}
         onReturnFocus={() => {
           if (opener.current?.isConnected) opener.current.focus();
           else document.querySelector<HTMLInputElement>('[data-testid="input-feature-search"]')?.focus({ preventScroll: true });
@@ -134,5 +139,37 @@ export function FeatureExplorer() {
         onPrev={idx > 0 ? () => swap(nav[idx - 1].id) : undefined}
         onNext={idx >= 0 && idx < nav.length - 1 ? () => swap(nav[idx + 1].id) : undefined} />
     </div>
+  );
+}
+
+function EvidenceQueue({ onOpen }: { onOpen: (id: string) => void }) {
+  const queue = useMemo(() => evidenceReviewQueue(FEATURE_REGISTRY), []);
+  const ref = useRef<HTMLDetailsElement>(null);
+  useEffect(() => {
+    const show = () => { const requested = consumeEvidenceRequest(); if ((!requested && window.location.hash !== "#evidence-review") || !ref.current) return; ref.current.open = true; ref.current.scrollIntoView({ block: "start" }); ref.current.querySelector<HTMLElement>("summary")?.focus({ preventScroll: true }); };
+    show(); // request made before this page mounted
+    return onEvidenceRequest(show);
+  }, []);
+  const verify = queue.filter((q) => q.feature.evidence.status === "requires-verification").length;
+  return (
+    <details ref={ref} className="ev-queue" id="evidence-review" data-testid="evidence-queue">
+      <summary data-testid="button-toggle-evidence-queue">
+        <ClipboardCheck className="h-4 w-4 text-[#203524]" aria-hidden />Evidence review queue
+        <span className="mono text-xs font-normal text-[#11110D]/60" data-testid="text-evidence-queue-count">{queue.length} of {FEATURE_REGISTRY.length} need review · {verify} require availability verification</span>
+        <span className="ml-auto text-xs font-normal text-[#11110D]/55">Show</span>
+      </summary>
+      {queue.length === 0 ? <p className="p-4 text-sm">Every feature has current documentation review, an owner and source dates.</p> : (
+        <ul>
+          {queue.map(({ feature: f, reasons }) => (
+            <li key={f.id} className="ev-row" data-testid={`row-evidence-${f.id}`}>
+              <div className="min-w-0"><p className="text-sm font-semibold">{f.title}</p><p className="mt-0.5 text-xs text-[#11110D]/55">Owner: {f.evidence.owner ?? "unassigned"}</p></div>
+              <div><EvidenceChip status={f.evidence.status} /><div className="mt-1">{reasons.map((r) => <span key={r} className="ev-reason">{r}</span>)}</div></div>
+              <a href={featureHref(f.id)} className="fx-btn fx-btn-ghost justify-self-start" onClick={(e) => { if (e.button === 0 && !e.metaKey && !e.ctrlKey && !e.shiftKey && !e.altKey) { e.preventDefault(); onOpen(f.id); } }} data-testid={`link-evidence-open-${f.id}`}>Open evidence</a>
+            </li>
+          ))}
+        </ul>
+      )}
+      <p className="border-t border-[#11110D]/10 px-4 py-2 text-[0.7rem] text-[#11110D]/55">Review dates reflect documentation checks only, never customer deployment validation. No human approval is recorded in this depot.</p>
+    </details>
   );
 }

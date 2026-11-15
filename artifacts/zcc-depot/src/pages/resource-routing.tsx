@@ -1,6 +1,8 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { ArrowDown, PhoneIncoming } from "lucide-react";
 import { PageHero } from "@/components/kit";
+import { PresentStage } from "@/components/presentation-stage";
+import { DiagramViewControls, EventPathText, type DiagramView } from "@/components/diagram-view-controls";
 import { RoomSection, SourceNote } from "@/components/room-kit";
 import { DEFAULT_CONFIG, simulateRouting, advancePlayback, type MethodId, type Playback, type PlaybackAction, type RoutingConfig } from "@/lib/routing-engine";
 import { METHODS, methodById, DOCS } from "@/data/routing-scenarios";
@@ -18,6 +20,7 @@ export default function ResourceRouting() {
   const [speed, setSpeed] = useState(1);
   const [presenter, setPresenter] = useState(false);
   const [still, setStill] = useState(false);
+  const [dv, setDv] = useState<Omit<DiagramView, "motion">>({ audience: "technical", text: false });
   const method = methodById(methodId)!;
   const result = useMemo(() => simulateRouting(methodId, config), [methodId, config]);
   const len = result.events.length;
@@ -67,8 +70,11 @@ export default function ResourceRouting() {
 
         <span id={`method-${methodId}`} className="rt-method-anchor" aria-hidden="true" />
         <RoomSection id="simulator" eyebrow={`Simulator · method ${method.n} of 12`} title={method.title} lede={method.tagline} tone="panel">
+          <PresentStage testId="routing" label={method.title} step={`Step ${idx + 1}/${len}`} onPrev={idx > 0 ? () => act("previous") : undefined} onNext={idx < len - 1 ? () => act("next") : undefined} onReset={() => act("reset")}>
           <RoutingControls idx={idx} len={len} running={pb.running} speed={speed} presenter={presenter} still={still} onAction={act} onSpeed={setSpeed} onPresenter={() => setPresenter((p) => !p)} onStill={() => setStill((s) => !s)} />
-          <div className={`mt-4 ${still ? "rt-still" : ""}`}>
+          <div className="mt-3"><DiagramViewControls testId="routing" view={{ ...dv, motion: !still }} set={(p) => { if (p.motion !== undefined) setStill(!p.motion); setDv((v) => ({ audience: p.audience ?? v.audience, text: p.text ?? v.text })); }} /></div>
+          {dv.text && <div className="mt-3"><EventPathText events={result.events} idx={idx} audience={dv.audience} testId="routing" /></div>}
+          <div className={`mt-4 ${dv.audience === "executive" ? "dv-executive" : ""} ${still ? "rt-still" : ""} ${dv.text ? "hidden" : ""}`}>
             <RoutingDiagram key={methodId} method={method} config={config} result={result} idx={idx} running={pb.running} still={still} />
           </div>
           <div className="mt-4 grid gap-4 md:grid-cols-2 xl:grid-cols-[17rem_1.25fr_1fr]">
@@ -79,6 +85,7 @@ export default function ResourceRouting() {
           <div className="mt-4"><RoutingOutcomePanel result={result} done={done} /></div>
           {presenter && <div className="mt-4"><RoutingPresenterNotes method={method} result={result} /></div>}
           <div className="mt-4"><RoutingConfigGuide key={method.id} method={method} ns="selected-" /></div>
+          </PresentStage>
         </RoomSection>
 
         <RoomSection id="configure" eyebrow="Reference" title="How to configure in Amazon Connect" lede="Eight-part guides for every method. Native features and custom patterns are labelled.">

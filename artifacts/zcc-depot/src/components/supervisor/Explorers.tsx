@@ -1,3 +1,4 @@
+import { DiagramFrame, EdgeList } from "@/components/diagram-view-controls";
 import { useMemo, useState } from "react";
 import { motion } from "framer-motion";
 import { X } from "lucide-react";
@@ -27,6 +28,22 @@ function pos(c: Contact, i: number): { x: number; y: number; tone: string } {
 }
 
 export function ContactFlowVisualizer() {
+  return (
+    <DiagramFrame testId="supervisor-contact-flow" text={(a) => <ContactFlowText audience={a} />}>
+      <ContactFlowArt />
+    </DiagramFrame>
+  );
+}
+function ContactFlowText({ audience }: { audience: "executive" | "technical" }) {
+  const { snap } = useSupervisor();
+  const n = (s: string) => snap.contacts.filter((x) => x.status === s).length;
+  return (<>
+    <EdgeList audience={audience} items={NODES.slice(0, -1).map((x, i) => ({ from: x.label, to: NODES[i + 1].label }))} />
+    <p className="mt-2">Queue exits: Abandon, Callback{snap.overflow ? `; overflow active from ${snap.overflowSource} to ${snap.overflowTarget}` : ""}.</p>
+    {audience === "technical" && <p className="mt-1 mono text-xs">Incoming {n("Incoming")} · IVR {n("IVR")} · Waiting {n("Waiting")} · Connected {n("Connected")} · ACW {n("After Contact Work")} · Completed {n("Completed")} · Abandoned {n("Abandoned")} · Callback {n("Callback")}</p>}
+  </>);
+}
+function ContactFlowArt() {
   const { snap, animate } = useSupervisor();
   const [sel, setSel] = useState<string | null>(null);
   const shown = useMemo(() => snap.contacts.filter((c) => !["Completed", "Abandoned", "Callback"].includes(c.status) || snap.clock - (c.disconnect ?? c.completed ?? c.since) < 90).slice(-48), [snap]);

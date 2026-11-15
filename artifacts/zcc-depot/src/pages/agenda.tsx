@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState, type ChangeEvent, type FormEvent } from "react";
 import { useQueryClient } from "@tanstack/react-query";
 import { useAuth } from "@workspace/replit-auth-web";
+import { useDepot } from "@/lib/depot-mode";
 import {
   getGetAgendaQueryKey,
   getListAgendasQueryKey,
@@ -41,6 +42,8 @@ import { useAgendaCompanyLogo } from "@/hooks/use-agenda-company-logo";
 import { companyLogoKey } from "@/lib/agenda-company-logo";
 import { ResearchAgendaPicker } from "@/components/research-agenda-picker";
 import { AgendaPdfAction } from "@/components/agenda-pdf-action";
+import { AgendaStoryboard } from "@/components/agenda-storyboard";
+import { useUnsavedShortlist } from "@/lib/unsaved-shortlist";
 
 const TEXT_KEY = "zcc-depot:agenda:v1";
 const LOGO_KEY = "zcc-depot:agenda-logo:v1";
@@ -114,7 +117,8 @@ const secondaryButton =
   "inline-flex min-h-11 items-center justify-center gap-2 rounded-full border border-[#cbd1c5] bg-[#fffefa] px-5 py-2.5 text-sm font-semibold text-[#294735] transition hover:border-[#829589] hover:bg-[#f5f6ef] disabled:cursor-not-allowed disabled:opacity-55";
 
 export default function Agenda() {
-  const { user, isLoading: authLoading, isAuthenticated, login, logout } = useAuth();
+  const { user, isLoading: authLoading, isAuthenticated, login } = useAuth();
+  const { signOut } = useDepot();
   const queryClient = useQueryClient();
   const reducedMotion = useReducedMotion();
   const listQuery = useListAgendas({
@@ -139,18 +143,17 @@ export default function Agenda() {
   const baseline = useRef<string | null>(JSON.stringify(fields));
   const currentFields = useRef(fields);
   currentFields.current = fields;
-  const dirty = baseline.current !== JSON.stringify(fields);
+  const [storyDirty, setStoryDirty] = useState(false);
+  const storyDirtyRef = useRef(false);
+  storyDirtyRef.current = storyDirty;
+  const dirty = baseline.current !== JSON.stringify(fields) || storyDirty;
 
   function mayDiscard() {
-    return baseline.current === JSON.stringify(currentFields.current) ||
+    return (baseline.current === JSON.stringify(currentFields.current) && !storyDirtyRef.current) ||
       window.confirm("This agenda has unsaved changes. Discard them and continue? Nothing will be saved.");
   }
-  useEffect(() => {
-    if (!dirty) return;
-    const warn = (event: BeforeUnloadEvent) => { event.preventDefault(); event.returnValue = ""; };
-    window.addEventListener("beforeunload", warn);
-    return () => window.removeEventListener("beforeunload", warn);
-  }, [dirty]);
+  // Shared guard: route changes, back/forward, Customer/Presenter mode switches and unload all confirm before discarding.
+  useUnsavedShortlist(dirty, busy, "This agenda or its storyboard has unsaved changes. Discard them and continue? Nothing will be saved.");
 
   const agendaQuery = useGetAgenda(selectedId ?? "", {
     query: {
@@ -479,7 +482,7 @@ export default function Agenda() {
             <div className="eyebrow flex items-center gap-2 text-[0.625rem] text-[#d4e4a6]"><span className="h-px w-5 bg-[#d4e4a6]" />Customer workshop · Conversation brief{mode !== "library" && <SectionGlyph label={mode === "presentation" ? "presentation" : "outcome"} dark />}</div>
             <div className="flex items-center gap-3">
               <span className="hidden text-xs text-[#f6f5ec]/65 sm:inline">{user?.email ?? "Signed in"}</span>
-              <button type="button" onClick={logout} className="inline-flex min-h-9 items-center gap-2 rounded-full border border-white/20 px-3.5 text-xs font-semibold text-white/85 transition hover:bg-white/10" data-testid="button-agenda-logout">
+              <button type="button" onClick={signOut} className="inline-flex min-h-9 items-center gap-2 rounded-full border border-white/20 px-3.5 text-xs font-semibold text-white/85 transition hover:bg-white/10" data-testid="button-agenda-logout">
                 <LogOut className="h-3.5 w-3.5" aria-hidden /> Sign out
               </button>
             </div>
@@ -698,6 +701,17 @@ export default function Agenda() {
               </aside>
             </form>
           )
+        )}
+
+        {mode !== "library" && !queryBusy && !agendaQuery.isError && (
+          <div hidden={mode !== "editor"} className="mt-6">
+            <AgendaStoryboard key={logoScope} company={fields.company} problems={fields.problems} onDirtyChange={setStoryDirty}
+              onApply={(text) => {
+                if (fields.conversation.trim() && !window.confirm("Replace the current Today’s conversation text with this storyboard? The change stays unsaved until you select Save agenda.")) return false;
+                updateField("conversation", text);
+                return true;
+              }} />
+          </div>
         )}
 
         {mode === "presentation" && (selectedId || creating) && (

@@ -18,6 +18,15 @@ import { ObjectStorageService } from "../lib/objectStorage";
 const router: IRouter = Router();
 const objectStorage = new ObjectStorageService();
 
+// Shared customer context must not survive in browser/proxy caches after sign-out.
+// All signed-in portal users retain the existing shared-workspace permissions.
+router.use("/agendas", (_req, res, next) => {
+  res.setHeader("Cache-Control", "private, no-store");
+  res.setHeader("Vary", "Cookie, Authorization");
+  res.setHeader("X-Robots-Tag", "noindex, nofollow, noarchive");
+  next();
+});
+
 async function canUseLogo(req: Request, objectPath: string): Promise<boolean> {
   if (!objectPath.startsWith("/objects/uploads/")) return false;
   try {

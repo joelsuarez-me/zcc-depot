@@ -1,3 +1,4 @@
+import { DiagramFrame, EdgeList } from "@/components/diagram-view-controls";
 import { useEffect, useMemo, useRef, useState, type KeyboardEvent } from "react";
 import { Pause, Play, RotateCcw, SkipForward, Headset, Search, UserCheck, AudioWaveform, BarChart3, Webhook, KeyRound, PhoneCall, IdCard, Database, Cpu, Boxes, ScrollText, FileText, ListChecks, type LucideIcon } from "lucide-react";
 import {
@@ -25,6 +26,16 @@ function useReduced() {
 }
 
 export function SystemDataFlow() {
+  const name = (id: string) => SYS_NODES.find((n) => n.id === id)?.t ?? id;
+  return (
+    <DiagramFrame testId="system-data-flow" dark showMotion={false}
+      text={(a) => <EdgeList audience={a} items={SYS_EDGES.map((e) => ({ from: name(e.from), to: name(e.to), label: e.label, note: e.optional ? "optional or configuration-dependent" : undefined }))} />}>
+      <SystemDataFlowDiagram />
+    </DiagramFrame>
+  );
+}
+
+function SystemDataFlowDiagram() {
   const reduced = useReduced();
   const [flow, setFlow] = useState<string | null>(null);
   const [node, setNode] = useState<string | null>(null);

@@ -9,6 +9,16 @@ export type FeatureClassification =
   | "Custom Development"
   | "Availability Requires Verification";
 export type FeatureDemoKind = "verification" | "workspace" | "ivr" | "assist" | "integration" | "continuity" | "workforce" | "lifecycle" | "journey";
+export type EvidenceStatus = "documentation-reviewed" | "requires-verification" | "missing-evidence";
+export interface FeatureEvidence {
+  owner: string | null;
+  status: EvidenceStatus;
+  reviewedAt: string | null;
+  productBoundary: FeatureClassification[];
+  dependencies: string[];
+  availabilityQualification: string;
+  humanApproval: null;
+}
 export interface FeatureSource {
   id: string;
   label: string;
@@ -39,6 +49,7 @@ export interface EnterpriseFeature {
   availability: string;
   lastVerified: string | null;
   sources: FeatureSource[];
+  evidence: FeatureEvidence;
   configuration: { title: string; detail: string }[];
   architecture: FeatureArchitecture;
   demo: { kind: FeatureDemoKind; href?: string; label: string; reused: boolean };

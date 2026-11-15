@@ -21,7 +21,7 @@ globalThis.clearTimeout=id=>timers.delete(id);
 const listeners={};
 globalThis.window={location:{hash:""},addEventListener:(e,fn)=>listeners[e]=fn,removeEventListener:e=>delete listeners[e]};
 globalThis.history={replaceState:(_a,_b,h)=>window.location.hash=h};
-globalThis.document={title:"Original",querySelector:()=>null,getElementById:()=>({scrollIntoView(){}})};
+globalThis.document={title:"Original",addEventListener(){},removeEventListener(){},querySelector:()=>null,getElementById:()=>({scrollIntoView(){}})};
 let n=0;const ok=(v,m)=>{assert.ok(v,m);n++};
 const text=x=>typeof x==="string"?x:(x?.children||[]).map(text).join(" ");
 let tree;act(()=>tree=create(<Page/>));
@@ -86,7 +86,7 @@ click("node-customer");ok(text(find("text-node-detail")).includes("Origin"),"int
 act(()=>tree.unmount());
 ok(document.title==="Original"&&!timers.size,"effect/timer cleanup");
 console.log(n+" routing UI checks passed");
-`},outfile:resolve(dir,"checks.cjs"),bundle:true,platform:"node",format:"cjs",jsx:"automatic",external:["react","react/*","react-test-renderer"],loader:{".css":"empty"},plugins:[{name:"stubs",setup(b){
+`},outfile:resolve(dir,"checks.cjs"),bundle:true,platform:"node",format:"cjs",jsx:"automatic",external:["react","react/*","react-test-renderer"],define:{"import.meta.env.BASE_URL":'"/"'},loader:{".css":"empty"},plugins:[{name:"stubs",setup(b){
 b.onResolve({filter:/^(@\/components\/(kit|room-kit)|framer-motion)$/},a=>({path:a.path,namespace:"stub"}));
 b.onLoad({filter:/.*/,namespace:"stub"},a=>({contents:a.path==="framer-motion"?'import React from "react";export const motion={g:({children,...p})=>React.createElement("g",p,children)};export const useReducedMotion=()=>false;':'import React from "react";export const PageHero=({title,lede,children})=>React.createElement("header",null,title,lede,children);export const RoomSection=({id,title,children})=>React.createElement("section",{id},title,children);export const SourceNote=({children})=>React.createElement("p",null,children);',loader:"js"}));
 }}],logLevel:"warning"});

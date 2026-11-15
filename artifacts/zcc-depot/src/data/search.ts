@@ -5,9 +5,10 @@ import { BLUEPRINT_DESCRIPTION } from "@/data/demo-blueprint";
 import { ROOMS } from "@/data/depot-rooms";
 import { COMPARISON_PATH, COMPARISON_TITLE } from "@/data/voice-comparison";
 import { navigationLabel } from "./navigation";
+import { destinationAccess, maySearchDestination } from "./access-policy";
 
 export type SearchGroup = "Pages" | "Sections" | "Features" | "Use cases" | "FAQ" | "Video highlights" | "Resources";
-export type SearchEntry = { id: string; group: SearchGroup; title: string; description: string; keywords?: string; href: string; external?: boolean };
+export type SearchEntry = { id: string; group: SearchGroup; title: string; description: string; keywords?: string; href: string; external?: boolean; access?: "public" | "presenter" };
 
 const page = (id: string, title: string, href: string, description: string, keywords = ""): SearchEntry => ({ id: `page-${id}`, group: "Pages", title, href, description, keywords });
 const sec = (id: string, title: string, href: string, description: string, keywords = ""): SearchEntry => ({ id: `section-${id}`, group: "Sections", title, href, description, keywords });
@@ -34,9 +35,9 @@ const PAGES: SearchEntry[] = [
 ];
 
 const SECTIONS: SearchEntry[] = [
-  sec("pricing-bundle", "Zendesk Contact Center — the bundle", "/pricing#bundle", "The primary motion: Zendesk sells Contact Center and Amazon Connect together on one contract.", "pricing bundle purchasing"),
-  sec("pricing-byoa", "Contact Center License — BYOA", "/pricing#byoa", "Bring-your-own-Amazon for customers with an AWS relationship or buying directly from Amazon.", "pricing license AWS Amazon contract"),
-  sec("pricing-team", "Contact Center Team — the lighter-weight path", "/pricing#team", "For greenfield and net-new customers who do not want the full Suite.", "pricing team new customer"),
+  sec("pricing-bundle", "Contact Center bundle", "/pricing#bundle", "Protected pricing guidance. Presenter Mode and sign-in required.", "pricing bundle"),
+  sec("pricing-byoa", "Bring your own Amazon", "/pricing#byoa", "Protected pricing guidance. Presenter Mode and sign-in required.", "pricing BYOA"),
+  sec("pricing-team", "Contact Center Team", "/pricing#team", "Protected pricing guidance. Presenter Mode and sign-in required.", "pricing team"),
   sec("platform", "One solution", "/#platform", "Pillars of the unified contact center platform.", "pillars overview"),
   sec("how-it-works", "How it works", "/#how-it-works", "Call journey from customer to Agent Workspace.", "journey voice"),
   sec("features", "Explore the power of Zendesk Contact Center", "/#features", "Search voice, AI, agent experience, operations, architecture and security capabilities.", "features capabilities explorer"),
@@ -71,13 +72,23 @@ const SEARCH_ENTRIES: SearchEntry[] = [
   ...FAQ.map(([q, a], i) => ({ id: `faq-${i}`, group: "FAQ" as const, title: q, description: a, href: "/resources#faq" })),
   ...VIDEO_HIGHLIGHTS.map((v, i) => ({ id: `video-${i}`, group: "Video highlights" as const, title: v.title, description: `${v.time} · ${v.highlight}`, keywords: v.transcript, href: `${WALKTHROUGH_URL}&t=${v.start}s`, external: true })),
   { id: "guided-demo", group: "Resources", title: "Launch guided demo", description: "Interactive Storylane click-through of Zendesk Contact Center.", keywords: "storylane", href: DEMO_URL, external: true },
-  ...RESOURCES.filter((r) => r.url !== DEMO_URL).map((r) => ({ id: `res-${r.id}`, group: "Resources" as const, title: r.title, description: `${r.category} · ${r.kind}`, href: r.url, external: true })),
+  ...RESOURCES.filter((r) => r.url !== DEMO_URL).map((r) => ({ id: `res-${r.id}`, group: "Resources" as const, title: r.title, description: `${r.category} · ${r.kind}`, href: r.url, external: true, access: r.kind === "Internal" ? "presenter" as const : "public" as const })),
 ];
 
 // Keep former names searchable while showing the approved navigation labels.
 export const SEARCH_INDEX: SearchEntry[] = SEARCH_ENTRIES.map(entry => {
   const label = navigationLabel(entry.href);
-  return label ? { ...entry, title: label, keywords: `${entry.keywords ?? ""} ${entry.title}` } : entry;
+  const labeled = label ? { ...entry, title: label, keywords: `${entry.keywords ?? ""} ${entry.title}` } : entry;
+  return entry.access === "presenter" || destinationAccess(entry.href) === "presenter"
+    ? { ...labeled, description: "Presenter Mode and sign-in required.", keywords: `${labeled.title} ${entry.title} internal presenter` }
+    : labeled;
 });
+
+export type SearchScope = "accessible" | "public" | "presenter";
+export function accessibleSearchEntries(authenticated: boolean, presenter: boolean, scope: SearchScope = "accessible") {
+  return SEARCH_INDEX.filter(entry => maySearchDestination(entry.href, authenticated, presenter)
+    && (entry.access !== "presenter" || (authenticated && presenter))
+    && (scope === "accessible" || (entry.access ?? destinationAccess(entry.href)) === scope));
+}
 
 export const SEARCH_GROUPS: SearchGroup[] = ["Pages", "Sections", "Features", "Use cases", "FAQ", "Video highlights", "Resources"];
