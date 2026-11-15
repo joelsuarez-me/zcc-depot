@@ -4,7 +4,7 @@ import { ArrowUpRight } from "lucide-react";
 import { motion, useReducedMotion, AnimatePresence } from "framer-motion";
 import { Ext, Note, Reveal, Section, SectionHead } from "@/components/kit";
 import { PillarArt } from "@/components/art";
-import { HomeHero, RoomStrip } from "@/components/home-hero";
+import { HomeHero } from "@/components/home-hero";
 import { CallJourney } from "@/components/call-journey";
 import { FEATURES, LINKS, PILLARS } from "@/data/content";
 import { HOW_IT_WORKS_GUIDE } from "@/data/navigation";
@@ -15,7 +15,7 @@ export default function Home() {
   const f = FEATURES[feat];
   return (
     <>
-      <div className="hh-wrap"><HomeHero /><RoomStrip /></div>
+      <div className="hh-wrap"><HomeHero /></div>
 
       <Section>
         <SectionHead id="platform" num="01" eyebrow="One solution" title={<>One contact center solution. <span className="hl">Zero silos.</span></>}
