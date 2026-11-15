@@ -70,3 +70,17 @@ mtime_ms = 1794762875123
 storage_uri = "gcs://replit-rams-assets-spock/rams/assets/repl:a5317541-3b36-4634-98e4-c41c651ba0cc/71ff8cfb-fc17-40ba-b431-455114c20fd9/6146aff2-4ad3-4086-b680-bf7c23daf1f7"
 storage_version_token = "1794762902180237"
 content_type = "application/octet-stream"
+
+[[outputs]]
+id = "s270MoOygWpieayTqiuTP"
+uri = "file://generated-artifacts/site-review/ZCC-Depot-Complete-Site-2026-11-15-182714.zip"
+type = "unspecified"
+title = "Download the complete site ZIP"
+description = "Fresh source archive: 914 project files, local assets, uploaded reference documents and readiness reports. About 80 MB. Excludes secrets, dependencies, database records and externally stored files. Contains internal material; share only with authorized recipients."
+logical_id = "9eb9f008-fdab-4212-9ca7-ada352099089"
+content_hash = "sha256:8a49d801c7052b533c4a8978f8ff3b6a6b47fb9d3134dd671b2808188995f039"
+size = 79968901
+mtime_ms = 1794767252238
+storage_uri = "gcs://replit-rams-assets-spock/rams/assets/repl:a5317541-3b36-4634-98e4-c41c651ba0cc/9eb9f008-fdab-4212-9ca7-ada352099089/e61c3d65-113c-4d4f-aa39-562a101b8edf"
+storage_version_token = "1794767260101567"
+content_type = "application/octet-stream"
