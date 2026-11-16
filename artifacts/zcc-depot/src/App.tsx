@@ -14,6 +14,7 @@ const SiteMap = lazy(() => import('@/pages/site-map'));
 const Demos = lazy(() => import('@/pages/demos'));
 const Architecture = lazy(() => import('@/pages/architecture'));
 const ArchitectureComponents = lazy(() => import('@/pages/architecture-components'));
+const ArchitectureWorkloadLayers = lazy(() => import('@/pages/architecture-workload-layers'));
 const ArchitectureSystemOverview = lazy(() => import('@/pages/architecture-system-overview'));
 const Sales = lazy(() => import('@/pages/sales'));
 const VoiceComparison = lazy(() => import('@/pages/voice-comparison'));
@@ -85,6 +86,7 @@ function Router() {
             <Route path="/demos/nuggets" component={DemoNuggets} />
             <Route path="/architecture" component={Architecture} />
             <Route path="/architecture/components" component={ArchitectureComponents} />
+            <Route path="/architecture/workload-layers" component={ArchitectureWorkloadLayers} />
             <Route path="/architecture/system-overview" component={ArchitectureSystemOverview} />
             <Route path="/sales" component={Sales} />
             <Route path="/sales/contact-center-vs-voice" component={VoiceComparison} />
