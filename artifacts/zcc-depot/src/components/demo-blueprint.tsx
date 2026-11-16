@@ -1,27 +1,62 @@
 import { useMemo, useState } from "react";
 import { Link } from "wouter";
-import { ArrowLeft, ArrowRight } from "lucide-react";
+import { ArrowLeft, ArrowRight, Check, Pencil, RotateCcw, Save, X } from "lucide-react";
 import { Ext, Note, Section, SectionHead } from "@/components/kit";
 import {
-  BLUEPRINT_DESCRIPTION, BLUEPRINT_DISCLAIMER, BLUEPRINT_TIMING_NOTE, DEFAULT_SESSION_LENGTH,
-  SESSION_LENGTHS, buildBlueprintTimeline, formatBlueprintTime, type SessionLength,
+  BLUEPRINT_DESCRIPTION, BLUEPRINT_DISCLAIMER, BLUEPRINT_STAGES, BLUEPRINT_TIMING_NOTE, DEFAULT_SESSION_LENGTH,
+  SESSION_LENGTHS, buildBlueprintTimeline, formatBlueprintTime, type BlueprintStage, type SessionLength,
 } from "@/data/demo-blueprint";
 import "./demo-blueprint.css";
 
 const range = (a: number, b: number) => `${formatBlueprintTime(a)}–${formatBlueprintTime(b)}`;
 const mins = (s: number) => { const m = s / 60; return `${Number.isInteger(m) ? m : m.toFixed(1)} min`; };
+const STORAGE_KEY = "zcc-depot:demo-blueprint:v1";
+const cloneStages = () => BLUEPRINT_STAGES.map(stage => ({ ...stage, minutes: { ...stage.minutes } }));
+function loadStages(): BlueprintStage[] {
+  try {
+    const parsed = JSON.parse(localStorage.getItem(STORAGE_KEY) || "null");
+    if (Array.isArray(parsed) && parsed.length === BLUEPRINT_STAGES.length && parsed.every((stage, i) => stage?.id === BLUEPRINT_STAGES[i]?.id)) return parsed;
+  } catch { /* use the defaults */ }
+  return cloneStages();
+}
 
 export function DemoBlueprint() {
   const [length, setLength] = useState<SessionLength>(DEFAULT_SESSION_LENGTH);
   const [index, setIndex] = useState(0);
   const [cues, setCues] = useState(true);
-  const stages = useMemo(() => buildBlueprintTimeline(length), [length]);
+  const [blueprintStages, setBlueprintStages] = useState<BlueprintStage[]>(loadStages);
+  const [editing, setEditing] = useState(false);
+  const [saved, setSaved] = useState(false);
+  const [saveError, setSaveError] = useState("");
+  const stages = useMemo(() => buildBlueprintTimeline(length, blueprintStages), [length, blueprintStages]);
   const s = stages[index];
-  const total = length * 60;
+  const total = stages[stages.length - 1]?.endSeconds ?? length * 60;
+  function updateStage<K extends "title" | "value" | "presenterCue" | "proof" | "transition">(key: K, value: BlueprintStage[K]) {
+    setBlueprintStages(previous => previous.map((stage, i) => i === index ? { ...stage, [key]: value } : stage));
+    setSaved(false);
+  }
+  function updateMinutes(sessionLength: SessionLength, value: number) {
+    setBlueprintStages(previous => previous.map((stage, i) => i === index ? { ...stage, minutes: { ...stage.minutes, [sessionLength]: Math.max(1, value) } } : stage));
+    setSaved(false);
+  }
+  function saveBlueprint() {
+    try { localStorage.setItem(STORAGE_KEY, JSON.stringify(blueprintStages)); setSaved(true); setSaveError(""); setEditing(false); }
+    catch { setSaved(false); setSaveError("Your browser could not save these changes. Check its storage settings and try again."); }
+  }
+  function resetBlueprint() {
+    const defaults = cloneStages();
+    setBlueprintStages(defaults);
+    try { localStorage.removeItem(STORAGE_KEY); } catch { /* storage unavailable */ }
+    setSaved(false); setSaveError(""); setEditing(false);
+  }
+  function discardEdits() {
+    setBlueprintStages(loadStages());
+    setSaved(false); setSaveError(""); setEditing(false);
+  }
 
   return (
     <Section className="demo-blueprint-section">
-      <SectionHead id="agenda" eyebrow="DEMO METHODOLOGY" title="Demo Blueprint" lede={BLUEPRINT_DESCRIPTION} />
+      <SectionHead id="blueprint" eyebrow="DEMO METHODOLOGY" title="Demo Blueprint" lede={BLUEPRINT_DESCRIPTION} />
 
       <div className="bp-options flex flex-wrap items-center justify-between gap-2">
         <div role="group" aria-label="Session length" className="inline-flex rounded-full border border-[#11110D]/15 bg-[#FBFBF8] p-1">
@@ -32,12 +67,41 @@ export function DemoBlueprint() {
             </button>
           ))}
         </div>
-        <label className="inline-flex min-h-11 cursor-pointer items-center gap-3 text-sm font-medium">
-          <input type="checkbox" checked={cues} onChange={(e) => setCues(e.target.checked)} data-testid="blueprint-cues"
-            className="h-4 w-4 accent-[#203524]" />
-          Show presenter cues
-        </label>
+        <div className="flex flex-wrap items-center gap-3">
+          <label className="inline-flex min-h-11 cursor-pointer items-center gap-3 text-sm font-medium">
+            <input type="checkbox" checked={cues} onChange={(e) => setCues(e.target.checked)} data-testid="blueprint-cues"
+              className="h-4 w-4 accent-[#203524]" />
+            Show presenter cues
+          </label>
+          <button type="button" onClick={() => { setEditing(value => !value); setSaved(false); }}
+            className="inline-flex min-h-11 items-center gap-2 rounded-full border border-[#11110D]/15 px-4 py-2 text-sm font-semibold hover:bg-[#203524]/8" data-testid="blueprint-edit">
+            {editing ? <X className="h-4 w-4" aria-hidden /> : <Pencil className="h-4 w-4" aria-hidden />}
+            {editing ? "Close editor" : "Edit blueprint"}
+          </button>
+          {saved && <span role="status" className="inline-flex items-center gap-1 text-sm font-medium text-[#203524]"><Check className="h-4 w-4" aria-hidden /> Saved on this device</span>}
+        </div>
       </div>
+      {editing && (
+        <div className="mt-4 rounded-2xl border border-[#203524]/20 bg-[#EAF2DB] p-5 md:p-6" data-testid="blueprint-editor">
+          <div className="flex flex-wrap items-start justify-between gap-3">
+            <div><div className="eyebrow text-[#203524]">Edit stage {s.number}</div><p className="mt-1 text-sm text-[#203524]/75">Edits preview immediately. Save to keep them after reload; discard to return to the last saved version.</p></div>
+            <div className="flex flex-wrap gap-2">
+              <button type="button" onClick={discardEdits} className="inline-flex min-h-11 items-center gap-2 rounded-full border border-[#203524]/25 px-4 py-2 text-sm font-semibold text-[#203524] hover:bg-white/60"><X className="h-4 w-4" aria-hidden />Discard edits</button>
+              <button type="button" onClick={resetBlueprint} className="inline-flex min-h-11 items-center gap-2 rounded-full border border-[#203524]/25 px-4 py-2 text-sm font-semibold text-[#203524] hover:bg-white/60"><RotateCcw className="h-4 w-4" aria-hidden />Reset defaults</button>
+              <button type="button" onClick={saveBlueprint} className="inline-flex min-h-11 items-center gap-2 rounded-full bg-[#203524] px-4 py-2 text-sm font-semibold text-[#D1F470] hover:bg-[#2b4630]" data-testid="blueprint-save"><Save className="h-4 w-4" aria-hidden />Save changes</button>
+            </div>
+          </div>
+          {saveError && <p role="alert" className="mt-3 text-sm font-medium text-red-800">{saveError}</p>}
+          <div className="mt-4 grid gap-4 md:grid-cols-2">
+            <label className="text-sm font-semibold">Stage title<input value={s.title} onChange={e => updateStage("title", e.target.value)} className="mt-1.5 block w-full rounded-xl border border-[#11110D]/15 bg-white px-3 py-2.5 font-normal" /></label>
+            <label className="text-sm font-semibold">Customer or business value<textarea value={s.value} onChange={e => updateStage("value", e.target.value)} rows={3} className="mt-1.5 block w-full rounded-xl border border-[#11110D]/15 bg-white px-3 py-2.5 font-normal" /></label>
+            <label className="text-sm font-semibold">Presenter cue<textarea value={s.presenterCue} onChange={e => updateStage("presenterCue", e.target.value)} rows={4} className="mt-1.5 block w-full rounded-xl border border-[#11110D]/15 bg-white px-3 py-2.5 font-normal" /></label>
+            <label className="text-sm font-semibold">Proof to show<textarea value={s.proof} onChange={e => updateStage("proof", e.target.value)} rows={3} className="mt-1.5 block w-full rounded-xl border border-[#11110D]/15 bg-white px-3 py-2.5 font-normal" /></label>
+            <label className="text-sm font-semibold md:col-span-2">Transition to the next stage<textarea value={s.transition} onChange={e => updateStage("transition", e.target.value)} rows={2} className="mt-1.5 block w-full rounded-xl border border-[#11110D]/15 bg-white px-3 py-2.5 font-normal" /></label>
+          </div>
+          <fieldset className="mt-4"><legend className="text-sm font-semibold">Time for this stage</legend><div className="mt-2 flex flex-wrap gap-3">{SESSION_LENGTHS.map(sessionLength => <label key={sessionLength} className="text-sm">{sessionLength}-minute session<input type="number" min={1} max={60} value={s.minutes[sessionLength]} onChange={e => updateMinutes(sessionLength, Number(e.target.value))} className="ml-2 w-20 rounded-lg border border-[#11110D]/15 bg-white px-2 py-1.5" /></label>)}</div></fieldset>
+        </div>
+      )}
       <p className="mt-2 text-xs text-[#11110D]/60">{BLUEPRINT_TIMING_NOTE}</p>
       <p className="mt-1 text-xs text-[#11110D]/65">Manual stage selection—not a session timer. Presenter cues control visibility, not access.</p>
 

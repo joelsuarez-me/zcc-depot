@@ -48,6 +48,14 @@ export default function Resources() {
           </span>
           <span className="inline-flex items-center gap-2 rounded-full bg-[#203524] px-4 py-2 text-sm font-semibold text-[#D1F470]">Explore the guide<ArrowUpRight className="h-4 w-4" aria-hidden /></span>
         </Link>
+        <Link href="/resources/aws-account-migration-assessment" className="mb-7 flex flex-wrap items-center justify-between gap-4 rounded-3xl border border-[#203524]/20 bg-[#F1F3EA] p-5 transition hover:border-[#203524] md:p-6" data-testid="link-resources-aws-account-migration">
+          <span>
+            <span className="eyebrow text-[#203524]">AWS account readiness</span>
+            <span className="mt-1 block text-2xl font-semibold tracking-tight text-[#11110D]">AWS Account Migration Assessment</span>
+            <span className="mt-1 block text-sm text-[#203524]">See the preparation, account review, security boundaries, and next steps at a glance.</span>
+          </span>
+          <span className="inline-flex items-center gap-2 rounded-full bg-[#203524] px-4 py-2 text-sm font-semibold text-[#D1F470]">Explore the process<ArrowUpRight className="h-4 w-4" aria-hidden /></span>
+        </Link>
         <Link href="/resources/amazon-connect-coverage" className="mb-7 flex flex-wrap items-center justify-between gap-4 rounded-3xl border border-[#203524]/20 bg-[#EEF2E8] p-5 transition hover:border-[#203524] md:p-6" data-testid="link-resources-amazon-connect-coverage">
           <span>
             <span className="eyebrow text-[#203524]">Live AWS coverage guide</span>

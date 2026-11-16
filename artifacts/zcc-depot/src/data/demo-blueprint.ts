@@ -140,10 +140,10 @@ export function formatBlueprintTime(seconds: number): string {
   return `${String(Math.floor(whole / 60)).padStart(2, "0")}:${String(whole % 60).padStart(2, "0")}`;
 }
 
-export function buildBlueprintTimeline(sessionLength: SessionLength): readonly TimedStage[] {
+export function buildBlueprintTimeline(sessionLength: SessionLength, stages: readonly BlueprintStage[] = BLUEPRINT_STAGES): readonly TimedStage[] {
   if (!SESSION_LENGTHS.includes(sessionLength)) throw new RangeError("Unsupported session length");
   let cursor = 0;
-  return BLUEPRINT_STAGES.map((stage, index) => {
+  return stages.map((stage, index) => {
     const startSeconds = cursor;
     const durationSeconds = stage.minutes[sessionLength] * 60;
     const endSeconds = startSeconds + durationSeconds;
