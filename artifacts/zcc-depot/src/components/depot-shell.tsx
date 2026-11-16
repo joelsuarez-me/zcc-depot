@@ -60,7 +60,7 @@ export function DepotSidebar({ logo, mobile = false, onNavigate }: { logo: strin
             <ul className="space-y-0.5">
               {NAV.map((n) => {
                 const href = n.href;
-                const active = isNavItemActive(n, loc);
+                const active = isNavItemActive(n, loc, typeof window !== "undefined" ? window.location.hash : "");
                 return (
                   <li key={n.href}>
                     <Link href={href} onClick={onNavigate} className={`depot-side-link is-quiet ${active ? "is-active" : ""}`} title={collapsed ? n.label : undefined} aria-label={n.label} aria-current={active ? "page" : undefined} data-testid={`link-nav-${n.label.toLowerCase()}`}>
@@ -68,12 +68,12 @@ export function DepotSidebar({ logo, mobile = false, onNavigate }: { logo: strin
                     </Link>
                     {!collapsed && n.children && (
                       <ul className="mb-1 ml-4 border-l border-[#F5F5F2]/10 pl-2">
-                        {n.children.filter((c) => isPresenter || !["/resources#roadmap", "/resources#collaboration", "/resources#pitch-deck"].includes(c.href)).map((c) => (
+                        {visibleNavItems(n.children, isPresenter).map((c) => (
                           <li key={c.href}>{c.external
                             ? <a href={c.href} target="_blank" rel="noopener noreferrer" onClick={onNavigate} className="depot-side-sublink" data-testid={`link-subnav-${c.label.toLowerCase().replace(/\W+/g, "-")}`}>{c.label}<span className="sr-only"> (opens in a new tab)</span></a>
                             : <Link href={c.href} onClick={onNavigate} className={`depot-side-sublink ${loc === c.href ? "is-active" : ""}`} data-testid={`link-subnav-${c.label.toLowerCase().replace(/\W+/g, "-")}`}>{c.label}</Link>}
                             {c.children && <ul className="ml-2 border-l border-white/15 pl-2" aria-label={`${c.label} competitors`}>
-                              {c.children.map(competitor => <li key={competitor.href}>
+                              {visibleNavItems(c.children, isPresenter).map(competitor => <li key={competitor.href}>
                                 <Link href={competitor.href} onClick={onNavigate} className={`depot-side-sublink flex min-h-11 items-center gap-2 ${loc === competitor.href ? "is-active" : ""}`} aria-label={competitor.label} title={competitor.label} aria-current={loc === competitor.href ? "page" : undefined} data-testid={`link-competitor-${competitor.label.toLowerCase()}`}>
                                   {competitor.logo ? <span className="inline-flex h-7 w-10 shrink-0 items-center justify-center rounded-md bg-white px-1"><img src={`${import.meta.env.BASE_URL}${competitor.logo}`} alt="" className="h-5 w-full object-contain" /></span> : competitor.label}
                                 </Link>
