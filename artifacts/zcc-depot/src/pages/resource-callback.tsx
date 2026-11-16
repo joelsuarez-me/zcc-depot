@@ -11,7 +11,6 @@ import { CallbackControls } from "@/components/callback/CallbackControls";
 import { CallbackGallery } from "@/components/callback/CallbackGallery";
 import { CallbackConfigPanel } from "@/components/callback/CallbackConfigPanel";
 import { CallbackCustomerPanel, CallbackAgentPanel, CallbackLifecycleTimeline, CallbackExecutionLog, CallbackOutcomePanel, WhatJustHappened } from "@/components/callback/CallbackPanels";
-import { CallbackCommandCenter } from "@/components/callback/CallbackCommandCenter";
 import { CallbackArchitectureExplorer } from "@/components/callback/CallbackArchitectureExplorer";
 import { CallbackValue } from "@/components/callback/CallbackValue";
 import { CallbackConfigGuide } from "@/components/callback/CallbackConfigGuide";
@@ -72,10 +71,6 @@ export default function ResourceCallback() {
         <a href="#simulator" className="room-chip" data-testid="link-hero-simulator">Launch Callback Simulator<PhoneIncoming className="h-3.5 w-3.5" aria-hidden /></a>
       </PageHero>
       <div className="mx-auto max-w-7xl px-5 pb-28 md:px-8">
-        <RoomSection id="command-center" eyebrow="Resources · Callback lab" title={<>Amazon Connect Callback Experience Lab<span className="mt-1 block text-lg font-normal text-[#11110D]/60">Callback command center</span></>} lede="One simulated dataset drives every tile, the funnel, the scheduling timeline and the feed. Filter it and everything moves together.">
-          <CallbackCommandCenter />
-        </RoomSection>
-
         <RoomSection id="experiences" eyebrow="Gallery" title="Twelve callback experiences" lede="Each miniature is the scenario's real topology. Select one to load it into the simulator.">
           <CallbackGallery current={id} onPick={(x) => pick(x)} />
         </RoomSection>

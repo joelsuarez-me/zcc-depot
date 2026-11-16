@@ -25,6 +25,7 @@ export const SITE_MAP_SECTIONS: Record<string, string[]> = {
   "/sales/contact-center-vs-voice": ["summary", "capabilities", "fit", "discovery", "migration", "faq", "sources"],
   "/pricing": ["bundle", "byoa", "team", "costs", "commercial-notes", "pricing-sources"],
   "/resources": ["library", "ai-suggestions", "collaboration", "pitch-deck", "faq", "roadmap"],
+  "/resources/resporg-number-porting": ["overview", "process", "resporg", "loa", "downloads"],
   "/resources/how-it-works": SLIDES.map(slide => slide.id),
   "/resources/routing": ["methods", "simulator", "configure", "accuracy"],
   "/resources/callback": ["command-center", "experiences", "simulator", "architecture", "value", "configure", "accuracy"],
