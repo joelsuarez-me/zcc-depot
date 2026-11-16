@@ -29,7 +29,7 @@ export function DemoBlueprint() {
   const [saved, setSaved] = useState(false);
   const stages = useMemo(() => buildBlueprintTimeline(length, blueprintStages), [length, blueprintStages]);
   const s = stages[index];
-  const total = length * 60;
+  const total = stages[stages.length - 1]?.endSeconds ?? length * 60;
   function updateStage<K extends "title" | "value" | "presenterCue" | "proof" | "transition">(key: K, value: BlueprintStage[K]) {
     setBlueprintStages(previous => previous.map((stage, i) => i === index ? { ...stage, [key]: value } : stage));
     setSaved(false);
