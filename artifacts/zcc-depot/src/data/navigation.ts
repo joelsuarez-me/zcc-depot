@@ -32,6 +32,9 @@ export const NAV: NavItem[] = [
     href: "/#features", label: "Capabilities", children: [
       { label: "Quick Connects", href: "/#quick-connects" },
       { label: "Screen Recording", href: "/#screen-recording" },
+      { label: "Call Routing", href: "/resources/routing" },
+      { label: "Queue Callbacks", href: "/resources/callback" },
+      { label: "Outbound Dialers", href: "/resources/outbound-dialers" },
       { label: "AI & Automation", href: "/rooms/ai-automation" },
       { label: "Agent Experience", href: "/rooms/agent-experience" },
       { label: "Feature Demos", href: "/demos/nuggets" },
@@ -63,9 +66,6 @@ export const NAV: NavItem[] = [
     href: "/resources", label: "Guides & Resources", children: [
       { label: "Reference Library", href: "/resources#library" },
       { label: "Operational Guides", href: "/resources#library", children: [
-        { label: "Call Routing", href: "/resources/routing" },
-        { label: "Queue Callbacks", href: "/resources/callback" },
-        { label: "Outbound Dialers", href: "/resources/outbound-dialers" },
         { label: "Supervisor Command Center", href: "/resources/supervisor-command-center" },
       ] },
       { label: "Telephony & Number Management", href: "/resources#library", children: [
