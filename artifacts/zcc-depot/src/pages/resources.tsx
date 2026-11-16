@@ -48,6 +48,14 @@ export default function Resources() {
           </span>
           <span className="inline-flex items-center gap-2 rounded-full bg-[#203524] px-4 py-2 text-sm font-semibold text-[#D1F470]">Explore the guide<ArrowUpRight className="h-4 w-4" aria-hidden /></span>
         </Link>
+        <Link href="/resources/amazon-connect-coverage" className="mb-7 flex flex-wrap items-center justify-between gap-4 rounded-3xl border border-[#203524]/20 bg-[#EEF2E8] p-5 transition hover:border-[#203524] md:p-6" data-testid="link-resources-amazon-connect-coverage">
+          <span>
+            <span className="eyebrow text-[#203524]">Live AWS coverage guide</span>
+            <span className="mt-1 block text-2xl font-semibold tracking-tight text-[#11110D]">Amazon Connect Telecom Country Coverage</span>
+            <span className="mt-1 block text-sm text-[#203524]">Open the current AWS country guide for DID, toll-free, porting, outbound and multi-carrier availability.</span>
+          </span>
+          <span className="inline-flex items-center gap-2 rounded-full bg-[#203524] px-4 py-2 text-sm font-semibold text-[#D1F470]">View coverage<ArrowUpRight className="h-4 w-4" aria-hidden /></span>
+        </Link>
         <div className="grid gap-8 lg:grid-cols-12">
           <aside className="lg:col-span-3">
             <div className="lg:sticky lg:top-28">
