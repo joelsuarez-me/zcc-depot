@@ -148,7 +148,7 @@ export function buildSiteMap(): SiteMapGroup[] {
     // this group's overview, not a duplicate copy of the entire Resources page.
     for (const entry of links) {
       const [path, hash] = entry.href.split("#");
-      if (entry.external || !hash || !validDestination(entry.href) || (path || "/") === (nav.href.split("#")[0] || "/") || isNavItemActive(nav, path)) continue;
+      if (entry.external || !hash || !validDestination(entry.href) || (path || "/") === (nav.href.split("#")[0] || "/")) continue;
       const overview = pages.find(page => page.href === nav.href.split("#")[0]) ?? pages[0];
       overview?.sections.push({ title: entry.label, href: entry.href, description: "Open this section.", keywords: "", access: siteAccess(entry.href) });
     }
@@ -160,7 +160,7 @@ export function buildSiteMap(): SiteMapGroup[] {
   const covered = new Set(groups.flatMap(group => group.pages.map(page => page.href)));
   // A new registered page must remain discoverable even before it gets its own menu link.
   const remaining = [...routePaths].filter(path => !covered.has(path));
-  if (remaining.length) groups.push({ id: "more-pages", title: "More pages", description: "Additional destinations in the Depot.", pages: remaining.map(pageFor) });
+  if (remaining.length) groups.push({ id: "more-pages", title: "More pages", description: "Additional destinations in the Depot.", pages: remaining.map(path => pageFor(path)) });
   return groups;
 }
 
