@@ -25,6 +25,7 @@ export const NAV: NavItem[] = [
       { label: "Architecture Explorer", href: "/rooms/architecture-integrations" },
       { label: "System & Data Flow", href: "/architecture#data-flow" },
       { label: "Platform Components", href: "/architecture/components" },
+      { label: "Amazon Connect Workload Layers", href: "/architecture/workload-layers" },
       { label: "Detailed System Flow", href: "/architecture/system-overview" },
     ],
   },
