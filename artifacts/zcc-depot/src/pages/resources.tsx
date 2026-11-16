@@ -109,6 +109,45 @@ export default function Resources() {
         </div>
       </Section>
 
+      <Section id="quick-connects">
+        <SectionHead permalinkId="quick-connects" eyebrow="Amazon Connect · Routing" title="Quick Connects: common transfers, ready to use" lede="Quick connects give agents a named list of destinations for common transfers, such as a specialist, another queue, or an on-call phone number." />
+        <div className="grid gap-3 md:grid-cols-2 xl:grid-cols-4">
+          {[
+            { title: "Phone number", label: "External destination", copy: "Send a contact to a phone number, such as a supervisor or on-call pager." },
+            { title: "User", label: "Specific agent", copy: "Transfer to a named Connect user through the configured transfer flow." },
+            { title: "Queue", label: "Another team", copy: "Route the contact to a queue through its configured transfer flow." },
+            { title: "Flow", label: "Chat only", copy: "Let an agent start an interactive workflow during an active chat." },
+          ].map((item) => (
+            <article key={item.title} className="rounded-2xl border border-[#203524]/15 bg-[#FBFBF8] p-5">
+              <p className="eyebrow text-[#203524]/65">{item.label}</p>
+              <h3 className="mt-2 text-lg font-semibold">{item.title}</h3>
+              <p className="mt-2 text-sm leading-relaxed text-[#11110D]/65">{item.copy}</p>
+            </article>
+          ))}
+        </div>
+
+        <div className="mt-5 grid gap-4 lg:grid-cols-2">
+          <div className="rounded-[2rem] bg-[#203524] p-6 text-[#F5F5F2]">
+            <p className="eyebrow text-[#D1F470]">Set up</p>
+            <ol className="mt-3 grid gap-3 text-sm leading-relaxed">
+              <li><strong>1. Create the destination.</strong> In the Connect admin site, open <strong>Routing → Quick connects</strong>. Give it a unique name, choose the type, set the destination and flow when applicable, then save.</li>
+              <li><strong>2. Make it available to agents.</strong> Edit the relevant queue, add the quick connect, and save. Agents see quick connects associated with queues in their routing profile, including the Default outbound queue.</li>
+              <li><strong>3. Try it in the CCP.</strong> For a phone-number quick connect, open Quick connects, select the entry, and choose Call.</li>
+            </ol>
+          </div>
+          <div className="rounded-[2rem] border border-[#203524]/15 bg-[#FBFBF8] p-6">
+            <p className="eyebrow text-[#203524]/65">What agents see</p>
+            <ul className="mt-3 grid gap-3 text-sm leading-relaxed text-[#11110D]/75">
+              <li><strong>User and Queue:</strong> shown in the CCP when an agent transfers a contact.</li>
+              <li><strong>Phone number:</strong> external destinations appear in the CCP at all times. No transfer flow runs; caller ID comes from the queue configuration.</li>
+              <li><strong>Flow:</strong> supported for chat contacts only.</li>
+            </ul>
+          </div>
+        </div>
+        <Note>Quick connects are reusable destinations. For User and Queue types, the associated flow controls the transfer behavior. AWS notes that the Contact Control Panel may show an internal transfer as connected while the destination agent is still being notified and accepting the contact.</Note>
+        <p className="mt-4 text-sm"><Ext href="https://docs.aws.amazon.com/connect/latest/adminguide/quick-connects.html" className="font-semibold text-[#203524] underline" testId="link-aws-quick-connects">AWS admin guide: Create quick connects</Ext></p>
+      </Section>
+
       <Section tone="white">
         <div className="grid gap-4 md:grid-cols-2">
           <a href={LINKS.gettingStarted} target="_blank" rel="noopener noreferrer" className="group rounded-[2rem] bg-[#203524] p-8 text-[#F5F5F2] transition hover:-translate-y-1" data-testid="card-getting-started">
