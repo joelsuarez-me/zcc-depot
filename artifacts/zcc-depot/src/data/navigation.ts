@@ -4,6 +4,12 @@ import { COMPETITORS } from "./competitors";
 export type SubNavItem = { label: string; href: string; external?: boolean; logo?: string; children?: readonly SubNavItem[] };
 export type NavItem = { href: string; label: string; children?: SubNavItem[] };
 
+// Used by the Overview content; intentionally not listed in the main menu.
+export const HOW_IT_WORKS_GUIDE: SubNavItem = {
+  label: "How it works (Detailed)",
+  href: "/resources/how-it-works",
+};
+
 // Pages linked from within a menu's content rather than listed as submenu items.
 export const NAV_RELATED_PAGES: Record<string, SubNavItem[]> = { "Demo Center": [...COMPETITORS] };
 
