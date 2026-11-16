@@ -5,8 +5,8 @@ import type { FeatureSource } from "./feature-types";
 const reviewed = "2026-11-15";
 const aws = "https://docs.aws.amazon.com/connect/latest/adminguide/";
 const zd = "https://support.zendesk.com/hc/en-us/articles/";
-function source(id: string, label: string, href: string): FeatureSource {
-  return { id, label, href, lastVerified: reviewed };
+function source(id: string, label: string, href: string, lastVerified = reviewed): FeatureSource {
+  return { id, label, href, lastVerified };
 }
 export const FEATURE_SOURCES = {
   components: source("components", "Zendesk: Contact Center components and integration boundaries", zd + "9829206009242"),
@@ -35,5 +35,10 @@ export const FEATURE_SOURCES = {
   architecture: source("architecture", "AWS: architectural guidance and workload boundaries", aws + "architecture-guidance.html"),
   workloadLayers: source("workload-layers", "AWS: Amazon Connect Customer workload layers", aws + "workload-layers.html"),
   stirShaken: source("stir-shaken", "AWS: STIR/SHAKEN signing, attestation levels and eligibility", aws + "stirshaken.html"),
+  quickConnects: source("quick-connects", "AWS: create and configure quick connects", aws + "quick-connects.html", "2026-11-16"),
+  screenRecording: source("screen-recording", "AWS: set up and review agent screen recordings", aws + "agent-screen-recording.html", "2026-11-16"),
+  screenRecordingClient: source("screen-recording-client", "AWS: screen recording client application and supported platforms", aws + "amazon-connect-client-app.html", "2026-11-16"),
+  screenRecordingRequirements: source("screen-recording-requirements", "AWS: screen recording system and network requirements", aws + "sr-system-req.html", "2026-11-16"),
+  screenRecordingEnable: source("screen-recording-enable", "AWS: enable screen recording for a Connect instance", aws + "enable-sr.html", "2026-11-16"),
 } satisfies Record<string, FeatureSource>;
 export type FeatureSourceId = keyof typeof FEATURE_SOURCES;

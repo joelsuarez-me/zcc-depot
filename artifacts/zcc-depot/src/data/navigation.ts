@@ -14,10 +14,7 @@ export const NAV: NavItem[] = [
       { label: "Welcome", href: "/#overview" },
       { label: "Connected Platform", href: "/#platform" },
       { label: "How It Works", href: "/#how-it-works" },
-      { label: "Capabilities", href: "/#features", children: [
-        { label: "Quick Connects", href: "/#quick-connects" },
-        { label: "Screen Recording", href: "/#screen-recording" },
-      ] },
+      { label: "Capabilities", href: "/#features" },
       { label: "Executive Overview", href: "/rooms/executive-overview" },
     ],
   },

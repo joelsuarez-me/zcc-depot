@@ -446,6 +446,30 @@ const seeds: Seed[] = [
     setup: ["Confirm eligible numbers, destinations and the Amazon Connect deployment.", "Prepare the business and number details requested through Zendesk Support.", "Treat attestation as one carrier signal; verify caller-name and reputation programs separately."],
     demo: "journey", href: "/resources/stir-shaken",
   },
+  {
+    id: "quick-connects", title: "Quick Connects", categories: ["voice", "agent"], icon: "PhoneForwarded",
+    description: "Give agents a ready list of approved transfer and outbound destinations in the Zendesk Contact Center workflow.",
+    problem: "Agents need a consistent way to reach the right colleague, queue, or external number without re-entering destinations.",
+    outcome: "Faster, more consistent handoffs", value: ["Make common transfer destinations easy to find.", "Keep target and flow behavior configured and reviewable."],
+    example: "An agent consults a specialist, transfers a contact to another queue, or calls an approved external number from a named quick connect.",
+    keywords: ["quick connects", "quick connect", "transfer", "warm transfer", "phone number", "queue", "user", "flow", "CCP"],
+    classes: [C], availability: "Quick connects are configured in Amazon Connect and made available through queue configuration. Phone number, User, Queue and Flow are distinct target types; user and queue transfers can use configured flows, while Flow quick connects are for chat. Availability and behavior depend on the Connect and Zendesk Contact Center setup.",
+    docs: ["quickConnects", "calls"], path: ["customer", "connect", "queue", "zcc", "workspace"],
+    setup: ["Choose the target type and approved destination: phone number, user, queue or chat flow.", "Create the quick connect in Amazon Connect and associate it with the relevant queue so eligible agents can see it.", "Test transfer, consult and call behavior for each target type in the agent workspace."],
+    demo: "journey", aliases: ["Quick Connect"], 
+  },
+  {
+    id: "screen-recording", title: "Agent Screen Recording", categories: ["agent", "operations"], icon: "FileCheck2",
+    description: "Review recorded agent desktop activity alongside a contact to support coaching, quality reviews and workflow investigation.",
+    problem: "Contact audio and transcripts do not show the agent-side steps that shaped the interaction.",
+    outcome: "More context for coaching and quality review", value: ["Review supported contacts with synchronized desktop context.", "Use configured redaction, access and retention controls."],
+    example: "A supervisor reviews a completed contact and its screen recording to understand a workflow step, then follows the organization’s access and retention policy.",
+    keywords: ["screen recording", "desktop recording", "agent screen", "quality management", "redaction", "Windows", "ChromeOS", "macOS"],
+    classes: [C, A], availability: "Requires Amazon Connect screen-recording configuration, supported client components, contact-flow settings, storage and permissions. AWS lists 64-bit Windows 10/11 and managed ChromeOS 140 or later as supported; macOS is not listed as a supported platform. Windows uses the Connect Customer Client Application. ChromeOS uses an Isolated Web App and browser extension.",
+    docs: ["screenRecording", "screenRecordingClient", "screenRecordingRequirements", "screenRecordingEnable"], path: ["agentIdentity", "cognito", "connect", "record", "workspace", "zcc"],
+    setup: ["Enable screen recording in the Connect instance and configure the destination S3 bucket and any required encryption.", "Prepare agent endpoints: install the client on supported Windows devices, or deploy AWS’s Isolated Web App and browser extension on managed ChromeOS. macOS is unsupported.", "Enable screen recording in each applicable contact flow and validate permissions, redaction behavior, access and retention."],
+    demo: "journey", aliases: ["Screen Recording", "Desktop Recording"],
+  },
 ];
 
 /** Stable semantic IDs, independent of grid position or category membership. */
@@ -460,6 +484,9 @@ export const FEATURE_REGISTRY: EnterpriseFeature[] = seeds.map((seed) => {
   const legacy = seed.legacyIndex === undefined ? undefined : FEATURES[seed.legacyIndex];
   const sources = seed.docs.map((id) => FEATURE_SOURCES[id]);
   const architecture = buildFeatureArchitecture(seed.path, [seed.availability]);
+  const lastVerified = sources.length > 0 && sources.every((item) => item.lastVerified)
+    ? sources.reduce((latest, item) => item.lastVerified! > latest ? item.lastVerified! : latest, "")
+    : null;
   return {
     id: seed.id, title: seed.title,
     aliases: [...(seed.aliases ?? []), ...(legacy ? [legacy.t, legacy.tag] : [])],
@@ -470,12 +497,12 @@ export const FEATURE_REGISTRY: EnterpriseFeature[] = seeds.map((seed) => {
     useCases: [{ title: "Illustrative service scenario", description: seed.example }],
     industries: seed.industries ?? ["Retail", "Financial services", "Telecommunications", "Technology"],
     keywords: seed.keywords, classifications: seed.classes, availability: seed.availability,
-    lastVerified: sources.every((item) => item.lastVerified) ? "2026-11-15" : null,
+    lastVerified,
     sources,
     evidence: {
       owner: null,
       status: sources.length === 0 ? "missing-evidence" : seed.classes.includes(V) ? "requires-verification" : "documentation-reviewed",
-      reviewedAt: sources.every((item) => item.lastVerified) ? "2026-11-15" : null,
+      reviewedAt: lastVerified,
       productBoundary: [...seed.classes],
       dependencies: architecture.nodes.filter(node => !["customer", "workspace"].includes(node.id)).map(node => `${node.label} — ${node.boundary} responsibility; confirm configuration and entitlement`),
       availabilityQualification: seed.availability,
