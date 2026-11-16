@@ -52,7 +52,6 @@ const SECTIONS: SearchEntry[] = [
   sec("nugget-voice-ai", "Voice AI Agents simulation", "/demos/nuggets#voice-ai-agents", "Simulate a replacement conversation with staged pickup and notification actions.", "demo nuggets customer confirmation automation animated voice agent"),
   sec("nugget-video", "Video calling & screen sharing simulation", "/demos/nuggets#video-screen-sharing", "Invite a customer to video, preview audio and camera, and share a prepared setup window while retaining ticket context.", "demo nuggets video call window sharing customer agent ElevenLabs narration"),
   sec("journey", "Call journey", "/#how-it-works", "From Amazon Connect to the Zendesk agent experience.", "flow"),
-  sec("ai-suggestions", "Agent knowledge · Real-time AI suggestions", "/resources#ai-suggestions", "Transcription and knowledge suggestions during calls.", "copilot"),
   sec("data-flow", "Architecture & data flow", "/architecture#data-flow", "Agent controls, customer context, and call records flows.", "lambda api gateway cognito ctr"),
   sec("components", "Core components", "/architecture#components", "Amazon Connect, app, identity, CloudFormation.", "cognito saml lambdas"),
   sec("component-connect", "Amazon Connect · Architecture panel", "/architecture#component-connect", "Core component panel: telephony, contact routing, and the customer's AWS Connect instance.", "voice chat queues contact flows routing"),
