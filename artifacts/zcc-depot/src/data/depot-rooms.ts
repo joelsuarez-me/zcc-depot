@@ -1,4 +1,4 @@
-export type RoomId = "executive-overview" | "architecture-integrations" | "ai-automation" | "agent-experience" | "use-cases";
+export type RoomId = "executive-overview" | "architecture-integrations" | "ai-automation" | "agent-experience";
 
 export type DepotRoom = {
   id: RoomId;
@@ -57,18 +57,7 @@ export const ROOMS: DepotRoom[] = [
       { id: "demo-assets", label: "Demo assets" },
     ],
   },
-  {
-    id: "use-cases", n: "05", title: "Top Five Use Cases", short: "Use cases", href: "/rooms/use-cases",
-    summary: "Five scenarios from challenge to outcome, with architecture, demo steps, and discovery questions.",
-    audience: "Solution engineers, account teams",
-    sections: [
-      { id: "scenario-inbound", label: "Intelligent inbound" },
-      { id: "scenario-ai-assisted", label: "AI-assisted service" },
-      { id: "scenario-continuity", label: "Voice-to-digital" },
-      { id: "scenario-productivity", label: "Agent productivity" },
-      { id: "scenario-modernization", label: "Modernization" },
-    ],
-  },
+
 ];
 
 export const roomById = (id: RoomId) => ROOMS.find((r) => r.id === id)!;
@@ -90,7 +79,7 @@ export const ROUTE_LABELS: Record<string, { label: string; parent?: string }> = 
   "/sales/contact-center-vs-voice": { label: "Contact Center vs. Voice", parent: "/sales" },
   "/pricing": { label: "Pricing", parent: "/sales" },
   "/sell-sheet": { label: "Sell Sheet", parent: "/sales" },
-  "/sales/use-cases-by-vertical": { label: "Use Cases by Vertical", parent: "/sales" },
+  "/sales/use-cases-by-vertical": { label: "Use Cases", parent: "/sales" },
   "/resources": { label: "Resources" },
   "/resources/amazon-connect-coverage": { label: "Amazon Connect Telecom Country Coverage", parent: "/resources" },
   "/resources/resporg-number-porting": { label: "RespOrg & Number Porting", parent: "/resources" },

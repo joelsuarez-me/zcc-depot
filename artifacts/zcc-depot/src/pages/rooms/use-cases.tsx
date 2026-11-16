@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { ArrowRight, Check, CircleHelp, ExternalLink } from "lucide-react";
-import { RoomFrame, RoomSection, StatusTag, type Status } from "@/components/room-kit";
+import { RoomSection, StatusTag, type Status } from "@/components/room-kit";
 import { RESOURCES } from "@/data/content";
 
 type UC = { id: string; t: string; status: Status; challenge: string; solution: string[]; arch: string[]; steps: string[]; value: string[]; questions: string[]; docs: string[] };
@@ -97,10 +97,15 @@ function UseCase({ u }: { u: UC }) {
   );
 }
 
-export default function UseCases() {
+export function TopUseCasesSection() {
   return (
-    <RoomFrame id="use-cases" lede="Five scenarios structured as challenge, solution, architecture, demonstration, value, and discovery. Each carries its availability label.">
+    <div className="mb-8">
+      <header className="mb-5 rounded-[2rem] bg-[#203524] p-6 text-[#F5F5F2] md:p-8">
+        <p className="eyebrow text-[#D1F470]">Cross-industry scenarios</p>
+        <h2 className="mt-2 text-2xl font-semibold tracking-tight">Five use cases to start with</h2>
+        <p className="mt-2 max-w-3xl text-sm leading-relaxed text-white/70">Use these scenarios to frame a discovery conversation, then explore the industry-specific library below. Each includes a solution approach, architecture, demo steps, business value and discovery questions.</p>
+      </header>
       {UCS.map((u) => <UseCase key={u.id} u={u} />)}
-    </RoomFrame>
+    </div>
   );
 }

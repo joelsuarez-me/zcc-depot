@@ -4,7 +4,7 @@ import { ErrorBoundary } from '@/components/error-boundary';
 import { Toaster } from '@/components/ui/toaster';
 import { TooltipProvider } from '@/components/ui/tooltip';
 import NotFound from '@/pages/not-found';
-import { Route, Switch, useLocation, Router as WouterRouter } from 'wouter';
+import { Redirect, Route, Switch, useLocation, Router as WouterRouter } from 'wouter';
 import { Shell } from '@/components/kit';
 import { DepotProvider } from '@/lib/depot-mode';
 import { PresenterGate } from '@/components/presenter';
@@ -41,7 +41,6 @@ const RoomExecutive = lazy(() => import('@/pages/rooms/executive-overview'));
 const RoomArchitecture = lazy(() => import('@/pages/rooms/architecture-integrations'));
 const RoomAi = lazy(() => import('@/pages/rooms/ai-automation'));
 const RoomAgent = lazy(() => import('@/pages/rooms/agent-experience'));
-const RoomUseCases = lazy(() => import('@/pages/rooms/use-cases'));
 
 const queryClient = new QueryClient();
 
@@ -79,7 +78,7 @@ function Router() {
             <Route path="/rooms/architecture-integrations" component={RoomArchitecture} />
             <Route path="/rooms/ai-automation" component={RoomAi} />
             <Route path="/rooms/agent-experience" component={RoomAgent} />
-            <Route path="/rooms/use-cases" component={RoomUseCases} />
+            <Route path="/rooms/use-cases"><Redirect to="/sales/use-cases-by-vertical" /></Route>
             <Route path="/demos" component={Demos} />
             <Route path="/demos/instance-details" component={DemoInstanceDetails} />
             <Route path="/demos/brief" component={GatedBrief} />

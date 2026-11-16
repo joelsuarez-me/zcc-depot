@@ -13,7 +13,7 @@ export type SiteMapGroup = { id: string; title: string; description: string; pag
 // Supplemental section anchors for the detailed labs, beyond the shared search index.
 // Keep these tied to real section IDs; site-map tests check them against the page source.
 export const SITE_MAP_SECTIONS: Record<string, string[]> = {
-  "/": ["overview", "platform", "how-it-works", "features", "quick-connects", "screen-recording"],
+  "/": ["overview", "platform", "how-it-works", "features"],
   "/architecture": ["data-flow", "components"],
   "/architecture/components": ["map", "sign-in"],
   "/architecture/system-overview": ["system-diagram"],
@@ -22,6 +22,7 @@ export const SITE_MAP_SECTIONS: Record<string, string[]> = {
   "/resources/objection-handling": ["playbook", "library", "sources"],
   "/demos/nuggets": ["library", "voice-copilot", "voice-qa", "voice-ai-agents", "video-screen-sharing"],
   "/sales": ["use-cases", "outcomes", "guidance"],
+  "/sales/use-cases-by-vertical": ["top-use-cases", "industries", "explore", "workspace", "legend"],
   "/sales/contact-center-vs-voice": ["summary", "capabilities", "fit", "discovery", "migration", "faq", "sources"],
   "/pricing": ["bundle", "byoa", "team", "costs", "commercial-notes", "pricing-sources"],
   "/resources": ["library", "ai-suggestions", "collaboration", "pitch-deck", "faq", "roadmap"],
@@ -60,6 +61,7 @@ const SECTION_NAMES: Record<string, string> = {
   "system-diagram": "Detailed system overview and data flow", "data-flow": "System + data flow",
   costs: "Cost components", "commercial-notes": "Terms to confirm", "pricing-sources": "Pricing source references",
   "contact-lens": "Amazon Connect Contact Lens", "amazon-lex": "Amazon Lex", "platform-and-aws": "Zendesk platform and AWS",
+  "top-use-cases": "Five cross-industry use cases", "scenario-inbound": "Intelligent inbound call handling", "scenario-ai-assisted": "AI-assisted customer service", "scenario-continuity": "Voice-to-digital continuity", "scenario-productivity": "Agent productivity", "scenario-modernization": "Contact center modernization",
 };
 const GROUP_DESCRIPTIONS: Record<string, string> = {
   Overview: "Understand the platform story and connected-service capabilities.",

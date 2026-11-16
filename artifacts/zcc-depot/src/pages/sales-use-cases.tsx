@@ -8,11 +8,12 @@ import { IndustryIcon } from "@/components/vertical-use-cases/industry-icon";
 import { KindBadge, UseCaseDetail } from "@/components/vertical-use-cases/use-case-detail";
 import { IndustryReviewOverview } from "@/components/vertical-use-cases/review-status";
 import { UseCaseShortlists } from "@/components/vertical-use-cases/shortlists";
+import { TopUseCasesSection } from "@/pages/rooms/use-cases";
 import "@/components/vertical-use-cases/vuc.css";
 
 const ALL = "all";
-const TITLE = "Use Cases by Vertical | ZCC Depot";
-const DESCRIPTION = "Forty-five curated, hypothetical Zendesk Contact Center use cases across nine industries: challenge, solution, workflow, outcomes, demo path and discovery questions.";
+const TITLE = "Use Cases | ZCC Depot";
+const DESCRIPTION = "Explore five cross-industry starting scenarios and 45 curated, hypothetical Zendesk Contact Center use cases across nine industries.";
 
 type UrlState = { industry: string; category: string; q: string; uc: string };
 function readUrl(): UrlState {
@@ -123,10 +124,11 @@ export default function SalesUseCases() {
 
   return (
     <div className="vuc">
-      <PageHero eyebrow="Industry solutions" motif="brief" title="Use Cases by Vertical"
-        lede={<><span className="vuc-sub block mb-1.5">Real-world challenges. Intelligent solutions. Measurable outcomes.</span>Explore how Zendesk Contact Center can help organizations across nine industries modernize customer engagement, streamline operations, and deliver more connected customer experiences.</>} />
+      <PageHero eyebrow="Sales Enablement · Customer scenarios" motif="brief" title="Use Cases"
+        lede={<><span className="vuc-sub block mb-1.5">Real-world challenges. Intelligent solutions. Measurable outcomes.</span>Start with five cross-industry scenarios, then explore 45 curated examples across nine industries. Each use case includes a challenge, solution path, architecture, demo steps and discovery questions.</>} />
 
       <div className="vuc-body">
+        <div id="top-use-cases" data-section-nav><TopUseCasesSection /></div>
         <IndustryReviewOverview />
         <UseCaseShortlists selectedId={selected?.id} onOpen={id => update({ q: "", industry: ALL, category: ALL, uc: id })} />
         <div className="vuc-tools" id="explore" data-section-nav>
@@ -230,7 +232,7 @@ export default function SalesUseCases() {
       {presenting && selected && (
         <div ref={dialogRef} className="vuc-present" role="dialog" aria-modal="true" aria-label={`Presenting: ${selected.title}`} tabIndex={-1} data-testid="dialog-present">
           <div className="vuc-present-bar on-dark">
-            <span className="eyebrow hidden truncate text-[#D1F470] sm:block">{industry?.name} · Use Cases by Vertical</span>
+            <span className="eyebrow hidden truncate text-[#D1F470] sm:block">{industry?.name} · Use Cases</span>
             <div className="flex items-center gap-2">
               {pager(true)}
               <button type="button" className="depot-btn depot-btn-lime" onClick={() => setPresenting(false)} data-testid="button-exit-present"><X className="h-4 w-4" aria-hidden />Exit<span className="sr-only"> presentation (Escape)</span></button>
