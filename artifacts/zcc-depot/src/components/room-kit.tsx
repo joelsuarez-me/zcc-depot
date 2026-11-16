@@ -21,7 +21,7 @@ export function RoomFrame({ id, lede, children, actions }: { id: RoomId; lede: R
   const { isFavorite, toggleFavorite } = useDepot();
   const reduce = useReducedMotion();
   const fav = isFavorite(room.href);
-  const showRoomNumber = id !== "executive-overview" && id !== "use-cases";
+  const showRoomNumber = id !== "executive-overview";
   return (
     <div className="room" data-room={id}>
       <motion.header className="room-hero on-dark" initial={reduce ? false : { opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.45, ease: [0.2, 0.7, 0.2, 1] }}>
@@ -50,7 +50,7 @@ export function RoomFrame({ id, lede, children, actions }: { id: RoomId; lede: R
 
       <nav aria-label="Room navigation" className="room-pager">
         {prev ? <Link href={prev.href} className="room-pager-link" data-testid="link-room-prev"><ArrowLeft className="h-4 w-4" aria-hidden /><span><span className="block text-xs text-[#11110D]/50">Room {prev.n}</span>{prev.title}</span></Link> : <Link href="/" className="room-pager-link" data-testid="link-room-prev"><ArrowLeft className="h-4 w-4" aria-hidden /><span><span className="block text-xs text-[#11110D]/50">Back to</span>Home</span></Link>}
-        {next ? <Link href={next.href} className="room-pager-link is-next" data-testid="link-room-next"><span>{next.id !== "use-cases" && <span className="block text-xs text-[#11110D]/50">Room {next.n}</span>}{next.title}</span><ArrowRight className="h-4 w-4" aria-hidden /></Link> : <span />}
+        {next ? <Link href={next.href} className="room-pager-link is-next" data-testid="link-room-next"><span><span className="block text-xs text-[#11110D]/50">Room {next.n}</span>{next.title}</span><ArrowRight className="h-4 w-4" aria-hidden /></Link> : <span />}
       </nav>
       <PresenterDock roomId={id} onPrevRoom={prev ? () => navigate(prev.href) : undefined} onNextRoom={next ? () => navigate(next.href) : undefined} />
     </div>
