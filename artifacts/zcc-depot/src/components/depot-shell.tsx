@@ -8,7 +8,7 @@ import { HeroMotionControl } from "@/components/hero-motion-control";
 import "@/components/demo-readiness.css";
 import { requestEvidenceQueue } from "@/components/evidence-signal";
 
-const PRESENTER_ONLY_NAV_HREFS = new Set(["/resources#roadmap", "/resources#collaboration", "/resources#pitch-deck"]);
+const PRESENTER_ONLY_NAV_HREFS = new Set(["/resources#roadmap", "/resources#pitch-deck"]);
 function visibleNavItems(items: readonly SubNavItem[], isPresenter: boolean): SubNavItem[] {
   return items
     .filter(item => isPresenter || !PRESENTER_ONLY_NAV_HREFS.has(item.href))
