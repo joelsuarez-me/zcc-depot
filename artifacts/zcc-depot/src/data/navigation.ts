@@ -41,6 +41,16 @@ export const NAV: NavItem[] = [
     ],
   },
   {
+    href: "/sales", label: "Sales Enablement", children: [
+      { label: "Solution Brief", href: "/sell-sheet" },
+      { label: "Pitch Deck", href: "/resources#pitch-deck" },
+      { label: "Pricing & Packaging", href: "/pricing" },
+      { label: "Contact Center vs. Voice", href: "/sales/contact-center-vs-voice" },
+      { label: "Competitive Intelligence", href: "/resources/compete" },
+      { label: "Use Cases", href: "/sales/use-cases-by-vertical" },
+    ],
+  },
+  {
     href: "/sales/use-cases-by-vertical", label: "Use Cases", children: [
       { label: "Cross-Industry Scenarios", href: "/sales/use-cases-by-vertical#top-use-cases" },
       { label: "Industry Library", href: "/sales/use-cases-by-vertical#industries" },
@@ -54,12 +64,6 @@ export const NAV: NavItem[] = [
       { label: "Demo Environment", href: "/demos/instance-details" },
       { label: "Demo Research", href: "/demos/brief" },
       { label: "Demo Agenda", href: "/agenda" },
-      { label: "Sales Enablement", href: "/sales", children: [
-        { label: "Solution Brief", href: "/sell-sheet" },
-        { label: "Pricing & Packaging", href: "/pricing" },
-        { label: "Competitive Intelligence", href: "/resources/compete" },
-        { label: "Sales Presentation", href: "/resources#pitch-deck" },
-      ] },
     ],
   },
   {
