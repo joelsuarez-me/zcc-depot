@@ -26,6 +26,7 @@ export default function ArchitectureComponents() {
         <SectionHead id="map" eyebrow="Architecture map" title="Identity, routing and the agent experience" lede="Zendesk can federate sign-in to Amazon Connect and Cognito. Connect supplies the routing foundation. The map illustrates a customer-managed AWS example; Zendesk-managed deployments are also documented." />
         <ComponentMap />
         <Note>{ACCURACY_NOTES.awsOwnership} <Ext href={LINKS.managedAws} className="underline">Zendesk-managed setup</Ext>{" · "}<Ext href={LINKS.customerAws} className="underline">BYOA setup</Ext></Note>
+
       </Section>
 
       <Section tone="white">

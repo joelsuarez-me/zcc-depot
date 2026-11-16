@@ -33,5 +33,7 @@ export const FEATURE_SOURCES = {
   resiliency: source("resiliency", "AWS: Global Resiliency access, supported regions and setup", aws + "setup-connect-global-resiliency.html"),
   security: source("security", "AWS: security and shared responsibility", aws + "security.html"),
   architecture: source("architecture", "AWS: architectural guidance and workload boundaries", aws + "architecture-guidance.html"),
+  workloadLayers: source("workload-layers", "AWS: Amazon Connect Customer workload layers", aws + "workload-layers.html"),
+  stirShaken: source("stir-shaken", "AWS: STIR/SHAKEN signing, attestation levels and eligibility", aws + "stirshaken.html"),
 } satisfies Record<string, FeatureSource>;
 export type FeatureSourceId = keyof typeof FEATURE_SOURCES;

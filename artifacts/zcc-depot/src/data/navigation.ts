@@ -63,7 +63,6 @@ export const NAV: NavItem[] = [
   { href: "/resources", label: "Resources", children: [
     { label: "Documentation Library", href: "/resources#library" },
     { label: "RespOrg & Number Porting", href: "/resources/resporg-number-porting" },
-    { label: "STIR/SHAKEN", href: "/resources/stir-shaken" },
     { label: "Amazon Connect Telecom Country Coverage", href: "/resources/amazon-connect-coverage" },
     { label: "Objection Handling", href: "/resources/objection-handling" },
     { label: "Zendesk Contact Center Hub", href: LINKS.contactCenterHub, external: true },
