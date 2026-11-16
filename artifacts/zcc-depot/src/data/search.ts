@@ -20,7 +20,7 @@ const PAGES: SearchEntry[] = [
   page("demos", "Demos", "/demos", "Demo Blueprint and guided click-through.", "demo approach storyline stages"),
   page("demo-nuggets", "Demo Nuggets", "/demos/nuggets", "Play Voice Copilot, Voice QA, Voice AI Agents, and video calling and screen sharing simulations with optional ElevenLabs narration.", "animated capabilities play pause replay nuggets voice copilot quality assurance agents video screen share narration"),
   page("instance", "Demo Instance Details", "/demos/instance-details", "Details for the shared demo instance.", "environment sandbox login setup"),
-  page("demo-brief", "Demo Researcher", "/demos/brief", "Research a company using current public sources and download a cited demo-preparation report as a PDF. Sign-in required.", "company research logo website region audience role demo brief PDF report"),
+  page("demo-brief", "Demo Research", "/demos/brief", "Research a company using current public sources and download a cited demo-preparation report as a PDF. Sign-in required.", "company research logo website region audience role demo brief PDF report"),
   page("pitch-deck", "Pitch Deck", "/resources#pitch-deck", "View and download the uploaded product deep-dive slides. Sign-in required.", "pitch deck presentation product deep dive slides resources"),
   page("architecture", "Architecture", "/architecture", "Amazon Connect, Lambda, system data flow, and core components.", "aws technical"),
   page("contact-center-components", "Understanding Contact Center components", "/architecture/components", "Interactive component map, customer AWS data boundary and corporate-to-Zendesk SAML sign-in sequence.", "Amazon Connect Cognito AWS SSO SAML identity IdP MFA Okta Entra Google Workspace privacy"),

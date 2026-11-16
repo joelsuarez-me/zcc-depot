@@ -16,7 +16,7 @@ import { ResearchLibrary } from "@/components/research-library";
 // remove the old hashed chunk while an already-open report is still on screen.
 import { createResearchPdf, researchPdfFilename } from "@/lib/research-pdf";
 
-const TITLE = "Demo Researcher | ZCC Depot";
+const TITLE = "Demo Research | ZCC Depot";
 const DESC = "Research a company from current public sources before a Zendesk Contact Center demo: cited report in the Demo Agenda format (five sections plus sources), company logo and PDF export.";
 
 function useMeta() {
@@ -276,7 +276,7 @@ export default function DemoBriefPage() {
 
   return (
     <div className="bg-[#F5F5F2]">
-      <PageHero eyebrow="Demos · Live research" title="Demo Researcher"
+      <PageHero eyebrow="Demos · Live research" title="Demo Research"
         lede="Research a company from current public sources and get a cited prep report in the Demo Agenda format: five agenda sections plus sources for your Zendesk Contact Center demo." />
 
       <div className="mx-auto max-w-7xl px-5 pt-6 md:px-8">

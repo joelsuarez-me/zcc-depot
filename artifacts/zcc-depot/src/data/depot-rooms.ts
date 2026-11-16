@@ -80,7 +80,7 @@ export const ROUTE_LABELS: Record<string, { label: string; parent?: string }> = 
   "/site-map": { label: "Site Map" },
   "/demos": { label: "Demos" },
   "/demos/instance-details": { label: "Instance details", parent: "/demos" },
-  "/demos/brief": { label: "Demo Researcher", parent: "/demos" },
+  "/demos/brief": { label: "Demo Research", parent: "/demos" },
   "/demos/nuggets": { label: "Demo Nuggets", parent: "/demos" },
   "/architecture": { label: "Architecture" },
   "/architecture/components": { label: "Components", parent: "/architecture" },

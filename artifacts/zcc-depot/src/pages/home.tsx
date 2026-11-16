@@ -61,6 +61,12 @@ export default function Home() {
           ))}
         </div>
 
+        <div className="mt-5 rounded-2xl border border-[#B45309]/25 bg-[#FFF7E8] p-5 text-[#382814]" role="note">
+          <p className="eyebrow text-[#805B1B]">Supported agent platforms</p>
+          <p className="mt-2 text-sm leading-relaxed"><strong>macOS is not supported for screen recording.</strong> AWS supports 64-bit Windows 10/11; managed ChromeOS 140+ is also supported. On Windows, install the Connect Customer Client Application. On ChromeOS, AWS requires its screen-recording Isolated Web App and browser extension.</p>
+          <p className="mt-3 text-sm"><Ext href="https://docs.aws.amazon.com/connect/latest/adminguide/amazon-connect-client-app.html" className="font-semibold text-[#203524] underline">AWS client application and OS support</Ext><span className="px-2 text-[#805B1B]/60">·</span><Ext href="https://docs.aws.amazon.com/connect/latest/adminguide/sr-system-req.html" className="font-semibold text-[#203524] underline">Screen recording system requirements</Ext></p>
+        </div>
+
         <div className="mt-5 grid gap-4 lg:grid-cols-2">
           <div className="rounded-[2rem] bg-[#203524] p-6 text-[#F5F5F2]">
             <p className="eyebrow text-[#D1F470]">Set up</p>
@@ -104,7 +110,7 @@ export default function Home() {
             <p className="eyebrow text-[#D1F470]">Enable the feature</p>
             <ol className="mt-3 grid gap-3 text-sm leading-relaxed">
               <li><strong>1. Configure storage.</strong> Enable screen recordings in the instance’s Data storage settings and choose an Amazon S3 bucket. You can optionally enable KMS encryption.</li>
-              <li><strong>2. Prepare agent desktops.</strong> Install the Connect Customer Client Application on each agent workstation and confirm system and network requirements.</li>
+              <li><strong>2. Prepare agent desktops.</strong> On Windows, install the Connect Customer Client Application. For managed ChromeOS, deploy the screen-recording Isolated Web App and browser extension. Confirm system and network requirements.</li>
               <li><strong>3. Turn it on in contact flows.</strong> Add a Set recording and analytics behavior block after the flow entry point, then enable screen recording for each flow where it should apply.</li>
             </ol>
           </div>
