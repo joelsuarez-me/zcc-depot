@@ -419,7 +419,7 @@ const seeds: Seed[] = [
     docs: ["analytics", "qa", "components"], path: ["customer", "connect", "lens", "lambda", "observe", "workspace"],
     setup: ["Confirm the real-time analytics provider, supported language and intended use.", "Enable the required flow analytics, events and permitted workspace/supervisor display.", "Test lag, absent signals, misleading scores and human review before any intervention."],
     demo: "journey", href: "/resources/supervisor-command-center", legacyIndex: 13,
-  },,
+  },
   {
     id: "amazon-connect-workload-layers", title: "Amazon Connect Workload Layers", categories: ["architecture"], icon: "Workflow",
     description: "Map Amazon Connect responsibilities across telephony, interface and API, flows and IVR, the agent workstation, and metrics and reporting.",
