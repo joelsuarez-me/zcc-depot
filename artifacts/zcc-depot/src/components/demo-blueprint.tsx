@@ -51,7 +51,7 @@ export function DemoBlueprint() {
 
   return (
     <Section className="demo-blueprint-section">
-      <SectionHead id="agenda" eyebrow="DEMO METHODOLOGY" title="Demo Blueprint" lede={BLUEPRINT_DESCRIPTION} />
+      <SectionHead id="blueprint" eyebrow="DEMO METHODOLOGY" title="Demo Blueprint" lede={BLUEPRINT_DESCRIPTION} />
 
       <div className="bp-options flex flex-wrap items-center justify-between gap-2">
         <div role="group" aria-label="Session length" className="inline-flex rounded-full border border-[#11110D]/15 bg-[#FBFBF8] p-1">
