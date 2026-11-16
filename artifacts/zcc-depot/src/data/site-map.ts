@@ -1,4 +1,4 @@
-import { NAV, NAV_RELATED_PAGES, isNavItemActive, navigationLabel } from "./navigation";
+import { NAV, NAV_RELATED_PAGES, flattenNavItems, navigationLabel } from "./navigation";
 import { ROOMS, ROUTE_LABELS } from "./depot-rooms";
 import { SEARCH_INDEX } from "./search";
 import { SLIDES } from "./how-it-works";
@@ -13,7 +13,7 @@ export type SiteMapGroup = { id: string; title: string; description: string; pag
 // Supplemental section anchors for the detailed labs, beyond the shared search index.
 // Keep these tied to real section IDs; site-map tests check them against the page source.
 export const SITE_MAP_SECTIONS: Record<string, string[]> = {
-  "/": ["overview", "platform", "how-it-works", "features"],
+  "/": ["overview", "platform", "how-it-works", "features", "quick-connects", "screen-recording"],
   "/architecture": ["data-flow", "components"],
   "/architecture/components": ["map", "sign-in"],
   "/architecture/system-overview": ["system-diagram"],
@@ -65,12 +65,12 @@ const SECTION_NAMES: Record<string, string> = {
   "top-use-cases": "Five cross-industry use cases", "scenario-inbound": "Intelligent inbound call handling", "scenario-ai-assisted": "AI-assisted customer service", "scenario-continuity": "Voice-to-digital continuity", "scenario-productivity": "Agent productivity", "scenario-modernization": "Contact center modernization",
 };
 const GROUP_DESCRIPTIONS: Record<string, string> = {
-  Overview: "Understand the platform story and connected-service capabilities.",
-  Architecture: "Explore components, identity, integrations and data flow.",
-  "Sales Enablement": "Find product fit, business value and commercial guidance.",
-  "Demo Preparation": "Prepare, research and present a customer conversation.",
-  "Interactive Demos": "Open hands-on feature and operational simulations.",
-  Resources: "Find detailed guides, reference material and enablement.",
+  "Platform Overview": "Start with the connected-service story, platform summary, and operating model.",
+  Architecture: "Explore system flow, components, integrations, deployment, identity, and data boundaries.",
+  Capabilities: "Browse product capabilities and interactive feature demonstrations.",
+  "Use Cases": "Explore one combined cross-industry and industry-specific use-case library.",
+  "Demo Center": "Prepare customer research, environments, demo journeys, and presenter materials.",
+  "Guides & Resources": "Find operational design guides, telephony references, official docs, and FAQs.",
 };
 export function siteAccess(href: string): SiteAccess {
   return destinationAccess(href);
@@ -93,11 +93,11 @@ function validDestination(href: string) {
   }
   return routePaths.has(url.pathname) && (!url.hash || anchorsFor(url.pathname).has(url.hash.slice(1)));
 }
-function pageFor(path: string): SiteMapPage {
+function pageFor(path: string, titleOverride?: string): SiteMapPage {
   const indexed = SEARCH_INDEX.find(entry => entry.group === "Pages" && entry.href === path);
   const room = ROOMS.find(entry => entry.href === path);
   const access = siteAccess(path);
-  const title = path === "/" ? "Welcome" : navigationLabel(path) ?? room?.title ?? indexed?.title ?? ROUTE_LABELS[path]?.label ?? path;
+  const title = titleOverride ?? (path === "/" ? "Welcome" : navigationLabel(path) ?? room?.title ?? indexed?.title ?? ROUTE_LABELS[path]?.label ?? path);
   const sections = new Map<string, SiteDestination>();
   const add = (entry: SiteDestination) => {
     const previous = sections.get(entry.href);
@@ -127,7 +127,7 @@ function pageFor(path: string): SiteMapPage {
       add({ title: entry.title, href: entry.href, description: entry.description, keywords: entry.keywords ?? "", access: entry.access ?? "public", external: true });
     }
   }
-  const navLinks = NAV.flatMap(group => group.children ?? []).filter(entry => entry.href.startsWith(`${path}#`));
+  const navLinks = NAV.flatMap(group => flattenNavItems(group.children)).filter(entry => !entry.children?.length && entry.href.startsWith(`${path}#`));
   for (const entry of navLinks) {
     if (validDestination(entry.href) && sections.has(entry.href)) sections.get(entry.href)!.title = entry.label;
   }
@@ -141,17 +141,18 @@ function pageFor(path: string): SiteMapPage {
 export function buildSiteMap(): SiteMapGroup[] {
   const groups: SiteMapGroup[] = [];
   for (const nav of NAV) {
-    const paths = new Set([nav.href, ...(nav.children ?? []).filter(child => !child.external).map(child => child.href), ...(NAV_RELATED_PAGES[nav.label] ?? []).map(child => child.href)].map(href => href.split("#")[0]));
-    const pages = [...paths].filter(path => routePaths.has(path) && isNavItemActive(nav, path)).map(pageFor);
+    const links = [...flattenNavItems(nav.children), ...(NAV_RELATED_PAGES[nav.label] ?? [])];
+    const paths = new Set([nav.href, ...links.filter(child => !child.external).map(child => child.href)].map(href => href.split("#")[0] || "/"));
+    const pages = [...paths].filter(path => routePaths.has(path)).map(path => pageFor(path, path === "/" && nav.label === "Capabilities" ? "Capabilities" : undefined));
     // A cross-category fragment shortcut (e.g. Sales Presentation) belongs in
     // this group's overview, not a duplicate copy of the entire Resources page.
-    for (const entry of nav.children ?? []) {
+    for (const entry of links) {
       const [path, hash] = entry.href.split("#");
-      if (entry.external || !hash || !validDestination(entry.href) || isNavItemActive(nav, path)) continue;
+      if (entry.external || !hash || !validDestination(entry.href) || (path || "/") === (nav.href.split("#")[0] || "/") || isNavItemActive(nav, path)) continue;
       const overview = pages.find(page => page.href === nav.href.split("#")[0]) ?? pages[0];
       overview?.sections.push({ title: entry.label, href: entry.href, description: "Open this section.", keywords: "", access: siteAccess(entry.href) });
     }
-    for (const entry of nav.children ?? []) {
+    for (const entry of links) {
       if (entry.external) pages.push({ title: entry.label, href: entry.href, description: "External enablement resource. Its own access requirements may apply.", keywords: "", access: "public", external: true, sections: [] });
     }
     if (pages.length) groups.push({ id: nav.label.toLowerCase().replace(/\s+/g, "-"), title: nav.label, description: GROUP_DESCRIPTIONS[nav.label] ?? "", pages });
