@@ -3,7 +3,7 @@ import { Link } from "wouter";
 import { Search, Bookmark, BookmarkCheck, ArrowUpRight, X } from "lucide-react";
 import { Ext, Note, PageHero, Section, SectionHead } from "@/components/kit";
 import { PitchDeckSection } from "@/components/pitch-deck-section";
-import { AgentKnowledgeSection, LatestNewsSection } from "@/components/resource-briefings";
+import { LatestNewsSection } from "@/components/resource-briefings";
 import { ResourceFaq } from "@/components/resource-faq";
 import { ResourceRoadmap } from "@/components/resource-roadmap";
 import { LINKS, RESOURCES, RESOURCE_CATEGORIES } from "@/data/content";
@@ -147,7 +147,6 @@ export default function Resources() {
         <Note>Bookmarks are stored in this browser's localStorage only and are not synced.</Note>
       </Section>
 
-      <AgentKnowledgeSection />
       <LatestNewsSection />
       <PitchDeckSection />
       <ResourceFaq />
