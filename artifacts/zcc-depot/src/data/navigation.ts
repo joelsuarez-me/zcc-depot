@@ -12,7 +12,7 @@ export const NAV: NavItem[] = [
   {
     href: "/", label: "Platform Overview", children: [
       { label: "Welcome", href: "/#overview" },
-      { label: "Connected Platform", href: "/#platform" },
+      { label: "Platform", href: "/#platform" },
       { label: "How It Works", href: "/#how-it-works" },
       { label: "Executive Overview", href: "/rooms/executive-overview" },
       HOW_IT_WORKS_GUIDE,
