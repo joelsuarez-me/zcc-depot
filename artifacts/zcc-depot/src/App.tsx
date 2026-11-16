@@ -31,6 +31,7 @@ const ResourceSupervisor = lazy(() => import('@/pages/resource-supervisor-comman
 const ResourceCoverage = lazy(() => import('@/pages/resource-amazon-connect-coverage'));
 const ResourcePorting = lazy(() => import('@/pages/resource-resporg-number-porting'));
 const ResourceStirShaken = lazy(() => import('@/pages/resource-stir-shaken'));
+const ResourceAIAgentVoices = lazy(() => import('@/pages/resource-ai-agent-voices'));
 const Agenda = lazy(() => import('@/pages/agenda'));
 const DemoInstanceDetails = lazy(() => import('@/pages/demo-instance-details'));
 const Pricing = lazy(() => import('@/pages/pricing'));
@@ -103,6 +104,7 @@ function Router() {
             <Route path="/resources/amazon-connect-coverage" component={ResourceCoverage} />
             <Route path="/resources/resporg-number-porting" component={ResourcePorting} />
             <Route path="/resources/stir-shaken" component={ResourceStirShaken} />
+            <Route path="/resources/ai-agent-voices" component={ResourceAIAgentVoices} />
             <Route path="/resources" component={Resources} />
             <Route path="/agenda" component={GatedAgenda} />
             <Route component={NotFound} />

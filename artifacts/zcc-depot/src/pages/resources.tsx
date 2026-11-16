@@ -64,6 +64,14 @@ export default function Resources() {
           </span>
           <span className="inline-flex items-center gap-2 rounded-full bg-[#203524] px-4 py-2 text-sm font-semibold text-[#D1F470]">Explore the guide<ArrowUpRight className="h-4 w-4" aria-hidden /></span>
         </Link>
+        <Link href="/resources/ai-agent-voices" className="mb-7 flex flex-wrap items-center justify-between gap-4 rounded-3xl border border-[#203524]/20 bg-[#F0ECF8] p-5 transition hover:border-[#203524] md:p-6" data-testid="link-resources-ai-agent-voices">
+          <span>
+            <span className="eyebrow text-[#203524]">AI voice · Provider previews</span>
+            <span className="mt-1 block text-2xl font-semibold tracking-tight text-[#11110D]">AI Agent Voices</span>
+            <span className="mt-1 block text-sm text-[#203524]">Compare documented language and accent options, then preview voice catalogs from Amazon, ElevenLabs, Deepgram, and OpenAI.</span>
+          </span>
+          <span className="inline-flex items-center gap-2 rounded-full bg-[#203524] px-4 py-2 text-sm font-semibold text-[#D1F470]">Explore voices<ArrowUpRight className="h-4 w-4" aria-hidden /></span>
+        </Link>
         <Link href="/resources/stir-shaken" className="mb-7 flex flex-wrap items-center justify-between gap-4 rounded-3xl border border-[#203524]/20 bg-[#EAF3F5] p-5 transition hover:border-[#203524] md:p-6" data-testid="link-resources-stir-shaken">
           <span>
             <span className="eyebrow text-[#203524]">Outbound voice · Caller authentication</span>

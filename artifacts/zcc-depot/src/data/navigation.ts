@@ -61,6 +61,7 @@ export const NAV: NavItem[] = [
     { label: "Documentation Library", href: "/resources#library" },
     { label: "RespOrg & Number Porting", href: "/resources/resporg-number-porting" },
     { label: "Amazon Connect Telecom Country Coverage", href: "/resources/amazon-connect-coverage" },
+    { label: "AI Agent Voices", href: "/resources/ai-agent-voices" },
     { label: "Objection Handling", href: "/resources/objection-handling" },
     { label: "Zendesk Contact Center Hub", href: LINKS.contactCenterHub, external: true },
     { label: "AI Knowledge Suggestions", href: "/resources#ai-suggestions" },
