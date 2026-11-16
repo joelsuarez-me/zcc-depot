@@ -77,7 +77,6 @@ export const NAV: NavItem[] = [
       { label: "Objection Handling", href: "/resources/objection-handling" },
       { label: "Zendesk Contact Center Hub", href: LINKS.contactCenterHub, external: true },
       { label: "Frequently Asked Questions", href: "/resources#faq" },
-      { label: "Product Updates · Internal", href: "/resources#collaboration" },
       { label: "Product Roadmap · Confidential", href: "/resources#roadmap" },
       { label: "Site Map", href: "/site-map" },
     ],
