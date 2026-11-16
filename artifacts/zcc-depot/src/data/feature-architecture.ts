@@ -21,6 +21,12 @@ export const ARCHITECTURE_NODES = {
   fallback: { id: "fallback", label: "Configured fallback", detail: "An application-level alternate route, queue or message. Regional disaster recovery requires a separately supported, tested architecture.", boundary: "AWS" },
   observe: { id: "observe", label: "Reporting & audit", detail: "Configured telemetry and permitted data mappings. Sample metrics are illustrative, not an SLA or promised business result.", boundary: "Zendesk" },
   phone: { id: "phone", label: "Phone number", detail: "A claimed or ported number associated with the correct Connect flow; country requirements and outbound permissions apply.", boundary: "AWS" },
+  carrier: { id: "carrier", label: "Carrier network", detail: "Intermediate and receiving carriers determine how they use and preserve STIR/SHAKEN information.", boundary: "External" },
+  recipient: { id: "recipient", label: "Recipient", detail: "The destination carrier applies its own call handling and filtering decisions.", boundary: "External" },
+  interface: { id: "interface", label: "Connect interface / API", detail: "Browser, CCP, supervisor tools, configured APIs and customer-facing chat entry points.", boundary: "AWS" },
+  contactFlow: { id: "contactFlow", label: "Flow / IVR", detail: "A configured flow collects input, invokes integrations and routes the contact.", boundary: "AWS" },
+  workstation: { id: "workstation", label: "Agent workstation", detail: "Customer-managed endpoint, headset, operating system, browser, network and workspace conditions.", boundary: "Customer" },
+  metrics: { id: "metrics", label: "Metrics & reporting", detail: "Configured collection, storage, monitoring, alerting and visualization for real-time and historical data.", boundary: "AWS" },
   input: { id: "input", label: "Protected DTMF input", detail: "Configured collection and encryption. Handle the literal Timeout value explicitly; encryption alone is not PCI compliance.", boundary: "AWS" },
 } satisfies Record<string, Node>;
 export type ArchitectureNodeId = keyof typeof ARCHITECTURE_NODES;
