@@ -63,6 +63,7 @@ const SECTIONS: SearchEntry[] = [
   sec("faq", "FAQ", "/resources#faq", "Common customer questions.", "questions"),
   sec("library", "Resource library", "/resources#library", "Browse and filter the official documentation collection.", "documentation articles"),
   sec("quick-connects", "Quick Connects · Amazon Connect", "/#quick-connects", "Configure reusable destinations for phone number, user, queue and chat flow transfers, then associate them with queues so agents can use them.", "Amazon Connect routing transfer quick connect phone number user agent queue flow CCP Contact Control Panel transfer flow chat destination"),
+  sec("screen-recording", "Agent screen recording · Amazon Connect", "/#screen-recording", "Enable agent desktop recordings for contact flows, review completed contacts alongside voice and transcripts, and configure rule-based redaction for sensitive windows.", "Amazon Connect screen recording desktop agent quality management coaching compliance S3 KMS contact flow redaction URL window title security profile transcript voice recording completed contact"),
 ];
 
 const SEARCH_ENTRIES: SearchEntry[] = [
