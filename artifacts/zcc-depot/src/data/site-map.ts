@@ -13,7 +13,7 @@ export type SiteMapGroup = { id: string; title: string; description: string; pag
 // Supplemental section anchors for the detailed labs, beyond the shared search index.
 // Keep these tied to real section IDs; site-map tests check them against the page source.
 export const SITE_MAP_SECTIONS: Record<string, string[]> = {
-  "/": ["overview", "platform", "how-it-works", "features"],
+  "/": ["overview", "platform", "how-it-works", "features", "quick-connects"],
   "/architecture": ["data-flow", "components"],
   "/architecture/components": ["map", "sign-in"],
   "/architecture/system-overview": ["system-diagram"],
@@ -24,7 +24,7 @@ export const SITE_MAP_SECTIONS: Record<string, string[]> = {
   "/sales": ["use-cases", "outcomes", "guidance"],
   "/sales/contact-center-vs-voice": ["summary", "capabilities", "fit", "discovery", "migration", "faq", "sources"],
   "/pricing": ["bundle", "byoa", "team", "costs", "commercial-notes", "pricing-sources"],
-  "/resources": ["library", "quick-connects", "ai-suggestions", "collaboration", "pitch-deck", "faq", "roadmap"],
+  "/resources": ["library", "ai-suggestions", "collaboration", "pitch-deck", "faq", "roadmap"],
   "/resources/how-it-works": SLIDES.map(slide => slide.id),
   "/resources/routing": ["methods", "simulator", "configure", "accuracy"],
   "/resources/callback": ["command-center", "experiences", "simulator", "architecture", "value", "configure", "accuracy"],
