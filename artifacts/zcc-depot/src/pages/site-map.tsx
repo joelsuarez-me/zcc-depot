@@ -6,7 +6,7 @@ import { SITE_MAP, filterSiteMap, normalizeSiteQuery, siteMapCounts } from "@/da
 import "@/components/site-map/site-map.css";
 
 const title = "Site map | ZCC Depot";
-const description = "A searchable visual map of every ZCC Depot room, simulation, guide and sales resource, with direct links to page sections.";
+const description = "A searchable map of the ZCC Depot platform overview, architecture, capabilities, use cases, demo center, and guides.";
 
 function useMeta() {
   useEffect(() => {
@@ -54,7 +54,7 @@ export default function SiteMap() {
   return (
     <div className="sm">
       <PageHero motif="map" eyebrow="Wayfinding" title="Site map"
-        lede={`Every room, simulation, guide and sales resource in one view: ${TOTAL.pages} pages and ${TOTAL.sections} sections across ${TOTAL.groups} areas.`} />
+        lede={`Platform pages, architecture, capabilities, use cases, demos, and guides: ${TOTAL.pages} pages and ${TOTAL.sections} sections across ${TOTAL.groups} areas.`} />
       <div className="sm-inner">
         <div className="sm-bar mt-4" role="search">
           <div className="sm-field">
