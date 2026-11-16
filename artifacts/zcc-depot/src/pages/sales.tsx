@@ -1,9 +1,8 @@
-import { useEffect, useState, type ReactNode } from "react";
+import { useEffect, type ReactNode } from "react";
 import { useLocation } from "wouter";
-import { motion, AnimatePresence, useReducedMotion } from "framer-motion";
-import { Plus } from "lucide-react";
+import { ArrowUpRight, Plus } from "lucide-react";
 import { Ext, Note, PageHero, Reveal, Section, SectionHead } from "@/components/kit";
-import { LINKS, OUTCOMES, USE_CASES } from "@/data/content";
+import { LINKS, OUTCOMES } from "@/data/content";
 import { PresenterOnly } from "@/components/presenter";
 import { usePresenterContent } from "@/hooks/use-presenter-content";
 
@@ -15,45 +14,6 @@ function Details({ q, children, testId }: { q: string; children: ReactNode; test
       </summary>
       <div className="pb-6 pr-12 leading-relaxed text-[#11110D]/70">{children}</div>
     </details>
-  );
-}
-
-function UseCases() {
-  const [i, setI] = useState(0);
-  const reduce = useReducedMotion();
-  const u = USE_CASES[i];
-  const col = (title: string, items: string[], cls: string) => (
-    <div className={`rounded-2xl p-5 ${cls}`}><div className="eyebrow mb-3 opacity-70">{title}</div><ul className="space-y-2">{items.map((x) => <li key={x} className="flex gap-2 text-[15px]"><span className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-current opacity-60" />{x}</li>)}</ul></div>
-  );
-  return (
-    <>
-      <div role="tablist" aria-label="Use cases" className="mb-6 flex gap-2 overflow-x-auto pb-2">
-        {USE_CASES.map((x, k) => (
-          <button key={k} role="tab" aria-selected={i === k} onClick={() => setI(k)} data-testid={`tab-usecase-${k + 1}`}
-            className={`shrink-0 rounded-full px-5 py-2.5 text-sm font-medium transition ${i === k ? "bg-[#203524] text-[#D1F470]" : "border border-[#11110D]/15 hover:border-[#203524]"}`}>
-            <span className="mono mr-2 opacity-60">0{k + 1}</span>{x.t.split(" ").slice(0, 4).join(" ")}
-          </button>
-        ))}
-      </div>
-      <AnimatePresence mode="wait">
-        <motion.div key={i} role="tabpanel" initial={reduce ? false : { opacity: 0, y: 14 }} animate={{ opacity: 1, y: 0 }} exit={reduce ? undefined : { opacity: 0 }} transition={{ duration: 0.3 }}
-          className="rounded-[2rem] border border-[#11110D]/10 bg-[#FBFBF8] p-6 md:p-10">
-          <div className="grid gap-8 lg:grid-cols-12">
-            <div className="lg:col-span-5">
-              <div className="serif text-7xl leading-none text-[#203524]/20">0{i + 1}</div>
-              <h3 className="mt-4 text-3xl font-semibold leading-tight tracking-tight">{u.t}</h3>
-              <div className="eyebrow mt-6 text-[#203524]">The scenario</div>
-              <p className="mt-2 text-lg leading-relaxed text-[#11110D]/75">{u.scenario}</p>
-            </div>
-            <div className="grid gap-3 lg:col-span-7">
-              {col("What's really broken", u.broken, "bg-[#11110D]/5")}
-              {col("What Zendesk Contact Center enables", u.enables, "bg-[#203524] text-[#F5F5F2]")}
-              {col("Business outcome", u.outcome, "bg-[#D1F470]")}
-            </div>
-          </div>
-        </motion.div>
-      </AnimatePresence>
-    </>
   );
 }
 
@@ -78,8 +38,8 @@ export default function Sales() {
       </PageHero>
 
       <Section>
-        <SectionHead id="use-cases" num="01" eyebrow="Customer use cases" title="Top 5 use cases" lede="Five customer pains, five conversation starters, and the outcomes Zendesk Contact Center can support." />
-        <UseCases />
+        <SectionHead id="use-cases" num="01" eyebrow="Customer scenarios" title="Explore the use-case library" lede="The consolidated library brings cross-industry starting scenarios together with the detailed industry collection, architecture notes, and demo steps." />
+        <a href="/sales/use-cases-by-vertical" className="inline-flex items-center gap-2 rounded-full bg-[#203524] px-5 py-3 text-sm font-semibold text-[#D1F470]" data-testid="link-full-use-cases">Browse all use cases<ArrowUpRight className="h-4 w-4" aria-hidden /></a>
       </Section>
 
       <Section tone="white">
