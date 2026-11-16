@@ -24,6 +24,7 @@ export const NAV: NavItem[] = [
       { label: "System & Data Flow", href: "/architecture#data-flow" },
       { label: "Platform Components", href: "/architecture/components" },
       { label: "Detailed System Flow", href: "/architecture/system-overview" },
+      { label: "Connect Customer Workload Layers", href: "/architecture/workload-layers" },
     ],
   },
   {
@@ -59,6 +60,7 @@ export const NAV: NavItem[] = [
   },
   { href: "/resources", label: "Resources", children: [
     { label: "Documentation Library", href: "/resources#library" },
+    { label: "AWS Account Migration Assessment", href: "/resources/aws-account-migration-assessment" },
     { label: "RespOrg & Number Porting", href: "/resources/resporg-number-porting" },
     { label: "Amazon Connect Telecom Country Coverage", href: "/resources/amazon-connect-coverage" },
     { label: "AI Agent Voices", href: "/resources/ai-agent-voices" },
