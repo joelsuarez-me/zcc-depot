@@ -15,6 +15,7 @@ export const NAV: NavItem[] = [
       { label: "Connected Platform", href: "/#platform" },
       { label: "How It Works", href: "/#how-it-works" },
       { label: "Capabilities", href: "/#features" },
+      { label: "Quick Connects", href: "/#quick-connects" },
       { label: "Executive Overview", href: "/rooms/executive-overview" },
     ],
   },
@@ -60,7 +61,6 @@ export const NAV: NavItem[] = [
   },
   { href: "/resources", label: "Resources", children: [
     { label: "Documentation Library", href: "/resources#library" },
-    { label: "Quick Connects", href: "/resources#quick-connects" },
     { label: "Amazon Connect Telecom Country Coverage", href: "/resources/amazon-connect-coverage" },
     { label: "Objection Handling", href: "/resources/objection-handling" },
     { label: "Zendesk Contact Center Hub", href: LINKS.contactCenterHub, external: true },
