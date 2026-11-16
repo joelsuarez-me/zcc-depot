@@ -114,6 +114,26 @@ export default function ResourceAIAgentVoices() {
         </div>
       </Section>
 
+      <Section id="zendesk-voices">
+        <SectionHead permalinkId="zendesk-voices" num="02" eyebrow="Zendesk voice AI agents" title="Preview Zendesk’s configured voices in the workspace" lede="Zendesk documents voice selection and in-dashboard voice samples for its Voice AI Agents experience. The provider catalogs below are separate preview destinations and should not be read as a list of vendors selectable in Zendesk." />
+        <div className="grid gap-5 lg:grid-cols-12">
+          <div className="rounded-[2rem] bg-[#111A23] p-7 text-white lg:col-span-7">
+            <p className="eyebrow text-[#D1F470]">Zendesk voice configuration</p>
+            <h3 className="mt-3 text-2xl font-semibold">Set a default voice, then tune key locales</h3>
+            <p className="mt-3 text-sm leading-relaxed text-white/70">Zendesk’s published configuration guide describes default male- or female-sounding voices across supported languages, plus curated premium voices for selected locales. It also describes searching by language or locale and previewing samples directly in the AI agents workspace. Access is tied to the Voice AI Agents early access program and account rollout.</p>
+            <div className="mt-5 flex flex-wrap gap-2">
+              <Ext href="https://support.zendesk.com/hc/en-us/articles/10849624262170-Announcing-voice-configuration-for-voice-AI-agents" className="inline-flex items-center gap-2 rounded-full bg-[#D1F470] px-4 py-2.5 text-sm font-semibold text-[#11110D]">Zendesk voice configuration<ArrowUpRight className="h-4 w-4" aria-hidden /></Ext>
+              <Ext href="https://support.zendesk.com/hc/en-us/articles/10588277182618-Configuring-multi-language-support-for-voice-AI-agents" className="inline-flex items-center gap-2 rounded-full border border-white/20 px-4 py-2.5 text-sm font-semibold text-white">Zendesk language setup<ArrowUpRight className="h-4 w-4" aria-hidden /></Ext>
+            </div>
+          </div>
+          <div className="rounded-[2rem] border border-[#203524]/15 bg-[#EAF2DB] p-6 lg:col-span-5">
+            <p className="eyebrow text-[#203524]/65">A note on provider names</p>
+            <h3 className="mt-2 text-xl font-semibold">Catalog availability depends on the product</h3>
+            <p className="mt-3 text-sm leading-relaxed text-[#11110D]/70">Amazon Nova Sonic, ElevenLabs, Deepgram, and OpenAI are shown here as voice technology catalogs to explore. Their inclusion does not confirm a native Zendesk integration, account entitlement, or availability as a selectable Zendesk voice. Verify the supported choices in your Zendesk workspace and deployment documentation.</p>
+          </div>
+        </div>
+      </Section>
+
       <Section tone="white" id="provider-catalog">
         <SectionHead permalinkId="provider-catalog" num="02" eyebrow="Provider catalogs" title="Languages, accents, and voice previews" lede="The options below describe each provider’s published catalog, not a promise that every voice is available in Zendesk or in your current Amazon Connect configuration." />
         <div className="grid gap-5 xl:grid-cols-2">
