@@ -25,7 +25,7 @@ export const SITE_MAP_SECTIONS: Record<string, string[]> = {
   "/sales/use-cases-by-vertical": ["top-use-cases", "industries", "explore", "workspace", "legend"],
   "/sales/contact-center-vs-voice": ["summary", "capabilities", "fit", "discovery", "migration", "faq", "sources"],
   "/pricing": ["bundle", "byoa", "team", "costs", "commercial-notes", "pricing-sources"],
-  "/resources": ["library", "ai-suggestions", "collaboration", "pitch-deck", "faq", "roadmap"],
+  "/resources": ["library", "collaboration", "pitch-deck", "faq", "roadmap"],
   "/resources/resporg-number-porting": ["overview", "process", "resporg", "loa", "downloads"],
   "/resources/stir-shaken": ["overview", "attestation", "registration", "limits", "sources"],
   "/resources/ai-agent-voices": ["overview", "zendesk-voices", "provider-catalog", "preview", "sources"],
@@ -52,7 +52,7 @@ const PAGE_HINTS: Record<string, { description: string; keywords: string }> = {
   "/architecture/system-overview": { description: "Trace data between Zendesk, Amazon Connect and configured customer systems.", keywords: "detailed system overview data flow cloud Cognito Lambda profiles logs recordings" },
 };
 const SECTION_NAMES: Record<string, string> = {
-  "ai-suggestions": "Agent knowledge", collaboration: "Latest news · internal briefing", roadmap: "Roadmap · confidential",
+  collaboration: "Latest news · internal briefing", roadmap: "Roadmap · confidential",
   "pitch-deck": "Pitch Deck", agenda: "Demo Blueprint", "guided-demo": "Demo Click-Through",
   byoa: "Bring your own Amazon", team: "Contact Center Team", bundle: "Contact Center bundle",
   "sign-in": "Identity and sign-in", map: "Interactive component map", faq: "FAQ",
