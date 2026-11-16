@@ -1,12 +1,19 @@
 import { useEffect, useState, type ReactNode, type Ref } from "react";
 import { Link, useLocation } from "wouter";
 import { ChevronRight, Clock3, Expand, LogOut, Menu, Minimize, PanelLeftClose, PanelLeftOpen, Presentation, Star, Users } from "lucide-react";
-import { NAV, isNavItemActive, navigationLabel } from "@/data/navigation";
+import { NAV, isNavItemActive, navigationLabel, type SubNavItem } from "@/data/navigation";
 import { ROOMS, ROUTE_LABELS } from "@/data/depot-rooms";
 import { useDepot } from "@/lib/depot-mode";
 import { HeroMotionControl } from "@/components/hero-motion-control";
 import "@/components/demo-readiness.css";
 import { requestEvidenceQueue } from "@/components/evidence-signal";
+
+const PRESENTER_ONLY_NAV_HREFS = new Set(["/resources#roadmap", "/resources#collaboration", "/resources#pitch-deck"]);
+function visibleNavItems(items: readonly SubNavItem[], isPresenter: boolean): SubNavItem[] {
+  return items
+    .filter(item => isPresenter || !PRESENTER_ONLY_NAV_HREFS.has(item.href))
+    .map(item => ({ ...item, children: item.children ? visibleNavItems(item.children, isPresenter) : undefined }));
+}
 
 /** Workflow shortcuts onto existing routes; the six navigation groups and breadcrumbs stay unchanged. */
 const WORKFLOW = [
