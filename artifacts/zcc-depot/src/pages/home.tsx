@@ -1,6 +1,6 @@
 import { Link } from "wouter";
 import { ArrowUpRight } from "lucide-react";
-import { Note, Reveal, Section, SectionHead } from "@/components/kit";
+import { Ext, Note, Reveal, Section, SectionHead } from "@/components/kit";
 import { PillarArt } from "@/components/art";
 import { HomeHero } from "@/components/home-hero";
 import { CallJourney } from "@/components/call-journey";
@@ -83,6 +83,47 @@ export default function Home() {
         <p className="mt-4 text-sm"><Ext href="https://docs.aws.amazon.com/connect/latest/adminguide/quick-connects.html" className="font-semibold text-[#203524] underline" testId="link-aws-quick-connects">AWS admin guide: Create quick connects</Ext></p>
       </Section>
 
+
+      <Section id="screen-recording">
+        <SectionHead permalinkId="screen-recording" eyebrow="Amazon Connect · Quality management" title="Agent screen recording" lede="Review an agent’s desktop alongside the contact to coach workflows, investigate long handling times, and support compliance reviews." />
+        <div className="grid gap-3 md:grid-cols-3">
+          {[
+            { title: "Record the desktop", copy: "Capture agent activity while handling supported voice, chat, and task contacts, based on the contact flow’s recording settings." },
+            { title: "Review in context", copy: "For completed contacts, supervisors can review screen video synchronized with the voice recording and contact transcript." },
+            { title: "Protect sensitive content", copy: "Rule-based redaction can mask matching browser pages or application windows in the assembled recording." },
+          ].map((item) => (
+            <article key={item.title} className="rounded-2xl border border-[#203524]/15 bg-[#FBFBF8] p-5">
+              <h3 className="text-lg font-semibold">{item.title}</h3>
+              <p className="mt-2 text-sm leading-relaxed text-[#11110D]/65">{item.copy}</p>
+            </article>
+          ))}
+        </div>
+
+        <div className="mt-5 grid gap-4 lg:grid-cols-2">
+          <div className="rounded-[2rem] bg-[#203524] p-6 text-[#F5F5F2]">
+            <p className="eyebrow text-[#D1F470]">Enable the feature</p>
+            <ol className="mt-3 grid gap-3 text-sm leading-relaxed">
+              <li><strong>1. Configure storage.</strong> Enable screen recordings in the instance’s Data storage settings and choose an Amazon S3 bucket. You can optionally enable KMS encryption.</li>
+              <li><strong>2. Prepare agent desktops.</strong> Install the Connect Customer Client Application on each agent workstation and confirm system and network requirements.</li>
+              <li><strong>3. Turn it on in contact flows.</strong> Add a Set recording and analytics behavior block after the flow entry point, then enable screen recording for each flow where it should apply.</li>
+            </ol>
+          </div>
+          <div className="rounded-[2rem] border border-[#203524]/15 bg-[#FBFBF8] p-6">
+            <p className="eyebrow text-[#203524]/65">Review and safeguard</p>
+            <ul className="mt-3 grid gap-3 text-sm leading-relaxed text-[#11110D]/75">
+              <li>Grant screen recording access through the appropriate security profile permissions. Recordings are reviewed from completed contacts.</li>
+              <li>Configure URL or application-window rules to mask sensitive screens. Redaction is applied after the contact ends; it does not hide individual fields or redact in real time.</li>
+              <li>Set access and retention practices for both redacted and original recordings in your S3 storage.</li>
+            </ul>
+          </div>
+        </div>
+        <Note>Screen recording can include sensitive on-screen information. Validate consent, access, redaction, and retention settings against your organization’s policies before enabling it.</Note>
+        <p className="mt-4 flex flex-wrap gap-x-5 gap-y-2 text-sm">
+          <Ext href="https://docs.aws.amazon.com/connect/latest/adminguide/agent-screen-recording.html" className="font-semibold text-[#203524] underline" testId="link-aws-screen-recording">AWS admin guide: Set up and review agent screen recordings</Ext>
+          <Ext href="https://docs.aws.amazon.com/connect/latest/adminguide/enable-sr.html" className="font-semibold text-[#203524] underline">Enable screen recording</Ext>
+          <Ext href="https://docs.aws.amazon.com/connect/latest/adminguide/rule-based-redaction-screen-recording.html" className="font-semibold text-[#203524] underline">Rule-based redaction</Ext>
+        </p>
+      </Section>
 
         <Note>Descriptions are qualified the way the linked Zendesk and AWS documentation qualifies them. Interactive demos are simulations with fictional data. Confirm availability, entitlements and pricing with current documentation.</Note>
       </Section>
