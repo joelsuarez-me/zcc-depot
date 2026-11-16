@@ -13,7 +13,7 @@ export type SiteMapGroup = { id: string; title: string; description: string; pag
 // Supplemental section anchors for the detailed labs, beyond the shared search index.
 // Keep these tied to real section IDs; site-map tests check them against the page source.
 export const SITE_MAP_SECTIONS: Record<string, string[]> = {
-  "/": ["overview", "platform", "how-it-works", "features", "quick-connects"],
+  "/": ["overview", "platform", "how-it-works", "features", "quick-connects", "screen-recording"],
   "/architecture": ["data-flow", "components"],
   "/architecture/components": ["map", "sign-in"],
   "/architecture/system-overview": ["system-diagram"],
