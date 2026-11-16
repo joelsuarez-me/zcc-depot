@@ -1,4 +1,5 @@
-import { ArrowDown, ArrowRight, BarChart3, Cloud, Database, Headphones, Laptop, Network, Phone, Radio, Route, Server, ShieldCheck, Users } from "lucide-react";
+import { BarChart3, Headphones, Laptop, Phone, Route } from "lucide-react";
+import type { ReactNode } from "react";
 
 const ink = "#203524";
 const lime = "#C4F36B";
@@ -34,7 +35,7 @@ function Arrow({ x1, y1, x2, y2, color = "#829088", dashed = false }: { x1: numb
   </g>;
 }
 
-function Frame({ title, description, children, className = "" }: { title: string; description: string; children: React.ReactNode; className?: string }) {
+function Frame({ title, description, children, className = "" }: { title: string; description: string; children: ReactNode; className?: string }) {
   return <figure className={`group overflow-hidden rounded-[1.6rem] border border-[#203524]/12 bg-white shadow-[0_10px_30px_rgba(32,53,36,.05)] transition duration-300 hover:-translate-y-1 hover:shadow-[0_20px_42px_rgba(32,53,36,.12)] ${className}`}>
     <figcaption className="border-b border-[#203524]/8 px-5 py-4">
       <p className="text-[.65rem] font-bold uppercase tracking-[.18em] text-[#5D7261]">AWS workload diagram</p>
@@ -134,8 +135,8 @@ export function WorkloadLayerDiagrams() {
           <Node x={208} y={76} w={178} h={82} title="Prompt · collect · decide" detail="attributes · branches · queues" color={amber} icon="server"/>
           <Arrow x1={402} y1={107} x2={443} y2={107}/>
           <Node x={445} y={69} w={136} title="Queue" detail="routing profile" color={lime} icon="network"/>
-          <Arrow x1={581} y1={107} x2={612} y2={107}/>
-          <Node x={614} y={69} w={70} title="Agent" detail="handles" color={violet} icon="agent"/>
+          <Arrow x1={581} y1={107} x2={588} y2={107}/>
+          <Node x={588} y={69} w={96} title="Agent" detail="handles" color={violet} icon="agent"/>
           <path d="M297 183 V198 H510 V179" fill="none" stroke="#A2B09F" strokeDasharray="4 4"/>
           <Label x={400} y={204} size={9.5} color="#5D7261">Optional integrations: Lambda · Lex · Kinesis · VPC · databases</Label>
         </Svg>
