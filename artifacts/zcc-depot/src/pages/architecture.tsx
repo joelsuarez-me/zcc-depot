@@ -46,7 +46,7 @@ export default function Architecture() {
         navigate("/#how-it-works", { replace: true });
         return;
       }
-      if (hash === "#ai-suggestions" || hash === "#collaboration") {
+      if (hash === "#collaboration") {
         navigate(`/resources${hash}`, { replace: true });
       }
     };
