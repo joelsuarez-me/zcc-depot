@@ -7,7 +7,7 @@ export default function Demos() {
       <PageHero eyebrow="Demos · Guided access" title={<>One journey. <span className="serif italic text-[#D1F470]">Seven connected stages.</span></>}
         lede="Guide your audience from the customer's first interaction through the agent experience, the architecture behind it, and the business impact. Then hand them the walkthrough.">
         <DemoButton />
-        <a href="#agenda" className="inline-flex items-center gap-2 rounded-full border border-[#F5F5F2]/25 px-5 py-3 text-sm font-semibold hover:border-[#D1F470] hover:text-[#D1F470]" data-testid="link-agenda">Demo Blueprint</a>
+        <a href="#blueprint" className="inline-flex items-center gap-2 rounded-full border border-[#F5F5F2]/25 px-5 py-3 text-sm font-semibold hover:border-[#D1F470] hover:text-[#D1F470]" data-testid="link-agenda">Demo Blueprint</a>
       </PageHero>
 
       <DemoBlueprint />
