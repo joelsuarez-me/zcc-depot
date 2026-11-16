@@ -84,6 +84,7 @@ export const ROUTE_LABELS: Record<string, { label: string; parent?: string }> = 
   "/demos/nuggets": { label: "Demo Nuggets", parent: "/demos" },
   "/architecture": { label: "Architecture" },
   "/architecture/components": { label: "Components", parent: "/architecture" },
+  "/architecture/workload-layers": { label: "Amazon Connect Workload Layers", parent: "/architecture" },
   "/architecture/system-overview": { label: "Detailed System Overview & Data Flow", parent: "/architecture" },
   "/sales": { label: "Sales" },
   "/sales/contact-center-vs-voice": { label: "Contact Center vs. Voice", parent: "/sales" },
