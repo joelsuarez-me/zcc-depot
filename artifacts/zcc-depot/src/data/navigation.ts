@@ -4,94 +4,112 @@ import { COMPETITORS } from "./competitors";
 export type SubNavItem = { label: string; href: string; external?: boolean; logo?: string; children?: readonly SubNavItem[] };
 export type NavItem = { href: string; label: string; children?: SubNavItem[] };
 
-export const HOW_IT_WORKS_GUIDE: SubNavItem = { label: "How it works (Detailed)", href: "/resources/how-it-works" };
+export const HOW_IT_WORKS_GUIDE: SubNavItem = { label: "Detailed How It Works Guide", href: "/resources/how-it-works" };
 // Pages linked from within a menu's content rather than listed as submenu items.
-export const NAV_RELATED_PAGES: Record<string, SubNavItem[]> = { Overview: [HOW_IT_WORKS_GUIDE], "Sales Enablement": [...COMPETITORS] };
+export const NAV_RELATED_PAGES: Record<string, SubNavItem[]> = { "Demo Center": [...COMPETITORS] };
 
 export const NAV: NavItem[] = [
   {
-    href: "/", label: "Overview", children: [
+    href: "/", label: "Platform Overview", children: [
       { label: "Welcome", href: "/#overview" },
       { label: "Connected Platform", href: "/#platform" },
       { label: "How It Works", href: "/#how-it-works" },
-      { label: "Capabilities", href: "/#features" },
       { label: "Executive Overview", href: "/rooms/executive-overview" },
+      HOW_IT_WORKS_GUIDE,
     ],
   },
   {
-    href: "/architecture#data-flow", label: "Architecture", children: [
-      { label: "Architecture Explorer", href: "/rooms/architecture-integrations" },
+    href: "/architecture", label: "Architecture", children: [
       { label: "System & Data Flow", href: "/architecture#data-flow" },
-      { label: "Platform Components", href: "/architecture/components" },
-      { label: "Detailed System Flow", href: "/architecture/system-overview" },
+      { label: "Architecture Explorer", href: "/rooms/architecture-integrations", children: [
+        { label: "Platform Components", href: "/architecture/components" },
+        { label: "Detailed System Flow", href: "/architecture/system-overview" },
+        { label: "Workload Layers", href: "/architecture/workload-layers" },
+      ] },
     ],
   },
   {
-    href: "/sales", label: "Sales Enablement", children: [
-      { label: "Contact Center vs. Voice", href: "/sales/contact-center-vs-voice" },
-      { label: "Solution Brief", href: "/sell-sheet" },
-      { label: "Pricing & Packaging", href: "/pricing" },
-      { label: "Use Cases", href: "/sales/use-cases-by-vertical" },
-      { label: "Competitive Intelligence", href: "/resources/compete", children: COMPETITORS },
-      { label: "Sales Presentation", href: "/resources#pitch-deck" },
+    href: "/#features", label: "Capabilities", children: [
+      { label: "Quick Connects", href: "/#quick-connects" },
+      { label: "Screen Recording", href: "/#screen-recording" },
+      { label: "AI & Automation", href: "/rooms/ai-automation" },
+      { label: "Agent Experience", href: "/rooms/agent-experience" },
+      { label: "Feature Demos", href: "/demos/nuggets" },
     ],
   },
   {
-    href: "/demos", label: "Demo Preparation", children: [
+    href: "/sales/use-cases-by-vertical", label: "Use Cases", children: [
+      { label: "Cross-Industry Scenarios", href: "/sales/use-cases-by-vertical#top-use-cases" },
+      { label: "Industry Library", href: "/sales/use-cases-by-vertical#industries" },
+      { label: "Search Use Cases", href: "/sales/use-cases-by-vertical#explore" },
+    ],
+  },
+  {
+    href: "/demos", label: "Demo Center", children: [
       { label: "Demo Blueprint", href: "/demos#agenda" },
       { label: "Guided Walkthrough", href: "/demos#guided-demo" },
       { label: "Demo Environment", href: "/demos/instance-details" },
       { label: "Demo Research", href: "/demos/brief" },
       { label: "Demo Agenda", href: "/agenda" },
+      { label: "Sales Enablement", href: "/sales", children: [
+        { label: "Solution Brief", href: "/sell-sheet" },
+        { label: "Pricing & Packaging", href: "/pricing" },
+        { label: "Competitive Intelligence", href: "/resources/compete" },
+        { label: "Sales Presentation", href: "/resources#pitch-deck" },
+      ] },
     ],
   },
   {
-    href: "/rooms/ai-automation", label: "Interactive Demos", children: [
-      { label: "Feature Demos", href: "/demos/nuggets" },
-      { label: "AI & Automation", href: "/rooms/ai-automation" },
-      { label: "Agent Experience", href: "/rooms/agent-experience" },
-      { label: "Supervisor Experience", href: "/resources/supervisor-command-center" },
-      { label: "Call Routing", href: "/resources/routing" },
-      { label: "Queue Callbacks", href: "/resources/callback" },
-      { label: "Outbound Dialers", href: "/resources/outbound-dialers" },
-      { label: "Video & Screen Sharing", href: "/demos/nuggets#video-screen-sharing" },
+    href: "/resources", label: "Guides & Resources", children: [
+      { label: "Reference Library", href: "/resources#library" },
+      { label: "Operational Guides", href: "/resources#library", children: [
+        { label: "Call Routing", href: "/resources/routing" },
+        { label: "Queue Callbacks", href: "/resources/callback" },
+        { label: "Outbound Dialers", href: "/resources/outbound-dialers" },
+        { label: "Supervisor Command Center", href: "/resources/supervisor-command-center" },
+      ] },
+      { label: "Telephony & Number Management", href: "/resources#library", children: [
+        { label: "Country Coverage", href: "/resources/amazon-connect-coverage" },
+        { label: "RespOrg & Number Porting", href: "/resources/resporg-number-porting" },
+        { label: "STIR/SHAKEN", href: "/resources/stir-shaken" },
+      ] },
+      { label: "AI Agent Voices", href: "/resources/ai-agent-voices" },
+      { label: "Objection Handling", href: "/resources/objection-handling" },
+      { label: "Zendesk Contact Center Hub", href: LINKS.contactCenterHub, external: true },
+      { label: "Frequently Asked Questions", href: "/resources#faq" },
+      { label: "Product Updates · Internal", href: "/resources#collaboration" },
+      { label: "Product Roadmap · Confidential", href: "/resources#roadmap" },
+      { label: "Site Map", href: "/site-map" },
     ],
   },
-  { href: "/resources", label: "Resources", children: [
-    { label: "Documentation Library", href: "/resources#library" },
-    { label: "RespOrg & Number Porting", href: "/resources/resporg-number-porting" },
-    { label: "Amazon Connect Telecom Country Coverage", href: "/resources/amazon-connect-coverage" },
-    { label: "AI Agent Voices", href: "/resources/ai-agent-voices" },
-    { label: "Objection Handling", href: "/resources/objection-handling" },
-    { label: "Zendesk Contact Center Hub", href: LINKS.contactCenterHub, external: true },
-    { label: "Product Updates · Internal", href: "/resources#collaboration" },
-    { label: "Frequently Asked Questions", href: "/resources#faq" },
-    { label: "Product Roadmap · Confidential", href: "/resources#roadmap" },
-    { label: "Site Map", href: "/site-map" },
-  ] },
 ];
 
-export function isNavItemActive(item: NavItem, location: string) {
-  const matches = (href: string) => {
-    const path = href.split("#")[0];
-    return path === "/" ? location === "/" : location === path || location.startsWith(`${path}/`);
-  };
-  const relatedOwner = Object.entries(NAV_RELATED_PAGES).find(([, links]) => links.some(child => matches(child.href)));
-  if (relatedOwner) return item.label === relatedOwner[0];
-  // A page's menu placement wins over its historic URL prefix. Fragment-only
-  // shortcuts don't transfer ownership of the whole Resources/Demos page.
-  const childOwner = NAV.find(group => group.children?.some(child =>
-    !child.external && !child.href.includes("#") && matches(child.href)));
-  if (childOwner) return item.href === childOwner.href;
-  return matches(item.href);
+export function flattenNavItems(items: readonly SubNavItem[] = []): SubNavItem[] {
+  return items.flatMap(item => [item, ...flattenNavItems(item.children ?? [])]);
+}
+
+const hrefPath = (href: string) => href.split("#")[0] || "/";
+
+export function isNavItemActive(item: NavItem, location: string, hash = "") {
+  const groups = NAV;
+  const fragmentOwner = hash
+    ? groups.find(group => [group.href, ...flattenNavItems(group.children)].some(href => {
+        const fragment = href.href.indexOf("#");
+        return fragment >= 0 && hrefPath(href.href) === location && href.href.slice(fragment) === hash;
+      }))
+    : undefined;
+  if (fragmentOwner) return item.href === fragmentOwner.href;
+  const routeOwner = groups.find(group => flattenNavItems(group.children).some(child =>
+    !child.external && !child.href.includes("#") && hrefPath(child.href) === location));
+  if (routeOwner) return item.href === routeOwner.href;
+  return groups.find(group => !group.href.includes("#") && hrefPath(group.href) === location)?.href === item.href;
 }
 
 /** Shared display labels; keep URL identity independent from menu wording. */
 export function navigationLabel(href: string) {
-  const children = NAV.flatMap(group => group.children ?? []);
+  const children = NAV.flatMap(group => flattenNavItems(group.children));
   return children.find(child => child.href === href)?.label
-    ?? children.flatMap(child => child.children ?? []).find(child => child.href === href)?.label
-    ?? NAV.find(group => group.href.split("#")[0] === href)?.label;
+    ?? NAV.find(group => group.href === href || hrefPath(group.href) === href)?.label;
 }
 
 // Native section links support both same-page hashes and cross-page entry.
