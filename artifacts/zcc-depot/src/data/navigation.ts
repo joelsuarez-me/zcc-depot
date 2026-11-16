@@ -4,7 +4,6 @@ import { COMPETITORS } from "./competitors";
 export type SubNavItem = { label: string; href: string; external?: boolean; logo?: string; children?: readonly SubNavItem[] };
 export type NavItem = { href: string; label: string; children?: SubNavItem[] };
 
-export const HOW_IT_WORKS_GUIDE: SubNavItem = { label: "Detailed How It Works Guide", href: "/resources/how-it-works" };
 // Pages linked from within a menu's content rather than listed as submenu items.
 export const NAV_RELATED_PAGES: Record<string, SubNavItem[]> = { "Demo Center": [...COMPETITORS] };
 
@@ -15,7 +14,6 @@ export const NAV: NavItem[] = [
       { label: "Platform", href: "/#platform" },
       { label: "How It Works", href: "/#how-it-works" },
       { label: "Executive Overview", href: "/rooms/executive-overview" },
-      HOW_IT_WORKS_GUIDE,
     ],
   },
   {
@@ -29,7 +27,7 @@ export const NAV: NavItem[] = [
     ],
   },
   {
-    href: "/#features", label: "Capabilities", children: [
+    href: "/#features", label: "Features", children: [
       { label: "Quick Connects", href: "/#quick-connects" },
       { label: "Screen Recording", href: "/#screen-recording" },
       { label: "Call Routing", href: "/resources/routing" },
