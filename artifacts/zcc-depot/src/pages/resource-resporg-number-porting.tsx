@@ -1,5 +1,5 @@
-import { useState } from "react";
-import { ArrowDown, ArrowUpRight, Download, FileText } from "lucide-react";
+import { useEffect, useState } from "react";
+import { ArrowDown, ArrowUpRight, Download, FileText, Printer } from "lucide-react";
 import { Ext, Note, PageHero, Section, SectionHead } from "@/components/kit";
 
 const PORTING_STEPS = [
@@ -59,7 +59,7 @@ function PortingFlow() {
           .porting-packet-motion { display: none; }
         }
       `}</style>
-      <div className="mt-3 grid gap-2 sm:grid-cols-2 lg:grid-cols-3">
+      <div className="porting-step-controls mt-3 grid gap-2 sm:grid-cols-2 lg:grid-cols-3">
         {PORTING_STEPS.map((step, i) => (
           <button key={step.title} type="button" onClick={() => setActive(i)} aria-pressed={active === i}
             className={`rounded-xl border px-3 py-2.5 text-left text-sm transition ${active === i ? "border-[#D1F470] bg-[#203524] text-[#D1F470]" : "border-white/15 bg-white/5 text-white/75 hover:border-white/40"}`}>
@@ -67,10 +67,13 @@ function PortingFlow() {
           </button>
         ))}
       </div>
-      <div className="mt-3 flex items-start gap-3 rounded-2xl bg-white/5 p-4" aria-live="polite">
+      <div className="porting-active-step mt-3 flex items-start gap-3 rounded-2xl bg-white/5 p-4" aria-live="polite">
         <span className="grid h-8 w-8 shrink-0 place-items-center rounded-full bg-[#D1F470] text-sm font-bold text-[#11110D]">{active + 1}</span>
         <div><p className="font-semibold">{PORTING_STEPS[active].title}</p><p className="mt-1 text-sm leading-relaxed text-white/70">{PORTING_STEPS[active].copy}</p></div>
       </div>
+      <ol className="porting-step-print-only">
+        {PORTING_STEPS.map((step, i) => <li key={step.title}><strong>{String(i + 1).padStart(2, "0")} · {step.title}</strong><p>{step.copy}</p></li>)}
+      </ol>
     </div>
   );
 }
@@ -86,10 +89,41 @@ function DownloadCard({ href, filename, title, description, testId }: { href: st
 
 export default function ResourceResporgNumberPorting() {
   const base = `${import.meta.env.BASE_URL}assets/amazon-connect-porting/`;
+  useEffect(() => {
+    const previousTitle = document.title;
+    document.title = "RespOrg & Number Porting | ZCC Depot";
+    return () => { document.title = previousTitle; };
+  }, []);
   return (
-    <>
+    <div className="resporg-porting-page">
+      <style>{`
+        .resporg-porting-page .section-brief-controls { display: none !important; }
+        .porting-step-print-only { display: none; }
+        @media print {
+          @page { size: letter; margin: 0.55in; }
+          html, body, #root { background: #fff !important; color: #11110D !important; }
+          body { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
+          .depot-sidebar, .depot-topbar, .section-navigation { display: none !important; }
+          .depot-content, .depot-main { margin: 0 !important; padding: 0 !important; }
+          .resporg-porting-page { width: 100% !important; background: #fff !important; color: #11110D !important; }
+          .resporg-porting-page .zhero-wrap { padding: 0 !important; background: #fff !important; }
+          .resporg-porting-page .zhero { border-radius: 0 !important; box-shadow: none !important; }
+          .resporg-porting-page .porting-page-print-button,
+          .resporg-porting-page .section-brief-controls,
+          .resporg-porting-page .porting-step-controls,
+          .resporg-porting-page .porting-active-step { display: none !important; }
+          .resporg-porting-page .porting-step-print-only { display: grid !important; gap: 0.15in; margin-top: 0.2in; padding-left: 0; list-style: none; }
+          .resporg-porting-page .porting-step-print-only li,
+          .resporg-porting-page article,
+          .resporg-porting-page .rounded-2xl { break-inside: avoid; }
+          .resporg-porting-page a { color: #203524 !important; text-decoration: underline !important; }
+          .resporg-porting-page img, .resporg-porting-page svg { max-width: 100% !important; }
+          .resporg-porting-page .porting-packet-motion { display: none !important; }
+        }
+      `}</style>
       <PageHero eyebrow="Resources · AWS telephony" title={<>RespOrg <span className="serif italic text-[#D1F470]">&amp; Number Porting</span></>} lede="A practical guide to AWS’s role in toll-free RespOrg management, number-portability checks, LOA preparation, carrier coordination, and cutover readiness.">
         <a href="#process" className="inline-flex items-center gap-2 rounded-full bg-[#D1F470] px-5 py-3 text-sm font-semibold text-[#11110D]">Explore the process <ArrowDown className="h-4 w-4" aria-hidden /></a>
+        <button type="button" onClick={() => window.print()} className="porting-page-print-button inline-flex items-center gap-2 rounded-full border border-[#F5F5F2]/25 px-5 py-3 text-sm font-semibold text-[#F5F5F2] transition hover:border-[#D1F470] hover:text-[#D1F470]" aria-label="Print the complete RespOrg and Number Porting page as a PDF" data-testid="button-print-porting-page"><Printer className="h-4 w-4" aria-hidden />Print Page</button>
       </PageHero>
 
       <Section id="overview">
@@ -166,6 +200,6 @@ export default function ResourceResporgNumberPorting() {
         </ul>
         <Note>Administrative labels in AWS documentation may vary by country or change over time. The AWS Support case and your AWS-provided LOA are authoritative for the current request.</Note>
       </Section>
-    </>
+    </div>
   );
 }
