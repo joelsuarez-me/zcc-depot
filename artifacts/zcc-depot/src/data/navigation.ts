@@ -93,9 +93,9 @@ const hrefPath = (href: string) => href.split("#")[0] || "/";
 export function isNavItemActive(item: NavItem, location: string, hash = "") {
   const groups = NAV;
   const fragmentOwner = hash
-    ? groups.find(group => [group.href, ...flattenNavItems(group.children)].some(href => {
-        const fragment = href.href.indexOf("#");
-        return fragment >= 0 && hrefPath(href.href) === location && href.href.slice(fragment) === hash;
+    ? groups.find(group => [group.href, ...flattenNavItems(group.children).map(child => child.href)].some(href => {
+        const fragment = href.indexOf("#");
+        return fragment >= 0 && hrefPath(href) === location && href.slice(fragment) === hash;
       }))
     : undefined;
   if (fragmentOwner) return item.href === fragmentOwner.href;
