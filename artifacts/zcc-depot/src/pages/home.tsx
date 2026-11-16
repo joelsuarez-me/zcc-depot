@@ -25,16 +25,16 @@ export default function Home() {
             </Reveal>
           ))}
         </div>
+        <div className="mt-6">
+          <Link href={HOW_IT_WORKS_GUIDE.href} className="inline-flex min-h-11 items-center gap-2 rounded-full border border-[#203524]/20 bg-white px-5 py-2 text-sm font-semibold text-[#203524] transition-colors hover:bg-[#D1F470] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#203524]" data-testid="link-how-it-works-detailed">
+            {HOW_IT_WORKS_GUIDE.label}<ArrowUpRight className="h-4 w-4" aria-hidden />
+          </Link>
+        </div>
       </Section>
 
       <Section>
         <SectionHead id="how-it-works" num="02" eyebrow="How it works" title="From caller to Zendesk agent"
           lede="Select a stage to see what it does. Illustrative architecture." />
-        <div className="mb-5">
-          <Link href={HOW_IT_WORKS_GUIDE.href} className="inline-flex min-h-11 items-center gap-2 rounded-full border border-[#203524]/20 bg-white px-5 py-2 text-sm font-semibold text-[#203524] transition-colors hover:bg-[#D1F470] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#203524]" data-testid="link-how-it-works-detailed">
-            {HOW_IT_WORKS_GUIDE.label}<ArrowUpRight className="h-4 w-4" aria-hidden />
-          </Link>
-        </div>
         <CallJourney />
       </Section>
 
@@ -43,8 +43,6 @@ export default function Home() {
           lede="Discover how intelligent routing, AI-powered automation, unified agent experiences, workforce optimization, and enterprise-grade architecture come together to transform customer service." />
         <p className="mb-4"><span className="fx-label" data-testid="text-features-label">An interactive guide to the capabilities behind modern customer experiences.</span></p>
         <FeatureExplorer />
-
-      
 
         <Note>Descriptions are qualified the way the linked Zendesk and AWS documentation qualifies them. Interactive demos are simulations with fictional data. Confirm availability, entitlements and pricing with current documentation.</Note>
       </Section>
