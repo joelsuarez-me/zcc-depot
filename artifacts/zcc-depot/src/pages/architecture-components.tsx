@@ -1,5 +1,4 @@
 import { useEffect } from "react";
-import { Link } from "wouter";
 import { ShieldCheck } from "lucide-react";
 import { SectionLink } from "@/components/section-link";
 import { Ext, Note, PageHero, Section, SectionHead } from "@/components/kit";
@@ -27,7 +26,7 @@ export default function ArchitectureComponents() {
         <SectionHead id="map" eyebrow="Architecture map" title="Identity, routing and the agent experience" lede="Zendesk can federate sign-in to Amazon Connect and Cognito. Connect supplies the routing foundation. The map illustrates a customer-managed AWS example; Zendesk-managed deployments are also documented." />
         <ComponentMap />
         <Note>{ACCURACY_NOTES.awsOwnership} <Ext href={LINKS.managedAws} className="underline">Zendesk-managed setup</Ext>{" · "}<Ext href={LINKS.customerAws} className="underline">BYOA setup</Ext></Note>
-        <Link href="/architecture/workload-layers" className="mt-6 flex flex-wrap items-center justify-between gap-4 rounded-[1.5rem] border border-[#203524]/12 bg-white p-5 shadow-sm transition hover:-translate-y-0.5 hover:border-[#203524]/35 hover:shadow-lg md:p-6" data-testid="link-workload-layers-page"><span><span className="block text-xs font-bold uppercase tracking-[.17em] text-[#59715D]">Explore the platform by workload</span><span className="mt-1 block text-xl font-semibold tracking-tight text-[#17251A]">Amazon Connect Workload Layers</span><span className="mt-1 block max-w-3xl text-sm leading-relaxed text-[#536158]">Trace telephony, interface and API, flows and IVR, the agent workstation, and metrics and reporting through original architecture diagrams.</span></span><span className="rounded-full bg-[#D1F470] px-4 py-2 text-sm font-semibold text-[#203524]">Open page <span aria-hidden>↗</span></span></Link>
+
       </Section>
 
       <Section tone="white">
