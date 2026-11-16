@@ -352,6 +352,52 @@ export interface PricingGuide {
   sources: PricingSource[];
 }
 
+export interface ObjectionCategory {
+  id: string;
+  title: string;
+  description: string;
+}
+
+export interface ObjectionSource {
+  id: string;
+  title: string;
+  url: string;
+  note: string;
+}
+
+export type ObjectionResponseOrigin = typeof ObjectionResponseOrigin[keyof typeof ObjectionResponseOrigin];
+
+
+export const ObjectionResponseOrigin = {
+  foundation: 'foundation',
+  expanded: 'expanded',
+} as const;
+
+export interface ObjectionResponse {
+  id: string;
+  categoryId: string;
+  title: string;
+  concern: string;
+  question: string;
+  response: string;
+  proof: string;
+  nextStep: string;
+  avoid: string;
+  escalation: string;
+  origin: ObjectionResponseOrigin;
+  sourceIds: string[];
+}
+
+export interface ObjectionHandlingGuide {
+  preparedOn: string;
+  sourceTitle: string;
+  sourceNote: string;
+  coverageNote: string;
+  categories: ObjectionCategory[];
+  sources: ObjectionSource[];
+  objections: ObjectionResponse[];
+}
+
 export interface CompeteTheme {
   id: string;
   title: string;

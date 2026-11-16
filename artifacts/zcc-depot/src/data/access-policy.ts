@@ -1,5 +1,5 @@
 /** Public destination metadata is not authorization. Protected bytes remain server-only. */
-const PRIVATE_PATHS = new Set(["/pricing", "/sell-sheet", "/agenda", "/demos/brief", "/resources/compete", "/resources/compete/five9"]);
+const PRIVATE_PATHS = new Set(["/pricing", "/sell-sheet", "/agenda", "/demos/brief", "/resources/compete", "/resources/compete/five9", "/resources/objection-handling"]);
 const PRIVATE_SECTIONS = new Set(["/resources#roadmap", "/resources#collaboration", "/resources#pitch-deck", "/sales#guidance"]);
 export function destinationAccess(href: string): "public" | "presenter" {
   try {

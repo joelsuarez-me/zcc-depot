@@ -455,6 +455,19 @@ paths:
                 $ref: "#/components/schemas/PricingGuide"
         "401":
           description: Sign-in required.
+  /objection-handling:
+    get:
+      operationId: getObjectionHandling
+      summary: Read internal objection-handling guidance as a signed-in Presenter
+      responses:
+        "200":
+          description: Categorized internal enablement with evidence and response boundaries.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ObjectionHandlingGuide"
+        "401": { description: Sign-in required. }
+        "403": { description: Presenter mode required. }
   /compete/{competitor}:
     get:
       operationId: getCompeteBattlecard
@@ -1229,6 +1242,58 @@ components:
           type: string
         internal:
           type: boolean
+    ObjectionHandlingGuide:
+      type: object
+      required: [preparedOn, sourceTitle, sourceNote, coverageNote, categories, sources, objections]
+      properties:
+        preparedOn: { type: string }
+        sourceTitle: { type: string }
+        sourceNote: { type: string }
+        coverageNote: { type: string }
+        categories:
+          type: array
+          items: { $ref: "#/components/schemas/ObjectionCategory" }
+        sources:
+          type: array
+          items: { $ref: "#/components/schemas/ObjectionSource" }
+        objections:
+          type: array
+          items: { $ref: "#/components/schemas/ObjectionResponse" }
+    ObjectionCategory:
+      type: object
+      required: [id, title, description]
+      properties:
+        id: { type: string }
+        title: { type: string }
+        description: { type: string }
+    ObjectionSource:
+      type: object
+      required: [id, title, url, note]
+      properties:
+        id: { type: string }
+        title: { type: string }
+        url: { type: string }
+        note: { type: string }
+    ObjectionResponse:
+      type: object
+      required: [id, categoryId, title, concern, question, response, proof, nextStep, avoid, escalation, origin, sourceIds]
+      properties:
+        id: { type: string }
+        categoryId: { type: string }
+        title: { type: string }
+        concern: { type: string }
+        question: { type: string }
+        response: { type: string }
+        proof: { type: string }
+        nextStep: { type: string }
+        avoid: { type: string }
+        escalation: { type: string }
+        origin:
+          type: string
+          enum: [foundation, expanded]
+        sourceIds:
+          type: array
+          items: { type: string }
     CompeteBattlecard:
       type: object
       required: [id, name, headline, summary, pitch, sourceTitle, sourceDates, preparedOn, strengths, themes, objections, guardrails, sources]

@@ -21,6 +21,7 @@ const SalesUseCases = lazy(() => import('@/pages/sales-use-cases'));
 const Resources = lazy(() => import('@/pages/resources'));
 const Compete = lazy(() => import('@/pages/compete'));
 const CompeteFive9 = lazy(() => import('@/pages/compete-five9'));
+const ObjectionHandling = lazy(() => import('@/pages/objection-handling'));
 const ResourceHowItWorks = lazy(() => import('@/pages/resource-how-it-works'));
 const ResourceRouting = lazy(() => import('@/pages/resource-routing'));
 const ResourceCallback = lazy(() => import('@/pages/resource-callback'));
@@ -58,6 +59,7 @@ const GatedPricing = gated(Pricing, 'Pricing and packaging');
 const GatedSellSheet = gated(SellSheet, 'Internal sell sheet');
 const GatedCompete = gated(Compete, 'Compete', 'Internal competitive enablement is available to signed-in presenters.');
 const GatedCompeteFive9 = gated(CompeteFive9, 'Five9 battle card', 'Switch to Presenter Mode and sign in to open internal competitive guidance.');
+const GatedObjectionHandling = gated(ObjectionHandling, 'Objection Handling', 'Sign in and enter Presenter Mode to open internal customer-conversation guidance.');
 const GatedAgenda = gated(Agenda, 'Demo agendas', 'Agendas are shared team workspaces. Enter Presenter Mode to open them; they stay hidden in the customer-facing view.');
 const GatedBrief = gated(DemoBrief, 'Demo Researcher', 'Saved research is shared team data. Enter Presenter Mode to open it; it stays hidden in the customer-facing view.');
 
@@ -89,6 +91,7 @@ function Router() {
             <Route path="/resources/how-it-works" component={ResourceHowItWorks} />
             <Route path="/resources/compete" component={GatedCompete} />
             <Route path="/resources/compete/five9" component={GatedCompeteFive9} />
+            <Route path="/resources/objection-handling" component={GatedObjectionHandling} />
             <Route path="/resources/routing" component={ResourceRouting} />
             <Route path="/resources/callback" component={ResourceCallback} />
             <Route path="/resources/outbound-dialers" component={ResourceOutboundDialers} />

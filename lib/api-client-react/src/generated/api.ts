@@ -35,6 +35,7 @@ import type {
   LogoutBrowserSessionParams,
   ObjectAuthorizationInput,
   ObjectAuthorizationResult,
+  ObjectionHandlingGuide,
   PitchDeck,
   PresenterContent,
   PricingGuide,
@@ -1966,6 +1967,83 @@ export function useGetPricingGuide<TData = Awaited<ReturnType<typeof getPricingG
  ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
 
   const queryOptions = getGetPricingGuideQueryOptions(options)
+
+  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
+
+  return withQueryKey(query, queryOptions.queryKey);
+}
+
+
+
+
+
+
+
+export const getGetObjectionHandlingUrl = () => {
+
+
+
+
+  return `/api/objection-handling`
+}
+
+/**
+ * @summary Read internal objection-handling guidance as a signed-in Presenter
+ */
+export const getObjectionHandling = async ( options?: Parameters<typeof customFetch>[1]): Promise<ObjectionHandlingGuide> => {
+
+  return customFetch<ObjectionHandlingGuide>(getGetObjectionHandlingUrl(),
+  {
+    ...options,
+    method: 'GET'
+
+
+  }
+);}
+
+
+
+
+
+export const getGetObjectionHandlingQueryKey = () => {
+    return [
+    `/api/objection-handling`
+    ] as const;
+    }
+
+
+export const getGetObjectionHandlingQueryOptions = <TData = Awaited<ReturnType<typeof getObjectionHandling>>, TError = ErrorType<void>>( options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getObjectionHandling>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getGetObjectionHandlingQueryKey();
+
+
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof getObjectionHandling>>> = ({ signal }) => getObjectionHandling({ signal, ...requestOptions });
+
+
+
+
+
+   return  { queryKey, queryFn, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof getObjectionHandling>>, TError, TData> & { queryKey: QueryKey }
+}
+
+export type GetObjectionHandlingQueryResult = NonNullable<Awaited<ReturnType<typeof getObjectionHandling>>>
+export type GetObjectionHandlingQueryError = ErrorType<void>
+
+
+/**
+ * @summary Read internal objection-handling guidance as a signed-in Presenter
+ */
+
+export function useGetObjectionHandling<TData = Awaited<ReturnType<typeof getObjectionHandling>>, TError = ErrorType<void>>(
+  options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getObjectionHandling>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+
+ ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+
+  const queryOptions = getGetObjectionHandlingQueryOptions(options)
 
   const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
 

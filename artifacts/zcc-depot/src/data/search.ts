@@ -31,6 +31,7 @@ const PAGES: SearchEntry[] = [
   page("resources", "Resources", "/resources", "Official documentation, agent knowledge, news, pitch deck, FAQ and the confidential roadmap.", "docs documentation help center"),
   page("compete", "Compete", "/resources/compete", "Signed-in competitor enablement library for presenters.", "competition competitors battle cards sales"),
   page("compete-five9", "Five9 battle card", "/resources/compete/five9", "Signed-in Five9 competitive guidance and source notes.", "compete competitor battlecard Five9"),
+  page("objection-handling", "Objection Handling", "/resources/objection-handling", "Internal conversation guidance for signed-in presenters.", "objection handling"),
   page("agenda", "Demo Agenda", "/agenda", "Signed-in area for preparing and presenting customer agendas.", "today’s agenda sign in presentation meeting"),
 ];
 

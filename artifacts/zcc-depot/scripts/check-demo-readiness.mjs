@@ -99,7 +99,8 @@ ok(applied.includes("PRIVATE-CHALLENGE")&&!applied.includes("SECRET-PRESENTER"),
 ok(applied.includes("/?feature=callbacks#features")&&applied.includes("/demos/nuggets#voice-copilot"),"composed agenda connects demos by URL");
 ok(!isDirty,"explicit compose clears unapplied flag");
 act(()=>tree.unmount());
-ok(siteMapCounts().pages===28&&siteMapCounts().groups===6,"routes and navigation groups preserved");
+const registeredRoutes=[...readFileSync("./src/App.tsx","utf8").matchAll(/<Route path="([^"]+)"/g)].map(m=>m[1]);
+ok(siteMapCounts().pages===new Set(registeredRoutes).size&&siteMapCounts().groups===6,"routes and navigation groups preserved");
 console.log(checks+" evidence, permission-aware search, storyboard privacy and shortcut checks passed");
 ` },
     bundle: true, platform: "node", format: "cjs", outfile: resolve(dir, "checks.cjs"),

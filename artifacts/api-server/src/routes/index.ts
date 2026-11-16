@@ -12,6 +12,7 @@ import videoVoiceRouter from "./video-demo-voice";
 import presenterRouter from "./presenter";
 import shortlistsRouter from "./use-case-shortlists";
 import competeRouter from "./compete";
+import objectionHandlingRouter from "./objection-handling";
 import { presenterAccess } from "../middlewares/presenterAccess";
 
 const router: IRouter = Router();
@@ -32,5 +33,6 @@ router.use(videoVoiceRouter);
 router.use(presenterRouter);
 router.use(shortlistsRouter);
 router.use(competeRouter);
+router.use(objectionHandlingRouter);
 
 export default router;

@@ -91,6 +91,7 @@ export const ROUTE_LABELS: Record<string, { label: string; parent?: string }> = 
   "/sell-sheet": { label: "Sell Sheet", parent: "/sales" },
   "/sales/use-cases-by-vertical": { label: "Use Cases by Vertical", parent: "/sales" },
   "/resources": { label: "Resources" },
+  "/resources/objection-handling": { label: "Objection Handling", parent: "/resources" },
   "/resources/compete": { label: "Compete", parent: "/resources" },
   "/resources/compete/five9": { label: "Five9", parent: "/resources/compete" },
   "/resources/how-it-works": { label: "How it works (Detailed)", parent: "/" },

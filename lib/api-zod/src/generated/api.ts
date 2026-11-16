@@ -812,6 +812,42 @@ export const GetPricingGuideResponse = zod.object({
 
 
 /**
+ * @summary Read internal objection-handling guidance as a signed-in Presenter
+ */
+export const GetObjectionHandlingResponse = zod.object({
+  "preparedOn": zod.string(),
+  "sourceTitle": zod.string(),
+  "sourceNote": zod.string(),
+  "coverageNote": zod.string(),
+  "categories": zod.array(zod.object({
+  "id": zod.string(),
+  "title": zod.string(),
+  "description": zod.string()
+})),
+  "sources": zod.array(zod.object({
+  "id": zod.string(),
+  "title": zod.string(),
+  "url": zod.string(),
+  "note": zod.string()
+})),
+  "objections": zod.array(zod.object({
+  "id": zod.string(),
+  "categoryId": zod.string(),
+  "title": zod.string(),
+  "concern": zod.string(),
+  "question": zod.string(),
+  "response": zod.string(),
+  "proof": zod.string(),
+  "nextStep": zod.string(),
+  "avoid": zod.string(),
+  "escalation": zod.string(),
+  "origin": zod.enum(['foundation', 'expanded']),
+  "sourceIds": zod.array(zod.string())
+}))
+})
+
+
+/**
  * @summary Read an internal competitor battle card in Presenter mode
  */
 export const GetCompeteBattlecardParams = zod.object({
