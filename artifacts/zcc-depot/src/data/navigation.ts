@@ -64,7 +64,6 @@ export const NAV: NavItem[] = [
     { label: "AI Agent Voices", href: "/resources/ai-agent-voices" },
     { label: "Objection Handling", href: "/resources/objection-handling" },
     { label: "Zendesk Contact Center Hub", href: LINKS.contactCenterHub, external: true },
-    { label: "AI Knowledge Suggestions", href: "/resources#ai-suggestions" },
     { label: "Product Updates · Internal", href: "/resources#collaboration" },
     { label: "Frequently Asked Questions", href: "/resources#faq" },
     { label: "Product Roadmap · Confidential", href: "/resources#roadmap" },
