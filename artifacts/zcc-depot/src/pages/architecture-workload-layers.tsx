@@ -1,5 +1,6 @@
 import { useEffect } from "react";
 import { ArrowDown, ArrowUpRight, Layers3 } from "lucide-react";
+import { Link } from "wouter";
 import { Ext, Note, PageHero, Section, SectionHead } from "@/components/kit";
 import { WorkloadLayerDiagrams } from "@/components/workload-layer-diagrams";
 
@@ -14,7 +15,7 @@ export default function ArchitectureWorkloadLayers() {
     <PageHero motif="map" eyebrow="Architecture · Platform Components" title={<>Amazon Connect <span className="serif italic text-[#D1F470]">Workload Layers</span></>}
       lede="Break down the contact center into five operational layers, then trace how voice, interfaces, contact flows, agent endpoints, and reporting fit together.">
       <a href="#layer-map" className="rounded-full bg-[#D1F470] px-5 py-3 text-sm font-semibold text-[#11110D]">Explore the layers<ArrowDown className="ml-2 inline h-4 w-4" aria-hidden /></a>
-      <a href="/architecture/components" className="rounded-full border border-[#F5F5F2]/25 px-5 py-3 text-sm font-semibold hover:border-[#D1F470] hover:text-[#D1F470]"><Layers3 className="mr-2 inline h-4 w-4" aria-hidden />Platform Components</a>
+      <Link href="/architecture/components" className="rounded-full border border-[#F5F5F2]/25 px-5 py-3 text-sm font-semibold hover:border-[#D1F470] hover:text-[#D1F470]"><Layers3 className="mr-2 inline h-4 w-4" aria-hidden />Platform Components</Link>
     </PageHero>
 
     <Section id="layer-map">
