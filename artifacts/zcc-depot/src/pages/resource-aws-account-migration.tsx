@@ -2,7 +2,7 @@ import { useEffect } from "react";
 import { ArrowRight, ArrowUpRight, CheckCircle2, ShieldCheck } from "lucide-react";
 import { Ext, Note, PageHero, Section, SectionHead } from "@/components/kit";
 
-const GUIDE_URL = "https://chatgpt.com/library?file_id=76b2e7e3d4a48191baa6e70412160970&account_id=618a18bb-bc3f-40fb-8038-6e35a18fb181";
+const GUIDE_URL = "https://chatgpt.com/library?file_id=1fefe3ed57b481918b41ca3f66a3c382&account_id=618a18bb-bc3f-40fb-8038-6e35a18fb181";
 
 const steps = [
   ["01", "Confirm scope", "Zendesk confirms which AWS account and Regions are in scope, and whether an AWS Organizations dependency check is needed."],
