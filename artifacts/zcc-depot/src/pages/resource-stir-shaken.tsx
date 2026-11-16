@@ -12,7 +12,7 @@ const LEVELS: { id: Level; name: string; short: string; detail: string; color: s
 function CallPath({ level, setLevel }: { level: Level; setLevel: (level: Level) => void }) {
   const selected = LEVELS.find(x => x.id === level)!;
   return (
-    <div className="overflow-hidden rounded-[2rem] border border-white/10 bg-[#111A23] p-5 text-[#F5F5F2] md:p-8">
+    <div className="overflow-hidden rounded-[2rem] border border-white/10 bg-[#111A23] p-5 text-[#F5F5F2] shadow-[0_24px_70px_rgba(17,26,35,.3)] md:p-8" style={{ background: "radial-gradient(ellipse at top left, rgba(63,90,99,.34), transparent 42%), linear-gradient(145deg, #101820, #111A23 52%, #161827)" }}>
       <div className="flex flex-wrap items-center justify-between gap-3">
         <div><p className="eyebrow text-[#D1F470]">Interactive call path</p><p className="mt-1 text-sm text-white/65">Select a level to see the trust statement carried with an eligible call.</p></div>
         <div className="inline-flex rounded-full border border-white/15 bg-white/5 p-1" role="group" aria-label="Choose an attestation level">
@@ -20,21 +20,39 @@ function CallPath({ level, setLevel }: { level: Level; setLevel: (level: Level) 
         </div>
       </div>
       <div className="mt-6 rounded-3xl border border-white/10 bg-[#18242D] p-4 md:p-6">
-        <svg viewBox="0 0 960 220" role="img" aria-labelledby="stir-path-title stir-path-desc" className="h-auto w-full">
+        <svg viewBox="0 0 1000 250" role="img" aria-labelledby="stir-path-title stir-path-desc" className="h-auto w-full" fontFamily="Inter, Aptos, 'Segoe UI', sans-serif">
           <title id="stir-path-title">STIR/SHAKEN outbound call authentication path</title>
           <desc id="stir-path-desc">An outbound call from an Amazon Connect number carries an attestation header through carrier networks to the recipient. Header preservation depends on each network along the route.</desc>
           <defs>
-            <linearGradient id="stir-trail" x1="0" x2="1"><stop offset="0%" stopColor="#C4F36B" /><stop offset="100%" stopColor="#67D5E4" /></linearGradient>
+            <linearGradient id="stir-trail" x1="0" x2="1"><stop offset="0%" stopColor="#C4F36B" /><stop offset="52%" stopColor="#67D5E4" /><stop offset="100%" stopColor="#A78BFA" /></linearGradient>
+            <linearGradient id="stir-card" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stopColor="#24333C" /><stop offset="100%" stopColor="#17232C" /></linearGradient>
             <filter id="stir-glow" x="-200%" y="-200%" width="500%" height="500%"><feGaussianBlur stdDeviation="5" result="blur" /><feMerge><feMergeNode in="blur" /><feMergeNode in="SourceGraphic" /></feMerge></filter>
           </defs>
-          <path d="M155 106 H805" stroke="#56636B" strokeWidth="4" strokeLinecap="round" fill="none" />
-          <path d="M155 106 H805" stroke="url(#stir-trail)" strokeWidth="3" strokeDasharray="8 12" strokeLinecap="round" fill="none" opacity=".8" />
-          <circle r="8" cy="106" fill="#C4F36B" filter="url(#stir-glow)"><animateMotion className="stir-packet-motion" dur="4.8s" repeatCount="indefinite" path="M155 106 H805" /></circle>
-          <g transform="translate(55 67)"><rect width="160" height="78" rx="18" fill="#213329" stroke="#C4F36B" /><path d="M24 41l11 11 23-26" stroke="#C4F36B" strokeWidth="5" fill="none" strokeLinecap="round" strokeLinejoin="round" /><text x="68" y="35" fill="#F5F5F2" fontSize="15" fontWeight="700">Amazon Connect</text><text x="68" y="56" fill="#B9C5BE" fontSize="12">signs eligible call</text></g>
-          <g transform="translate(400 67)"><rect width="160" height="78" rx="18" fill="#202A33" stroke="#67D5E4" /><path d="M22 43h35M27 34v18M39 30v26M51 37v12" stroke="#67D5E4" strokeWidth="3" strokeLinecap="round" /><text x="68" y="35" fill="#F5F5F2" fontSize="15" fontWeight="700">Carrier network</text><text x="68" y="56" fill="#B9C5BE" fontSize="12">may use the signal</text></g>
-          <g transform="translate(745 67)"><rect width="160" height="78" rx="18" fill="#252433" stroke="#A78BFA" /><circle cx="41" cy="34" r="10" fill="none" stroke="#C4B5FD" strokeWidth="3" /><path d="M22 59c2-13 36-13 38 0" fill="none" stroke="#C4B5FD" strokeWidth="3" strokeLinecap="round" /><text x="68" y="35" fill="#F5F5F2" fontSize="15" fontWeight="700">Recipient</text><text x="68" y="56" fill="#B9C5BE" fontSize="12">carrier decides treatment</text></g>
-          <rect x="370" y="166" width="220" height="32" rx="16" fill="#18242D" stroke="#53635A" />
-          <text x="480" y="187" textAnchor="middle" fill="#D5DED9" fontSize="13">Identity header · Attestation {level}</text>
+          <path d="M130 112 H870" stroke="#43515B" strokeWidth="6" strokeLinecap="round" fill="none" />
+          <path d="M130 112 H870" stroke="url(#stir-trail)" strokeWidth="3" strokeDasharray="9 13" strokeLinecap="round" fill="none" opacity=".9" />
+          <circle r="8" cy="112" fill="#D1F470" filter="url(#stir-glow)"><animateMotion className="stir-packet-motion" dur="4.8s" repeatCount="indefinite" path="M130 112 H870" /></circle>
+          <circle r="3.5" cy="112" fill="#fff"><animateMotion className="stir-packet-motion" dur="4.8s" begin="1.6s" repeatCount="indefinite" path="M130 112 H870" /></circle>
+          <g transform="translate(34 58)">
+            <rect x="-4" y="-4" width="200" height="104" rx="25" fill="#C4F36B" opacity=".08" /><rect width="192" height="96" rx="22" fill="url(#stir-card)" stroke="#C4F36B" strokeWidth="1.6" />
+            <rect x="14" y="13" width="164" height="20" rx="10" fill="#C4F36B" opacity=".15" /><text x="96" y="27" textAnchor="middle" fill="#D1F470" fontSize="9.5" fontWeight="750" letterSpacing="1.5">ORIGINATING PROVIDER</text>
+            <circle cx="38" cy="61" r="18" fill="#C4F36B" opacity=".17" /><path d="M29 61l7 7 13-15" stroke="#C4F36B" strokeWidth="4" fill="none" strokeLinecap="round" strokeLinejoin="round" />
+            <text x="67" y="58" fill="#F5F5F2" fontSize="15" fontWeight="750">Amazon Connect</text><text x="67" y="77" fill="#BCC8C1" fontSize="12" fontWeight="500">signs eligible call</text>
+          </g>
+          <g transform="translate(404 58)">
+            <rect x="-4" y="-4" width="200" height="104" rx="25" fill="#67D5E4" opacity=".08" /><rect width="192" height="96" rx="22" fill="url(#stir-card)" stroke="#67D5E4" strokeWidth="1.6" />
+            <rect x="14" y="13" width="164" height="20" rx="10" fill="#67D5E4" opacity=".14" /><text x="96" y="27" textAnchor="middle" fill="#8CE6EF" fontSize="9.5" fontWeight="750" letterSpacing="1.5">TRANSIT NETWORKS</text>
+            <circle cx="38" cy="61" r="18" fill="#67D5E4" opacity=".16" /><path d="M27 62h22M31 54v16M38 51v22M45 57v10" stroke="#67D5E4" strokeWidth="2.5" strokeLinecap="round" />
+            <text x="67" y="58" fill="#F5F5F2" fontSize="15" fontWeight="750">Carrier network</text><text x="67" y="77" fill="#BCC8C1" fontSize="12" fontWeight="500">may use the signal</text>
+          </g>
+          <g transform="translate(774 58)">
+            <rect x="-4" y="-4" width="200" height="104" rx="25" fill="#A78BFA" opacity=".08" /><rect width="192" height="96" rx="22" fill="url(#stir-card)" stroke="#A78BFA" strokeWidth="1.6" />
+            <rect x="14" y="13" width="164" height="20" rx="10" fill="#A78BFA" opacity=".15" /><text x="96" y="27" textAnchor="middle" fill="#C4B5FD" fontSize="9.5" fontWeight="750" letterSpacing="1.5">RECEIVING PARTY</text>
+            <circle cx="38" cy="56" r="8" fill="none" stroke="#C4B5FD" strokeWidth="2.5" /><path d="M23 79c2-14 28-14 30 0" fill="none" stroke="#C4B5FD" strokeWidth="2.5" strokeLinecap="round" />
+            <text x="67" y="58" fill="#F5F5F2" fontSize="15" fontWeight="750">Recipient</text><text x="67" y="77" fill="#BCC8C1" fontSize="12" fontWeight="500">carrier decides treatment</text>
+          </g>
+          <rect x="362" y="183" width="276" height="38" rx="19" fill="#202E37" stroke="#65766D" strokeWidth="1.2" /><circle cx="384" cy="202" r="5" fill="#C4F36B" />
+          <text x="500" y="207" textAnchor="middle" fill="#E2E9E3" fontSize="13" fontWeight="600">Identity header · Attestation {level}</text>
+          <text x="500" y="241" textAnchor="middle" fill="#8D9A93" fontSize="10.5" fontWeight="500" letterSpacing=".4">SIGNATURE TRAVELS WITH THE CALL · CARRIERS CONTROL HOW THEY USE IT</text>
         </svg>
         <style>{`@media (prefers-reduced-motion: reduce) { .stir-packet-motion { display: none; } }`}</style>
         <div className="mt-4 flex items-start gap-3 rounded-2xl border border-white/10 p-4" aria-live="polite">
