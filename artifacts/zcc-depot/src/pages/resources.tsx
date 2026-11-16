@@ -64,6 +64,14 @@ export default function Resources() {
           </span>
           <span className="inline-flex items-center gap-2 rounded-full bg-[#203524] px-4 py-2 text-sm font-semibold text-[#D1F470]">Explore the guide<ArrowUpRight className="h-4 w-4" aria-hidden /></span>
         </Link>
+        <Link href="/resources/stir-shaken" className="mb-7 flex flex-wrap items-center justify-between gap-4 rounded-3xl border border-[#203524]/20 bg-[#EAF3F5] p-5 transition hover:border-[#203524] md:p-6" data-testid="link-resources-stir-shaken">
+          <span>
+            <span className="eyebrow text-[#203524]">Outbound voice · Caller authentication</span>
+            <span className="mt-1 block text-2xl font-semibold tracking-tight text-[#11110D]">STIR/SHAKEN</span>
+            <span className="mt-1 block text-sm text-[#203524]">See how Amazon Connect signs eligible outbound calls, what A/B/C attestation means, and how to request Attestation A through Zendesk Support.</span>
+          </span>
+          <span className="inline-flex items-center gap-2 rounded-full bg-[#203524] px-4 py-2 text-sm font-semibold text-[#D1F470]">Explore the guide<ArrowUpRight className="h-4 w-4" aria-hidden /></span>
+        </Link>
         <div className="grid gap-8 lg:grid-cols-12">
           <aside className="lg:col-span-3">
             <div className="lg:sticky lg:top-28">

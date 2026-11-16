@@ -93,6 +93,7 @@ export const ROUTE_LABELS: Record<string, { label: string; parent?: string }> = 
   "/resources": { label: "Resources" },
   "/resources/amazon-connect-coverage": { label: "Amazon Connect Telecom Country Coverage", parent: "/resources" },
   "/resources/resporg-number-porting": { label: "RespOrg & Number Porting", parent: "/resources" },
+  "/resources/stir-shaken": { label: "STIR/SHAKEN", parent: "/resources" },
   "/resources/objection-handling": { label: "Objection Handling", parent: "/resources" },
   "/resources/compete": { label: "Compete", parent: "/resources" },
   "/resources/compete/five9": { label: "Five9", parent: "/resources/compete" },
