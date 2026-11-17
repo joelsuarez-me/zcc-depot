@@ -33,6 +33,7 @@ export const NAV: NavItem[] = [
       { label: "Call Routing", href: "/resources/routing" },
       { label: "Queue Callbacks", href: "/resources/callback" },
       { label: "Outbound Dialers", href: "/resources/outbound-dialers" },
+      { label: "Supervisor Command Center", href: "/resources/supervisor-command-center" },
       { label: "AI & Automation", href: "/rooms/ai-automation" },
       { label: "Agent Experience", href: "/rooms/agent-experience" },
       { label: "Feature Demos", href: "/demos/nuggets" },
@@ -67,9 +68,7 @@ export const NAV: NavItem[] = [
   {
     href: "/resources", label: "Guides & Resources", children: [
       { label: "Reference Library", href: "/resources#library" },
-      { label: "Operational Guides", href: "/resources#library", children: [
-        { label: "Supervisor Command Center", href: "/resources/supervisor-command-center" },
-      ] },
+      { label: "Operational Guides", href: "/resources#library" },
       { label: "Telephony & Number Management", href: "/resources#library", children: [
         { label: "Country Coverage", href: "/resources/amazon-connect-coverage" },
         { label: "RespOrg & Number Porting", href: "/resources/resporg-number-porting" },
